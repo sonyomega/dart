@@ -100,6 +100,12 @@ public: // Operators
     /// @brief Const Casting operator.
     const se3* operator&() const { return this; }
 
+    /// @brief Access to the idx th element.
+    double& operator()(int _i);
+
+    /// @brief Access to the idx th element.
+    const double& operator()(int _i) const;
+
     /// @brief Unary plus operator.
     se3 operator+(void) const;
 

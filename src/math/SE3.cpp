@@ -100,6 +100,16 @@ const se3& se3::operator=(const se3& _V)
     }
 }
 
+double& operator()(int _i)
+{
+
+}
+
+const double& operator()(int _i) const
+{
+
+}
+
 se3 se3::operator+(void) const
 {
     return *this;
@@ -556,7 +566,7 @@ SE3 SE3::operator*(const SE3& _T) const
                mRotation * _T.mPosition + mPosition);
 }
 
-SE3 SE3::operator*(const TSE3& _dT) const
+TSE3 SE3::operator*(const TSE3& _dT) const
 {
     // this = | R1 p1 |, _dT = | R2 p2 |
     //        |  0  1 |,       |  0  0 |
@@ -571,13 +581,6 @@ SE3 SE3::operator*(const TSE3& _dT) const
 
     return TSE3(mRotation * _dT.mRotation,
                 mRotation * _dT.mPosition);
-}
-
-
-SE3 SE3::operator*(const SE3& _T) const
-{
-    return SE3(mRotation * _T.mRotation,
-               mRotation * _T.mPosition + mPosition);
 }
 
 //SE3 SE3::operator/(const SE3& _T) const
@@ -633,7 +636,7 @@ void SE3::setExp(const se3& _s)
 {
 	// TODO: Need document
 
-	Eigen::Vector6d _S = _s.getVector();
+	Vector6d _S = _s.getVector();
 
 	double s2[] = { _S[0] * _S[0], _S[1] * _S[1], _S[2] * _S[2] };
 	double theta = sqrt(s2[0] + s2[1] + s2[2]);

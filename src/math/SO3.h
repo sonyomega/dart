@@ -88,11 +88,11 @@ public: // Operators
     /// @brief Const Casting operator.
     const so3* operator&() const { return this; }
 
-//    /// @brief Access to the idx th element.
-//    double& operator[](int i);
+    /// @brief Access to the idx th element.
+    double& operator()(int _i);
 
-//    /// @brief Access to the idx th element.
-//    const double& operator[](int i) const;
+    /// @brief Access to the idx th element.
+    const double& operator()(int _i) const;
 
     /// @brief Unary plus operator.
     so3 operator+(void) const;
@@ -193,6 +193,12 @@ public:
 
     /// @brief Const Casting operator.
     const SO3* operator&() const { return this; }
+
+    /// @brief
+    double& operator()(int _i, int _j);
+
+    /// @brief
+    const double& operator()(int _i, int _j) const;
 
     /// @brief Multiplication operator.
     /// T_this *= T is a fast version of T_this = T_this * T.

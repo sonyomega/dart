@@ -42,6 +42,123 @@ namespace math
 
 #define LIEGROUP_EPS 10e-9
 
+//==============================================================================
+so3::so3()
+	: mw(Eigen::Vector3d::Zero())
+{
+}
+
+so3::so3(const Eigen::Vector3d& _w)
+	: mw(_w)
+{
+
+}
+
+so3::so3(double _w0, double _w1, double _w2)
+{
+	mw << _w0, _w1, _w2;
+}
+
+so3::~so3()
+{
+}
+
+const so3& so3::operator=(const so3& _w)
+{
+    if (this != & _w)
+    {
+        mw = _w.mw;
+    }
+
+    return *this;
+}
+
+double& so3::operator()(int _i)
+{
+    assert(0 <= _i && _i <= 2);
+
+    return mw[_i];
+}
+
+const double& so3::operator()(int _i) const
+{
+    assert(0 <= _i && _i <= 2);
+
+    return mw[_i];
+}
+
+so3 so3::operator+(void) const
+{
+    return *this;
+}
+
+so3 so3::operator-(void) const
+{
+    return so3(-mw);
+}
+
+const so3& so3::operator+=(const so3& _w)
+{
+    mw += _w.mw;
+    return *this;
+}
+
+const so3& so3::operator-=(const so3& _w)
+{
+    mw -= _w.mw;
+    return *this;
+}
+
+const so3& so3::operator*=(double _c)
+{
+    mw *= _c;
+    return *this;
+}
+
+so3 so3::operator+(const so3& _w) const
+{
+    return so3(mw + _w.mw);
+}
+
+so3 so3::operator-(const so3& _w) const
+{
+    return so3(mw - _w.mw);
+}
+
+so3 so3::operator*(double _c) const
+{
+    return so3(mw * _c);
+}
+
+void so3::setValues(double _w0, double _w1, double _w2)
+{
+    mw << _w0, _w1, _w2;
+}
+
+Eigen::Matrix3d so3::getSkewSymmetrixMatrix() const
+{
+    Eigen::Matrix3d result = Eigen::Matrix3d::Zero();
+
+    result(0, 1) = -mw(2);
+    result(1, 0) =  mw(2);
+    result(0, 2) =  mw(1);
+    result(2, 0) = -mw(1);
+    result(1, 2) = -mw(0);
+    result(2, 1) =  mw(0);
+
+    return result;
+}
+
+void so3::setVector(const Eigen::Vector3d& _w)
+{
+    mw = _w;
+}
+
+
+so3 operator*(double _c, const so3& _w)
+{
+    return so3(_c * _w.mw);
+}
 
 //==============================================================================
 SO3::SO3()
@@ -78,6 +195,22 @@ SO3::SO3(const so3& _w)
 
 SO3::~SO3()
 {
+}
+
+double& SO3::operator()(int _i, int _j)
+{
+	assert(0 <= _i && _i <= 2);
+	assert(0 <= _j && _j <= 2);
+
+	return mRotation(_i, _j);
+}
+
+const double& SO3::operator()(int _i, int _j) const
+{
+	assert(0 <= _i && _i <= 2);
+	assert(0 <= _j && _j <= 2);
+
+	return mRotation(_i, _j);
 }
 
 /// @brief Substitution operator.
@@ -209,119 +342,7 @@ void SO3::setExp(const so3& _S, double theta)
 	mRotation(2,2) = 1.0 + vt * (s2[2] - 1.0);
 }
 
-//==============================================================================
-so3::so3()
-	: mw(Eigen::Vector3d::Zero())
-{
-}
 
-so3::so3(const Eigen::Vector3d& _w)
-	: mw(_w)
-{
-
-}
-
-so3::so3(double _w0, double _w1, double _w2)
-{
-	mw << _w0, _w1, _w2;
-}
-
-so3::~so3()
-{
-}
-
-const so3& so3::operator=(const so3& _w)
-{
-    if (this != & _w)
-    {
-        mw = _w.mw;
-    }
-
-    return *this;
-}
-
-//double& so3::operator [] (int i)
-//{
-//    return mw[i];
-//}
-
-//const double& so3::operator [] (int i) const
-//{
-//    return mw[i];
-//}
-
-so3 so3::operator+(void) const
-{
-    return *this;
-}
-
-so3 so3::operator-(void) const
-{
-    return so3(-mw);
-}
-
-const so3& so3::operator+=(const so3& _w)
-{
-    mw += _w.mw;
-    return *this;
-}
-
-const so3& so3::operator-=(const so3& _w)
-{
-    mw -= _w.mw;
-    return *this;
-}
-
-const so3& so3::operator*=(double _c)
-{
-    mw *= _c;
-    return *this;
-}
-
-so3 so3::operator+(const so3& _w) const
-{
-    return so3(mw + _w.mw);
-}
-
-so3 so3::operator-(const so3& _w) const
-{
-    return so3(mw - _w.mw);
-}
-
-so3 so3::operator*(double _c) const
-{
-    return so3(mw * _c);
-}
-
-void so3::setValues(double _w0, double _w1, double _w2)
-{
-    mw << _w0, _w1, _w2;
-}
-
-Eigen::Matrix3d so3::getSkewSymmetrixMatrix() const
-{
-    Eigen::Matrix3d result = Eigen::Matrix3d::Zero();
-
-    result(0, 1) = -mw(2);
-    result(1, 0) =  mw(2);
-    result(0, 2) =  mw(1);
-    result(2, 0) = -mw(1);
-    result(1, 2) = -mw(0);
-    result(2, 1) =  mw(0);
-
-    return result;
-}
-
-void so3::setVector(const Eigen::Vector3d& _w)
-{
-    mw = _w;
-}
-
-
-so3 operator*(double _c, const so3& _w)
-{
-    return so3(_c * _w.mw);
-}
 
 
 } // namespace math
