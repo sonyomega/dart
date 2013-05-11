@@ -2,8 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
- * Date: 06/12/2011
+ * Author(s): Jeongseok Lee <jslee02@gmail.com>
+ * Date: 05/11/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,71 +35,65 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "kinematics/Transformation.h"
-#include "kinematics/Dof.h"
+#ifndef DART_KINEMATICS_SYSTEM_H
+#define DART_KINEMATICS_SYSTEM_H
+
+#include <vector>
+#include <Eigen/Dense>
 
 namespace kinematics
 {
+class Dof;
 
-Dof::Dof()
+class System
 {
-    _init();
-}
+public:
+    /// @brief
+    System();
 
-Dof::Dof(double _v)
-{
-    _init(_v);
-}
+    /// @brief
+    virtual ~System();
 
-Dof::Dof(double _v, const char * _name)
-{
-    _init(_v, _name);
-}
+    /// @brief
+    unsigned int getNumDOFs();
 
-Dof::Dof(double _v, double _min, double _max)
-{
-    _init(_v, "Unknown Dof", _min, _max);
-}
+    /// @brief
+    const std::vector<Dof*>& getDofs() const { return mDofs; }
 
-Dof::Dof(double _v, const char * _name, double _min, double _max)
-{
-    _init(_v, _name, _min, _max);
-}
+    /// @brief
+    int getIndexOfDOF(const Dof* _dof) const;
 
-void Dof::setValue(double _v)
-{
-    m_q = _v;
+    /// @brief
+    void set_q(const Eigen::VectorXd& _q);
 
-    if (mTrans != NULL)
-        mTrans->setDirty();
-}
+    /// @brief
+    void set_dq(const Eigen::VectorXd& _dq);
 
-void Dof::_init(double _v, const char * _name, double _min, double _max)
-{
-    double inf = std::numeric_limits<double>::infinity();
+    /// @brief
+    void set_ddq(const Eigen::VectorXd& _ddq);
 
-    m_q = _v;
-    mMin_q = _min;
-    mMax_q = _max;
+    /// @brief
+    void setTorque(const Eigen::VectorXd& _tau);
 
-    m_dq = 0.0;
-    mMin_dq = -inf;
-    mMax_dq = inf;
+    /// @brief
+    Eigen::VectorXd get_q(void) const;
 
-    m_ddq = 0.0;
-    mMin_ddq = -inf;
-    mMax_ddq = inf;
+    /// @brief
+    Eigen::VectorXd get_dq(void) const;
 
-    mTorque = 0.0;
-    mMinTorque = -inf;
-    mMaxTorque = inf;
+    /// @brief
+    Eigen::VectorXd get_ddq(void) const;
 
-    strcpy(mName, _name);
-    mSkelIndex = -1;
-    mVariable = false;
-    mTrans = NULL;
-    mJoint = NULL;	// remains null if const dof
-}
+    /// @brief
+    Eigen::VectorXd getTorque(void) const;
+
+
+protected:
+    /// @brief pointer to DOF.
+    std::vector<Dof*> mDofs;
+};
 
 } // namespace kinematics
+
+#endif // #ifndef DART_KINEMATICS_SYSTEM_H
 

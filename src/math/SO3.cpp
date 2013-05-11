@@ -132,7 +132,24 @@ so3 so3::operator*(double _c) const
 
 void so3::setValues(double _w0, double _w1, double _w2)
 {
-    mw << _w0, _w1, _w2;
+    mw(0) = _w0;
+    mw(1) = _w1;
+    mw(2) = _w2;
+}
+
+void so3::setFromSkewSymmetrixMatrix(const Eigen::Matrix3d& _ssm)
+{
+    assert(_ssm(0,0) == 0);
+    assert(_ssm(1,1) == 0);
+    assert(_ssm(2,2) == 0);
+
+    assert(_ssm(0,1) == _ssm(1,0));
+    assert(_ssm(0,2) == _ssm(2,0));
+    assert(_ssm(1,2) == _ssm(2,1));
+
+    mw(0) = _ssm(2,1);
+    mw(1) = _ssm(0,2);
+    mw(2) = _ssm(1,0);
 }
 
 Eigen::Matrix3d so3::getSkewSymmetrixMatrix() const
@@ -162,6 +179,7 @@ so3 operator*(double _c, const so3& _w)
 
 //==============================================================================
 SO3::SO3()
+    : mRotation(Eigen::Matrix3d::Identity())
 {
 }
 
@@ -170,14 +188,14 @@ SO3::SO3(const Eigen::Matrix3d& _rotation)
 {
 }
 
-SO3::SO3(const Eigen::Vector3d& _axisX,
-		 const Eigen::Vector3d& _axisY,
-		 const Eigen::Vector3d& _axisZ)
-{
-	mRotation.col(0) = _axisX;
-	mRotation.col(1) = _axisY;
-	mRotation.col(2) = _axisZ;
-}
+//SO3::SO3(const Eigen::Vector3d& _axisX,
+//		 const Eigen::Vector3d& _axisY,
+//		 const Eigen::Vector3d& _axisZ)
+//{
+//	mRotation.col(0) = _axisX;
+//	mRotation.col(1) = _axisY;
+//	mRotation.col(2) = _axisZ;
+//}
 
 SO3::SO3(double _R00, double _R01, double _R02,
 		 double _R10, double _R11, double _R12,
@@ -341,9 +359,6 @@ void SO3::setExp(const so3& _S, double theta)
 	mRotation(1,2) = vt * s[1] * s[2] - sts[0];
 	mRotation(2,2) = 1.0 + vt * (s2[2] - 1.0);
 }
-
-
-
 
 } // namespace math
 

@@ -40,73 +40,74 @@
 
 #include <vector>
 #include <Eigen/Dense>
+#include "kinematics/System.h"
 
-namespace renderer { class RenderInterface; };
+namespace renderer { class RenderInterface; }
 
 namespace kinematics {
 
-    class Transformation;
-    class Marker;
-    class Joint;
-    class BodyNode;
-    class Dof;
+class Transformation;
+class Marker;
+class Joint;
+class BodyNode;
+class Dof;
 
-    class Skeleton {
-    public:
-        Eigen::VectorXd mCurrPose; 
-        BodyNode* mRoot;
+class Skeleton : public System
+{
+public:
+    Eigen::VectorXd mCurrPose;
+    BodyNode* mRoot;
 
+    Skeleton();
+    virtual ~Skeleton();
 
-        Skeleton();
-        virtual ~Skeleton();
+    virtual BodyNode* createBodyNode(const char* const name = NULL);
+    void addMarker(Marker *_h);
+    void addNode(BodyNode *_b, bool _addParentJoint = true);
+    void addJoint(Joint *_j);
+    void addDof(Dof *_d);
+    void addTransform(Transformation *_t);
 
-        virtual BodyNode* createBodyNode(const char* const name = NULL);
-        void addMarker(Marker *_h);
-        void addNode(BodyNode *_b, bool _addParentJoint = true);
-        void addJoint(Joint *_j);
-        void addDof(Dof *_d);
-        void addTransform(Transformation *_t);
-	
-        // init the model after parsing
-        void initSkel();
-	
-        // inline access functions
-        inline int getNumDofs() const { return mDofs.size(); }
-        inline int getNumNodes() const { return mNodes.size(); }
-        inline int getNumMarkers() const { return mMarkers.size(); }
-        inline int getNumJoints() const { return mJoints.size();}
-        inline Dof* getDof(int _i) { return mDofs[_i]; }
-        inline BodyNode* getNode(int _i) const { return mNodes[_i]; }
-        inline BodyNode* getRoot() { return mRoot; }
-        BodyNode* getNode(const char* const _name) const;
-        int getNodeIndex(const char* const _name) const;
-        inline Joint* getJoint(int _i) const { return mJoints[_i]; }
-        Joint* getJoint(const char* const _name) const;
-        int getJointIndex(const char* const _name) const;
+    // init the model after parsing
+    void initSkel();
 
-        inline Marker* getMarker(int _i) { return mMarkers[_i]; }
-        inline double getMass() { return mMass; }
-        Eigen::Vector3d getWorldCOM();
-        inline std::string getName() { return mName; }
-        inline void setName( std::string _name ) { mName = _name; }
-        Eigen::VectorXd getPose();
-        virtual void setPose(const Eigen::VectorXd&, bool bCalcTrans = true, bool bCalcDeriv = true);
-        Eigen::VectorXd getConfig(std::vector<int> _id);
-        void setConfig(std::vector<int> _id, Eigen::VectorXd _vals, bool _calcTrans = true, bool _calcDeriv = true);
-        Eigen::MatrixXd getJacobian(BodyNode* _bd, Eigen::Vector3d& _localOffset);
+    // inline access functions
+    inline int getNumDofs() const { return mDofs.size(); }
+    inline int getNumNodes() const { return mNodes.size(); }
+    inline int getNumMarkers() const { return mMarkers.size(); }
+    inline int getNumJoints() const { return mJoints.size();}
+    inline Dof* getDof(int _i) { return mDofs[_i]; }
+    inline BodyNode* getNode(int _i) const { return mNodes[_i]; }
+    inline BodyNode* getRoot() { return mRoot; }
+    BodyNode* getNode(const char* const _name) const;
+    int getNodeIndex(const char* const _name) const;
+    inline Joint* getJoint(int _i) const { return mJoints[_i]; }
+    Joint* getJoint(const char* const _name) const;
+    int getJointIndex(const char* const _name) const;
 
-        void draw(renderer::RenderInterface* _ri = NULL, const Eigen::Vector4d& _color=Eigen::Vector4d::Ones(), bool _useDefaultColor = true) const;
-        void drawMarkers(renderer::RenderInterface* _ri = NULL, const Eigen::Vector4d& _color=Eigen::Vector4d::Ones(), bool _useDefaultColor = true ) const;
+    inline Marker* getMarker(int _i) { return mMarkers[_i]; }
+    inline double getMass() { return mMass; }
+    Eigen::Vector3d getWorldCOM();
+    inline std::string getName() { return mName; }
+    inline void setName( std::string _name ) { mName = _name; }
+    Eigen::VectorXd getPose();
+    virtual void setPose(const Eigen::VectorXd&, bool bCalcTrans = true, bool bCalcDeriv = true);
+    Eigen::VectorXd getConfig(std::vector<int> _id);
+    void setConfig(std::vector<int> _id, Eigen::VectorXd _vals, bool _calcTrans = true, bool _calcDeriv = true);
+    Eigen::MatrixXd getJacobian(BodyNode* _bd, Eigen::Vector3d& _localOffset);
 
-    protected:
-        std::string mName;
-        std::vector<Marker*> mMarkers;
-        std::vector<Dof*> mDofs;
-        std::vector<Transformation*> mTransforms;
-        std::vector<BodyNode*> mNodes;
-        std::vector<Joint*> mJoints;
-        double mMass;
-    };
+    void draw(renderer::RenderInterface* _ri = NULL, const Eigen::Vector4d& _color=Eigen::Vector4d::Ones(), bool _useDefaultColor = true) const;
+    void drawMarkers(renderer::RenderInterface* _ri = NULL, const Eigen::Vector4d& _color=Eigen::Vector4d::Ones(), bool _useDefaultColor = true ) const;
+
+protected:
+    std::string mName;
+    std::vector<Marker*> mMarkers;
+    std::vector<Dof*> mDofs;
+    std::vector<Transformation*> mTransforms;
+    std::vector<BodyNode*> mNodes;
+    std::vector<Joint*> mJoints;
+    double mMass;
+};
 
 } // namespace kinematics
 

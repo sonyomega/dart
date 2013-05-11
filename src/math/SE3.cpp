@@ -100,15 +100,17 @@ const se3& se3::operator=(const se3& _V)
     }
 }
 
-double& operator()(int _i)
-{
+//double& se3::operator()(int _i)
+//{
+//    assert(0 <= _i && _i <= 5);
 
-}
+//    return mw[_i];
+//}
 
-const double& operator()(int _i) const
-{
+//const double& se3::operator()(int _i) const
+//{
 
-}
+//}
 
 se3 se3::operator+(void) const
 {
@@ -458,7 +460,11 @@ SE3::SE3(const Eigen::Matrix4d& _T)
     : mRotation(_T.topLeftCorner<3,3>()),
       mPosition(_T.topRightCorner<3,1>())
 {
+    assert(_T(3,0) == 0);
+    assert(_T(3,1) == 0);
+    assert(_T(3,2) == 0);
 
+    assert(_T(3,3) == 1);
 }
 
 SE3::SE3(const SO3& _R, const Eigen::Vector3d& _p)
@@ -579,7 +585,7 @@ TSE3 SE3::operator*(const TSE3& _dT) const
     //        = | R1 * R2   R1 * p2 |
     //          |       0         0 |
 
-    return TSE3(mRotation * _dT.mRotation,
+    return TSE3(mRotation.getMatrix() * _dT.mRotation,
                 mRotation * _dT.mPosition);
 }
 
@@ -622,12 +628,14 @@ void SE3::setValues(double _R00, double _R01, double _R02,
 
 void SE3::setExp(const so3& _w)
 {
+	// TODO: use SE3::setExp(const se3& _s)
 	mRotation.setExp(_w);
 	mPosition.setZero();
 }
 
 void SE3::setExp(const so3& _w, double _theta)
 {
+	// TODO: use SE3::setExp(const se3& _s, double _theta)
 	mRotation.setExp(_w, _theta);
 	mPosition.setZero();
 }
@@ -680,33 +688,35 @@ void SE3::setExp(const se3& _S, double _theta)
 {
 	// TODO: Need document
 
-	double s2[] = { _S[0] * _S[0], _S[1] * _S[1], _S[2] * _S[2] };
 
-	if ( fabs(s2[0] + s2[1] + s2[2] - 1.0) > LIEGROUP_EPS )
-	{
-		return setExp(_theta * _S);
-	}
 
-	double st = sin(_theta),
-			vt = 1.0 - cos(_theta),
-			ut = (_theta - st) * (_S[0] * _S[3] + _S[1] * _S[4] + _S[2] * _S[5]),
-			sts[] = { st * _S[0], st * _S[1], st * _S[2] };
+//	double s2[] = { _S[0] * _S[0], _S[1] * _S[1], _S[2] * _S[2] };
 
-	mRotation(0,0) = 1.0 + vt * (s2[0] - 1.0);
-	mRotation(1,0) = vt * _S[0] * _S[1] + sts[2];
-	mRotation(2,0) = vt * _S[0] * _S[2] - sts[1];
+//	if ( fabs(s2[0] + s2[1] + s2[2] - 1.0) > LIEGROUP_EPS )
+//	{
+//		return setExp(_theta * _S);
+//	}
 
-	mRotation(0,1) = vt * _S[0] * _S[1] - sts[2];
-	mRotation(1,1) = 1.0 + vt * (s2[1] - 1.0);
-	mRotation(2,1) = vt * _S[1] * _S[2] + sts[0];
+//	double st = sin(_theta),
+//			vt = 1.0 - cos(_theta),
+//			ut = (_theta - st) * (_S[0] * _S[3] + _S[1] * _S[4] + _S[2] * _S[5]),
+//			sts[] = { st * _S[0], st * _S[1], st * _S[2] };
 
-	mRotation(0,2) = vt * _S[0] * _S[2] + sts[1];
-	mRotation(1,2) = vt * _S[1] * _S[2] - sts[0];
-	mRotation(2,2) = 1.0 + vt * (s2[2] - 1.0);
+//	mRotation(0,0) = 1.0 + vt * (s2[0] - 1.0);
+//	mRotation(1,0) = vt * _S[0] * _S[1] + sts[2];
+//	mRotation(2,0) = vt * _S[0] * _S[2] - sts[1];
 
-	mRotation(0,3) = st * _S[3] + ut * _S[0] + vt * (_S[1] * _S[5] - _S[2] * _S[4]);
-	mRotation(1,3) = st * _S[4] + ut * _S[1] + vt * (_S[2] * _S[3] - _S[0] * _S[5]);
-	mRotation(2,3) = st * _S[5] + ut * _S[2] + vt * (_S[0] * _S[4] - _S[1] * _S[3]);
+//	mRotation(0,1) = vt * _S[0] * _S[1] - sts[2];
+//	mRotation(1,1) = 1.0 + vt * (s2[1] - 1.0);
+//	mRotation(2,1) = vt * _S[1] * _S[2] + sts[0];
+
+//	mRotation(0,2) = vt * _S[0] * _S[2] + sts[1];
+//	mRotation(1,2) = vt * _S[1] * _S[2] - sts[0];
+//	mRotation(2,2) = 1.0 + vt * (s2[2] - 1.0);
+
+//	mRotation(0,3) = st * _S[3] + ut * _S[0] + vt * (_S[1] * _S[5] - _S[2] * _S[4]);
+//	mRotation(1,3) = st * _S[4] + ut * _S[1] + vt * (_S[2] * _S[3] - _S[0] * _S[5]);
+//	mRotation(2,3) = st * _S[5] + ut * _S[2] + vt * (_S[0] * _S[4] - _S[1] * _S[3]);
 }
 
 void SE3::setIdentity()
@@ -724,13 +734,14 @@ void SE3::setInverse()
 	//        = |     0       1 |
 	//
 
-	mRotation = mRotation.transpose();		// R^{T}
+	//mRotation = mRotation.transpose();		// R^{T}
+	mRotation = mRotation.getInverse();		// R^{T}
 	mPosition = -(mRotation * mPosition);	// -R^{T} * p
 }
 
 SE3 SE3::getInverse() const
 {
-	return SE3(mRotation.transpose(), -mRotation.transpose() * mPosition);
+	return SE3(mRotation.getInverse(), -(mRotation.getInverse() * mPosition));
 }
 
 //Eigen::Vector3d SE3::operator%(const Eigen::Vector3d& _q) const
@@ -749,110 +760,7 @@ Eigen::Matrix4d SE3::getMatrix() const
 }
 
 
-//==============================================================================
 
-//==============================================================================
-so3::so3()
-    : mw(Eigen::Vector3d::Zero())
-{
-}
-
-so3::so3(const Eigen::Vector3d& _w)
-    : mw(_w)
-{
-
-}
-
-so3::so3(double _w0, double _w1, double _w2)
-{
-    mw << _w0, _w1, _w2;
-}
-
-so3::~so3()
-{
-}
-
-const so3& so3::operator=(const so3& _w)
-{
-    if (this != & _w)
-    {
-        mw = _w.mw;
-    }
-
-    return *this;
-}
-
-double& so3::operator [] (int i)
-{
-    return _w[i];
-}
-
-const double& so3::operator [] (int i) const
-{
-    return _w[i];
-}
-
-so3 so3::operator+(void) const
-{
-    return *this;
-}
-
-so3 so3::operator-(void) const
-{
-    return so3(-mw);
-}
-
-const so3& so3::operator+=(const so3& _w)
-{
-    mw += _w.mw;
-    return *this;
-}
-
-const so3& so3::operator-=(const so3& _w)
-{
-    mw -= _w.mw;
-    return *this;
-}
-
-const so3& so3::operator*=(double _c)
-{
-    mw *= _c;
-    return *this;
-}
-
-so3 so3::operator+(const so3& _w) const
-{
-    return so3(mw + _w.mw);
-}
-
-so3 so3::operator-(const so3& _w) const
-{
-    return so3(mw - _w.mw);
-}
-
-so3 so3::operator*(double _c) const
-{
-    return so3(mw * _c);
-}
-
-Eigen::Matrix3d so3::getSkewSymmetrixMatrix() const
-{
-    Eigen::Matrix3d result;
-
-    result(0, 1) = -v(2);
-    result(1, 0) =  v(2);
-    result(0, 2) =  v(1);
-    result(2, 0) = -v(1);
-    result(1, 2) = -v(0);
-    result(2, 1) =  v(0);
-
-    return result;
-}
-
-so3 operator*(double _c, const so3& _w)
-{
-    return so3(_c * _w.mw);
-}
 
 //==============================================================================
 TSE3::TSE3()
@@ -942,7 +850,7 @@ const TSE3& TSE3::operator*=(const SE3& _T)
     //            |       0              0 |
 
     mPosition = mRotation * _T.mPosition + mPosition;
-    mRotation = mRotation * _T.mRotation;
+    mRotation = mRotation * _T.mRotation.getMatrix();
 
     return  *this;
 }
@@ -993,7 +901,7 @@ TSE3 TSE3::operator*(const SE3& _T) const
     //            = | R1 * R2   R1 * p2 + p1 |
     //              |       0              0 |
 
-    return TSE3(mRotation * _T.mRotation,
+    return TSE3(mRotation * _T.mRotation.getMatrix(),
                 mRotation * _T.mPosition + mPosition);
 }
 

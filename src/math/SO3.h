@@ -46,17 +46,8 @@
 
 namespace math
 {
-
-// TODO: Is here right place?
-typedef Matrix<double, 6, 1> Vector6d;
-
-class Inertia; // Inertia with cog offset (6x6 matrix)
-class so3;
-class SO3; // Special orthogonal group (3x3 rotation matrix)
-class se3;
-class dse3;
-class SE3; // Special Euclidean group (4x4 transformation matrix)
-class TSE3;
+class so3; // Lie algebra of SO(3)
+class SO3; // SO(3), Special orthogonal group (3x3 rotation matrix)
 
 //==============================================================================
 /// @brief
@@ -135,6 +126,9 @@ public:
     void setNormalize(void) { mw.normalize(); }
 
     /// @brief
+    void setFromSkewSymmetrixMatrix(const Eigen::Matrix3d& _ssm);
+
+    /// @brief
     Eigen::Matrix3d getSkewSymmetrixMatrix(void) const;
 
     /// @brief
@@ -152,6 +146,7 @@ private:
     friend class se3;
     friend class dse3;
     friend class SO3;
+    friend class SE3;
 };
 
 //==============================================================================
@@ -166,12 +161,12 @@ public: // Constructors and destructor
     SO3();
     
     /// @brief
-    SO3(const Eigen::Matrix3d& _rotation);
+    explicit SO3(const Eigen::Matrix3d& _rotation);
     
-    /// @brief
-    explicit SO3(const Eigen::Vector3d& _axisX,
-                 const Eigen::Vector3d& _axisY,
-                 const Eigen::Vector3d& _axisZ);
+//    /// @brief
+//    explicit SO3(const Eigen::Vector3d& _axisX,
+//                 const Eigen::Vector3d& _axisY,
+//                 const Eigen::Vector3d& _axisZ);
     
     /// @brief
     explicit SO3(double _R00, double _R01, double _R02,

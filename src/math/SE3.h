@@ -49,6 +49,11 @@
 namespace math
 {
 
+class se3;  // se(3), Lie algebra of SE(3)
+class dse3; // se*(3), Dual space of se(3)
+class SE3;  // SE(3), Special Euclidean group
+class TSE3; // TSE(3), Tangential space of SE(3)
+
 // TODO: Is here right place?
 typedef Matrix<double, 6, 1> Vector6d;
 
@@ -60,7 +65,9 @@ typedef Matrix<double, 6, 1> Vector6d;
 /// velocity and angular velocity.
 class se3
 {
-public: // Constructors and destructor
+public:
+    // CONSTRUCTORS AND DESTRUCTOR ---------------------------------------------
+
     // Aligned allocator for Eigen member variable.
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
@@ -90,7 +97,9 @@ public: // Constructors and destructor
     /// @brief Default destructor.
     virtual ~se3();
 
-public: // Operators
+public:
+    // OPERATORS ---------------------------------------------------------------
+
     /// @brief Substitution operator.
     const se3& operator=(const se3& _V);
 
@@ -100,11 +109,11 @@ public: // Operators
     /// @brief Const Casting operator.
     const se3* operator&() const { return this; }
 
-    /// @brief Access to the idx th element.
-    double& operator()(int _i);
+//    /// @brief Access to the idx th element.
+//    double& operator()(int _i);
 
-    /// @brief Access to the idx th element.
-    const double& operator()(int _i) const;
+//    /// @brief Access to the idx th element.
+//    const double& operator()(int _i) const;
 
     /// @brief Unary plus operator.
     se3 operator+(void) const;
@@ -181,11 +190,11 @@ public:
     
 protected:
     /// @brief
-    Eigen::Vector3d mLinear;
-    
-    /// @brief
     so3 mAngular;
 
+    /// @brief
+    Eigen::Vector3d mLinear;
+    
 private:
 };
 
