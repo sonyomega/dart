@@ -57,6 +57,20 @@ class TSE3; // TSE(3), Tangential space of SE(3)
 // TODO: Is here right place?
 typedef Matrix<double, 6, 1> Vector6d;
 
+/// @brief Transform the reference frame of the generalized velocity
+/// (angular velocity + linear velocity) from frame 2 to frame 1.
+/// @param[in] _T12 Transformation matrix from frame 1 to frame 2.
+/// @param[in] _vel2 Generalized velocity represented in frame 2.
+/// @return Generalized velocity represented in frame 1.
+se3 Ad(const SE3& _T12, const se3& _vel2);
+
+/// @brief Transform the reference frame of the generalized velocity
+/// (angular velocity + linear velocity) from frame 1 to frame 2.
+/// @param[in] _T12 Transformation matrix from frame 1 to frame 2.
+/// @param[in] _vel1 Generalized velocity represented in frame 1.
+/// @return Generalized velocity represented in frame 2.
+//se3 InvAd(const SE3& _T21, const se3& _vel2);
+
 //==============================================================================
 /// @brief se3 is a class for representing \f$se(3)\f$, the Lie algebra of
 /// \f$SE(3)\f$.
@@ -152,7 +166,7 @@ public:
     TSE3 operator*(const SE3& _T) const;
 
     /// @brief Multiplication operator.
-    TSE3 operator*(const TSE3& _dT) const;
+    //TSE3 operator*(const TSE3& _dT) const;
 
     /// @brief double multiplication operator.
     friend se3 operator*(double _c, const se3& _V);
@@ -450,7 +464,7 @@ private:
 
 //==============================================================================
 /// @class TSE3
-/// @brief Derivative of special Euclidean group
+/// @brief Tangent space of SE(3) which consist of se(3) and SE(3)
 class TSE3
 {
 public: // CONSTRUCTORS AND DESTRUCTOR -----------------------------------------
@@ -460,20 +474,11 @@ public: // CONSTRUCTORS AND DESTRUCTOR -----------------------------------------
     /// @brief Copy constructor.
     TSE3(const TSE3& _dT);
     
-    /// @brief Constructor rotation and position part.
-    explicit TSE3(double _R00, double _R01, double _R02,
-                  double _R10, double _R11, double _R12,
-                  double _R20, double _R21, double _R22,
-                  double _p0, double _p1, double _p2);
-    
     /// @brief
-    explicit TSE3(const Eigen::Matrix3d& _R, const Eigen::Vector3d& _p);
-    
+    explicit TSE3(const se3& _S, const SE3& _T);
+
     /// @brief
-    explicit TSE3(const Eigen::Matrix3d& _R);
-    
-    /// @brief
-    explicit TSE3(const Eigen::Vector3d& _p);
+    explicit TSE3(const SE3& _T, const se3& _S);
     
     /// @brief Default destructor.
     ~TSE3();
@@ -489,7 +494,7 @@ public: // OPERATORS -----------------------------------------------------------
     const TSE3* operator&() const { return this; }
     
     /// @brief Multiplication operator.
-    const TSE3& operator*=(const TSE3& _dT);
+    //const TSE3& operator*=(const TSE3& _dT);
     
     /// @brief Multiplication operator.
     const TSE3& operator*=(const SE3& _T);
@@ -498,7 +503,7 @@ public: // OPERATORS -----------------------------------------------------------
     const TSE3& operator*=(const se3& _S);
     
     /// @brief Multiplication operator.
-    TSE3 operator*(const TSE3& _dT) const;
+    //TSE3 operator*(const TSE3& _dT) const;
     
     /// @brief Multiplication operator.
     TSE3 operator*(const SE3& _T) const;
@@ -506,50 +511,17 @@ public: // OPERATORS -----------------------------------------------------------
     /// @brief Multiplication operator.
     TSE3 operator*(const se3& _S) const;
     
-    /// @brief Multiplication operator.
-    Eigen::Vector3d operator*(const Eigen::Vector3d& _p) const;
-    
 public: //----------------------------------------------------------------------
-    /// @brief Set values.
-    void setValues(double _R00, double _R01, double _R02,
-                   double _R10, double _R11, double _R12,
-                   double _R20, double _R21, double _R22,
-                   double _p0, double _p1, double _p2);
-    
-    /// @brief Set value.
-    void setRotation(int _i, int _j, double _val);
-
-    /// @brief
-    double getRotation(int _i, int _j) const;
-
-    /// @brief
-    void setPosition(int _i, double _val);
-
-    /// @brief
-    double getPosition(int _i);
-
     /// @brief
     void setZero(void);
     
-    /// @brief Set rotation part.
-    void setRotation(const Eigen::Matrix3d& _R);
-    
-    /// @brief Get rotation part. */
-    const Eigen::Matrix3d& getRotation(void) const;
-    
-    /// @brief Set position part.
-    void setPosition(const Eigen::Vector3d& _p);
-    
-    /// @brief Get position part. */
-    const Eigen::Vector3d& getPosition(void) const;
-    
 private: //---------------------------------------------------------------------
     /// @brief
-    Eigen::Matrix3d mRotation;
-    
+    se3 mS;
+
     /// @brief
-    Eigen::Vector3d mPosition;
-    
+    SE3 mT;
+
     friend class SE3;
 };
 

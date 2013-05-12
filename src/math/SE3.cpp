@@ -42,6 +42,48 @@ namespace math
 
 #define LIEGROUP_EPS 10e-9
 
+se3 Ad(const SE3& _T12, const se3& _vel2)
+{
+    // _T12 = | R p |, vel1 = | w1 |, _vel2 = | w2 |
+    //        | 0 1 |         | v1 |          | v2 |
+    //
+    // vel1 = Ad(_T12, _vel2)
+    //      = Ad(_T12) * _vel2
+    //      = | R    0 | * | w2 |
+    //        | [p]R R | * | v2 |
+    //      = | Rw2         |
+    //        | [p]Rw2 + Rv2 |
+    // w1 = R * w2
+    // v1 = [p]R * w2 + R * v2
+
+    se3 vel1;
+
+    vel1.setAngular(_T12.getRotation() * _vel2.getAngular());
+    vel1.setLinear(_T12.getPosition().cross(vel1.getAngular().getVector())
+                   + _T12.getRotation() * _vel2.getLinear());
+
+    return vel1;
+}
+
+//se3 InvAd(const SE3& _T21, const se3& _vel2)
+//{
+//    se3 vel1;
+
+//    // _T21 = | R p |, vel1 = | w1 |, _vel2 = | w2 |
+//    //        | 0 1 |         | v1 |          | v2 |
+//    //
+//    // vel1 = Ad(_T12, _vel2)
+//    //      = Ad(_T12) * _vel2
+//    //      = | R    0 | * | w2 |
+//    //        | [p]R R | * | v2 |
+//    //      = | Rw2         |
+//    //        | [p]Rw2 + Rv2 |
+//    // w1 = R * w2
+//    // v1 = [p]R * w2 + R * v2
+
+//    return vel1;
+//}
+
 //==============================================================================
 se3::se3()
     : mAngular(Eigen::Vector3d::Zero()),
@@ -191,27 +233,28 @@ TSE3 se3::operator*(const SE3& _T) const
 
     const Eigen::Matrix3d& wSkewSymmetric = mAngular.getSkewSymmetrixMatrix();
 
-    return TSE3(wSkewSymmetric * _T.getRotation().getMatrix(),
-                wSkewSymmetric * _T.getPosition() + mLinear);
+//    return TSE3(wSkewSymmetric * _T.getRotation().getMatrix(),
+//                wSkewSymmetric * _T.getPosition() + mLinear);
+    return TSE3(*this, _T);
 }
 
-TSE3 se3::operator*(const TSE3& _dT) const
-{
-    // Let,
-    //     this = | [w] v |, _dT = | R p |
-    //            |  0  0 |        | 0 0 |
-    // Then,
-    //     return  = | [w] v | * | R p |
-    //               |  0  0 |   | 0 0 |
-    //
-    //             = | [w] * R   [w] * p |
-    //               |       0         0 |
+//TSE3 se3::operator*(const TSE3& _dT) const
+//{
+//    // Let,
+//    //     this = | [w] v |, _dT = | R p |
+//    //            |  0  0 |        | 0 0 |
+//    // Then,
+//    //     return  = | [w] v | * | R p |
+//    //               |  0  0 |   | 0 0 |
+//    //
+//    //             = | [w] * R   [w] * p |
+//    //               |       0         0 |
 
-    const Eigen::Matrix3d& wSkewSymmetric = mAngular.getSkewSymmetrixMatrix();
+//    const Eigen::Matrix3d& wSkewSymmetric = mAngular.getSkewSymmetrixMatrix();
 
-    return TSE3(wSkewSymmetric * _dT.getRotation(),
-                wSkewSymmetric * _dT.getPosition());
-}
+//    return TSE3(wSkewSymmetric * _dT.getRotation(),
+//                wSkewSymmetric * _dT.getPosition());
+//}
 
 se3 operator * (double _c, const se3& _V)
 {
@@ -585,8 +628,7 @@ TSE3 SE3::operator*(const TSE3& _dT) const
     //        = | R1 * R2   R1 * p2 |
     //          |       0         0 |
 
-    return TSE3(mRotation.getMatrix() * _dT.mRotation,
-                mRotation * _dT.mPosition);
+    return TSE3( Ad(_dT.mT, _dT.mS), _dT.mT * (*this));
 }
 
 //SE3 SE3::operator/(const SE3& _T) const
@@ -764,8 +806,6 @@ Eigen::Matrix4d SE3::getMatrix() const
 
 //==============================================================================
 TSE3::TSE3()
-    : mRotation(Eigen::Matrix3d::Identity()),
-      mPosition(Eigen::Vector3d::Zero())
 {
 }
 
@@ -774,37 +814,18 @@ TSE3::~TSE3()
 }
 
 TSE3::TSE3(const TSE3& _dT)
-    : mRotation(_dT.mRotation),
-      mPosition(_dT.mPosition)
+    : mS(_dT.mS),
+      mT(_dT.mT)
 {
 }
 
-TSE3::TSE3(double _R00, double _R01, double _R02,
-           double _R10, double _R11, double _R12,
-           double _R20, double _R21, double _R22,
-           double _p0, double _p1, double _p2)
-{
-	setValues(_R00, _R01, _R02,
-			  _R10, _R11, _R12,
-			  _R20, _R21, _R22,
-			  _p0, _p1, _p2);
-}
-
-TSE3::TSE3(const Eigen::Matrix3d& _R, const Eigen::Vector3d& _p)
-    : mRotation(_R),
-      mPosition(_p)
+TSE3::TSE3(const se3& _S, const SE3& _T)
+    : mS(_S), mT(_T)
 {
 }
 
-TSE3::TSE3(const Eigen::Matrix3d& _R)
-    : mRotation(_R),
-      mPosition(Eigen::Vector3d::Zero())
-{
-}
-
-TSE3::TSE3(const Eigen::Vector3d& _p)
-    : mRotation(Eigen::Matrix3d::Zero()),
-      mPosition(_p)
+TSE3::TSE3(const SE3& _T, const se3& _S)
+//    : mS()
 {
 }
 
@@ -812,30 +833,30 @@ const TSE3 &TSE3::operator=(const TSE3& _dT)
 {
     if (this != &_dT)
     {
-        mRotation = _dT.mRotation;
-        mPosition = _dT.mPosition;
+        mS = _dT.mS;
+        mT = _dT.mT;
     }
 
     return (*this);
 }
 
-const TSE3& TSE3::operator*=(const TSE3& _dT)
-{
-    // Let,
-    //     this = | R1 p1 |, _dT = | R2 p2 |
-    //            |  0  0 |        |  0  0 |
-    // Then,
-    //     this = | R1 p1 | * | R2 p2 |
-    //            |  0  0 |   |  0  0 |
-    //
-    //          = | R1 * R2   R1 * p2 |
-    //            |       0         0 |
+//const TSE3& TSE3::operator*=(const TSE3& _dT)
+//{
+//    // Let,
+//    //     this = | R1 p1 |, _dT = | R2 p2 |
+//    //            |  0  0 |        |  0  0 |
+//    // Then,
+//    //     this = | R1 p1 | * | R2 p2 |
+//    //            |  0  0 |   |  0  0 |
+//    //
+//    //          = | R1 * R2   R1 * p2 |
+//    //            |       0         0 |
 
-    mPosition = mRotation * _dT.mPosition;
-    mRotation = mRotation * _dT.mRotation;
+//    mPosition = mRotation * _dT.mPosition;
+//    mRotation = mRotation * _dT.mRotation;
 
-    return *this;
-}
+//    return *this;
+//}
 
 const TSE3& TSE3::operator*=(const SE3& _T)
 {
@@ -849,8 +870,8 @@ const TSE3& TSE3::operator*=(const SE3& _T)
     //          = | R1 * R2   R1 * p2 + p1 |
     //            |       0              0 |
 
-    mPosition = mRotation * _T.mPosition + mPosition;
-    mRotation = mRotation * _T.mRotation.getMatrix();
+//    mPosition = mRotation * _T.mPosition + mPosition;
+//    mRotation = mRotation * _T.mRotation.getMatrix();
 
     return  *this;
 }
@@ -867,27 +888,27 @@ const TSE3& TSE3::operator*=(const se3& _S)
     //          = | R1 * [w]   R1 * v |
     //            |       0         0 |
 
-    mPosition = mRotation * _S.getLinear();
-    mRotation = mRotation * _S.getAngular().getSkewSymmetrixMatrix();
+//    mPosition = mRotation * _S.getLinear();
+//    mRotation = mRotation * _S.getAngular().getSkewSymmetrixMatrix();
 
     return  *this;
 }
 
-TSE3 TSE3::operator*(const TSE3& _dT) const
-{
-    // Let,
-    //     this = | R1 p1 |, _dT = | R2 p2 |
-    //            |  0  0 |        |  0  0 |
-    // Then,
-    //     return = | R1 p1 | * | R2 p2 |
-    //              |  0  0 |   |  0  0 |
-    //
-    //            = | R1 * R2   R1 * p2 |
-    //              |       0         0 |
+//TSE3 TSE3::operator*(const TSE3& _dT) const
+//{
+//    // Let,
+//    //     this = | R1 p1 |, _dT = | R2 p2 |
+//    //            |  0  0 |        |  0  0 |
+//    // Then,
+//    //     return = | R1 p1 | * | R2 p2 |
+//    //              |  0  0 |   |  0  0 |
+//    //
+//    //            = | R1 * R2   R1 * p2 |
+//    //              |       0         0 |
 
-    return TSE3(mRotation * _dT.mRotation,
-                mRotation * _dT.mPosition);
-}
+//    return TSE3(mRotation * _dT.mRotation,
+//                mRotation * _dT.mPosition);
+//}
 
 TSE3 TSE3::operator*(const SE3& _T) const
 {
@@ -901,8 +922,9 @@ TSE3 TSE3::operator*(const SE3& _T) const
     //            = | R1 * R2   R1 * p2 + p1 |
     //              |       0              0 |
 
-    return TSE3(mRotation * _T.mRotation.getMatrix(),
-                mRotation * _T.mPosition + mPosition);
+//    return TSE3(mRotation * _T.mRotation.getMatrix(),
+//                mRotation * _T.mPosition + mPosition);
+    return TSE3(mS, mT * _T);
 }
 
 TSE3 TSE3::operator*(const se3& _S) const
@@ -917,98 +939,20 @@ TSE3 TSE3::operator*(const se3& _S) const
     //             = | R1 * [w]   R1 * v |
     //               |       0         0 |
 
-    const Eigen::Matrix3d& wSkeySymemetrix
-            = _S.getAngular().getSkewSymmetrixMatrix();
-    const Eigen::Vector3d& v
-            = _S.getLinear();
+//    const Eigen::Matrix3d& wSkeySymemetrix
+//            = _S.getAngular().getSkewSymmetrixMatrix();
+//    const Eigen::Vector3d& v
+//            = _S.getLinear();
 
-    return TSE3(mRotation * wSkeySymemetrix,
-                mRotation * v);
-}
-
-Eigen::Vector3d TSE3::operator*(const Eigen::Vector3d& _p) const
-{
-    // Let,
-    //     this = | R1 p1 |, _p = | p |
-    //            |  0  0 |       | 1 |
-    // Then,
-    //     return  = | R1 p1 | * | p |
-    //               |  0  0 |   | 1 |
-    //
-    //             = | R1 * p + p1 |
-    //               |           0 |
-
-    return (mRotation * _p + mPosition);
-}
-
-void TSE3::setValues(double _R00, double _R01, double _R02,
-                     double _R10, double _R11, double _R12,
-                     double _R20, double _R21, double _R22,
-                     double _p0, double _p1, double _p2)
-{
-	mRotation << _R00, _R01, _R02,
-			_R10, _R11, _R12,
-			_R20, _R21, _R22;
-
-	mPosition << _p0, _p1, _p2;
-}
-
-void TSE3::setRotation(int _i, int _j, double _val)
-{
-	assert(0 <= _i && _i <= 2);
-	assert(0 <= _j && _j <= 2);
-
-	mRotation(_i, _j) = _val;
-}
-
-double TSE3::getRotation(int _i, int _j) const
-{
-	assert(0 <= _i && _i <= 2);
-	assert(0 <= _j && _j <= 2);
-
-	return mRotation(_i, _j);
-}
-
-void TSE3::setPosition(int _i, double _val)
-{
-	assert(0 <= _i && _i <= 2);
-
-	mPosition(_i) = _val;
-}
-
-double TSE3::getPosition(int _i)
-{
-	assert(0 <= _i && _i <= 2);
-
-	return mPosition(_i);
+//    return TSE3(mRotation * wSkeySymemetrix,
+//                mRotation * v);
 }
 
 void TSE3::setZero()
 {
-	mRotation.setZero();
-	mPosition.setZero();
+	mS.setZero();
+	mT.setIdentity();
 }
-
-void TSE3::setRotation(const Eigen::Matrix3d& _R)
-{
-	mRotation = _R;
-}
-
-const Eigen::Matrix3d& TSE3::getRotation() const
-{
-	return mRotation;
-}
-
-void TSE3::setPosition(const Eigen::Vector3d& _p)
-{
-	mPosition = _p;
-}
-
-const Eigen::Vector3d& TSE3::getPosition() const
-{
-	return mPosition;
-}
-
 
 } // namespace math
 

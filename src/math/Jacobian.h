@@ -48,18 +48,6 @@
 namespace math
 {
 
-// TODO: Is here right place?
-typedef Matrix<double, 6, 1> Vector6d;
-
-class Inertia; // Inertia with cog offset (6x6 matrix)
-class so3;
-class SO3; // Special orthogonal group (3x3 rotation matrix)
-class se3;
-class dse3;
-class SE3; // Special Euclidean group (4x4 transformation matrix)
-class TSE3;
-
-
 //==============================================================================
 class Jacobian
 {
