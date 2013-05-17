@@ -424,8 +424,8 @@ namespace renderer {
     		break;
     	case kinematics::Shape::P_CYLINDER:
     		break;
-    	case kinematics::Shape::P_ELLIPSOID:
-    		break;
+        case kinematics::Shape::P_ELLIPSOID:
+            break;
     	case kinematics::Shape::P_MESH:
     		//FIXME: Separate these calls once BodyNode is refactored to contain
     		// both a col Shape and vis Shape.
@@ -517,8 +517,8 @@ namespace renderer {
     	case kinematics::Shape::P_CYLINDER:
     		//FIXME: We are not in a glut instance
 	        drawCylinder( ((kinematics::ShapeCylinder*)_shape)->getRadius(), ((kinematics::ShapeCylinder*)_shape)->getHeight() );
-    		break;
-    	case kinematics::Shape::P_ELLIPSOID:
+            break;
+        case kinematics::Shape::P_ELLIPSOID:
     		//FIXME: We are not in a glut instance
     		drawEllipsoid(_shape->getDim());
     		break;

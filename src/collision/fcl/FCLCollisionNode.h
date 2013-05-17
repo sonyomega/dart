@@ -2,8 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Karen Liu <karenliu@cc.gatech.edu>
- * Date: 12/01/2011
+ * Author(s): Jeongseok Lee <jslee02@gmail.com>
+ * Date: 05/11/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,42 +35,56 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DYNAMICS_JOINTLIMIT_DYNAMICS_H
-#define DYNAMICS_JOINTLIMIT_DYNAMICS_H
+#ifndef COLLISION_FCL_CONLLISION_NODE_H
+#define COLLISION_FCL_CONLLISION_NODE_H
 
-#include <vector>
 #include <Eigen/Dense>
+#include <fcl/collision.h>
+#include <fcl/BVH/BVH_model.h>
 
-namespace lcpsolver {
-    class LCPSolver;
-} //namespace lcpsolver
+#include "collision/CollisionNode.h"
 
-namespace dynamics {
-    class SkeletonDynamics;
+namespace kinematics { class BodyNode; }
 
-    class JointLimitDynamics {
-    public:
-        JointLimitDynamics(SkeletonDynamics *_skel, double _dt);
-        virtual ~JointLimitDynamics() { };
-        void applyJointLimitTorques();
-        inline Eigen::VectorXd getConstraintForce() const { return mConstrForce; }
-    private:
-        void updateTauStar();        
-        void fillMatrices();
-        bool solve();
-        void applySolution();
-        
-        SkeletonDynamics *mSkel;
-        std::vector<int> mLimitingDofIndex; // if dof i hits upper limit, we store this information as mLimitingDofIndex.push_back(i+1), if dof i hits lower limite, mLimitingDofIndex.push_back(-(i+1));
-        double mDt; // timestep
+namespace collision {
 
-        Eigen::VectorXd mConstrForce; // solved constraint force in generalized coordinates
-        Eigen::VectorXd mTauStar;
+/// @brief
+class FCLCollisionNode : public CollisionNode
+{
+public:
+    /// @brief
+    FCLCollisionNode(kinematics::BodyNode* _bodyNode);
 
-        Eigen::MatrixXd mA;
-        Eigen::VectorXd mQBar;
-        Eigen::VectorXd mX;
-    };
-} // namespace dynamics
+    /// @brief
+    virtual ~FCLCollisionNode();
 
-#endif // DYNAMICS_JOINTLIMIT_DYNAMICS_H
+    /// @brief
+    void setCollisionGeometry(fcl::CollisionGeometry* _geom)
+    { mCollisionGeometry = _geom; }
+
+    /// @brief
+    fcl::CollisionGeometry* getCollisionGeometry() const
+    { return mCollisionGeometry; }
+
+    /// @brief
+    fcl::Transform3f getFCLTransform(void) const;
+
+protected:
+
+private:
+    /// @brief
+    fcl::CollisionGeometry* mCollisionGeometry;
+};
+
+/// @brief
+template<class BV>
+fcl::BVHModel<BV>* createMesh(float _sizeX, float _sizeY, float _sizeZ,
+                              const aiScene *_mesh);
+
+/// @brief
+template<class BV>
+fcl::BVHModel<BV>* createEllipsoid(float _sizeX, float _sizeY, float _sizeZ);
+
+} // namespace collision
+
+#endif // COLLISION_FCL2_CONLLISION_NODE_H

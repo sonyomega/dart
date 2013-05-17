@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2012, Georgia Tech Research Corporation
+ * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Ana Huaman <ahuaman3@gatech.edu>
- * Date: 2012-08-03
+ * Author(s): Jeongseok Lee <jslee02@gmail.com>
+ * Date: 05/11/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -33,32 +33,20 @@
  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  *   ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *   POSSIBILITY OF SUCH DAMAGE.
- *
- *   @file Robot.h
- *   @brief Class that describe Robot, a subclass of Skeleton
  */
 
-#ifndef __DART_ROBOTICS_ROBOT_H__
-#define __DART_ROBOTICS_ROBOT_H__
+#include "collision/CollisionNode.h"
 
-#include "dynamics/SkeletonDynamics.h"
+namespace collision
+{
 
-namespace robotics {
-
-  /**
-   * @class Robot
-   * @brief Subclass of Dynamic Skeleton
-   */
-  class Robot : public dynamics::SkeletonDynamics {
-
-  public:
-    Robot();
-    virtual ~Robot();
-
-    void setRootTransform(const Eigen::Matrix<double, 6, 1>& _pose ); /**< Set 6 values x,y,z,r,p,y */
-    Eigen::Matrix<double, 6, 1> getRootTransform(); /**< Get 6 values x,y,z,r,p,y */
-    void update(); ///< deprecated for external calls
-  };
+CollisionNode::CollisionNode(kinematics::BodyNode* _bodyNode)
+    : mBodyNode(_bodyNode) {
 }
 
-#endif /** __DART_ROBOTICS_ROBOT_H__ */
+CollisionNode::~CollisionNode() {
+}
+
+
+
+} // namespace collision
