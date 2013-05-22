@@ -49,13 +49,19 @@ namespace dart
 
 namespace kinematics { class BodyNode; }
 
-namespace dynamics {
+namespace dynamics
+{
+
 class SkeletonDynamics;
 class BodyNodeDynamics;
 
-class ConstraintDynamics {
+class ConstraintDynamics
+{
 public:
-    ConstraintDynamics(const std::vector<SkeletonDynamics*>& _skels, double _dt, double _mu = 1.0, int _d = 4);
+    ConstraintDynamics(const std::vector<SkeletonDynamics*>& _skels,
+                       double _dt,
+                       double _mu = 1.0,
+                       int _d = 4);
     virtual ~ConstraintDynamics();
 
     void reset();

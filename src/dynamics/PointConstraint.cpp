@@ -15,7 +15,9 @@ namespace dart
 namespace dynamics
 {
 
-PointConstraint::PointConstraint(BodyNodeDynamics *_body, Vector3d _offset, Vector3d _target, int _skelIndex) {
+PointConstraint::PointConstraint(BodyNodeDynamics *_body, Vector3d _offset,
+                                 Vector3d _target, int _skelIndex)
+{
     mBody = _body;
     mOffset = _offset;
     mTarget = _target;
@@ -24,10 +26,15 @@ PointConstraint::PointConstraint(BodyNodeDynamics *_body, Vector3d _offset, Vect
     mNumRows = 3;
 }
 
-PointConstraint::~PointConstraint() {
+PointConstraint::~PointConstraint()
+{
 }
 
-void PointConstraint::updateDynamics(std::vector<Eigen::MatrixXd> & _J, Eigen::VectorXd & _C, Eigen::VectorXd & _CDot, int _rowIndex) {
+void PointConstraint::updateDynamics(std::vector<Eigen::MatrixXd>& _J,
+                                     Eigen::VectorXd& _C,
+                                     Eigen::VectorXd& _CDot,
+                                     int _rowIndex)
+{
     getJacobian();
     SkeletonDynamics *skel = (SkeletonDynamics*)mBody->getSkel();
     _J[mSkelIndex].block(_rowIndex, 0, 3, skel->getNumDofs()) = mJ;
@@ -37,8 +44,10 @@ void PointConstraint::updateDynamics(std::vector<Eigen::MatrixXd> & _J, Eigen::V
     _CDot.segment(_rowIndex, 3) = mJ * qDot;
 }
 
-void PointConstraint::getJacobian() {
-    for(int i = 0; i < mBody->getNumDependentDofs(); i++) {
+void PointConstraint::getJacobian()
+{
+    for(int i = 0; i < mBody->getNumDependentDofs(); i++)
+    {
         int dofIndex = mBody->getDependentDof(i);
         VectorXd Jcol = xformHom(mBody->getDerivWorldTransform(i), mOffset);
         mJ.col(dofIndex) = Jcol;

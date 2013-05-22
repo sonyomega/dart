@@ -44,9 +44,9 @@
 
 #include "kinematics/Dof.h"
 #include "collision/CollisionDetector.h"
+#include "dynamics/BodyNodeDynamics.h"
 #include "dynamics/ContactDynamics.h"
 #include "dynamics/ConstraintDynamics.h"
-#include "dynamics/BodyNodeDynamics.h"
 #include "simulation/World.h"
 
 namespace dart
@@ -225,20 +225,6 @@ Eigen::VectorXd World::evalDeriv()
                                    + mCollisionHandle->getTotalConstraintForce(i)
                                    );
 
-        Eigen::MatrixXd InvM = mSkeletons[i]->getInvMassMatrix();
-        Eigen::MatrixXd Cdq_G = -mSkeletons[i]->getCombinedVector();
-        Eigen::MatrixXd ExtForce = mSkeletons[i]->getExternalForces();
-        Eigen::MatrixXd IntForce = mSkeletons[i]->getInternalForces();
-        //Eigen::MatrixXd constForce = mCollisionHandle->getConstraintForce(i);
-        Eigen::MatrixXd constForce = mCollisionHandle->getTotalConstraintForce(i);
-
-        //        Eigen::VectorXd qddot = mSkeletons[i]->getMassMatrix().ldlt().solve(
-        //                                    -mSkeletons[i]->getCombinedVector()
-        //                                    + mSkeletons[i]->getExternalForces()
-        //                                    + mSkeletons[i]->getInternalForces()
-        //                                    + mCollisionHandle->getConstraintForce(i)
-        //                                    );
-        
         // set velocities
         deriv.segment(start, size) = getSkeleton(i)->get_dq() + (qddot * mTimeStep);
 
@@ -286,7 +272,8 @@ bool World::addSkeleton(dynamics::SkeletonDynamics* _skeleton)
     return true;
 }
 
-bool World::checkCollision(bool checkAllCollisions) {
+bool World::checkCollision(bool checkAllCollisions)
+{
     return mCollisionHandle->getCollisionChecker()->checkCollision(checkAllCollisions, false);
 }
 
