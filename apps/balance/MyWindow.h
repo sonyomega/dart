@@ -5,7 +5,7 @@
 #include "simulation/SimWindow.h"
 #include "Controller.h"
 
-class MyWindow : public simulation::SimWindow
+class MyWindow : public dart::simulation::SimWindow
 {
  public:
  MyWindow(): SimWindow()

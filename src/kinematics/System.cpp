@@ -37,6 +37,8 @@
 
 #include "kinematics/System.h"
 
+namespace dart
+{
 namespace kinematics
 {
 
@@ -296,3 +298,4 @@ Eigen::VectorXd System::get_tau() const
 }
 
 } // namespace kinematics
+} // namespace dart

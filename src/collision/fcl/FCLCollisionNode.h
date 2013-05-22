@@ -44,9 +44,13 @@
 
 #include "collision/CollisionNode.h"
 
+namespace dart
+{
+
 namespace kinematics { class BodyNode; }
 
-namespace collision {
+namespace collision
+{
 
 /// @brief
 class FCLCollisionNode : public CollisionNode
@@ -86,5 +90,6 @@ template<class BV>
 fcl::BVHModel<BV>* createEllipsoid(float _sizeX, float _sizeY, float _sizeZ);
 
 } // namespace collision
+} // namespace dart
 
 #endif // COLLISION_FCL2_CONLLISION_NODE_H

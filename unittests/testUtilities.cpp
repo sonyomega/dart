@@ -43,7 +43,8 @@ using namespace Eigen;
 
 /* ********************************************************************************************* */
 TEST(UTILS, ROTATION) {
-  using namespace dart_math;
+  using namespace dart;
+  using namespace math;
   
   // Create Initial ExpMap
   Vector3d axis(2.0, 1.0, 1.0);
@@ -72,10 +73,10 @@ TEST(UTILS, ROTATION) {
 /* ********************************************************************************************* */
 TEST(UTILS, UTILS) {
   // Test CR Matrix
-  EXPECT_DOUBLE_EQ(dart_math::CR(0, 1), -1.0);
+  EXPECT_DOUBLE_EQ(dart::math::CR(0, 1), -1.0);
 
   // Test randomize function
-  double x = dart_math::random(0.0, 2.0);
+  double x = dart::math::random(0.0, 2.0);
   EXPECT_LT(0.0, x);
   EXPECT_LT(x, 2.0);
 
@@ -86,7 +87,7 @@ TEST(UTILS, UTILS) {
     0.0, 0.0, 1.0, 1.0,
     0.0, 0.0, 0.0, 1.0;
   Vector3d pt(1.0, 0.5, 1.0);
-  Vector3d result = dart_math::xformHom(M, pt);
+  Vector3d result = dart::math::xformHom(M, pt);
   Vector3d expected(4.0, 2.5, 2.0);
   EXPECT_NEAR( (result - expected).norm(), 0.0, M_EPSILON)
     << "result = " << result << " expected = " << expected;

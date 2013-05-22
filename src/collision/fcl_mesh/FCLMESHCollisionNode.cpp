@@ -55,6 +55,8 @@
 #include "collision/fcl_mesh/FCLMESHCollisionDetector.h"
 #include "collision/fcl_mesh/FCLMESHCollisionNode.h"
 
+namespace dart
+{
 namespace collision
 {
 
@@ -341,6 +343,5 @@ void FCLMESHCollisionNode::drawCollisionSkeletonNode(bool _bTrans) {
     glPopMatrix();
 }
 
-
-
 } // namespace collision
+} // namespace dart

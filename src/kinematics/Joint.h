@@ -45,7 +45,10 @@
 #include "math/UtilsRotation.h"
 #include "kinematics/System.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 class Dof;
 class BodyNode;
@@ -69,13 +72,13 @@ public:
 
     enum JointType {
         J_UNKNOWN,
-        J_FREEEULER,
-        J_FREEEXPMAP,
-        J_BALLEULER,
-        J_BALLEXPMAP,
-        J_HINGE,
-        J_UNIVERSAL,
-        J_TRANS
+                J_FREEEULER,
+                J_FREEEXPMAP,
+                J_BALLEULER,
+                J_BALLEXPMAP,
+                J_HINGE,
+                J_UNIVERSAL,
+                J_TRANS
     };
 
     Joint(BodyNode* _bParent, BodyNode* _bChild, const char *_name=NULL);
@@ -92,7 +95,7 @@ public:
     void applyTransform(Eigen::Matrix4d& _m); ///< apply the local transformation to a matrix _m
 
     void computeRotationJac(Eigen::MatrixXd *_J, Eigen::MatrixXd *_Jdot, const Eigen::VectorXd *_qdot);   ///< compute the relative angular velocity jacobian i.e. w_rel = J*\dot{q_local}
-    dart_math::RotationOrder getEulerOrder(); ///< Rotation order for the euler rotation if hinge, universal or ball euler joint
+    math::RotationOrder getEulerOrder(); ///< Rotation order for the euler rotation if hinge, universal or ball euler joint
     Eigen::Vector3d getAxis(unsigned int _i);    ///< returns the i th axis of rotation accordingly when R = R2*R1*R0 (i \in {0,1,2})
 
     Eigen::Matrix4d getDeriv(const Dof* _q); ///< returns the derivative of the local transformation w.r.t. _q. Note: this function assumes _q belongs to this joint. Is _q is not in this joint, the local transformation is returned.
@@ -142,7 +145,7 @@ public:
     Eigen::MatrixXd getLocalJacobian();
 
     /// @brief
-    //dart_math::Vector6d evalLocalVelocity() const;
+    //math::Vector6d evalLocalVelocity() const;
 
     /// @brief
     void setDampingCoefficient(int _idx, double _d);
@@ -205,7 +208,7 @@ protected:
     //Eigen::MatrixXd mLocalJacobian;
 
     /// @brief
-    //dart_math::Vector6d mLocalVelocity;
+    //math::Vector6d mLocalVelocity;
 
     /// @brief
     std::vector<double> mDampingCoefficient;
@@ -218,6 +221,7 @@ private:
 };
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_JOINT_H
 

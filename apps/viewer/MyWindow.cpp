@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace Eigen;
+using namespace dart;
 using namespace kinematics;
 
 void MyWindow::displayTimer(int _val)

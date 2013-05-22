@@ -48,9 +48,10 @@
 using namespace std;
 
 /* ********************************************************************************************* */
-dynamics::SkeletonDynamics* prepareSkeleton( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
+dart::dynamics::SkeletonDynamics* prepareSkeleton( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
     using namespace std;
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
     using namespace dynamics;
 
@@ -67,16 +68,17 @@ dynamics::SkeletonDynamics* prepareSkeleton( Eigen::VectorXd& _q, Eigen::VectorX
     _q = VectorXd::Zero(skelDyn->getNumDofs());
     _qdot = VectorXd::Zero(skelDyn->getNumDofs());
     for(int i=0; i<skelDyn->getNumDofs(); i++){
-        _q[i] = dart_math::random(-1.0, 1.0);
-        _qdot[i] = dart_math::random(-5.0, 5.0);
+        _q[i] = math::random(-1.0, 1.0);
+        _qdot[i] = math::random(-5.0, 5.0);
     }
     skelDyn->initDynamics();
     return skelDyn; }
 
 /* ********************************************************************************************* */
-dynamics::SkeletonDynamics* prepareSkeletonChain( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
+dart::dynamics::SkeletonDynamics* prepareSkeletonChain( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
 	using namespace std;
 	using namespace Eigen;
+	using namespace dart;
 	using namespace kinematics;
 	using namespace dynamics;
 
@@ -98,9 +100,10 @@ dynamics::SkeletonDynamics* prepareSkeletonChain( Eigen::VectorXd& _q, Eigen::Ve
 }
 
 /* ********************************************************************************************* */
-void addExternalForces(dynamics::SkeletonDynamics* skelDyn) {
+void addExternalForces(dart::dynamics::SkeletonDynamics* skelDyn) {
     using namespace std;
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
     using namespace dynamics;
 
@@ -111,9 +114,10 @@ void addExternalForces(dynamics::SkeletonDynamics* skelDyn) {
 }
 
 /* ********************************************************************************************* */
-void addExternalForcesChain(dynamics::SkeletonDynamics* skelDyn) {
+void addExternalForcesChain(dart::dynamics::SkeletonDynamics* skelDyn) {
 	using namespace std;
 	using namespace Eigen;
+	using namespace dart;
 	using namespace kinematics;
 	using namespace dynamics;
 
@@ -124,6 +128,7 @@ void addExternalForcesChain(dynamics::SkeletonDynamics* skelDyn) {
 TEST(DYNAMICS, COMPARE_VELOCITIES) {
     using namespace std;
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
     using namespace dynamics;
 
@@ -181,6 +186,7 @@ TEST(DYNAMICS, COMPARE_VELOCITIES) {
 TEST(DYNAMICS, FINITEDIFF_ACCELERATIONS_INVERSEDYNAMICS) {
     using namespace std;
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
     using namespace dynamics;
     
@@ -235,6 +241,7 @@ TEST(DYNAMICS, FINITEDIFF_ACCELERATIONS_INVERSEDYNAMICS) {
 TEST(DYNAMICS, COMPARE_CORIOLIS) {
     using namespace std;
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
     using namespace dynamics;
 
@@ -258,6 +265,7 @@ TEST(DYNAMICS, COMPARE_CORIOLIS) {
 TEST(DYNAMICS, COMPARE_MASS) {
     using namespace std;
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
     using namespace dynamics;
     
@@ -287,6 +295,7 @@ TEST(DYNAMICS, COMPARE_MASS) {
 TEST(DYNAMICS, COMPARE_EXTERNAL_FORCES) {
     using namespace std;
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
     using namespace dynamics;
 
@@ -316,6 +325,7 @@ TEST(DYNAMICS, COMPARE_EXTERNAL_FORCES) {
 TEST(DYNAMICS, COMPARE_DYN_EXTERNAL_FORCES) {
     using namespace std;
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
     using namespace dynamics;
 
@@ -348,8 +358,9 @@ TEST(DYNAMICS, COMPARE_DYN_EXTERNAL_FORCES) {
 TEST(DYNAMICS, COMPARE_JOINT_TOQUE_W_EXTERNAL_FORCES) {
 	using namespace std;
 	using namespace Eigen;
+	using namespace dart;
 	using namespace kinematics;
-    using namespace dart_math;
+    using namespace math;
 	using namespace dynamics;
 
 	const double TOLERANCE_EXACT = 1.0e-10;

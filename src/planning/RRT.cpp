@@ -48,9 +48,11 @@
 
 using namespace std;
 using namespace Eigen;
+using namespace dart;
 using namespace simulation;
 using namespace dynamics;
 
+namespace dart {
 namespace planning {
 
 /* ********************************************************************************************* */
@@ -336,3 +338,4 @@ void RRT::draw (const RRT* t1, const RRT* t2) {
 }
 
 }	//< End of namespace
+}

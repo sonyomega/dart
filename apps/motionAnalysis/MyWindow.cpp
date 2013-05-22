@@ -7,6 +7,7 @@
 #include "Analyzer.h"
 #include <stdio.h>
 
+using namespace dart;
 using namespace dynamics;
 
 void MyWindow::initDyn()

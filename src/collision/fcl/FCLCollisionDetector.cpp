@@ -42,6 +42,8 @@
 #include "collision/fcl/FCLCollisionNode.h"
 #include "collision/fcl/FCLCollisionDetector.h"
 
+namespace dart
+{
 namespace collision
 {
 
@@ -142,3 +144,4 @@ CollisionNode* FCLCollisionDetector::findCollisionNode(
 }
 
 } // namespace collision
+} // namespace dart

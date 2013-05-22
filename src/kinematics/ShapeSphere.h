@@ -40,30 +40,34 @@
 
 #include "kinematics/Shape.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
-    class ShapeSphere : public Shape {
-    public:
-        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+class ShapeSphere : public Shape {
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-        ShapeSphere(double _radius);
+    ShapeSphere(double _radius);
 
-        inline void setRadius(double _radius) { mRadius = _radius; }
-        inline double getRadius() const { return mRadius; }
+    inline void setRadius(double _radius) { mRadius = _radius; }
+    inline double getRadius() const { return mRadius; }
 
-        void draw(renderer::RenderInterface* _ri = NULL, const Eigen::Vector4d& _col=Eigen::Vector4d::Ones(), bool _useDefaultColor = true) const;
+    void draw(renderer::RenderInterface* _ri = NULL, const Eigen::Vector4d& _col=Eigen::Vector4d::Ones(), bool _useDefaultColor = true) const;
 
-        virtual Eigen::Matrix3d computeInertia(double _mass);
+    virtual Eigen::Matrix3d computeInertia(double _mass);
 
-    private:
-        void computeVolume();
-        void initMeshes();
+private:
+    void computeVolume();
+    void initMeshes();
 
-        double mRadius;
-    public:
-    };
+    double mRadius;
+public:
+};
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_PRIMITIVE_ELLIPSOID_H
 

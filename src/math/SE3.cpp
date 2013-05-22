@@ -37,6 +37,8 @@
 
 #include "math/SE3.h"
 
+namespace dart
+{
 namespace math
 {
 
@@ -955,4 +957,4 @@ void TSE3::setZero()
 }
 
 } // namespace math
-
+} // namespace dart

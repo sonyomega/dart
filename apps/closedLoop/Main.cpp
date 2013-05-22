@@ -4,6 +4,7 @@
 
 #include "MyWindow.h"
 
+using namespace dart;
 using namespace kinematics;
 using namespace dynamics;
 

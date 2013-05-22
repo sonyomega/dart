@@ -50,6 +50,8 @@
 using namespace std;
 using namespace Eigen;
 
+namespace dart
+{
 namespace kinematics
 {
 
@@ -282,7 +284,7 @@ MatrixXd Skeleton::getJacobian(BodyNode* _bd, Vector3d& _localOffset)
     {
         int dofindex = _bd->getDependentDof(i);
         VectorXd deriv
-                = dart_math::xformHom(_bd->getDerivWorldTransform(i),
+                = math::xformHom(_bd->getDerivWorldTransform(i),
                                       _localOffset);
         J.col(dofindex) = deriv;
     }
@@ -325,3 +327,4 @@ void Skeleton::drawMarkers(renderer::RenderInterface* _ri,
 //}
 
 } // namespace kinematics
+} // namespace dart

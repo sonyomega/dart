@@ -43,7 +43,10 @@
 #include "kinematics/Dof.h"
 #include "kinematics/Joint.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 //class HingeJoint : public Joint {
 //public:
@@ -69,6 +72,7 @@ namespace kinematics {
 //};
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_HINGE_JOINT_H
 

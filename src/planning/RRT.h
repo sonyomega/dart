@@ -48,6 +48,7 @@
 #include <Eigen/Core>
 #include <flann/flann.hpp>
 
+namespace dart {
 namespace simulation { class World; }
 namespace dynamics { class SkeletonDynamics; }
 
@@ -169,4 +170,4 @@ protected:
 };
 
 }	//< End of namespace
-
+}

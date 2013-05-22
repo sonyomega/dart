@@ -3,18 +3,22 @@
 
 #include "yui/Win3D.h"
 
+namespace dart {
 namespace kinematics {
     class Skeleton;
 }
+}
 
+namespace dart {
 namespace optimizer {
     class ObjectiveBox;
     class Var;
 }
+}
 
-class MyWindow : public yui::Win3D {
+class MyWindow : public dart::yui::Win3D {
 public:
- MyWindow(kinematics::Skeleton* _skel): Win3D(), mSkel(_skel) {
+ MyWindow(dart::kinematics::Skeleton* _skel): Win3D(), mSkel(_skel) {
         mBackground[0] = 1.0;
         mBackground[1] = 1.0;
         mBackground[2] = 1.0;
@@ -30,9 +34,9 @@ public:
     virtual void displayTimer(int _val);
 
  protected:
-    kinematics::Skeleton *mSkel;
-    optimizer::ObjectiveBox *mObjBox;
-    std::vector<optimizer::Var*> mVariables;
+    dart::kinematics::Skeleton *mSkel;
+    dart::optimizer::ObjectiveBox *mObjBox;
+    std::vector<dart::optimizer::Var*> mVariables;
 
     void initIK();
     void solveIK();

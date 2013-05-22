@@ -40,29 +40,36 @@
 
 #include "Constraint.h"
 
-namespace dynamics {
-    class BodyNodeDynamics;
-    class SkeletonDynamics;
-    class ClosedLoopConstraint : public Constraint {
-    public:
-        ClosedLoopConstraint(BodyNodeDynamics *_body1, BodyNodeDynamics *_body2, Eigen::Vector3d _offset1, Eigen::Vector3d _offset2, int _skelIndex1, int _skelIndex2);
-        virtual ~ClosedLoopConstraint();
-        virtual void updateDynamics(std::vector<Eigen::MatrixXd> & _J, Eigen::VectorXd & _C, Eigen::VectorXd & _CDot, int _rowIndex);
+namespace dart
+{
+namespace dynamics
+{
 
-    private:
-        void getJacobian();
+class BodyNodeDynamics;
+class SkeletonDynamics;
 
-        BodyNodeDynamics* mBody1;
-        BodyNodeDynamics* mBody2;
-        Eigen::Vector3d mOffset1;
-        Eigen::Vector3d mOffset2;
-        Eigen::MatrixXd mJ1;
-        Eigen::MatrixXd mJ2;
+class ClosedLoopConstraint : public Constraint {
+public:
+    ClosedLoopConstraint(BodyNodeDynamics *_body1, BodyNodeDynamics *_body2, Eigen::Vector3d _offset1, Eigen::Vector3d _offset2, int _skelIndex1, int _skelIndex2);
+    virtual ~ClosedLoopConstraint();
+    virtual void updateDynamics(std::vector<Eigen::MatrixXd> & _J, Eigen::VectorXd & _C, Eigen::VectorXd & _CDot, int _rowIndex);
 
-        int mSkelIndex1;
-        int mSkelIndex2;
-    };
+private:
+    void getJacobian();
+
+    BodyNodeDynamics* mBody1;
+    BodyNodeDynamics* mBody2;
+    Eigen::Vector3d mOffset1;
+    Eigen::Vector3d mOffset2;
+    Eigen::MatrixXd mJ1;
+    Eigen::MatrixXd mJ2;
+
+    int mSkelIndex1;
+    int mSkelIndex2;
+};
+
 } // namespace dynamics
+} // namespace dart
 
 #endif // #ifndef DART_DYNAMICS_CLOSEDLOOP_CONSTRAINT_H
 

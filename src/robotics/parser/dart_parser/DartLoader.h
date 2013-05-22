@@ -15,6 +15,14 @@
 #include <robotics/parser/urdfdom_headers/urdf_model/link.h>
 #include <robotics/parser/urdfdom_headers/urdf_model/color.h>
 
+namespace urdf {
+	class ModelInterface;
+	class Link;
+	class Joint;
+}
+
+namespace dart {
+
 const bool debug = false;
 
 namespace dynamics {
@@ -27,12 +35,6 @@ namespace simulation {
 namespace kinematics {
 	class Joint;
 }
-namespace urdf {
-	class ModelInterface;
-	class Link;
-	class Joint;	 
-}
-
 
 // Type of DOF Enum
 enum TypeOfDOF {
@@ -116,5 +118,6 @@ class DartLoader {
   
 };
 
+}
 
 #endif /** DART_LOADER_H */

@@ -40,7 +40,10 @@
 
 #include "Shape.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 class ShapeEllipsoid : public Shape {
 public:
@@ -70,6 +73,7 @@ public:
 };
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_PRIMITIVE_ELLIPSOID_H
 

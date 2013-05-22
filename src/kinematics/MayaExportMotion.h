@@ -40,31 +40,37 @@
 
 #include <fstream>
 
-namespace kinematics{
-    class BodyNode;
-    class Skeleton;
-    class FileInfoDof;
+namespace dart
+{
+
+namespace kinematics
+{
+class BodyNode;
+class Skeleton;
+class FileInfoDof;
 }
 
 namespace utils {
-    namespace mayaexports {
+namespace mayaexports {
 
-        class MayaExportMotion{
-        public:
-            MayaExportMotion(kinematics::Skeleton *_skel, kinematics::FileInfoDof *_dofData){
-                mSkel = _skel;
-                mDofData = _dofData;
-            }
-            bool exportMayaAnim( const char* _fName, int _start, int _end, const std::string &_nodesPrefix, int _writeNumNodes );
+class MayaExportMotion{
+public:
+    MayaExportMotion(kinematics::Skeleton *_skel, kinematics::FileInfoDof *_dofData){
+        mSkel = _skel;
+        mDofData = _dofData;
+    }
+    bool exportMayaAnim( const char* _fName, int _start, int _end, const std::string &_nodesPrefix, int _writeNumNodes );
     
-        private:
-            kinematics::FileInfoDof *mDofData;;
-            kinematics::Skeleton *mSkel;
-            bool exportMayaAnimSegment(std::ofstream &outFile0, int _first, int _last, kinematics::BodyNode *b, const std::string &_nodesPrefix, int _writeNumNodes, int level);
-            // just write everything in common framework
-            bool exportMayaAnimSegment2(std::ofstream &outFile0, int _first, int _last, kinematics::BodyNode *_b, const std::string &_nodesPrefix, int _writeNumNodes, int level);
-        };
-    }   // namespace mayaexports
+private:
+    kinematics::FileInfoDof *mDofData;
+    kinematics::Skeleton *mSkel;
+    bool exportMayaAnimSegment(std::ofstream &outFile0, int _first, int _last, kinematics::BodyNode *b, const std::string &_nodesPrefix, int _writeNumNodes, int level);
+    // just write everything in common framework
+    bool exportMayaAnimSegment2(std::ofstream &outFile0, int _first, int _last, kinematics::BodyNode *_b, const std::string &_nodesPrefix, int _writeNumNodes, int level);
+};
+
+} // namespace mayaexports
 } // namespace utils
+} // namespace dart
 
 #endif //MAYAEXPORTS_MAYAEXPORTMOTION_H

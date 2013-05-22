@@ -45,6 +45,8 @@
 
 #include "utils/Deprecated.h"
 
+namespace dart
+{
 namespace kinematics
 {
 
@@ -197,6 +199,7 @@ protected:
 };
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_DOF_H
 

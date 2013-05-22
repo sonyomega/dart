@@ -41,7 +41,10 @@
 using namespace std;
 using namespace Eigen;
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 ShapeBox::ShapeBox(Vector3d _dim)
     : Shape(P_BOX)
@@ -78,3 +81,4 @@ void ShapeBox::computeVolume() {
 }
 
 } // namespace kinematics
+} // namespace dart

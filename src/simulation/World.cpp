@@ -49,7 +49,10 @@
 #include "dynamics/BodyNodeDynamics.h"
 #include "simulation/World.h"
 
-namespace simulation {
+namespace dart
+{
+namespace simulation
+{
 
 ////////////////////////////////////////////////////////////////////////////////
 World::World()
@@ -288,3 +291,4 @@ bool World::checkCollision(bool checkAllCollisions) {
 }
 
 } // namespace simulation
+} // namespace dart

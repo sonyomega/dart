@@ -43,8 +43,11 @@
 #include "dynamics/BodyNodeDynamics.h"
 
 using namespace Eigen;
+using namespace dart;
 using namespace kinematics;
 
+namespace dart
+{
 namespace dynamics
 {
 
@@ -68,16 +71,16 @@ void SkeletonDynamics::initDynamics()
     mCvec = VectorXd::Zero(getNumDofs());
     mG = VectorXd::Zero(getNumDofs());
     mCg = VectorXd::Zero(getNumDofs());
-//    mFint = VectorXd::Zero(getNumDofs());
-//    mFintMin = VectorXd::Zero(getNumDofs());
-//    mFintMax = VectorXd::Zero(getNumDofs());
+    //    mFint = VectorXd::Zero(getNumDofs());
+    //    mFintMin = VectorXd::Zero(getNumDofs());
+    //    mFintMax = VectorXd::Zero(getNumDofs());
     mFext = VectorXd::Zero(getNumDofs());
 
-//    for (unsigned int i = 0; i < mFint.size(); ++i)
-//    {
-//        mFintMin[i] = -std::numeric_limits<double>::infinity();
-//        mFintMax[i] = std::numeric_limits<double>::infinity();
-//    }
+    //    for (unsigned int i = 0; i < mFint.size(); ++i)
+    //    {
+    //        mFintMin[i] = -std::numeric_limits<double>::infinity();
+    //        mFintMax[i] = std::numeric_limits<double>::infinity();
+    //    }
 
     //dtdbg << "SkeletonDynamics is initialized.\n";
 }
@@ -276,9 +279,9 @@ void SkeletonDynamics::clampRotation(VectorXd& _q, VectorXd& _qdot)
                         Matrix3d omegaSkewSymmetric
                                 = jnt->getDeriv(
                                       jnt->getDof(j + 3)).topLeftCorner<3,3>()
-                                  * node->getLocalTransform().topLeftCorner<3,3>().transpose();
+                                * node->getLocalTransform().topLeftCorner<3,3>().transpose();
                         oldJwBody.col(j)
-                                = dart_math::fromSkewSymmetric(omegaSkewSymmetric);
+                                = math::fromSkewSymmetric(omegaSkewSymmetric);
                     }
 
                     // the new Jw
@@ -293,7 +296,7 @@ void SkeletonDynamics::clampRotation(VectorXd& _q, VectorXd& _qdot)
                     {
                         Matrix3d omegaSkewSymmetric
                                 = jnt->getDeriv(jnt->getDof(j + 3)).topLeftCorner<3,3>()*Tbody.topLeftCorner<3,3>().transpose();
-                        newJwBody.col(j) = dart_math::fromSkewSymmetric(omegaSkewSymmetric);
+                        newJwBody.col(j) = math::fromSkewSymmetric(omegaSkewSymmetric);
                     }
 
                     // solve new_qdot s.t. newJw*new_qdot = w
@@ -338,8 +341,8 @@ void SkeletonDynamics::clampRotation(VectorXd& _q, VectorXd& _qdot)
                     {
                         // XXX do not use node->mTq here because it's not computed if the recursive algorithm is used; instead the derivative matrix is (re)computed explicitly.
                         Matrix3d omegaSkewSymmetric = jnt->getDeriv(jnt->getDof(j)).topLeftCorner<3,3>()
-                                                      * node->getLocalTransform().topLeftCorner<3,3>().transpose();
-                        oldJwBody.col(j) = dart_math::fromSkewSymmetric(omegaSkewSymmetric);
+                                * node->getLocalTransform().topLeftCorner<3,3>().transpose();
+                        oldJwBody.col(j) = math::fromSkewSymmetric(omegaSkewSymmetric);
                     }
 
                     // the new Jw
@@ -353,7 +356,7 @@ void SkeletonDynamics::clampRotation(VectorXd& _q, VectorXd& _qdot)
                     for (int j = 0; j < 3; j++)
                     {
                         Matrix3d omegaSkewSymmetric = jnt->getDeriv(jnt->getDof(j)).topLeftCorner<3,3>()*Tbody.topLeftCorner<3,3>().transpose();
-                        newJwBody.col(j) = dart_math::fromSkewSymmetric(omegaSkewSymmetric);
+                        newJwBody.col(j) = math::fromSkewSymmetric(omegaSkewSymmetric);
                     }
 
                     // solve new_qdot s.t. newJw*new_qdot = w
@@ -406,4 +409,5 @@ void SkeletonDynamics::clearExternalForces()
         ((BodyNodeDynamics*)mNodes.at(i))->clearExternalForces();
 }
 
-}   // namespace dynamics
+} // namespace dynamics
+} // namespace dart

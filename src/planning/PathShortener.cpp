@@ -7,10 +7,12 @@
 
 using namespace std;
 using namespace Eigen;
+using namespace dart;
 using namespace simulation;
 
 #define RAND12(N1,N2) N1 + ((N2-N1) * ((double)rand() / ((double)RAND_MAX + 1))) // random # between N&M
 
+namespace dart {
 namespace planning {
 
 PathShortener::PathShortener() {}
@@ -100,5 +102,6 @@ bool PathShortener::segmentCollisionFree(list<VectorXd> &intermediatePoints, con
 	else {
 		return false;
 	}
+}
 }
 }

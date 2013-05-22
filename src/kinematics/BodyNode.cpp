@@ -51,6 +51,8 @@
 using namespace std;
 using namespace Eigen;
 
+namespace dart
+{
 namespace kinematics
 {
 
@@ -165,7 +167,7 @@ void BodyNode::updateVelocity()
 {
     // Generalized body velocity from parent link.
     if (mParentNode)
-        mBodyVelocity = dart_math::InvAd(mT, mParentNode->mBodyVelocity);
+        mBodyVelocity = math::InvAd(mT, mParentNode->mBodyVelocity);
     else
         mBodyVelocity.setZero();
 
@@ -179,7 +181,7 @@ void BodyNode::updateAcceleration()
 
     // Generalized body velocity from parent link.
     if (mParentNode)
-        mBodyVelocity = dart_math::InvAd(mT, mParentNode->mBodyAcceleration);
+        mBodyVelocity = math::InvAd(mT, mParentNode->mBodyAcceleration);
     else
         mBodyVelocity.setZero();
 
@@ -222,7 +224,7 @@ void BodyNode::evalJacLin() {
     assert(mJv.rows() == 3 && mJv.cols() == mDependentDofs.size());
 
     for (unsigned int i = 0; i < mDependentDofs.size(); i++) {
-        mJv.col(i) = dart_math::xformHom(mWq[i], mCOMLocal);
+        mJv.col(i) = math::xformHom(mWq[i], mCOMLocal);
     }
 }
 
@@ -230,7 +232,7 @@ void BodyNode::evalJacAng() {
     mJw.setZero();
     for (unsigned int i=mNumRootTrans; i<mDependentDofs.size(); i++) {
         Matrix3d omegaSkewSymmetric = mWq[i].topLeftCorner<3,3>() * mW.topLeftCorner<3,3>().transpose();  // wikipedia calls this the angular velocity tensor
-        mJw.col(i) = dart_math::fromSkewSymmetric(omegaSkewSymmetric);
+        mJw.col(i) = math::fromSkewSymmetric(omegaSkewSymmetric);
     }
 }
 
@@ -267,7 +269,7 @@ void BodyNode::evalJacobian()
     {
         Eigen::MatrixXd parentJacobian = mParentNode->getBodyJacobian();
         for (int i = 0; i < parentJacobian.cols(); ++i)
-            mBodyJacobian.col(i) = dart_math::InvAd(mT, parentJacobian.col(i));
+            mBodyJacobian.col(i) = math::InvAd(mT, parentJacobian.col(i));
     }
 
     // Bind localJacobian.
@@ -289,7 +291,7 @@ void BodyNode::evalJacobian()
 
 Vector3d BodyNode::evalWorldPos(const Vector3d& _lp) const
 {
-    return dart_math::xformHom(mW, _lp);
+    return math::xformHom(mW, _lp);
 }
 
 Matrix4d BodyNode::getLocalDeriv(Dof* _q) const
@@ -462,7 +464,7 @@ Eigen::MatrixXd BodyNode::getWorldJacobian() const
     X.topLeftCorner<3,3>() = mW.topLeftCorner<3,3>();
 
     for (int i = 0; i < worldJacobian.cols(); ++i)
-        worldJacobian.col(i) = dart_math::Ad(X, bodyJacobian.col(i));
+        worldJacobian.col(i) = math::Ad(X, bodyJacobian.col(i));
 
     return worldJacobian;
 }
@@ -483,27 +485,28 @@ void BodyNode::evalOmega(const VectorXd &_qDotSkel)
         mOmega += mJw.col(i)*_qDotSkel[mDependentDofs[i]];
 }
 
-dart_math::Vector6d BodyNode::getWorldVelocity() const
+math::Vector6d BodyNode::getWorldVelocity() const
 {
-    dart_math::Vector6d worldVelcocity;
+    math::Vector6d worldVelcocity;
 
     Eigen::Matrix4d X = Eigen::Matrix4d::Identity();
     X.topLeftCorner<3,3>() = mW.topLeftCorner<3,3>();
-    worldVelcocity = dart_math::Ad(X, mBodyVelocity);
+    worldVelcocity = math::Ad(X, mBodyVelocity);
 
     return worldVelcocity;
 }
 
-dart_math::Vector6d BodyNode::getWorldAcceleration() const
+math::Vector6d BodyNode::getWorldAcceleration() const
 {
-    dart_math::Vector6d worldAcceleration;
+    math::Vector6d worldAcceleration;
 
     Eigen::Matrix4d X = Eigen::Matrix4d::Identity();
     X.topLeftCorner<3,3>() = mW.topLeftCorner<3,3>();
-    worldAcceleration = dart_math::Ad(X, mBodyAcceleration);
+    worldAcceleration = math::Ad(X, mBodyAcceleration);
 
     return worldAcceleration;
 }
 
 } // namespace kinematics
+} // namespace dart
 

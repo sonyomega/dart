@@ -4,46 +4,66 @@
 #include "optimizer/Var.h"
 #include "math/UtilsMath.h"
 
+using namespace dart;
 using namespace kinematics;
-using namespace dart_math;
+using namespace math;
 
+namespace dart {
 namespace optimizer {
-    
-    PositionConstraint::PositionConstraint(vector<Var *>& var, Skeleton* skel, BodyNode* node, const Vector3d& offset, const Vector3d& val) : Constraint(var), mSkel(skel), mNode(node), mTarget(val), mOffset(offset) {
-        mNumRows = 3;
 
-        mWeight = VectorXd::Ones(mNumRows);
-        mConstTerm = VectorXd::Zero(mNumRows);
-        mCompletion = VectorXd::Zero(mNumRows);
-    }
+PositionConstraint::PositionConstraint(vector<Var *>& var,
+                                       Skeleton* skel,
+                                       BodyNode* node,
+                                       const Vector3d& offset,
+                                       const Vector3d& val)
+    : Constraint(var),
+      mSkel(skel),
+      mNode(node),
+      mTarget(val),
+      mOffset(offset)
+{
+    mNumRows = 3;
 
-    VectorXd PositionConstraint::evalCon() {
-        Vector3d wp = mNode->evalWorldPos(mOffset);
-        Vector3d c = wp - mTarget;
-        VectorXd ret(c);
-        return ret;
-    }
+    mWeight = VectorXd::Ones(mNumRows);
+    mConstTerm = VectorXd::Zero(mNumRows);
+    mCompletion = VectorXd::Zero(mNumRows);
+}
 
-    void PositionConstraint::fillJac(VVD jEntry, VVB jMap, int index) {
-    }
+VectorXd PositionConstraint::evalCon()
+{
+    Vector3d wp = mNode->evalWorldPos(mOffset);
+    Vector3d c = wp - mTarget;
+    VectorXd ret(c);
+    return ret;
+}
 
-    void PositionConstraint::fillObjGrad(std::vector<double>& dG) {
-        VectorXd dP = evalCon();
-        for(int dofIndex = 0; dofIndex < mNode->getNumDependentDofs(); dofIndex++) {
-            int i = mNode->getDependentDof(dofIndex);            
-            const Var* v = mVariables[i];
-            double w = v->mWeight;
-            VectorXd J = xformHom(mNode->getDerivWorldTransform(dofIndex), mOffset);
-            J /= w;
-            dG[i] += 2 * dP.dot(J);
-        }
-    }
+void PositionConstraint::fillJac(VVD jEntry, VVB jMap, int index)
+{
+}
 
-    void PositionConstraint::setTarget(const Vector3d& target) {
-        mTarget = target;
+void PositionConstraint::fillObjGrad(std::vector<double>& dG)
+{
+    VectorXd dP = evalCon();
+    for(int dofIndex = 0; dofIndex < mNode->getNumDependentDofs(); dofIndex++)
+    {
+        int i = mNode->getDependentDof(dofIndex);
+        const Var* v = mVariables[i];
+        double w = v->mWeight;
+        VectorXd J = xformHom(mNode->getDerivWorldTransform(dofIndex), mOffset);
+        J /= w;
+        dG[i] += 2 * dP.dot(J);
     }
+}
 
-    Vector3d PositionConstraint::getTarget() const {
-        return mTarget;
-    }
+void PositionConstraint::setTarget(const Vector3d& target)
+{
+    mTarget = target;
+}
+
+Vector3d PositionConstraint::getTarget() const
+{
+    return mTarget;
+}
+
 } // namespace optimizer
+} // namespace dart

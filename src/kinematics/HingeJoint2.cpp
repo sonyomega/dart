@@ -37,7 +37,10 @@
 
 #include "kinematics/HingeJoint2.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 //HingeJoint::HingeJoint(BodyNode* _bParent, BodyNode* _bChild, const char* _name)
 //    : Joint(_bParent, _bChild, _name)
@@ -50,4 +53,4 @@ namespace kinematics {
 //}
 
 } // namespace kinematics
-
+} // namespace dart

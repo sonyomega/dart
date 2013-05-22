@@ -40,6 +40,7 @@
 
 #include <Eigen/Core>
 
+namespace dart {
 namespace planning {
 class Trajectory
 {
@@ -48,4 +49,5 @@ public:
 	virtual Eigen::VectorXd getPosition(double time) const = 0;
 	virtual Eigen::VectorXd getVelocity(double time) const = 0;
 };
+}
 }

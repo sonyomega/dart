@@ -41,7 +41,10 @@ using namespace Eigen;
 
 #define PRIMITIVE_MAGIC_NUMBER 1000
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 Shape::Shape(ShapeType _type) :
     mType(_type),
@@ -61,3 +64,4 @@ void Shape::setDim(const Eigen::Vector3d& _dim) {
 int Shape::mCounter = PRIMITIVE_MAGIC_NUMBER;
 
 } // namespace kinematics
+} // namespace dart

@@ -35,12 +35,14 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef INTEGRATOR_H
-#define INTEGRATOR_H
+#ifndef DART_INTEGRATION_INTEGRATOR_H
+#define DART_INTEGRATION_INTEGRATOR_H
 
 #include <vector>
 #include <Eigen/Dense>
 
+namespace dart
+{
 namespace integration
 {
 
@@ -61,5 +63,6 @@ public:
 };
 
 } // namespace integration
+} // namespace dart
 
 #endif // INTEGRATOR_H

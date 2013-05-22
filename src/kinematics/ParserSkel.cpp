@@ -128,6 +128,7 @@ enum yytokentype {
 #include <Eigen/Dense>
 using namespace Eigen;
 
+using namespace dart;
 using namespace kinematics;
 
 #include "Skeleton.h"

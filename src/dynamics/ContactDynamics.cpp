@@ -13,12 +13,16 @@
 #include "utils/Timer.h"
 
 using namespace Eigen;
+using namespace dart;
 using namespace collision;
 using namespace utils;
 
 #define EPSILON 0.000001
 
-namespace dynamics {
+namespace dart
+{
+namespace dynamics
+{
 
 ContactDynamics::ContactDynamics(const std::vector<SkeletonDynamics*>& _skels,
                                  double _dt,
@@ -284,11 +288,11 @@ void ContactDynamics::applySolution() {
 MatrixXd ContactDynamics::getJacobian(kinematics::BodyNode* node, const Vector3d& p) {
     int nDofs = node->getSkel()->getNumDofs();
     MatrixXd Jt( MatrixXd::Zero(nDofs, 3) );
-    Vector3d invP = dart_math::xformHom(node->getWorldInvTransform(), p);
+    Vector3d invP = math::xformHom(node->getWorldInvTransform(), p);
 
     for(int dofIndex = 0; dofIndex < node->getNumDependentDofs(); dofIndex++) {
         int i = node->getDependentDof(dofIndex);
-        Jt.row(i) = dart_math::xformHom(node->getDerivWorldTransform(dofIndex), invP);
+        Jt.row(i) = math::xformHom(node->getDerivWorldTransform(dofIndex), invP);
     }
 
     return Jt;
@@ -487,3 +491,4 @@ int ContactDynamics::getNumContacts() const {
 }
 
 } // namespace dynamics
+} // namespace dart

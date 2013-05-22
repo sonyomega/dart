@@ -44,6 +44,7 @@
 using namespace Eigen;
 using namespace std;
 
+namespace dart {
 namespace planning {
 
 const double PathFollowingTrajectory::timeStep = 0.001;
@@ -617,5 +618,6 @@ double PathFollowingTrajectory::getMaxAccelerationError() {
 	}
 
 	return maxAccelerationError;
+}
 }
 }

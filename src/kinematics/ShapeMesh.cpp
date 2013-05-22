@@ -35,17 +35,21 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ShapeMesh.h"
-#include "renderer/RenderInterface.h"
 #include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/cimport.h>
 
+#include "renderer/RenderInterface.h"
+#include "kinematics/ShapeMesh.h"
+
 using namespace Eigen;
 using namespace std;
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 ShapeMesh::ShapeMesh(Vector3d _dim, const aiScene *_mesh)
     : Shape(P_MESH),
@@ -136,4 +140,6 @@ const aiScene* ShapeMesh::loadMesh(const string& fileName) {
 
     return scene;
 }
+
 } // namespace kinematics
+} // namespace dart

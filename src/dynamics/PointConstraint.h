@@ -40,27 +40,34 @@
 
 #include "Constraint.h"
 
-namespace dynamics {
-    class BodyNodeDynamics;
-    class SkeletonDynamics;
-    class PointConstraint : public Constraint {
-    public:
-        PointConstraint(BodyNodeDynamics *_body, Eigen::Vector3d _offset, Eigen::Vector3d _target, int _skelIndex);
-        virtual ~PointConstraint();
+namespace dart
+{
+namespace dynamics
+{
 
-        virtual void updateDynamics(std::vector<Eigen::MatrixXd> & _J, Eigen::VectorXd & _C, Eigen::VectorXd & _CDot, int _rowIndex);
+class BodyNodeDynamics;
+class SkeletonDynamics;
 
-    private:
-        void getJacobian();
+class PointConstraint : public Constraint {
+public:
+    PointConstraint(BodyNodeDynamics *_body, Eigen::Vector3d _offset, Eigen::Vector3d _target, int _skelIndex);
+    virtual ~PointConstraint();
 
-        BodyNodeDynamics* mBody;
-        Eigen::Vector3d mOffset;
-        Eigen::Vector3d mTarget;
-        Eigen::MatrixXd mJ;
+    virtual void updateDynamics(std::vector<Eigen::MatrixXd> & _J, Eigen::VectorXd & _C, Eigen::VectorXd & _CDot, int _rowIndex);
 
-        int mSkelIndex;
-    };
+private:
+    void getJacobian();
+
+    BodyNodeDynamics* mBody;
+    Eigen::Vector3d mOffset;
+    Eigen::Vector3d mTarget;
+    Eigen::MatrixXd mJ;
+
+    int mSkelIndex;
+};
+
 } // namespace dynamics
+} // namespace dart
 
 #endif // #ifndef DART_DYNAMICS_POINT_CONSTRAINT_DYNAMICS_H
 

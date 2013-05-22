@@ -46,6 +46,8 @@
 
 #include "collision/fcl/FCLCollisionNode.h"
 
+namespace dart
+{
 namespace collision
 {
 
@@ -347,3 +349,4 @@ fcl::BVHModel<BV>* createEllipsoid(float _sizeX, float _sizeY, float _sizeZ) {
 }
 
 } // namespace collision
+} // namespace dart

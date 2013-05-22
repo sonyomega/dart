@@ -45,9 +45,13 @@ using namespace Eigen;
 
 #include "Dof.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
-TrfmRotateQuat::TrfmRotateQuat(Dof *w, Dof *x, Dof *y, Dof *z, const char *_name){
+TrfmRotateQuat::TrfmRotateQuat(Dof *w, Dof *x, Dof *y, Dof *z, const char *_name)
+{
     mDofs.clear();
     mDofs.resize(4);
     mDofs[0]=w;
@@ -86,7 +90,7 @@ Matrix4d TrfmRotateQuat::getDeriv(const Dof *d) const{
     int el=-1;
     for(int i=0; i<4; i++) if(d==mDofs[i]) el=i;
     assert(el!=-1);
-    mat = dart_math::quatDeriv(q, el);
+    mat = math::quatDeriv(q, el);
 
     for(int i=0; i<3; i++){
         for(int j=0; j<3; j++)
@@ -110,7 +114,7 @@ Matrix4d TrfmRotateQuat::getSecondDeriv(const Dof *d1, const Dof *d2) const{
     }
     assert(el1!=-1);
     assert(el2!=-1);
-    mat = dart_math::quatSecondDeriv(q, el1, el2);
+    mat = math::quatSecondDeriv(q, el1, el2);
 
     for(int i=0; i<3; i++){
         for(int j=0; j<3; j++)
@@ -143,4 +147,6 @@ void TrfmRotateQuat::applyGLTransform(renderer::RenderInterface* _ri) const {
         if (_ri) _ri->rotate(a, theta*180/M_PI);
     }
 }
+
 } // namespace kinematics
+} // namespace dart

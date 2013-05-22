@@ -41,6 +41,8 @@
 #include "collision/CollisionNode.h"
 #include "collision/CollisionDetector.h"
 
+namespace dart
+{
 namespace collision
 {
 
@@ -128,3 +130,4 @@ void CollisionDetector::updateBodyNodeCollidableState() {
 }
 
 } // namespace collision
+} // namespace dart

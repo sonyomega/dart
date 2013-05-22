@@ -4,9 +4,10 @@
 #include <vector>
 #include <Eigen/Core>
 
+
+namespace dart {
 namespace simulation { class World; }
 namespace dynamics { class SkeletonDynamics; }
-
 namespace planning {
 class PathShortener
 {
@@ -23,4 +24,5 @@ protected:
 	double stepSize;
 	virtual bool localPlanner(std::list<Eigen::VectorXd> &waypoints, std::list<Eigen::VectorXd>::const_iterator it1, std::list<Eigen::VectorXd>::const_iterator it2);
 };
+}
 }

@@ -10,6 +10,7 @@
 #include "simulation/World.h"
 
 using namespace std;
+using namespace dart;
 using namespace planning;
 using namespace simulation;
 

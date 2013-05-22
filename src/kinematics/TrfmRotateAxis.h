@@ -41,7 +41,11 @@
 #include "Transformation.h"
 #include <cassert>
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
+
     class TrfmRotateAxis: public Transformation {
     public:
         /// @brief Constructor.
@@ -82,7 +86,9 @@ namespace kinematics {
         /// @brief Precalculated variables to speed up transform computation.
         Eigen::Matrix3d mCosCoefficients;
     };
+
 } // namespace kinematics
+} // namespace dart
 
 #endif
 

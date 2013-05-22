@@ -43,6 +43,8 @@
 
 #include "kinematics/Skeleton.h"
 
+namespace dart
+{
 namespace dynamics
 {
 
@@ -157,5 +159,6 @@ protected:
 };
 
 } // namespace dynamics
+} // namespace dart
 
 #endif // #ifndef DART_DYNAMICS_SKELETONDYNAMICS_H

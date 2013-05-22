@@ -40,7 +40,10 @@
 
 using namespace Eigen;
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 ShapeEllipsoid::ShapeEllipsoid(Vector3d _dim)
     : Shape(P_ELLIPSOID)
@@ -87,3 +90,4 @@ void ShapeEllipsoid::initMeshes() {
 }
 
 } // namespace kinematics
+} // namespace dart

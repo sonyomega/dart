@@ -44,7 +44,8 @@
 
 // TODO: Let's use noalias().
 // TODO: Not using Eigen?
-
+namespace dart
+{
 namespace math
 {
 
@@ -112,5 +113,6 @@ private:
 };
 
 } // namespace math
+} // namespace dart
 
 #endif // DART_MATH_LIE_GROUPS_H

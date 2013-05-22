@@ -20,6 +20,7 @@
 // For continuous joint limit
 #include <limits>
 
+namespace dart {
 
 /**
  * @function createDartRootJoint
@@ -307,4 +308,6 @@ dynamics::BodyNodeDynamics* DartLoader::createDartNode( boost::shared_ptr<urdf::
   }
 
   return node;
+}
+
 }

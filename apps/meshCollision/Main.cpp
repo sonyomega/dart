@@ -17,6 +17,7 @@
 
 using namespace std;
 using namespace Eigen;
+using namespace dart;
 using namespace kinematics;
 using namespace dynamics;
 

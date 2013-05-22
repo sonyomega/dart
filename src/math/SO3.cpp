@@ -37,6 +37,8 @@
 
 #include "math/SO3.h"
 
+namespace dart
+{
 namespace math
 {
 
@@ -361,4 +363,4 @@ void SO3::setExp(const so3& _S, double theta)
 }
 
 } // namespace math
-
+} // namespace dart

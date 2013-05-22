@@ -6,10 +6,11 @@
 
 #include "MyWindow.h"
 
+using namespace dart;
 using namespace kinematics;
 using namespace dynamics;
 using namespace simulation;
-using namespace dart_math;
+using namespace math;
 
 int main(int argc, char* argv[])
 {

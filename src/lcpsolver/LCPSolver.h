@@ -36,8 +36,8 @@
  */
 
 
-#ifndef _LCP_SOLVER
-#define _LCP_SOLVER
+#ifndef DART_LCPSOLVER_LCP_SOLVER
+#define DART_LCPSOLVER_LCP_SOLVER
 
 #include "Eigen/Dense"
 using namespace Eigen;
@@ -45,18 +45,25 @@ using namespace Eigen;
 #include <vector>
 using namespace std;
 
-namespace lcpsolver {
-    class LCPSolver
-    {
-    public:
-        LCPSolver();
-        ~LCPSolver();
+namespace dart
+{
+namespace lcpsolver
+{
 
-        bool Solve(const MatrixXd& _A, const VectorXd& _b, VectorXd& _x, int numContacts, double mu = 0, int numDir = 0, bool bUseODESolver = false);
-    private:
-        void transferToODEFormulation(const MatrixXd& _A, const VectorXd& _b, MatrixXd& _AOut, VectorXd& _bOut, int _numDir, int _numContacts);
-        void transferSolFromODEFormulation(const VectorXd& _x, VectorXd& _xOut, int _numDir, int _numContacts);
-        bool checkIfSolution(const MatrixXd& _A, const VectorXd& _b, const VectorXd& _x);
-    };
+class LCPSolver
+{
+public:
+    LCPSolver();
+    ~LCPSolver();
+
+    bool Solve(const MatrixXd& _A, const VectorXd& _b, VectorXd& _x, int numContacts, double mu = 0, int numDir = 0, bool bUseODESolver = false);
+private:
+    void transferToODEFormulation(const MatrixXd& _A, const VectorXd& _b, MatrixXd& _AOut, VectorXd& _bOut, int _numDir, int _numContacts);
+    void transferSolFromODEFormulation(const VectorXd& _x, VectorXd& _xOut, int _numDir, int _numContacts);
+    bool checkIfSolution(const MatrixXd& _A, const VectorXd& _b, const VectorXd& _x);
+};
+
 } // namespace lcpsolver
+} // namespace dart
+
 #endif

@@ -6,6 +6,7 @@
 
 using namespace Eigen;
 using namespace std;
+using namespace dart;
 using namespace dynamics;
 
 Analyzer::Analyzer(kinematics::FileInfoDof *_motion, dynamics::SkeletonDynamics *_skel, Vector3d _grav) {

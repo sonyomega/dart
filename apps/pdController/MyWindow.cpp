@@ -7,6 +7,7 @@
 #include "Controller.h"
 #include <stdio.h>
 
+using namespace dart;
 using namespace dynamics;
 using namespace utils;
 

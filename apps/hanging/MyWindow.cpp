@@ -9,10 +9,11 @@
 #include <stdio.h>
 #include "dynamics/PointConstraint.h"
 
+using namespace dart;
 using namespace dynamics;
 using namespace yui;
 using namespace utils;
-using namespace dart_math;
+using namespace math;
 
 void MyWindow::initDyn()
 {

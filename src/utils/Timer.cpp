@@ -45,115 +45,119 @@ using namespace std;
 //#define CLOCKS_PER_SEC 1000
 //#endif
 
-namespace utils {
-  
-    double subtractTimes( double endTime, double startTime) {
-        return (endTime - startTime) / CLOCKS_PER_SEC;
-    }
+namespace dart
+{
+namespace utils
+{
+
+double subtractTimes( double endTime, double startTime) {
+    return (endTime - startTime) / CLOCKS_PER_SEC;
+}
 
 
-    Timer::Timer(const char* name) {
-        mCount = 0;
-        mTotal = 0;
-        mName = new char[64];
-        strcpy(mName, name);
-        mIsRunning = false;
+Timer::Timer(const char* name) {
+    mCount = 0;
+    mTotal = 0;
+    mName = new char[64];
+    strcpy(mName, name);
+    mIsRunning = false;
 #if WIN32
-        mTimer.start.QuadPart=0;
-        mTimer.stop.QuadPart=0;
-        QueryPerformanceFrequency( &mFrequency ) ;
+    mTimer.start.QuadPart=0;
+    mTimer.stop.QuadPart=0;
+    QueryPerformanceFrequency( &mFrequency ) ;
 #endif
-    }
+}
 
-    Timer::~Timer() {
-        print();
-        delete[] mName;
-    }
+Timer::~Timer() {
+    print();
+    delete[] mName;
+}
 
 #if WIN32
-    double Timer::LIToSecs( LARGE_INTEGER & L) {
-        return ((double)L.QuadPart /(double)mFrequency.QuadPart) ;
-    }
+double Timer::LIToSecs( LARGE_INTEGER & L) {
+    return ((double)L.QuadPart /(double)mFrequency.QuadPart) ;
+}
 #endif
 
-    void Timer::startTimer() {
-        mIsRunning = true;
-        mCount++;
+void Timer::startTimer() {
+    mIsRunning = true;
+    mCount++;
 #if WIN32
-        QueryPerformanceCounter(&mTimer.start) ;
+    QueryPerformanceCounter(&mTimer.start) ;
 #else
-        mStart = clock();
+    mStart = clock();
 #endif
-    }
+}
 
-    double Timer::elapsed() {
+double Timer::elapsed() {
 #if WIN32
-        LARGE_INTEGER timenow;
-        QueryPerformanceCounter(&timenow) ;
-        LARGE_INTEGER time;
-        time.QuadPart = timenow.QuadPart - mTimer.start.QuadPart;
-        mLastElapsed = LIToSecs( time) ;
+    LARGE_INTEGER timenow;
+    QueryPerformanceCounter(&timenow) ;
+    LARGE_INTEGER time;
+    time.QuadPart = timenow.QuadPart - mTimer.start.QuadPart;
+    mLastElapsed = LIToSecs( time) ;
 #else
-        double now = clock();
-        mLastElapsed = subtractTimes(now, mStart);
+    double now = clock();
+    mLastElapsed = subtractTimes(now, mStart);
 #endif
-        return mLastElapsed;
-    }
+    return mLastElapsed;
+}
 
-    double Timer::lastElapsed() const {
-        return mLastElapsed;
-    }
+double Timer::lastElapsed() const {
+    return mLastElapsed;
+}
 
-    void Timer::stopTimer() {
-        mIsRunning = false;
+void Timer::stopTimer() {
+    mIsRunning = false;
 #if WIN32
-        QueryPerformanceCounter(&mTimer.stop) ;
-        LARGE_INTEGER time;
-        time.QuadPart = mTimer.stop.QuadPart - mTimer.start.QuadPart;
-        mLastElapsed = LIToSecs( time) ;
+    QueryPerformanceCounter(&mTimer.stop) ;
+    LARGE_INTEGER time;
+    time.QuadPart = mTimer.stop.QuadPart - mTimer.start.QuadPart;
+    mLastElapsed = LIToSecs( time) ;
 #else 
-        mStop = clock();
-        mLastElapsed = subtractTimes(mStop, mStart);
+    mStop = clock();
+    mLastElapsed = subtractTimes(mStop, mStart);
 #endif
-        mTotal += mLastElapsed;
-    }
+    mTotal += mLastElapsed;
+}
 
-    bool Timer::isRunning() const {
-        return mIsRunning;
-    }
+bool Timer::isRunning() const {
+    return mIsRunning;
+}
 
-    void Timer::printLog() {
-        if(mCount>0) {
-            cout << "[VLOG(1)]" << "Timer [" << mName << "] : "
-                    << "Last = " << mLastElapsed << " "
-                    << "Total " << " "
-                    << mTotal << " " << mCount << "; "
-                    << "Average: " << mTotal / mCount << " "
-                    << "FPS : " << mCount / mTotal << "hz ";
-       
-        } else {
-        	cout << "[VLOG(1)]" << "Timer " << mName << " doesn't have any record." << endl;
-        }
-    }
+void Timer::printLog() {
+    if(mCount>0) {
+        cout << "[VLOG(1)]" << "Timer [" << mName << "] : "
+             << "Last = " << mLastElapsed << " "
+             << "Total " << " "
+             << mTotal << " " << mCount << "; "
+             << "Average: " << mTotal / mCount << " "
+             << "FPS : " << mCount / mTotal << "hz ";
 
-    void Timer::printScreen() {
-        if(mCount>0) {
-            cout << "Timer [" << mName << "] : "<<endl
-                    << "Last elapsed : " << mLastElapsed << "; "
-                    << "Total time : " << " "
-                    << mTotal << "; " 
-                    << "Total count : " << mCount << "; "
-                    << "Average time : " << mTotal / mCount << " "
-                    << "FPS : " << mCount / mTotal << "hz "<<endl;
-       
-        } else {
-            cout << "Timer " << mName << " doesn't have any record." << endl;
-        }
+    } else {
+        cout << "[VLOG(1)]" << "Timer " << mName << " doesn't have any record." << endl;
     }
-    
-    void Timer::print( bool _toScreen ){
-        if( _toScreen ) printScreen();
-        else printLog();
+}
+
+void Timer::printScreen() {
+    if(mCount>0) {
+        cout << "Timer [" << mName << "] : "<<endl
+             << "Last elapsed : " << mLastElapsed << "; "
+             << "Total time : " << " "
+             << mTotal << "; "
+             << "Total count : " << mCount << "; "
+             << "Average time : " << mTotal / mCount << " "
+             << "FPS : " << mCount / mTotal << "hz "<<endl;
+
+    } else {
+        cout << "Timer " << mName << " doesn't have any record." << endl;
     }
+}
+
+void Timer::print( bool _toScreen ){
+    if( _toScreen ) printScreen();
+    else printLog();
+}
 
 } // namespace utils
+} // namespace dart

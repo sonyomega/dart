@@ -38,15 +38,19 @@
 #ifndef COLLISION_FCL_MESH_COLLISION_DETECTOR_H
 #define COLLISION_FCL_MESH_COLLISION_DETECTOR_H
 
-#include <vector>
 #include <map>
+#include <vector>
 #include <fcl/BVH/BVH_model.h>
 
 #include "collision/CollisionDetector.h"
 #include "collision/fcl_mesh/tri_tri_intersection_test.h"
 
-namespace kinematics { class BodyNode; }
 namespace fcl { class CollisionResult; }
+
+namespace dart
+{
+
+namespace kinematics { class BodyNode; }
 
 namespace collision 
 {
@@ -121,8 +125,6 @@ public:
     std::vector<std::vector<bool> > mActiveMatrix;
 };
 
-
-
 inline bool Vec3fCmp(fcl::Vec3f& v1, fcl::Vec3f& v2)
 {
     if(v1[0]!=v2[0])
@@ -133,7 +135,7 @@ inline bool Vec3fCmp(fcl::Vec3f& v1, fcl::Vec3f& v2)
         return v1[2]<v2[2];
 }
 
-
 } // namespace collision
+} // namespace dart
 
 #endif // COLLISION_FCL_COLLISION_DETECTOR_H

@@ -6,12 +6,13 @@
 #include "math/UtilsMath.h"
 
 using namespace Eigen;
+using namespace dart;
 using namespace kinematics;
 using namespace dynamics;
-using namespace dart_math;
+using namespace math;
 
 
-Controller::Controller(dynamics::SkeletonDynamics *_skel) {
+Controller::Controller(dart::dynamics::SkeletonDynamics *_skel) {
 
     mSkel = _skel;
     int nDof = mSkel->getNumDofs();

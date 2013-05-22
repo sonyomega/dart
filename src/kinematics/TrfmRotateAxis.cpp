@@ -41,7 +41,11 @@
 
 using namespace Eigen;
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
+
 TrfmRotateAxis::TrfmRotateAxis(const Eigen::Vector3d& _axis, Dof* _angle, const char* _name) :
     mAxis(_axis)
 {
@@ -117,3 +121,4 @@ Matrix4d TrfmRotateAxis::getInvTransform() {
 }
 
 } // namespace kinematics
+} // namespace dart

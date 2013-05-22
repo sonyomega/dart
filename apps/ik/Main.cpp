@@ -2,6 +2,7 @@
 #include "kinematics/FileInfoSkel.hpp"
 #include "utils/Paths.h"
 
+using namespace dart;
 using namespace kinematics;
 
 int main(int argc, char* argv[]) 

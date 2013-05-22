@@ -41,6 +41,8 @@
 #include <vector>
 #include "kinematics/Dof.h"
 
+namespace dart
+{
 namespace kinematics
 {
 
@@ -128,5 +130,6 @@ private:
 };
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // DART_KINEMATICS_SYSTEM_H

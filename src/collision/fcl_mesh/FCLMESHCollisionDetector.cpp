@@ -14,16 +14,20 @@
 
 using namespace std;
 using namespace Eigen;
-using namespace dart_math;
+using namespace dart;
+using namespace math;
 
+namespace dart
+{
 namespace collision
 {
 
-FCLMESHCollisionDetector::~FCLMESHCollisionDetector() {
+FCLMESHCollisionDetector::~FCLMESHCollisionDetector()
+{
 }
 
 void FCLMESHCollisionDetector::addCollisionSkeletonNode(kinematics::BodyNode *_bd,
-                                                    bool _bRecursive)
+                                                        bool _bRecursive)
 {
     if (_bRecursive == false || _bd->getNumChildJoints() == 0)
     {
@@ -36,13 +40,10 @@ void FCLMESHCollisionDetector::addCollisionSkeletonNode(kinematics::BodyNode *_b
         for(unsigned int i = 0; i < mCollisionNodes.size() - 1; i++)
         {
             //if(mCollisionSkeletonNodeList[i]->mBodyNode->getParentNode() == _bd || _bd->getParentNode() == mCollisionSkeletonNodeList[i]->mBodyNode) {
-            if(mCollisionNodes[i]->getBodyNode()->getSkel() == _bd->getSkel()) {
+            if(mCollisionNodes[i]->getBodyNode()->getSkel() == _bd->getSkel())
                 mActiveMatrix.back()[i] = false;
-            }
             else
-            {
                 mActiveMatrix.back()[i] = true;
-            }
         }
     }
     else
@@ -54,7 +55,8 @@ void FCLMESHCollisionDetector::addCollisionSkeletonNode(kinematics::BodyNode *_b
     }
 }
 
-CollisionNode*FCLMESHCollisionDetector::createCollisionNode(kinematics::BodyNode* _bodyNode)
+CollisionNode*FCLMESHCollisionDetector::createCollisionNode(
+        kinematics::BodyNode* _bodyNode)
 {
     CollisionNode* collisionNode = NULL;
 
@@ -87,9 +89,8 @@ bool FCLMESHCollisionDetector::checkCollision(bool _checkAllCollisions,
             FCLMESHCollisionNode2 = static_cast<FCLMESHCollisionNode*>(mCollisionNodes[j]);
 
             if (!mActiveMatrix[j][i])
-            {
                 continue;
-            }
+
             const int numTriIntersection
                     = FCLMESHCollisionNode1->checkCollision(
                           FCLMESHCollisionNode2,
@@ -105,35 +106,42 @@ bool FCLMESHCollisionDetector::checkCollision(bool _checkAllCollisions,
             }
 
             if(!_checkAllCollisions && mNumTriIntersection > 0)
-            {
                 return true;
-            }
         }
     }
 
     return (mNumTriIntersection > 0);
 }
 
-void FCLMESHCollisionDetector::draw() {
+void FCLMESHCollisionDetector::draw()
+{
     for(int i=0;i<mCollisionNodes.size();i++)
         static_cast<FCLMESHCollisionNode*>(mCollisionNodes[i])->drawCollisionSkeletonNode();
 }
 
-void FCLMESHCollisionDetector::activatePair(const kinematics::BodyNode* node1, const kinematics::BodyNode* node2) {
+void FCLMESHCollisionDetector::activatePair(const kinematics::BodyNode* node1,
+                                            const kinematics::BodyNode* node2)
+{
     int nodeId1 = getCollisionSkeletonNode(node1)->getBodyNodeID();
     int nodeId2 = getCollisionSkeletonNode(node2)->getBodyNodeID();
-    if(nodeId1 < nodeId2) {
+
+    if(nodeId1 < nodeId2)
         swap(nodeId1, nodeId2);
-    }
+
     mActiveMatrix[nodeId1][nodeId2] = true;
 }
 
-void FCLMESHCollisionDetector::deactivatePair(const kinematics::BodyNode* node1, const kinematics::BodyNode* node2) {
+void FCLMESHCollisionDetector::deactivatePair(const kinematics::BodyNode* node1,
+                                              const kinematics::BodyNode* node2)
+{
     int nodeId1 = getCollisionSkeletonNode(node1)->getBodyNodeID();
     int nodeId2 = getCollisionSkeletonNode(node2)->getBodyNodeID();
-    if(nodeId1 < nodeId2) {
+
+    if(nodeId1 < nodeId2)
         swap(nodeId1, nodeId2);
-    }
+
     mActiveMatrix[nodeId1][nodeId2] = false;
 }
-}
+
+} // namespace collision
+} // namespace dart

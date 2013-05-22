@@ -7,6 +7,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace dart;
 using namespace kinematics;
 #include "utils/Paths.h"
 

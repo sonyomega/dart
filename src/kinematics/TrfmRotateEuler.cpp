@@ -41,7 +41,11 @@
 
 using namespace Eigen;
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
+
 ////////////////////////////////////////////////////////////////////////////////
 // rotation about X axis
 TrfmRotateEulerX::TrfmRotateEulerX(Dof *q, const char *_name){
@@ -262,3 +266,4 @@ Matrix4d TrfmRotateEulerZ::getInvTransform(){
 //
 
 } // namespace kinematics
+} // namespace dart

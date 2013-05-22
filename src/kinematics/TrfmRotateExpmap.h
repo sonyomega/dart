@@ -43,34 +43,38 @@
 #include <cmath>
 #include <cassert>
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
-    class TrfmRotateExpMap: public Transformation {
-    public:
-        TrfmRotateExpMap(Dof *x, Dof *y, Dof *z, const char* name = NULL);
+class TrfmRotateExpMap: public Transformation {
+public:
+    TrfmRotateExpMap(Dof *x, Dof *y, Dof *z, const char* name = NULL);
 
-        // Documentation inherited.
-        Eigen::Matrix4d getInvTransform();
+    // Documentation inherited.
+    Eigen::Matrix4d getInvTransform();
 
-        // Documentation inherited.
-        void applyGLTransform(renderer::RenderInterface* _ri) const;
+    // Documentation inherited.
+    void applyGLTransform(renderer::RenderInterface* _ri) const;
 
-        // Documentation inherited.
-        void computeTransform();
+    // Documentation inherited.
+    void computeTransform();
 
-        // Documentation inherited.
-        Eigen::Matrix4d getDeriv(const Dof *) const;
+    // Documentation inherited.
+    Eigen::Matrix4d getDeriv(const Dof *) const;
 
-        // Documentation inherited.
-        Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+    // Documentation inherited.
+    Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
 
-        // Documentation inherited.
-        virtual Eigen::MatrixXd getJacobian() const;
+    // Documentation inherited.
+    virtual Eigen::MatrixXd getJacobian() const;
 
-    protected:
+protected:
 
-    };
+};
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // KINEMATICS_TRFM_ROTATE_EXPMAP_H

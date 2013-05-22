@@ -2,6 +2,7 @@
 #include "kinematics/FileInfoSkel.hpp"
 #include "utils/Paths.h"
 
+using namespace dart;
 using namespace kinematics;
 using namespace dynamics;
 using namespace simulation;

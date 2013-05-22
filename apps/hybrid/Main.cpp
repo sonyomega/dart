@@ -6,11 +6,11 @@
 #include <fstream>
 #include <iostream>
 
+using namespace dart;
 using namespace kinematics;
 using namespace dynamics;
 using namespace Eigen;
 using namespace std;
-
 
 int main(int argc, char* argv[])
 {  

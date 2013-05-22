@@ -20,6 +20,7 @@
 #include <boost/math/special_functions/fpclassify.hpp>
 #include <Eigen/Dense>
 
+using namespace dart;
 using namespace kinematics;
 using namespace dynamics;
 using namespace Eigen;

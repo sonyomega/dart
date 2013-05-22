@@ -8,9 +8,10 @@
 
 using namespace Eigen;
 using namespace std;
+using namespace dart;
 using namespace dynamics;
 using namespace yui;
-using namespace dart_math;
+using namespace math;
 
 void MyWindow::timeStepping()
 {

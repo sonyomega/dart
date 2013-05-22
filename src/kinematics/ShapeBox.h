@@ -40,7 +40,10 @@
 
 #include "Shape.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 class ShapeBox : public Shape {
 public:
@@ -64,5 +67,6 @@ public:
 };
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_PRIMITIVE_CUBE_H

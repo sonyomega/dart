@@ -14,6 +14,8 @@
 #include "kinematics/Transformation.h"
 #include "kinematics/Dof.h"
 
+namespace dart {
+
 /**
  * @function DartLoader
  * @brief Constructor
@@ -610,4 +612,6 @@ std::string  DartLoader::readXmlToString( std::string _xmlFile ) {
   xml_file.close();
   
   return xml_string;
+}
+
 }

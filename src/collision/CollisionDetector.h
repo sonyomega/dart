@@ -42,9 +42,13 @@
 #include <Eigen/Dense>
 #include "collision/CollisionNode.h"
 
+namespace dart
+{
+
 namespace kinematics { class BodyNode; }
 
-namespace collision {
+namespace collision
+{
 
 class CollisionNode;
 
@@ -138,5 +142,6 @@ private:
 };
 
 } // namespace collision
+} // namespace dart
 
 #endif // COLLISION_CONLLISION_DETECTOR_H

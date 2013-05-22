@@ -48,6 +48,7 @@ using namespace std;
 /* ********************************************************************************************* */
 TEST(KINEMATICS, VSK_LOADER) {
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
   
     FileInfoSkel<Skeleton> modelFile;
@@ -64,6 +65,7 @@ TEST(KINEMATICS, VSK_LOADER) {
 /* ********************************************************************************************* */
 TEST(KINEMATICS, C3D_LOADER) {
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
   
     FileInfoC3D c3dFile;
@@ -77,6 +79,7 @@ TEST(KINEMATICS, C3D_LOADER) {
 /* ********************************************************************************************* */
 TEST(KINEMATICS, TRANS_AND_DERIV) {
     using namespace Eigen;
+    using namespace dart;
     using namespace kinematics;
   
     FileInfoSkel<Skeleton> modelFile;
@@ -169,13 +172,13 @@ TEST(KINEMATICS, TRANS_AND_DERIV) {
 //    double vel_min = -3.14;
 //    double vel_max = 3.14;
 
-//    kinematics::Dof *x = new kinematics::Dof(dart_math::random(pos_min, pos_max));
-//    kinematics::Dof *y = new kinematics::Dof(dart_math::random(pos_min, pos_max));
-//    kinematics::Dof *z = new kinematics::Dof(dart_math::random(pos_min, pos_max));
+//    kinematics::Dof *x = new kinematics::Dof(math::random(pos_min, pos_max));
+//    kinematics::Dof *y = new kinematics::Dof(math::random(pos_min, pos_max));
+//    kinematics::Dof *z = new kinematics::Dof(math::random(pos_min, pos_max));
 
-//    double dxdt = dart_math::random(vel_min, vel_max);
-//    double dydt = dart_math::random(vel_min, vel_max);
-//    double dzdt = dart_math::random(vel_min, vel_max);
+//    double dxdt = math::random(vel_min, vel_max);
+//    double dydt = math::random(vel_min, vel_max);
+//    double dzdt = math::random(vel_min, vel_max);
 //    Eigen::Vector3d dwdt;
 //    dwdt << dxdt, dydt, dzdt;
 

@@ -37,7 +37,9 @@
 
 #include "math/Inertia.h"
 
-namespace dart_math
+namespace dart
+{
+namespace math
 {
 
 #define LIEGROUP_EPS 10e-9
@@ -103,14 +105,14 @@ const Inertia& Inertia::operator = (const Inertia& _I)
 	return (*this);
 }
 
-dart_math::Vector6d Inertia::operator*(const dart_math::Vector6d& _V) const
+math::Vector6d Inertia::operator*(const math::Vector6d& _V) const
 {
 	/*--------------------------------------------------------------------------
 	(angluar) M = I * w + m * (r X v - r X (r X w))
 	(linear)  F = m * (v - r X w)
 	--------------------------------------------------------------------------*/
 
-	dart_math::Vector6d res;
+	math::Vector6d res;
 
 	const Eigen::Vector3d& v = _V.tail<3>();
 	const Eigen::Vector3d& w = _V.head<3>();
@@ -152,4 +154,4 @@ Eigen::Matrix<double,6,6> Inertia::getInertiaTensor() const
 }
 
 } // namespace math
-
+} // namespace dart

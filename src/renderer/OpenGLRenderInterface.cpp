@@ -63,7 +63,10 @@ static void initQuadObj()
 }
 //glut/lib/glut_shapes.c
 
-namespace renderer {
+namespace dart
+{
+namespace renderer
+{
 
     void OpenGLRenderInterface::initialize() {
         glMatrixMode(GL_MODELVIEW);
@@ -558,3 +561,4 @@ namespace renderer {
     }
 
 } // namespace renderer
+} // namespace dart

@@ -44,7 +44,11 @@
 using namespace std;
 using namespace Eigen;
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
+
 TrfmTranslate::TrfmTranslate(Dof *x, Dof *y, Dof *z, const char* _name){
     mDofs.resize(3);
     mDofs[0]=x;
@@ -429,3 +433,4 @@ void TrfmTranslateZ::applyInvTransform(Matrix4d& m){
 }
 
 } // namespace kinematics
+} // namespace dart

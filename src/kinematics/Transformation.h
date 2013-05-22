@@ -44,6 +44,9 @@
 
 #include "kinematics/System.h"
 
+namespace dart
+{
+
 namespace renderer { class RenderInterface; }
 
 namespace kinematics {
@@ -191,6 +194,7 @@ protected:
 };
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_TRANSFORMATION_H
 

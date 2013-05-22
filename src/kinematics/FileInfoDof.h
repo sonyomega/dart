@@ -43,36 +43,41 @@
 #include <climits>
 #include <Eigen/Dense>
 
-namespace kinematics {
-    class Skeleton;
- 
-    class FileInfoDof {
-    public:
-        FileInfoDof(Skeleton* _skel, double _fps = 120.0);
-        virtual ~FileInfoDof();
+namespace dart
+{
+namespace kinematics
+{
 
-        bool loadFile(const char* _fileName);
-        bool saveFile(const char* _fileName, int _start, int _end, double _sampleRate = 1.0); ///< Note: down sampling not implemented yet
+class Skeleton;
 
-        inline void addDof(Eigen::VectorXd& _dofs){ mDofs.push_back(_dofs); mNumFrames++; }
-        inline double getDofAt(int _frame, int _id) const { assert(_frame>=0 && _frame<mNumFrames); return mDofs.at(_frame)[_id]; }
-        inline Eigen::VectorXd getPoseAtFrame(int _frame) { return mDofs.at(_frame); }
+class FileInfoDof {
+public:
+    FileInfoDof(Skeleton* _skel, double _fps = 120.0);
+    virtual ~FileInfoDof();
 
-        inline void setFPS(double _fps){ mFPS = _fps; }
-        inline double getFPS() const { return mFPS; }
-        
-        inline int getNumFrames() const { return mNumFrames; }
-        inline Skeleton* getSkel() const { return mSkel; }
+    bool loadFile(const char* _fileName);
+    bool saveFile(const char* _fileName, int _start, int _end, double _sampleRate = 1.0); ///< Note: down sampling not implemented yet
 
-    protected:
-        Skeleton* mSkel; ///< model associated with
-        double mFPS; ///< frame rate
-        int mNumFrames; ///< number of frames
-        char mFileName[256]; ///< file name
-        std::vector< Eigen::VectorXd > mDofs; ///< dof data [frame][dofIndex]
-    };
+    inline void addDof(Eigen::VectorXd& _dofs){ mDofs.push_back(_dofs); mNumFrames++; }
+    inline double getDofAt(int _frame, int _id) const { assert(_frame>=0 && _frame<mNumFrames); return mDofs.at(_frame)[_id]; }
+    inline Eigen::VectorXd getPoseAtFrame(int _frame) { return mDofs.at(_frame); }
+
+    inline void setFPS(double _fps){ mFPS = _fps; }
+    inline double getFPS() const { return mFPS; }
+
+    inline int getNumFrames() const { return mNumFrames; }
+    inline Skeleton* getSkel() const { return mSkel; }
+
+protected:
+    Skeleton* mSkel; ///< model associated with
+    double mFPS; ///< frame rate
+    int mNumFrames; ///< number of frames
+    char mFileName[256]; ///< file name
+    std::vector< Eigen::VectorXd > mDofs; ///< dof data [frame][dofIndex]
+};
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_FILEINFO_DOF_H
 

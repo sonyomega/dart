@@ -47,6 +47,9 @@
 #include "collision/CollisionDetector.h"
 #include "collision/fcl_mesh/tri_tri_intersection_test.h"
 
+namespace dart
+{
+
 namespace kinematics { class BodyNode; }
 
 namespace collision
@@ -192,7 +195,7 @@ inline double FCLMESHCollisionNode::triArea(fcl::Vec3f p1, fcl::Vec3f p2, fcl::V
     return area;
 }
 
-
 } // namespace collision
+} // namespace dart
 
 #endif // COLLISION_FCL2_CONLLISION_NODE_H

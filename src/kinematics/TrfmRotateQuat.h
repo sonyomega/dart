@@ -40,31 +40,35 @@
 
 #include "Transformation.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
-    class TrfmRotateQuat: public Transformation {
-    public:
-        /// @brief Constructor.
-        TrfmRotateQuat(Dof *w, Dof *x, Dof *y, Dof *z, const char *_name = NULL);
-	
-		// Documentation inherited.
-		void applyGLTransform(renderer::RenderInterface* _ri) const;
+class TrfmRotateQuat: public Transformation {
+public:
+    /// @brief Constructor.
+    TrfmRotateQuat(Dof *w, Dof *x, Dof *y, Dof *z, const char *_name = NULL);
 
-        // Documentation inherited.
-        void computeTransform();
+    // Documentation inherited.
+    void applyGLTransform(renderer::RenderInterface* _ri) const;
 
-        // Documentation inherited.
-        Eigen::Matrix4d getDeriv(const Dof *) const;
+    // Documentation inherited.
+    void computeTransform();
 
-        // Documentation inherited.
-        Eigen::Matrix4d getSecondDeriv(const Dof *, const Dof *) const;
+    // Documentation inherited.
+    Eigen::Matrix4d getDeriv(const Dof *) const;
 
-        // Documentation inherited.
-        // TODO: NOT IMPLEMENTED !
-        virtual Eigen::MatrixXd getJacobian() const;
-    };
+    // Documentation inherited.
+    Eigen::Matrix4d getSecondDeriv(const Dof *, const Dof *) const;
+
+    // Documentation inherited.
+    // TODO: NOT IMPLEMENTED !
+    virtual Eigen::MatrixXd getJacobian() const;
+};
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_TRFM_ROTATE_QUAT_H
 

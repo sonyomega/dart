@@ -8,9 +8,9 @@
 
 class Analyzer;
 
-class MyWindow : public yui::Win3D {
+class MyWindow : public dart::yui::Win3D {
 public:
- MyWindow(kinematics::FileInfoDof *_motion, dynamics::SkeletonDynamics *_skel, ...): Win3D() {
+ MyWindow(dart::kinematics::FileInfoDof *_motion, dart::dynamics::SkeletonDynamics *_skel, ...): Win3D() {
         mBackground[0] = 1.0;
         mBackground[1] = 1.0;
         mBackground[2] = 1.0;
@@ -36,11 +36,11 @@ public:
     virtual void displayTimer(int _val);
 
  protected:	
-    kinematics::FileInfoDof *mMotion;
+    dart::kinematics::FileInfoDof *mMotion;
     int mPlayFrame;
     bool mPlay;
 
-    dynamics::SkeletonDynamics* mSkel;
+    dart::dynamics::SkeletonDynamics* mSkel;
     double mTimeStep;
     Eigen::Vector3d mGravity;
     Analyzer *mAnalyzer;

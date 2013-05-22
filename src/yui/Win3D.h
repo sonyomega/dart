@@ -42,39 +42,43 @@
 #include "Trackball.h"
 #include <Eigen/Eigen>
 
-namespace yui {
+namespace dart
+{
+namespace yui
+{
 
-    class Win3D : public GlutWindow {
-    public:
-        Win3D();
+class Win3D : public GlutWindow {
+public:
+    Win3D();
 
-        virtual void initWindow(int w, int h, const char* name);
-        virtual void resize(int w, int h);
-        virtual void render();
+    virtual void initWindow(int w, int h, const char* name);
+    virtual void resize(int w, int h);
+    virtual void render();
 
-        virtual void keyboard(unsigned char key, int x, int y);
-        virtual void click(int button, int state, int x, int y);
-        virtual void drag(int x, int y);
+    virtual void keyboard(unsigned char key, int x, int y);
+    virtual void click(int button, int state, int x, int y);
+    virtual void drag(int x, int y);
 
-        virtual void capturing();
-        virtual void initGL();
-        virtual void initLights();
+    virtual void capturing();
+    virtual void initGL();
+    virtual void initLights();
 
-        virtual void draw()=0;
+    virtual void draw()=0;
 
-    protected:
-        Trackball mTrackBall;
-        Eigen::Vector3d mTrans;
-        Eigen::Vector3d mEye;
-        Eigen::Vector3d mUp;
-        float mZoom;
-        float mPersp;
+protected:
+    Trackball mTrackBall;
+    Eigen::Vector3d mTrans;
+    Eigen::Vector3d mEye;
+    Eigen::Vector3d mUp;
+    float mZoom;
+    float mPersp;
 
-        bool mRotate;
-        bool mTranslate;
-        bool mZooming;
-    };
+    bool mRotate;
+    bool mTranslate;
+    bool mZooming;
+};
 
-}   // namespace yui
+} // namespace yui
+} // namespace dart
 
 #endif

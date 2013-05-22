@@ -41,199 +41,205 @@
 #include <cassert>
 #include "Transformation.h"
 
-namespace kinematics {
-    class TrfmTranslate : public Transformation {
-    public:
-        /// @brief Constructor.
-        TrfmTranslate(Dof *x, Dof *y, Dof *z, const char *_name = NULL);
+namespace dart
+{
+namespace kinematics
+{
 
-        // Documentation inherited.
-        Eigen::Matrix4d getInvTransform();
+class TrfmTranslate : public Transformation {
+public:
+    /// @brief Constructor.
+    TrfmTranslate(Dof *x, Dof *y, Dof *z, const char *_name = NULL);
 
-        // Documentation inherited.
-        void applyTransform(Eigen::Vector3d&);
+    // Documentation inherited.
+    Eigen::Matrix4d getInvTransform();
 
-        // Documentation inherited.
-        void applyTransform(Eigen::Matrix4d&);
+    // Documentation inherited.
+    void applyTransform(Eigen::Vector3d&);
 
-        // Documentation inherited.
-        void applyInvTransform(Eigen::Vector3d&);
+    // Documentation inherited.
+    void applyTransform(Eigen::Matrix4d&);
 
-        // Documentation inherited.
-        void applyInvTransform(Eigen::Matrix4d&);
+    // Documentation inherited.
+    void applyInvTransform(Eigen::Vector3d&);
 
-        // Documentation inherited.
-        void applyGLTransform(renderer::RenderInterface* _ri) const;
+    // Documentation inherited.
+    void applyInvTransform(Eigen::Matrix4d&);
 
-        // Documentation inherited.
-        void computeTransform();
+    // Documentation inherited.
+    void applyGLTransform(renderer::RenderInterface* _ri) const;
 
-        // Documentation inherited.
-        Eigen::Matrix4d getDeriv(const Dof *q) const;
+    // Documentation inherited.
+    void computeTransform();
 
-        // Documentation inherited.
-        void applyDeriv(const Dof* q, Eigen::Vector3d& v);
+    // Documentation inherited.
+    Eigen::Matrix4d getDeriv(const Dof *q) const;
 
-        // Documentation inherited.
-        void applyDeriv(const Dof* q, Eigen::Matrix4d& m);
+    // Documentation inherited.
+    void applyDeriv(const Dof* q, Eigen::Vector3d& v);
 
-        // Documentation inherited.
-        Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+    // Documentation inherited.
+    void applyDeriv(const Dof* q, Eigen::Matrix4d& m);
 
-        // Documentation inherited.
-        void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Vector3d& v);
+    // Documentation inherited.
+    Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
 
-        // Documentation inherited.
-        void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Matrix4d& m);
+    // Documentation inherited.
+    void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Vector3d& v);
 
-        // Documentation inherited.
-        virtual Eigen::MatrixXd getJacobian() const;
-    };
+    // Documentation inherited.
+    void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Matrix4d& m);
 
-    class TrfmTranslateX : public Transformation {
-    public:
-        /// @brief Constructor.
-        TrfmTranslateX(Dof *x, const char *_name = NULL);
+    // Documentation inherited.
+    virtual Eigen::MatrixXd getJacobian() const;
+};
 
-        // Documentation inherited.
-        Eigen::Matrix4d getInvTransform();
+class TrfmTranslateX : public Transformation {
+public:
+    /// @brief Constructor.
+    TrfmTranslateX(Dof *x, const char *_name = NULL);
 
-        // Documentation inherited.
-        void applyTransform(Eigen::Vector3d&);
+    // Documentation inherited.
+    Eigen::Matrix4d getInvTransform();
 
-        // Documentation inherited.
-        void applyTransform(Eigen::Matrix4d&);
+    // Documentation inherited.
+    void applyTransform(Eigen::Vector3d&);
 
-        // Documentation inherited.
-        void applyInvTransform(Eigen::Vector3d&);
+    // Documentation inherited.
+    void applyTransform(Eigen::Matrix4d&);
 
-        // Documentation inherited.
-        void applyInvTransform(Eigen::Matrix4d&);
+    // Documentation inherited.
+    void applyInvTransform(Eigen::Vector3d&);
 
-        // Documentation inherited.
-        void applyGLTransform(renderer::RenderInterface* _ri) const;
+    // Documentation inherited.
+    void applyInvTransform(Eigen::Matrix4d&);
 
-        // Documentation inherited.
-        void computeTransform();
+    // Documentation inherited.
+    void applyGLTransform(renderer::RenderInterface* _ri) const;
 
-        // Documentation inherited.
-        Eigen::Matrix4d getDeriv(const Dof *q) const;
+    // Documentation inherited.
+    void computeTransform();
 
-        // Documentation inherited.
-        void applyDeriv(const Dof* q, Eigen::Vector3d& v);
+    // Documentation inherited.
+    Eigen::Matrix4d getDeriv(const Dof *q) const;
 
-        // Documentation inherited.
-        void applyDeriv(const Dof* q, Eigen::Matrix4d& m);
+    // Documentation inherited.
+    void applyDeriv(const Dof* q, Eigen::Vector3d& v);
 
-        // Documentation inherited.
-        Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+    // Documentation inherited.
+    void applyDeriv(const Dof* q, Eigen::Matrix4d& m);
 
-        // Documentation inherited.
-        void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Vector3d& v);
+    // Documentation inherited.
+    Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
 
-        // Documentation inherited.
-        void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Matrix4d& m);
+    // Documentation inherited.
+    void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Vector3d& v);
 
-        // Documentation inherited.
-        virtual Eigen::MatrixXd getJacobian() const;
-    };
+    // Documentation inherited.
+    void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Matrix4d& m);
 
-    class TrfmTranslateY : public Transformation {
-    public:
-        /// @brief Constructor.
-        TrfmTranslateY(Dof *y, const char *_name = NULL);
+    // Documentation inherited.
+    virtual Eigen::MatrixXd getJacobian() const;
+};
 
-        // Documentation inherited.
-        Eigen::Matrix4d getInvTransform();
+class TrfmTranslateY : public Transformation {
+public:
+    /// @brief Constructor.
+    TrfmTranslateY(Dof *y, const char *_name = NULL);
 
-        // Documentation inherited.
-        void applyTransform(Eigen::Vector3d&);
+    // Documentation inherited.
+    Eigen::Matrix4d getInvTransform();
 
-        // Documentation inherited.
-        void applyTransform(Eigen::Matrix4d&);
+    // Documentation inherited.
+    void applyTransform(Eigen::Vector3d&);
 
-        // Documentation inherited.
-        void applyInvTransform(Eigen::Vector3d&);
+    // Documentation inherited.
+    void applyTransform(Eigen::Matrix4d&);
 
-        // Documentation inherited.
-        void applyInvTransform(Eigen::Matrix4d&);
+    // Documentation inherited.
+    void applyInvTransform(Eigen::Vector3d&);
 
-        // Documentation inherited.
-        void applyGLTransform(renderer::RenderInterface* _ri) const;
+    // Documentation inherited.
+    void applyInvTransform(Eigen::Matrix4d&);
 
-        // Documentation inherited.
-        void computeTransform();
+    // Documentation inherited.
+    void applyGLTransform(renderer::RenderInterface* _ri) const;
 
-        // Documentation inherited.
-        Eigen::Matrix4d getDeriv(const Dof *q) const;
+    // Documentation inherited.
+    void computeTransform();
 
-        // Documentation inherited.
-        void applyDeriv(const Dof* q, Eigen::Vector3d& v);
+    // Documentation inherited.
+    Eigen::Matrix4d getDeriv(const Dof *q) const;
 
-        // Documentation inherited.
-        void applyDeriv(const Dof* q, Eigen::Matrix4d& m);
+    // Documentation inherited.
+    void applyDeriv(const Dof* q, Eigen::Vector3d& v);
 
-        // Documentation inherited.
-        Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+    // Documentation inherited.
+    void applyDeriv(const Dof* q, Eigen::Matrix4d& m);
 
-        // Documentation inherited.
-        void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Vector3d& v);
+    // Documentation inherited.
+    Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
 
-        // Documentation inherited.
-        void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Matrix4d& m);
+    // Documentation inherited.
+    void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Vector3d& v);
 
-        // Documentation inherited.
-        virtual Eigen::MatrixXd getJacobian() const;
-    };
+    // Documentation inherited.
+    void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Matrix4d& m);
 
-    class TrfmTranslateZ : public Transformation {
-    public:
-        /// @brief Constructor.
-        TrfmTranslateZ(Dof *z, const char *_name = NULL);
+    // Documentation inherited.
+    virtual Eigen::MatrixXd getJacobian() const;
+};
 
-        // Documentation inherited.
-        Eigen::Matrix4d getInvTransform();
+class TrfmTranslateZ : public Transformation {
+public:
+    /// @brief Constructor.
+    TrfmTranslateZ(Dof *z, const char *_name = NULL);
 
-        // Documentation inherited.
-        void applyTransform(Eigen::Vector3d&);
+    // Documentation inherited.
+    Eigen::Matrix4d getInvTransform();
 
-        // Documentation inherited.
-        void applyTransform(Eigen::Matrix4d&);
+    // Documentation inherited.
+    void applyTransform(Eigen::Vector3d&);
 
-        // Documentation inherited.
-        void applyInvTransform(Eigen::Vector3d&);
+    // Documentation inherited.
+    void applyTransform(Eigen::Matrix4d&);
 
-        // Documentation inherited.
-        void applyInvTransform(Eigen::Matrix4d&);
+    // Documentation inherited.
+    void applyInvTransform(Eigen::Vector3d&);
 
-        // Documentation inherited.
-        void applyGLTransform(renderer::RenderInterface* _ri) const;
+    // Documentation inherited.
+    void applyInvTransform(Eigen::Matrix4d&);
 
-        // Documentation inherited.
-        void computeTransform();
+    // Documentation inherited.
+    void applyGLTransform(renderer::RenderInterface* _ri) const;
 
-        // Documentation inherited.
-        Eigen::Matrix4d getDeriv(const Dof *q) const;
+    // Documentation inherited.
+    void computeTransform();
 
-        // Documentation inherited.
-        void applyDeriv(const Dof* q, Eigen::Vector3d& v);
+    // Documentation inherited.
+    Eigen::Matrix4d getDeriv(const Dof *q) const;
 
-        // Documentation inherited.
-        void applyDeriv(const Dof* q, Eigen::Matrix4d& m);
+    // Documentation inherited.
+    void applyDeriv(const Dof* q, Eigen::Vector3d& v);
 
-        // Documentation inherited.
-        Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+    // Documentation inherited.
+    void applyDeriv(const Dof* q, Eigen::Matrix4d& m);
 
-        // Documentation inherited.
-        void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Vector3d& v);
+    // Documentation inherited.
+    Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
 
-        // Documentation inherited.
-        void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Matrix4d& m);
+    // Documentation inherited.
+    void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Vector3d& v);
 
-        // Documentation inherited.
-        virtual Eigen::MatrixXd getJacobian() const;
-    };
+    // Documentation inherited.
+    void applySecondDeriv(const Dof* q1, const Dof* q2, Eigen::Matrix4d& m);
+
+    // Documentation inherited.
+    virtual Eigen::MatrixXd getJacobian() const;
+};
+
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_TRFM_TRANSLATE_H
 

@@ -8,9 +8,10 @@
 #include "math/UtilsMath.h"
 #include "collision/CollisionDetector.h"
 
+using namespace dart;
 using namespace kinematics;
 using namespace dynamics;
-using namespace dart_math;
+using namespace math;
 
 Controller::Controller(dynamics::SkeletonDynamics *_skel, dynamics::ConstraintDynamics *_constraintHandle, double _t) {
     mSkel = _skel;

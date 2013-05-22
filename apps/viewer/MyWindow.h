@@ -4,9 +4,9 @@
 #include "yui/Win3D.h"
 #include "kinematics/FileInfoDof.h"
 
-class MyWindow : public yui::Win3D {
+class MyWindow : public dart::yui::Win3D {
 public:
- MyWindow(kinematics::FileInfoDof& _mot): Win3D(), mMainMotion(_mot), mCompareMotion(_mot)
+ MyWindow(dart::kinematics::FileInfoDof& _mot): Win3D(), mMainMotion(_mot), mCompareMotion(_mot)
  {
         mBackground[0] = 1.0;
         mBackground[1] = 1.0;
@@ -23,7 +23,7 @@ public:
         mDisplayTimeout = 5;        
     }
 
- MyWindow(kinematics::FileInfoDof& _mot1, kinematics::FileInfoDof& _mot2): Win3D(), mMainMotion(_mot1), mCompareMotion(_mot2)
+ MyWindow(dart::kinematics::FileInfoDof& _mot1, dart::kinematics::FileInfoDof& _mot2): Win3D(), mMainMotion(_mot1), mCompareMotion(_mot2)
  {
         mBackground[0] = 1.0;
         mBackground[1] = 1.0;
@@ -52,8 +52,8 @@ protected:
     int mFrame;
     bool mShowMarker;
     bool mShowProgress;
-    kinematics::FileInfoDof& mMainMotion;
-    kinematics::FileInfoDof& mCompareMotion;
+    dart::kinematics::FileInfoDof& mMainMotion;
+    dart::kinematics::FileInfoDof& mCompareMotion;
 };
 
 #endif

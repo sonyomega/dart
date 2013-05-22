@@ -15,6 +15,7 @@
 #include "simulation/World.h"
 #include "RRT.h"
 
+namespace dart {
 namespace planning {
 
 /* ********************************************************************************************* */
@@ -251,3 +252,4 @@ bool PathPlanner<R>::planBidirectionalRrt(dynamics::SkeletonDynamics* robot, con
 }
 
 }  //< End of namespace
+}

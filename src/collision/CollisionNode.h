@@ -41,9 +41,13 @@
 #include <Eigen/Dense>
 #include <fcl/collision.h>
 
+namespace dart
+{
+
 namespace kinematics { class BodyNode; }
 
-namespace collision {
+namespace collision
+{
 
 class CollisionNode;
 class CollisionNodePair;
@@ -52,7 +56,8 @@ class CollisionNodePair;
 ///
 /// CollisionDetector creates all possible BodyNode pairs for collision
 /// checking.
-struct CollisionNodePair {
+struct CollisionNodePair
+{
     /// @brief
     CollisionNode* collisionNode1;
 
@@ -65,7 +70,8 @@ struct CollisionNodePair {
 };
 
 /// @brief
-class CollisionNode {
+class CollisionNode
+{
 public: // constructors and destructor
     /// @brief Default constructor
     CollisionNode(kinematics::BodyNode* _bodyNode);
@@ -97,5 +103,6 @@ private:
 };
 
 } // namespace collision
+} // namespace dart
 
 #endif // COLLISION_CONLLISION_DETECTOR_H

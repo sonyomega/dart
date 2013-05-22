@@ -81,6 +81,9 @@ Runge-Kutta and fourth-order Runge Kutta.
 #include "math/UtilsMath.h"
 #include "math/Inertia.h"
 
+namespace dart
+{
+
 namespace renderer { class RenderInterface; }
 
 namespace kinematics
@@ -342,17 +345,17 @@ public:
     void evalBodyVelocity();
 
     /// @brief Get generalized body velocity w.r.t. body frame.
-    const dart_math::Vector6d& getBodyVelocity() const { return mBodyVelocity; }
+    const math::Vector6d& getBodyVelocity() const { return mBodyVelocity; }
 
     /// @brief Get generalized body velocity w.r.t. world frame.
-    dart_math::Vector6d getWorldVelocity() const;
+    math::Vector6d getWorldVelocity() const;
 
     /// @brief Get generalized body acceleration w.r.t. body frame.
-    const dart_math::Vector6d& getBodyAcceleration() const
+    const math::Vector6d& getBodyAcceleration() const
     { return mBodyAcceleration; }
 
     /// @brief Get generalized body acceleration w.r.t. world frame.
-    dart_math::Vector6d getWorldAcceleration() const;
+    math::Vector6d getWorldAcceleration() const;
 
     /// @brief Update the first derivatives of the transformations
     void updateFirstDerivatives();
@@ -415,7 +418,7 @@ protected:
     Skeleton* mSkel;
 
     /// @brief Generalized inertia w.r.t. body frame.
-    dart_math::Inertia mInertia;
+    math::Inertia mInertia;
 
     //--------------------------------------------------------------------------
     // TRANSFORMATIONS
@@ -434,10 +437,10 @@ protected:
     Eigen::MatrixXd mBodyJacobian;
 
     /// @brief Generalized body velocity.
-    dart_math::Vector6d mBodyVelocity;
+    math::Vector6d mBodyVelocity;
 
     /// @brief Generalized body acceleration.
-    dart_math::Vector6d mBodyAcceleration;
+    math::Vector6d mBodyAcceleration;
 
 private:
     /// @brief A unique ID of this node globally.
@@ -451,6 +454,7 @@ private:
 };
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_BODYNODE_H
 

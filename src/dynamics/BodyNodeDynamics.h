@@ -44,6 +44,8 @@
 #include "math/EigenHelper.h"
 #include "math/UtilsMath.h"
 
+namespace dart
+{
 namespace dynamics
 {
 
@@ -202,5 +204,6 @@ protected:
 };
 
 } // namespace dynamics
+} // namespace dart
 
 #endif // #ifndef DART_DYNAMICS_BODYNODE_DYNAMICS_H

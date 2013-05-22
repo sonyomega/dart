@@ -40,7 +40,10 @@
 
 #include "Shape.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 class ShapeCylinder : public Shape {
 public:
@@ -81,6 +84,7 @@ private:
 };
 
 } // namespace kinematics
+} // namespace dart
 
 #endif
 

@@ -41,8 +41,11 @@
 #include <Eigen/Dense>
 #include "math/UtilsMath.h"
 
-namespace dart_math
+namespace dart
 {
+namespace math
+{
+
 class Inertia; // Inertia with cog offset (6x6 matrix)
 
 /// @brief Inertia is a class for representing generalized inertia tensor.
@@ -97,7 +100,7 @@ public: // Operators
     /// @brief Multiplication operator.
     /// @note \f$J V = ( Iw + r\times v,~ mv-r\times w)\in se(3)^*\f$,
     /// where \f$J = (I,m,r)\in\f$ Inertia, \f$V = (w,v)\in se(3)\f$.
-    dart_math::Vector6d operator*(const dart_math::Vector6d& _V) const;
+    math::Vector6d operator*(const math::Vector6d& _V) const;
 
 public: // Others
     /// @brief
@@ -190,5 +193,6 @@ private:
 };
 
 } // namespace math
+} // namespace dart
 
 #endif // DART_MATH_LIE_GROUPS_H

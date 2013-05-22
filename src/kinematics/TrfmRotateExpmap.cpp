@@ -45,7 +45,10 @@
 using namespace std;
 using namespace Eigen;
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 TrfmRotateExpMap::TrfmRotateExpMap(Dof *x, Dof *y, Dof *z, const char* _name){
     mDofs.resize(3);
@@ -65,7 +68,7 @@ TrfmRotateExpMap::TrfmRotateExpMap(Dof *x, Dof *y, Dof *z, const char* _name){
 void TrfmRotateExpMap::computeTransform() {
     Vector3d q(mDofs[0]->getValue(), mDofs[1]->getValue(), mDofs[2]->getValue());
 
-    Matrix3d rot = dart_math::expMapRot(q);
+    Matrix3d rot = math::expMapRot(q);
     mTransform.setZero();
     mTransform.topLeftCorner<3,3>() = rot;
     mTransform(3, 3) = 1.0;
@@ -93,9 +96,9 @@ Matrix4d TrfmRotateExpMap::getDeriv(const Dof *d) const
     assert(j!=-1);
     assert(j>=0 && j<=2);
 
-    Matrix3d R = dart_math::expMapRot(q);
-    Matrix3d J = dart_math::expMapJac(q);
-    Matrix3d dRdj = dart_math::makeSkewSymmetric(J.col(j))*R;
+    Matrix3d R = math::expMapRot(q);
+    Matrix3d J = math::expMapJac(q);
+    Matrix3d dRdj = math::makeSkewSymmetric(J.col(j))*R;
 
     Matrix4d dRdj4d = Matrix4d::Zero();
     dRdj4d.topLeftCorner<3,3>() = dRdj;
@@ -118,11 +121,11 @@ Matrix4d TrfmRotateExpMap::getSecondDeriv(const Dof *q1, const Dof *q2) const
     assert(j>=0 && j<=2);
     assert(k>=0 && k<=2);
 
-    Matrix3d R = dart_math::expMapRot(q);
-    Matrix3d J = dart_math::expMapJac(q);
-    Matrix3d Jjss = dart_math::makeSkewSymmetric(J.col(j));
-    Matrix3d Jkss = dart_math::makeSkewSymmetric(J.col(k));
-    Matrix3d dJjdkss = dart_math::makeSkewSymmetric(dart_math::expMapJacDeriv(q, k).col(j));
+    Matrix3d R = math::expMapRot(q);
+    Matrix3d J = math::expMapJac(q);
+    Matrix3d Jjss = math::makeSkewSymmetric(J.col(j));
+    Matrix3d Jkss = math::makeSkewSymmetric(J.col(k));
+    Matrix3d dJjdkss = math::makeSkewSymmetric(math::expMapJacDeriv(q, k).col(j));
 
     Matrix3d d2Rdidj = (Jjss*Jkss + dJjdkss)*R;
 
@@ -148,9 +151,9 @@ Eigen::MatrixXd TrfmRotateExpMap::getJacobian() const {
     Matrix4d Y2 = mTransform.inverse() * Y;
     Matrix4d Z2 = mTransform.inverse() * Z;
 
-    Vector3d x = dart_math::fromSkewSymmetric(X2.topLeftCorner<3,3>());
-    Vector3d y = dart_math::fromSkewSymmetric(Y2.topLeftCorner<3,3>());
-    Vector3d z = dart_math::fromSkewSymmetric(Z2.topLeftCorner<3,3>());
+    Vector3d x = math::fromSkewSymmetric(X2.topLeftCorner<3,3>());
+    Vector3d y = math::fromSkewSymmetric(Y2.topLeftCorner<3,3>());
+    Vector3d z = math::fromSkewSymmetric(Z2.topLeftCorner<3,3>());
 
     return J;
 }
@@ -159,10 +162,12 @@ void TrfmRotateExpMap::applyGLTransform(renderer::RenderInterface* _ri) const{
     Vector3d v(mDofs[0]->getValue(), mDofs[1]->getValue(), mDofs[2]->getValue());
     double theta = v.norm();
     Vector3d vhat = Vector3d::Zero();
-    if(!dart_math::isZero(theta)) {
+    if(!math::isZero(theta)) {
         vhat= v/theta;
         _ri->rotate(vhat, theta * 180 / M_PI);
     }
 
 }
+
 } // namespace kinematics
+} // namespace dart

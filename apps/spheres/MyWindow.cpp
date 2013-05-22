@@ -3,8 +3,8 @@
 #include "dynamics/BodyNodeDynamics.h"
 
 using namespace Eigen;
+using namespace dart;
 using namespace dynamics;
-
 
 void MyWindow::timeStepping()
 {

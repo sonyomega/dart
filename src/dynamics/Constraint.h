@@ -41,24 +41,29 @@
 #include <vector>
 #include <Eigen/Dense>
 
-namespace dynamics {
-    class Constraint {
-    public:
-        Constraint(){
-        };
-        virtual ~Constraint(){};
+namespace dart
+{
+namespace dynamics
+{
 
-        virtual void updateDynamics(std::vector<Eigen::MatrixXd> & _J, Eigen::VectorXd & _C, Eigen::VectorXd & _CDot, int _rowIndex){};
-        inline int getNumRows() const { return mNumRows; };
-        inline Eigen::VectorXd getLagrangeMultipliers() const { return mLagrangeMultipliers; };
-        inline void setLagrangeMultipliers(const Eigen::VectorXd& _lambda) { mLagrangeMultipliers = _lambda; };
-
-    protected:
-        int mNumRows;
-        Eigen::VectorXd mLagrangeMultipliers;
+class Constraint {
+public:
+    Constraint(){
     };
-} // namespace dynamics
+    virtual ~Constraint(){};
 
+    virtual void updateDynamics(std::vector<Eigen::MatrixXd> & _J, Eigen::VectorXd & _C, Eigen::VectorXd & _CDot, int _rowIndex){};
+    inline int getNumRows() const { return mNumRows; };
+    inline Eigen::VectorXd getLagrangeMultipliers() const { return mLagrangeMultipliers; };
+    inline void setLagrangeMultipliers(const Eigen::VectorXd& _lambda) { mLagrangeMultipliers = _lambda; };
+
+protected:
+    int mNumRows;
+    Eigen::VectorXd mLagrangeMultipliers;
+};
+
+} // namespace dynamics
+} // namespace dart
 
 #endif // #ifndef DART_DYNAMICS_CONSTRAINT_H
 

@@ -40,11 +40,14 @@
 
 #include <Eigen/Dense>
 
+extern "C" { struct aiScene; }
+
+namespace dart
+{
+
 namespace renderer {
 class RenderInterface;
 }
-
-extern "C" { struct aiScene; }
 
 namespace kinematics {
 class Transformation;
@@ -150,6 +153,7 @@ public:
 };
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_PRIMITIVE_H
 

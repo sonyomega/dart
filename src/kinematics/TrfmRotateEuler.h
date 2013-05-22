@@ -41,83 +41,88 @@
 #include "Transformation.h"
 #include <cassert>
 
-namespace kinematics {
-    // rotate about x axis
-    class TrfmRotateEulerX: public Transformation {
-    public:
-        /// @brief Constructor.
-        TrfmRotateEulerX(Dof *x, const char *_name=NULL);
+namespace dart
+{
+namespace kinematics
+{
+// rotate about x axis
+class TrfmRotateEulerX: public Transformation {
+public:
+    /// @brief Constructor.
+    TrfmRotateEulerX(Dof *x, const char *_name=NULL);
 
-        // Documentation inherited.
-        Eigen::Matrix4d getInvTransform();
-	
-		// Documentation inherited.
-		void applyGLTransform(renderer::RenderInterface* _ri) const;
+    // Documentation inherited.
+    Eigen::Matrix4d getInvTransform();
 
-        // Documentation inherited.
-        void computeTransform();
+    // Documentation inherited.
+    void applyGLTransform(renderer::RenderInterface* _ri) const;
 
-        // Documentation inherited.
-        Eigen::Matrix4d getDeriv(const Dof *q) const;
+    // Documentation inherited.
+    void computeTransform();
 
-        // Documentation inherited.
-        Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+    // Documentation inherited.
+    Eigen::Matrix4d getDeriv(const Dof *q) const;
 
-        // Documentation inherited.
-        virtual Eigen::MatrixXd getJacobian() const;
-    };
+    // Documentation inherited.
+    Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
 
-    // rotate about y axis
-    class TrfmRotateEulerY: public Transformation {
-    public:
-        /// @brief Constructor.
-        TrfmRotateEulerY(Dof *y, const char *_name=NULL);
+    // Documentation inherited.
+    virtual Eigen::MatrixXd getJacobian() const;
+};
 
-        // Documentation inherited.
-        Eigen::Matrix4d getInvTransform();
-	
-		// Documentation inherited.
-        void applyGLTransform(renderer::RenderInterface* _ri) const;
+// rotate about y axis
+class TrfmRotateEulerY: public Transformation {
+public:
+    /// @brief Constructor.
+    TrfmRotateEulerY(Dof *y, const char *_name=NULL);
 
-        // Documentation inherited.
-        void computeTransform();
+    // Documentation inherited.
+    Eigen::Matrix4d getInvTransform();
 
-        // Documentation inherited.
-        Eigen::Matrix4d getDeriv(const Dof *q) const;
+    // Documentation inherited.
+    void applyGLTransform(renderer::RenderInterface* _ri) const;
 
-        // Documentation inherited.
-        Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+    // Documentation inherited.
+    void computeTransform();
 
-        // Documentation inherited.
-        virtual Eigen::MatrixXd getJacobian() const;
-    };
+    // Documentation inherited.
+    Eigen::Matrix4d getDeriv(const Dof *q) const;
+
+    // Documentation inherited.
+    Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+
+    // Documentation inherited.
+    virtual Eigen::MatrixXd getJacobian() const;
+};
 
 
 // rotate about z axis
-    class TrfmRotateEulerZ: public Transformation {
-    public:
-        /// @brief Constructor.
-        TrfmRotateEulerZ(Dof *z, const char *_name=NULL);
+class TrfmRotateEulerZ: public Transformation {
+public:
+    /// @brief Constructor.
+    TrfmRotateEulerZ(Dof *z, const char *_name=NULL);
 
-        // Documentation inherited.
-        Eigen::Matrix4d getInvTransform();
-	
-		// Documentation inherited.
-        void applyGLTransform(renderer::RenderInterface* _ri) const;
+    // Documentation inherited.
+    Eigen::Matrix4d getInvTransform();
 
-        // Documentation inherited.
-        void computeTransform();
+    // Documentation inherited.
+    void applyGLTransform(renderer::RenderInterface* _ri) const;
 
-        // Documentation inherited.
-        Eigen::Matrix4d getDeriv(const Dof *q) const;
+    // Documentation inherited.
+    void computeTransform();
 
-        // Documentation inherited.
-        Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+    // Documentation inherited.
+    Eigen::Matrix4d getDeriv(const Dof *q) const;
 
-        // Documentation inherited.
-        virtual Eigen::MatrixXd getJacobian() const;
-    };
+    // Documentation inherited.
+    Eigen::Matrix4d getSecondDeriv(const Dof *q1, const Dof *q2) const;
+
+    // Documentation inherited.
+    virtual Eigen::MatrixXd getJacobian() const;
+};
+
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_ROTATE_EULER_H
 

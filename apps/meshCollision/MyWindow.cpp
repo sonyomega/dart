@@ -9,6 +9,7 @@
 #include "kinematics/BodyNode.h"
 
 using namespace Eigen;
+using namespace dart;
 using namespace kinematics;
 using namespace utils;
 using namespace integration;

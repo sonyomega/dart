@@ -9,10 +9,10 @@
 #include "dynamics/SkeletonDynamics.h"
 #include "dynamics/ConstraintDynamics.h"
 
-class MyWindow : public yui::Win3D, public integration::IntegrableSystem {
+class MyWindow : public dart::yui::Win3D, public dart::integration::IntegrableSystem {
 public:
     
- MyWindow(dynamics::SkeletonDynamics* _mList = 0, ...): Win3D() {
+ MyWindow(dart::dynamics::SkeletonDynamics* _mList = 0, ...): Win3D() {
         mBackground[0] = 1.0;
         mBackground[1] = 1.0;
         mBackground[2] = 1.0;
@@ -38,7 +38,7 @@ public:
             va_list ap;
             va_start(ap, _mList);
             while (true) {
-                dynamics::SkeletonDynamics *skel = va_arg(ap, dynamics::SkeletonDynamics*);
+                dart::dynamics::SkeletonDynamics *skel = va_arg(ap, dart::dynamics::SkeletonDynamics*);
                 if(skel)
                     mSkels.push_back(skel);
                 else
@@ -72,12 +72,12 @@ public:
     int mPlayFrame;
     bool mPlay;
     bool mShowMarkers;
-    integration::EulerIntegrator mIntegrator;
+    dart::integration::EulerIntegrator mIntegrator;
     //integration::RK4Integrator mIntegrator;
     std::vector<Eigen::VectorXd> mBakedStates;
 
-    std::vector<dynamics::SkeletonDynamics*> mSkels;
-    dynamics::ConstraintDynamics *mConstraintHandle;
+    std::vector<dart::dynamics::SkeletonDynamics*> mSkels;
+    dart::dynamics::ConstraintDynamics *mConstraintHandle;
     std::vector<Eigen::VectorXd> mDofVels;
     std::vector<Eigen::VectorXd> mDofs;
     double mTimeStep;

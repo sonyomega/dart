@@ -38,14 +38,18 @@
 #ifndef DART_KINEMATICS_PARSER_SKEL_H
 #define DART_KINEMATICS_PARSER_SKEL_H
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
     class Transformation;
     class Shape;
     class Dof;
 }
+}
 
-typedef kinematics::Dof* dofVec3[3];
-typedef kinematics::Dof* dofVec4[4];
+typedef dart::kinematics::Dof* dofVec3[3];
+typedef dart::kinematics::Dof* dofVec4[4];
 typedef double doubleVec3[3];
 
 typedef union {
@@ -55,9 +59,9 @@ typedef union {
     dofVec3 v3DValue;
     dofVec4 v4DValue;
     doubleVec3 v3VValue;
-    kinematics::Transformation* tValue;
-    kinematics::Shape* pValue;
-    kinematics::Dof* dofValue;
+    dart::kinematics::Transformation* tValue;
+    dart::kinematics::Shape* pValue;
+    dart::kinematics::Dof* dofValue;
 } yystype;
 
 # define YYSTYPE yystype

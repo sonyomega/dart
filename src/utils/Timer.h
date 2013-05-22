@@ -47,48 +47,54 @@ typedef struct {
 } stopWatch;
 #endif
 
-namespace utils {
-    class Timer;
+namespace dart
+{
+namespace utils
+{
 
-    /**
+class Timer;
+
+/**
        @brief The implementation of Timer class
 
        This is a definition of mTimer class.
        For measure the time, clock() api is used
     */
-    class Timer {
-    public:
-        Timer(const char* name); ///< Default constructor. The name can be up to 64
-        ~Timer(); ///< Default destructor
-	
-        void startTimer(); 
-        double elapsed(); ///< return elapsed time in seconds since startTimer().
-        ///< @see startTimer()
-        double lastElapsed() const;
-        void stopTimer();
-        bool isRunning() const;
-        void printLog();
-        void printScreen();
-        void print( bool _toScreen=true );
+class Timer {
+public:
+    Timer(const char* name); ///< Default constructor. The name can be up to 64
+    ~Timer(); ///< Default destructor
 
-    private:
-        int mCount;
+    void startTimer();
+    double elapsed(); ///< return elapsed time in seconds since startTimer().
+    ///< @see startTimer()
+    double lastElapsed() const;
+    void stopTimer();
+    bool isRunning() const;
+    void printLog();
+    void printScreen();
+    void print( bool _toScreen=true );
+
+private:
+    int mCount;
 #if WIN32
-        stopWatch mTimer;
+    stopWatch mTimer;
 #else
-        double mStart;
-        double mStop;
+    double mStart;
+    double mStop;
 #endif
-        double mLastElapsed;
-        double mTotal;
-        char *mName;
-        bool mIsRunning;
+    double mLastElapsed;
+    double mTotal;
+    char *mName;
+    bool mIsRunning;
 
 #if WIN32
-        LARGE_INTEGER  mFrequency;
-        double LIToSecs( LARGE_INTEGER & L) ;
+    LARGE_INTEGER  mFrequency;
+    double LIToSecs( LARGE_INTEGER & L) ;
 #endif
-    };
+};
+
 } // namespace utils
+} // namespace dart
 
 #endif // #ifndef UTILS_TIMER_H

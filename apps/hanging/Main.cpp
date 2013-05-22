@@ -5,6 +5,7 @@
 
 using namespace Eigen;
 using namespace std;
+using namespace dart;
 using namespace kinematics;
 using namespace dynamics;
 

@@ -32,16 +32,18 @@
 
 using namespace std;
 
+namespace dart{
 namespace dynamics{
 	class SkeletonDynamics;
 	class ContactDynamics;
 }
+}
 
-class MyWindow : public yui::Win3D {
+class MyWindow : public dart::yui::Win3D {
 public:
 
 	/// The constructor - set the position of the skeleton
-	MyWindow(dynamics::SkeletonDynamics* _skel): Win3D(), skel(_skel) {
+	MyWindow(dart::dynamics::SkeletonDynamics* _skel): Win3D(), skel(_skel) {
 		mTrans[1] = 200.f;
 		mZoom = 0.3;
 	}
@@ -53,5 +55,5 @@ public:
 	virtual void keyboard(unsigned char key, int x, int y);
 
 	/// Hardcoded skeleton
-	dynamics::SkeletonDynamics* skel;
+	dart::dynamics::SkeletonDynamics* skel;
 };

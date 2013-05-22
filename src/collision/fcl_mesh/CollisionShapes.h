@@ -15,8 +15,10 @@
 
 #include <iostream>
 
-
-namespace collision {
+namespace dart
+{
+namespace collision
+{
 
 template<class BV>
 fcl::BVHModel<BV>* createMesh(float _sizeX, float _sizeY, float _sizeZ,
@@ -378,6 +380,7 @@ fcl::BVHModel<BV>* createCylinder(double _baseRadius, double _topRadius,
 	return model;
 }
 
-}
+} // namespace collision
+} // namespace dart
 
 #endif

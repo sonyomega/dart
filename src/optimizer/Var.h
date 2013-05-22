@@ -38,19 +38,24 @@
 #ifndef OPTIMIZER_VAR_H
 #define OPTIMIZER_VAR_H
 
-namespace optimizer {
-    class Var {
-    public:
-        Var(double val, double lower, double upper);
-        void setWeight(double weight);
-    public:
-        double mVal;
-        double mLower;
-        double mUpper;
-        double mWeight;
-    };
-    
+namespace dart
+{
+namespace optimizer
+{
+
+class Var {
+public:
+    Var(double val, double lower, double upper);
+    void setWeight(double weight);
+public:
+    double mVal;
+    double mLower;
+    double mUpper;
+    double mWeight;
+};
+
 } // namespace optimizer
+} // namespace dart
 
 #endif // #ifndef OPTIMIZER_VAR_H
 

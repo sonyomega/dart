@@ -41,6 +41,8 @@
 
 double inf = 1e9;
 
+namespace dart
+{
 namespace kinematics
 {
 
@@ -193,4 +195,4 @@ void Dof::init()
 }
 
 } // namespace kinematics
-
+} // namespace dart

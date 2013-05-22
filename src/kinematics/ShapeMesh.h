@@ -40,51 +40,55 @@
 
 #include "Shape.h"
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
-    class ShapeMesh : public Shape {
-    public:
-        /// @brief Constructor.
-        ShapeMesh(Eigen::Vector3d _dim, const aiScene *_mesh);
+class ShapeMesh : public Shape {
+public:
+    /// @brief Constructor.
+    ShapeMesh(Eigen::Vector3d _dim, const aiScene *_mesh);
 
-        /// @brief
-        inline const aiScene* getMesh() const { return mMesh; }
+    /// @brief
+    inline const aiScene* getMesh() const { return mMesh; }
 
-        /// @brief
-        inline void setMesh(const aiScene* _mesh) { mMesh = _mesh; }
+    /// @brief
+    inline void setMesh(const aiScene* _mesh) { mMesh = _mesh; }
 
-        /// @brief
-        inline int getDisplayList() const { return mDisplayList; }
+    /// @brief
+    inline int getDisplayList() const { return mDisplayList; }
 
-        /// @brief
-        inline void setDisplayList(int _index) { mDisplayList = _index; }
+    /// @brief
+    inline void setDisplayList(int _index) { mDisplayList = _index; }
 
-        // Documentation inherited.
-        void draw(renderer::RenderInterface* _ri = NULL,
-                  const Eigen::Vector4d& _col = Eigen::Vector4d::Ones(),
-                  bool _default = true) const;
+    // Documentation inherited.
+    void draw(renderer::RenderInterface* _ri = NULL,
+              const Eigen::Vector4d& _col = Eigen::Vector4d::Ones(),
+              bool _default = true) const;
 
-        /// @brief
-        static const aiScene* loadMesh(const std::string& fileName);
+    /// @brief
+    static const aiScene* loadMesh(const std::string& fileName);
 
-        // Documentation inherited.
-        virtual Eigen::Matrix3d computeInertia(double _mass);
+    // Documentation inherited.
+    virtual Eigen::Matrix3d computeInertia(double _mass);
 
-    private:
-        // Documentation inherited.
-        void computeVolume();
+private:
+    // Documentation inherited.
+    void computeVolume();
 
-        /// @brief
-        const aiScene *mMesh;
+    /// @brief
+    const aiScene *mMesh;
 
-        /// @brief OpenGL DisplayList id for rendering
-        int mDisplayList;
+    /// @brief OpenGL DisplayList id for rendering
+    int mDisplayList;
 
-    public:
-        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    };
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
 
 } // namespace kinematics
+} // namespace dart
 
 #endif // #ifndef DART_KINEMATICS_PRIMITIVE_MESH_H
 

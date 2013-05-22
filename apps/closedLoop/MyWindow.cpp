@@ -9,6 +9,7 @@
 #include "utils/Timer.h"
 #include "yui/GLFuncs.h"
 
+using namespace dart;
 using namespace utils;
 using namespace dynamics;
 

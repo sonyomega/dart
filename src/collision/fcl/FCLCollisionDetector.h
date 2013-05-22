@@ -44,6 +44,8 @@
 
 #include "collision/CollisionDetector.h"
 
+namespace dart
+{
 namespace collision
 {
 
@@ -83,5 +85,6 @@ private:
 };
 
 } // namespace collision
+} // namespace dart
 
 #endif // COLLISION_FCL_CONLLISION_DETECTOR_H

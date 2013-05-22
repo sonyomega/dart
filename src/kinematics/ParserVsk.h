@@ -38,14 +38,19 @@
 #ifndef DART_KINEMATICS_PARSER_VSK_H
 #define DART_KINEMATICS_PARSER_VSK_H
 
-namespace kinematics {
-    class Skeleton;
+namespace dart
+{
+namespace kinematics
+{
+class Skeleton;
 } // namespace kinematics
+} // namespace dart
 
 #define VERBOSE false
 #define VSK_OK 0
 #define VSK_ERROR 1
-int readVSKFile(const char* const filename, kinematics::Skeleton* skel);
+int readVSKFile(const char* const filename, dart::kinematics::Skeleton* skel);
+
 
 #endif // #ifndef DART_KINEMATICS_PARSER_VSK_H
 

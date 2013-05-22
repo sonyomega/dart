@@ -48,7 +48,11 @@
 using namespace Eigen;
 using namespace std;
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
+
 Joint::Joint(BodyNode *_bIn, BodyNode *_bOut, const char *_name)
 	: System() {
 	mType = J_UNKNOWN;
@@ -197,9 +201,9 @@ void Joint::computeRotationJac(MatrixXd *_J, MatrixXd *_Jdot, const VectorXd *_q
         assert(mRotTransformIndex.size()==1);
         Transformation *em = mTransforms[mRotTransformIndex[0]];
         Vector3d q(em->getDof(0)->getValue(), em->getDof(1)->getValue(), em->getDof(2)->getValue());
-        *_J = dart_math::expMapJac(q);
+        *_J = math::expMapJac(q);
         if(_Jdot){
-            *_Jdot = dart_math::expMapJacDot(q, *_qdot);
+            *_Jdot = math::expMapJacDot(q, *_qdot);
         }
     }
     else {
@@ -211,8 +215,8 @@ void Joint::computeRotationJac(MatrixXd *_J, MatrixXd *_Jdot, const VectorXd *_q
     if(_Jdot) (*_Jdot) = mStaticTransform.topLeftCorner<3,3>() * (*_Jdot);
 }
 
-dart_math::RotationOrder Joint::getEulerOrder(){
-    if(mType == J_BALLEXPMAP || mType == J_FREEEXPMAP) return dart_math::UNKNOWN;
+math::RotationOrder Joint::getEulerOrder(){
+    if(mType == J_BALLEXPMAP || mType == J_FREEEXPMAP) return math::UNKNOWN;
 
     assert(mNumDofsRot==mRotTransformIndex.size());
     string rot="";
@@ -222,14 +226,14 @@ dart_math::RotationOrder Joint::getEulerOrder(){
         else if(mTransforms[mRotTransformIndex[i]]->getType()==Transformation::T_ROTATEZ) rot+="z";
     }
 
-    if(rot.compare("xyz")==0 || rot.compare("xy")==0 || rot.compare("yz")==0 || rot.compare("xz")==0 || rot.compare("x")==0 || rot.compare("y")==0 || rot.compare("z")==0) return dart_math::XYZ;
-    if(rot.compare("yzx")==0 ) return dart_math::YZX;
-    if(rot.compare("zxy")==0 ) return dart_math::ZXY;
-    if(rot.compare("xzy")==0 ) return dart_math::XZY;
-    if(rot.compare("yxz")==0 ) return dart_math::YXZ;
-    if(rot.compare("zyx")==0 || rot.compare("zy")==0|| rot.compare("yx")==0|| rot.compare("zx")==0 ) return dart_math::ZYX;
+    if(rot.compare("xyz")==0 || rot.compare("xy")==0 || rot.compare("yz")==0 || rot.compare("xz")==0 || rot.compare("x")==0 || rot.compare("y")==0 || rot.compare("z")==0) return math::XYZ;
+    if(rot.compare("yzx")==0 ) return math::YZX;
+    if(rot.compare("zxy")==0 ) return math::ZXY;
+    if(rot.compare("xzy")==0 ) return math::XZY;
+    if(rot.compare("yxz")==0 ) return math::YXZ;
+    if(rot.compare("zyx")==0 || rot.compare("zy")==0|| rot.compare("yx")==0|| rot.compare("zx")==0 ) return math::ZYX;
 
-    return dart_math::UNKNOWN;
+    return math::UNKNOWN;
 }
 
 Vector3d Joint::getAxis( unsigned int _i ){
@@ -441,7 +445,7 @@ Eigen::VectorXd Joint::getFrictionForce() const
     return frictionForce;
 }
 
-//dart_math::Vector6d Joint::evalLocalVelocity() const
+//math::Vector6d Joint::evalLocalVelocity() const
 //{
 
 //}
@@ -465,7 +469,7 @@ Eigen::MatrixXd Joint::__recursive_evalLocalJacobian()
             assert(jointJ.cols() == numTransformDofs);
 
             for (int j = 0; j < jointJ.cols(); ++j)
-                jointJ.col(j) = dart_math::InvAd(T, jointJ.col(j));
+                jointJ.col(j) = math::InvAd(T, jointJ.col(j));
 
             k -= numTransformDofs;
             assert(0 <= k && k < numDofs);
@@ -479,4 +483,4 @@ Eigen::MatrixXd Joint::__recursive_evalLocalJacobian()
 }
 
 } // namespace kinematics
-
+} // namespace dart

@@ -44,8 +44,12 @@
 
 using namespace std;
 using namespace Eigen;
+
+using namespace dart;
 using namespace kinematics;
 
+namespace dart
+{
 namespace dynamics
 {
 
@@ -229,10 +233,10 @@ void BodyNodeDynamics::computeInvDynVelocities(const Vector3d &_gravity,
             Vector3d rl = mT.topRightCorner<3,1>();    // translation from parent's origin to self origin
             mJv.leftCols(nodeParent->getNumDependentDofs()) = nodeParent->mJv;
             mJv.leftCols(nodeParent->getNumDependentDofs()).noalias()
-                    -= dart_math::makeSkewSymmetric(
+                    -= math::makeSkewSymmetric(
                            nodeParent->mW.topLeftCorner<3,3>()*(rl-clparent))
                        * nodeParent->mJw;
-            mJv.noalias() -= dart_math::makeSkewSymmetric(
+            mJv.noalias() -= math::makeSkewSymmetric(
                                  mW.topLeftCorner<3,3>()*mCOMLocal)
                              * mJw;
         }
@@ -241,7 +245,7 @@ void BodyNodeDynamics::computeInvDynVelocities(const Vector3d &_gravity,
         {
             mJw.rightCols(mParentJoint->getNumDofsRot()) = mJwJoint;
 
-            mJv.noalias() -= dart_math::makeSkewSymmetric(
+            mJv.noalias() -= math::makeSkewSymmetric(
                                  mW.topLeftCorner<3,3>()*mCOMLocal)
                              * mJw;
             // if root has translation DOFs
@@ -504,7 +508,7 @@ void BodyNodeDynamics::evalJacDerivLin(int _qi, Vector3d _offset)
 
     for (int j = mNumRootTrans; j < getNumDependentDofs(); j++)
     {
-        VectorXd Jvqi = dart_math::xformHom(mWqq.at(_qi).at(j), _offset);
+        VectorXd Jvqi = math::xformHom(mWqq.at(_qi).at(j), _offset);
         mJvq.at(_qi)(0,j) = Jvqi[0];
         mJvq.at(_qi)(1,j) = Jvqi[1];
         mJvq.at(_qi)(2,j) = Jvqi[2];
@@ -523,7 +527,7 @@ void BodyNodeDynamics::evalJacDerivAng(int _qi)
         Matrix3d JwqijSkewSymm
                 = mWqq.at(_qi).at(j).topLeftCorner<3,3>()*mW.topLeftCorner<3,3>().transpose()
                 + mWq.at(j).topLeftCorner<3,3>()*mWq.at(_qi).topLeftCorner<3,3>().transpose();
-        Vector3d Jwqij = dart_math::fromSkewSymmetric(JwqijSkewSymm);
+        Vector3d Jwqij = math::fromSkewSymmetric(JwqijSkewSymm);
         mJwq.at(_qi)(0,j) = Jwqij[0];
         mJwq.at(_qi)(1,j) = Jwqij[1];
         mJwq.at(_qi)(2,j) = Jwqij[2];
@@ -575,7 +579,7 @@ void BodyNodeDynamics::evalMassMatrix()
     //        const Matrix3d& R = mW.topLeftCorner<3,3>();
     //        const Matrix3d& RT = R.transpose();
     //        const Vector3d& r = mCOMLocal;
-    //        const Matrix3d& r_skew = dart_math::makeSkewSymmetric(r);
+    //        const Matrix3d& r_skew = math::makeSkewSymmetric(r);
     //        const double& m = getMass();
     //        const MatrixXd& mJvT = mJv.transpose();
     //        const MatrixXd& mJwT = mJw.transpose();
@@ -598,7 +602,7 @@ void BodyNodeDynamics::evalCoriolisMatrix(const VectorXd &_qDotSkel)
     mC.noalias() = getMass() * mJv.transpose() * mJvDot;
     mC.noalias() += mJw.transpose() * mIc * mJwDot;
     // term 2
-    mC.noalias() += mJw.transpose() * dart_math::makeSkewSymmetric(mOmega) * mIc * mJw;
+    mC.noalias() += mJw.transpose() * math::makeSkewSymmetric(mOmega) * mIc * mJw;
 }
 
 void BodyNodeDynamics::evalCoriolisVector(const VectorXd &_qDotSkel)
@@ -645,7 +649,7 @@ void BodyNodeDynamics::evalExternalForces(VectorXd& _extForce)
         MatrixXd J = MatrixXd::Zero(3, getNumDependentDofs());
         Vector3d force = mW.topLeftCorner<3,3>() * mContacts[i].second;
         for(int j = 0; j < getNumDependentDofs(); j++)
-            J.col(j) = dart_math::xformHom(mWq[j],mContacts[i].first);
+            J.col(j) = math::xformHom(mWq[j],mContacts[i].first);
         // compute J^TF
         mFext.noalias() += J.transpose() * force;
     }
@@ -779,7 +783,7 @@ void BodyNodeDynamics::addExtForce(const Vector3d& _offset,
     Vector3d force = _force;
 
     if (!_isOffsetLocal)
-        pos = dart_math::xformHom(getWorldInvTransform(), _offset);
+        pos = math::xformHom(getWorldInvTransform(), _offset);
 
     if (!_isForceLocal)
         force.noalias() = mW.topLeftCorner<3,3>().transpose() * _force;
@@ -818,4 +822,5 @@ Vector3d BodyNodeDynamics::evalAngMomentum(Vector3d _pivot)
     return Inew * mOmega;
 }
 
-}   // namespace dynamics
+} // namespace dynamics
+} // namespace dart

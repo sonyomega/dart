@@ -53,13 +53,18 @@
 #include "utils/Deprecated.h"
 //#include "utils/Console.h"
 
-namespace dynamics {
+namespace dart
+{
+
+namespace dynamics
+{
 class ContactDynamics;
 class ConstraintDynamics;
 class BodyNodeDynamics;
 } // namespace dynamics
 
-namespace simulation {
+namespace simulation
+{
 
 /// @class World
 /// @brief
@@ -179,5 +184,6 @@ private:
 };
 
 } // namespace simulation
+} // namespace dart
 
 #endif // #ifndef SIMULATION_WORLD_H

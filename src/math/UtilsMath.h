@@ -52,7 +52,10 @@ using namespace Eigen;
 // Local Headers
 #include "utils/Misc.h"
 
-namespace dart_math {
+namespace dart
+{
+namespace math
+{
 
 // TODO: Is here right place?
 typedef Matrix<double, 6, 1> Vector6d;
@@ -263,6 +266,7 @@ inline Vector6d InvAd(Eigen::Matrix4d& _T12, const Vector6d& _vel1) {
 }
 
 } // namespace utils
+} // namespace dart
 
 #endif // #ifndef UTILS_UTILSMATH_H
 

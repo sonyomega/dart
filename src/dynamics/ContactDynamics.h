@@ -41,88 +41,86 @@
 #include <vector>
 #include <Eigen/Dense>
 
-namespace kinematics {
-    class BodyNode;
-} // namespace kinematics
+namespace dart
+{
 
-namespace collision {
-    class CollisionDetector;
-} // namespace collision
-
-namespace lcpsolver {
-    class LCPSolver;
-} //namespace lcpsolver
-
+namespace kinematics { class BodyNode; }
+namespace collision { class CollisionDetector; }
+namespace lcpsolver { class LCPSolver; }
 
 /*
   // Sample Usage
   dynamics::ContactDynamics contacts(skels, dt);
   contacts.applyContactForces();
  */
-namespace dynamics {
-    class SkeletonDynamics;
-    
-    class ContactDynamics {
-        public:
-        ContactDynamics(const std::vector<SkeletonDynamics*>& _skels, double _dt, double _mu = 1.0, int _d = 4);
-        virtual ~ContactDynamics();
-        inline void setTimeStep(double _timeStep) { mDt = _timeStep; }
-        void applyContactForces();
-        void reset();
-        void addSkeleton(SkeletonDynamics* _newSkel);
-        inline Eigen::VectorXd getConstraintForce(int _skelIndex) const { return mConstrForces[_skelIndex]; }
-        inline collision::CollisionDetector* getCollisionChecker() const {return mCollisionChecker; }
-        int getNumContacts() const;
+namespace dynamics
+{
+
+class SkeletonDynamics;
+
+class ContactDynamics {
+public:
+    ContactDynamics(const std::vector<SkeletonDynamics*>& _skels, double _dt, double _mu = 1.0, int _d = 4);
+    virtual ~ContactDynamics();
+    inline void setTimeStep(double _timeStep) { mDt = _timeStep; }
+    void applyContactForces();
+    void reset();
+    void addSkeleton(SkeletonDynamics* _newSkel);
+    inline Eigen::VectorXd getConstraintForce(int _skelIndex) const { return mConstrForces[_skelIndex]; }
+    inline collision::CollisionDetector* getCollisionChecker() const {return mCollisionChecker; }
+    int getNumContacts() const;
 
 
-    private:
-        void initialize();
-        void destroy();
-        
-        void updateTauStar();
+private:
+    void initialize();
+    void destroy();
 
-        void fillMatrices();
-        bool solve();
-        void applySolution();
+    void updateTauStar();
 
-        inline int getNumSkels() const { return mSkels.size(); }
-        inline int getNumTotalDofs() const { return mIndices.back(); }
-        inline int getNumContactDirections() const { return mNumDir; }
+    void fillMatrices();
+    bool solve();
+    void applySolution();
 
-        Eigen::MatrixXd getJacobian(kinematics::BodyNode* node, const Eigen::Vector3d& p);
+    inline int getNumSkels() const { return mSkels.size(); }
+    inline int getNumTotalDofs() const { return mIndices.back(); }
+    inline int getNumContactDirections() const { return mNumDir; }
 
-        // Helper functions to compute all of the matrices
-        // Notation is similar to that used in derivation:
-        // Mqddot + Cqdot + kq = tau + (J^T)(f_n)N + (J^T)D(f_d) -> Mqdot = tau* + N(f_n) + B(f_d)
-        //        inline Eigen::MatrixXd getMassMatrix() const { return mM; } // M matrix
-        //        inline Eigen::VectorXd getTauStarVector() const { return mTauStar; } // T* vector (not T)
-        //        void updateNormalMatrix(); // N matrix
-        //        void updateBasisMatrix() ; // B matrix
-        void updateNBMatrices();
-        Eigen::MatrixXd getTangentBasisMatrix(const Eigen::Vector3d& p, const Eigen::Vector3d& n) ; // gets a matrix of tangent dirs.
-        Eigen::MatrixXd getContactMatrix() const; // E matrix
-        Eigen::MatrixXd getMuMatrix() const; // mu matrix
+    Eigen::MatrixXd getJacobian(kinematics::BodyNode* node, const Eigen::Vector3d& p);
 
-        std::vector<SkeletonDynamics*> mSkels;
-        std::vector<int> mBodyIndexToSkelIndex;
-        std::vector<int> mIndices;
-        collision::CollisionDetector* mCollisionChecker;
-        double mDt; // timestep
-        double mMu; // friction coeff.
-        int mNumDir; // number of basis directions
+    // Helper functions to compute all of the matrices
+    // Notation is similar to that used in derivation:
+    // Mqddot + Cqdot + kq = tau + (J^T)(f_n)N + (J^T)D(f_d) -> Mqdot = tau* + N(f_n) + B(f_d)
+    //        inline Eigen::MatrixXd getMassMatrix() const { return mM; } // M matrix
+    //        inline Eigen::VectorXd getTauStarVector() const { return mTauStar; } // T* vector (not T)
+    //        void updateNormalMatrix(); // N matrix
+    //        void updateBasisMatrix() ; // B matrix
+    void updateNBMatrices();
+    Eigen::MatrixXd getTangentBasisMatrix(const Eigen::Vector3d& p, const Eigen::Vector3d& n) ; // gets a matrix of tangent dirs.
+    Eigen::MatrixXd getContactMatrix() const; // E matrix
+    Eigen::MatrixXd getMuMatrix() const; // mu matrix
 
-        // Cached (aggregated) mass/tau matrices
-        Eigen::VectorXd mTauStar;
-        Eigen::MatrixXd mN;
-        Eigen::MatrixXd mB;
+    std::vector<SkeletonDynamics*> mSkels;
+    std::vector<int> mBodyIndexToSkelIndex;
+    std::vector<int> mIndices;
+    collision::CollisionDetector* mCollisionChecker;
+    double mDt; // timestep
+    double mMu; // friction coeff.
+    int mNumDir; // number of basis directions
 
-        // Matrices to pass to solver
-        Eigen::MatrixXd mA;
-        Eigen::VectorXd mQBar;
-        Eigen::VectorXd mX;
-        std::vector<Eigen::VectorXd> mConstrForces; // solved constraint force in generalized coordinates; mConstrForces[i] is the constraint force for the ith skeleton
-        };
+    // Cached (aggregated) mass/tau matrices
+    Eigen::VectorXd mTauStar;
+    Eigen::MatrixXd mN;
+    Eigen::MatrixXd mB;
+
+    // Matrices to pass to solver
+    Eigen::MatrixXd mA;
+    Eigen::VectorXd mQBar;
+    Eigen::VectorXd mX;
+    std::vector<Eigen::VectorXd> mConstrForces; // solved constraint force in generalized coordinates; mConstrForces[i] is the constraint force for the ith skeleton
+};
+
 } // namespace dynamics
+} // namespace dart
 
 #endif // #ifndef DART_DYNAMICS_CONTACT_DYNAMICS_H
 

@@ -44,35 +44,41 @@
 
 using namespace std;
 
-namespace kinematics{
-    class Skeleton;
-    class BodyNode;
+namespace dart
+{
+
+namespace kinematics
+{
+class Skeleton;
+class BodyNode;
 }   // namespace kinematics
 
 namespace utils {
-    namespace mayaexports {
+namespace mayaexports {
 
-        class MayaExportSkeleton{
-        public:    
-            static bool exportMayaAscii( kinematics::Skeleton *_model, ofstream &_outFile );
+class MayaExportSkeleton{
+public:
+    static bool exportMayaAscii( kinematics::Skeleton *_model, ofstream &_outFile );
     
-        private:
-            friend class MayaExportMotion;
-        
-            static const string mSuffixPrim;
-            static const string mSuffixShape;
-            static const string mSuffixGeom;
-            static const dart_math::RotationOrder mRotOrder;
+private:
+    friend class MayaExportMotion;
 
-            static bool exportMayaAsciiHeader(ofstream &_outFile );
-            static bool exportMayaAsciiShape(kinematics::BodyNode* b, ofstream &_outFile, const string &_prefix, const string &_suffix);
-            static bool exportMayaAsciiSegmentSubtree(kinematics::BodyNode *_b, const int _writeNumNodes, ofstream &_outFile, const string &_prefix, const string &_suffix );
-            // do not write the const stuff - all keyed now
-            static bool exportMayaAsciiSegmentSubtree2(kinematics::BodyNode *_b, const int _writeNumNodes, ofstream &_outFile, const string &_prefix, const string &_suffix );
-            static bool exportMayaAsciiSegmentFooter(kinematics::BodyNode* _b, const int _writeNumNodes, ofstream &_outFile, const string &_prefix, const string &_suffix  );
+    static const string mSuffixPrim;
+    static const string mSuffixShape;
+    static const string mSuffixGeom;
+    static const math::RotationOrder mRotOrder;
 
-        };
-    } // namespace mayaexports
+    static bool exportMayaAsciiHeader(ofstream &_outFile );
+    static bool exportMayaAsciiShape(kinematics::BodyNode* b, ofstream &_outFile, const string &_prefix, const string &_suffix);
+    static bool exportMayaAsciiSegmentSubtree(kinematics::BodyNode *_b, const int _writeNumNodes, ofstream &_outFile, const string &_prefix, const string &_suffix );
+    // do not write the const stuff - all keyed now
+    static bool exportMayaAsciiSegmentSubtree2(kinematics::BodyNode *_b, const int _writeNumNodes, ofstream &_outFile, const string &_prefix, const string &_suffix );
+    static bool exportMayaAsciiSegmentFooter(kinematics::BodyNode* _b, const int _writeNumNodes, ofstream &_outFile, const string &_prefix, const string &_suffix  );
+
+};
+
+} // namespace mayaexports
 } // namespace utils
+} // namespace dart
 
 #endif  // MAYAEXPORTS_MAYAEXPORTSKELETON_H

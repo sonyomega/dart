@@ -3,6 +3,7 @@
 
 #include "optimizer/Constraint.h"
 
+namespace dart {
 namespace kinematics {
     class Skeleton;
     class BodyNode;
@@ -31,5 +32,6 @@ namespace optimizer {
         kinematics::BodyNode* mNode;
     };
 } // namespace optimizer
+} // namespace dart
     
 #endif // #ifndef POSITION_CONSTRAINT_H

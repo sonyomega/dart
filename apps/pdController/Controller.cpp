@@ -5,7 +5,7 @@
 
 using namespace Eigen;
 
-Controller::Controller(kinematics::FileInfoDof *_motion, dynamics::SkeletonDynamics *_skel, double _t) {
+Controller::Controller(dart::kinematics::FileInfoDof *_motion, dart::dynamics::SkeletonDynamics *_skel, double _t) {
     mMotion = _motion;
     mSkel = _skel;
     mTimestep = _t;

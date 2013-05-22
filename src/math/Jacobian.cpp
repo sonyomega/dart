@@ -37,6 +37,8 @@
 
 #include "math/Jacobian.h"
 
+namespace dart
+{
 namespace math
 {
 
@@ -113,4 +115,5 @@ se3 Jacobian::operator*(const Eigen::VectorXd& _qdot)
 }
 
 } // namespace math
+} // namespace dart
 

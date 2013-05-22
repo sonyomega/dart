@@ -41,7 +41,10 @@
 using namespace std;
 using namespace Eigen;
 
-namespace kinematics {
+namespace dart
+{
+namespace kinematics
+{
 
 ShapeCylinder::ShapeCylinder(double _radius, double _height)
     : Shape(P_CYLINDER),
@@ -80,3 +83,4 @@ Matrix3d ShapeCylinder::computeInertia(double _mass) {
 }
 
 } // namespace kinematics
+} // namespace dart

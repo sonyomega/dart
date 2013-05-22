@@ -42,6 +42,7 @@
 #include "Path.h"
 #include "Trajectory.h"
 
+namespace dart {
 namespace planning {
 class PathFollowingTrajectory : public Trajectory
 {
@@ -98,4 +99,5 @@ private:
 	mutable double cachedTime;
 	mutable std::list<TrajectoryStep>::const_iterator cachedTrajectorySegment;
 };
+}
 }
