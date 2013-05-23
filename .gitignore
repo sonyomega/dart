@@ -40,3 +40,4 @@ obj/
 *.o
 *~
 /nbproject/
+/XCode/
