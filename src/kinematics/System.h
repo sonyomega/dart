@@ -39,12 +39,12 @@
 #define DART_KINEMATICS_SYSTEM_H
 
 #include <vector>
+#include <Eigen/Dense>
+
 #include "kinematics/Dof.h"
 
-namespace dart
-{
-namespace kinematics
-{
+namespace dart {
+namespace kinematics {
 
 /// @brief System is a base class for every classes that has Dofs.
 class System
@@ -66,7 +66,7 @@ public:
     Dof* getDof(int _idx) const;
 
     /// @brief
-    Dof* getDof(const char* const _name) const;
+    Dof* getDof(const std::string& _name) const;
 
     /// @brief Backup current state as initial state.
     void backupInitState();
@@ -77,10 +77,10 @@ public:
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
-    void set_q(const Eigen::VectorXd& _q);
-    void set_dq(const Eigen::VectorXd& _dq);
-    void set_ddq(const Eigen::VectorXd& _ddq);
-    void set_tau(const Eigen::VectorXd& _tau);
+    void set_q(const Eigen::VectorXd& _q);     ///< Set generalized coordinate vector
+    void set_dq(const Eigen::VectorXd& _dq);   ///< Set generalized velocity vector
+    void set_ddq(const Eigen::VectorXd& _ddq); ///< Set generalized acceleration vector
+    void set_tau(const Eigen::VectorXd& _tau); ///< Set generalized force vector
 
     void set_qMin(const Eigen::VectorXd& _qMin);
     void set_dqMin(const Eigen::VectorXd& _dqMin);

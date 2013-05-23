@@ -33,14 +33,14 @@
  */
 
 // For problem
-#include "optimizer/Var.h"
-#include "optimizer/Constraint.h"
-#include "optimizer/Problem.h"
-#include "optimizer/ObjectiveBox.h"
-#include "optimizer/snopt/SnoptSolver.h"
 #include <iostream>
 #include <gtest/gtest.h>
 #include <Eigen/Dense>
+//#include "optimizer/Var.h"
+//#include "optimizer/Constraint.h"
+//#include "optimizer/Problem.h"
+//#include "optimizer/ObjectiveBox.h"
+//#include "optimizer/snopt/SnoptSolver.h"
 
 using namespace std;
 using namespace Eigen;

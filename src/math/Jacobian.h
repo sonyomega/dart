@@ -44,10 +44,8 @@
 
 // TODO: Let's use noalias().
 // TODO: Not using Eigen?
-namespace dart
-{
-namespace math
-{
+namespace dart {
+namespace math {
 
 //==============================================================================
 class Jacobian
@@ -84,6 +82,9 @@ public:
     /// @brief
     Eigen::MatrixXd getMatrix() const;
     
+    /// @brief
+    void setZero();
+
     /// @brief
     void setColumn(int _idx, const se3& _J) { mJ[_idx] = _J; }
     

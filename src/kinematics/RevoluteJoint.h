@@ -2,8 +2,7 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>,
- *            Jeongseok Lee <jslee02@gmail.com>
+ * Author(s): Jeongseok Lee <jslee02@gmail.com>
  * Date: 05/21/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
@@ -36,47 +35,46 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef DART_KINEMATICS_REVOLUTE_JOINT_H
+#define DART_KINEMATICS_REVOLUTE_JOINT_H
+
+#include <Eigen/Dense>
+
+#include "kinematics/Dof.h"
 #include "kinematics/Joint.h"
 
 namespace dart {
 namespace kinematics {
 
-Joint::Joint()
-    : mJointType(UNKNOWN),
-      mParentBody(NULL),
-      mChildBody(NULL),
-      mT_ParentBodyToJoint(math::SE3()),
-      mT_ChildBodyToJoint(math::SE3()),
-      mT(math::SE3()),
-      mV(math::se3()),
-      mS(math::Jacobian()),
-      mdS(math::Jacobian())
+class RevoluteJoint : public Joint
 {
-}
+public:
+    /// @brief
+    RevoluteJoint();
 
-Joint::~Joint()
-{
-}
+    /// @brief
+    virtual ~RevoluteJoint();
 
-void Joint::setParentBody(BodyNode* _body)
-{
-    mParentBody = _body;
-}
+    //
+    virtual void updateKinematics(bool _firstDerivative = true,
+                        bool _secondDerivative = true);
 
-void Joint::setChildBody(BodyNode* _body)
-{
-    mChildBody = _body;
-}
+protected:
+    /// @brief
+    Dof mCoordinate;
 
-void Joint::setLocalTransformFromParentBody(const math::SE3& _T)
-{
-    mT_ParentBodyToJoint = _T;
-}
+    /// @brief Rotational axis.
+    math::so3 mAxis;
 
-void Joint::setLocalTransformFromChildBody(const math::SE3& _T)
-{
-    mT_ChildBodyToJoint = _T;
-}
+private:
+
+public:
+    //
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
 
 } // namespace kinematics
 } // namespace dart
+
+#endif // #ifndef DART_KINEMATICS_REVOLUTE_JOINT_H
+

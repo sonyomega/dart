@@ -44,13 +44,13 @@
 // TODO: Let's use noalias().
 // TODO: Not using Eigen?
 
-namespace dart
-{
-namespace math
-{
+namespace dart {
+namespace math {
 
 class so3; // Lie algebra of SO(3)
 class SO3; // SO(3), Special orthogonal group (3x3 rotation matrix)
+
+typedef Eigen::Vector3d Vec3;
 
 //==============================================================================
 /// @brief

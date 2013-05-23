@@ -39,26 +39,114 @@
 #ifndef DART_KINEMATICS_DOF_H
 #define DART_KINEMATICS_DOF_H
 
-#include <cstring>
-#include <Eigen/Dense>
-#include <vector>
+#include <string>
 
-#include "utils/Deprecated.h"
-
-namespace dart
-{
-namespace kinematics
-{
-
-#define MAX_DOF_NAME 128
+namespace dart {
+namespace kinematics {
 
 class Joint;
 class Transformation;
 
+/// @brief
+// TODO: Change name (Dof --> Coordinate) since Dof is generalized coordiante.
 class Dof
 {
 public:
-    // TODO: All publics? class vs struct?
+    double get_q() const { return q; }           ///< Coordinate
+    double get_dq() const { return dq; }         ///< Velocity
+    double get_ddq() const { return ddq; }       ///< Acceleration
+    double get_tau() const { return tau; }       ///< torque or force
+
+    double get_qMin() const { return qMin; }     ///< Minimum value of q
+    double get_dqMin() const { return dqMin; }   ///< Minimum value of dq
+    double get_ddqMin() const { return ddqMin; } ///< Minimum value of ddq
+    double get_tauMin() const { return tauMin; } ///< Minimum value of tau
+
+    double get_qMax() const { return qMax; }     ///< Maximum value of q
+    double get_dqMax() const { return dqMax; }   ///< Maximum value of dq
+    double get_ddqMax() const { return ddqMax; } ///< Maximum value of ddq
+    double get_tauMax() const { return tauMax; } ///< Maximum value of tau
+
+    double get_init_q() const { return init_q; }   ///< Initial value of q
+    double get_init_dq() const { return init_dq; } ///< Initial value of dq
+
+    void set_q(double _q) { q = _q; }
+    void set_dq(double _dq) { dq = _dq; }
+    void set_ddq(double _ddq) { ddq = _ddq; }
+    void set_tau(double _tau) { tau = _tau; }
+
+    void set_qMin(double _qMin) { qMin = _qMin; }
+    void set_dqMin(double _dqMin) { dqMin = _dqMin; }
+    void set_ddqMin(double _ddqMin) { ddqMin = _ddqMin; }
+    void set_tauMin(double _tauMin) { tauMin = _tauMin; }
+
+    void set_qMax(double _qMax) { qMax = _qMax; }
+    void set_dqMax(double _dqMax) { dqMax = _dqMax; }
+    void set_ddqMax(double _ddqMax) { ddqMax = _ddqMax; }
+    void set_tauMax(double _tauMax) { tauMax = _tauMax; }
+
+    void set_init_q(double _init_q) { init_q = _init_q; }
+    void set_init_dq(double _init_dq) { init_dq = _init_dq; }
+
+    void backupInitState();
+    void restoreInitState();
+
+public:
+    /// @brief
+    Dof();
+
+    /// @brief
+    virtual ~Dof();
+
+public:
+    /// @brief
+    void init();
+
+    /// @brief
+    void setName(const std::string& _name) { mName = _name; }
+
+    /// @brief
+    const std::string& getName() const { return mName; }
+
+    /// @brief
+    //int getSkelIndex() const { return mSkelIndex; }
+
+    /// @brief
+    //void setSkelIndex(int _idx) { mSkelIndex = _idx; }
+
+    /// @brief
+    //bool isVariable() const { return mVariable; }
+
+    /// @brief
+    //void setVariable() { mVariable = true; }
+
+    /// @brief
+    //void setTrans(Transformation *_t){ mTrans = _t; }
+
+    /// @brief
+    //Transformation* getTrans() const{ return mTrans; }
+
+    /// @brief
+    //void setJoint(Joint *_j) { mJoint = _j; }
+
+    /// @brief
+    //Joint *getJoint() const { return mJoint; }
+
+protected:
+    /// @brief
+    std::string mName;
+
+    /// @brief Unique to dof in model.
+    //int mSkelIndex;
+
+    /// @brief Transformation associated with
+    //Transformation *mTrans;
+
+    /// @brief Joint to which it belongs.
+    //Joint *mJoint;
+
+    /// @brief True when it is a variable and included int he model.
+    //bool mVariable;
 
     //--------------------------------------------------------------------------
     // Position
@@ -97,105 +185,7 @@ public:
     //--------------------------------------------------------------------------
     double init_q;
     double init_dq;
-    double init_ddq;
-
-    //std::vector<double> q_history;
-
-    double get_q() const { return q; }
-    double get_dq() const { return dq; }
-    double get_ddq() const { return ddq; }
-    double get_tau() const { return tau; }
-
-    void set_q(double _q) { q = _q; }
-    void set_dq(double _dq) { dq = _dq; }
-    void set_ddq(double _ddq) { ddq = _ddq; }
-    void set_tau(double _tau) { tau = _tau; }
-
-public:
-    /// @brief
-    Dof();
-
-    /// @brief
-    Dof(double _val);
-
-    /// @brief
-    Dof(double _val, double _min, double _max);
-
-    /// @brief
-    Dof(double _val, const char *_name);
-
-    /// @brief
-    Dof(double _val, const char *_name, double _min, double _max);
-
-    virtual ~Dof() {}
-
-public:
-    /// @brief
-    void init();
-
-    /// @brief
-    void setName(char *_n) { strcpy(mName, _n); }
-
-    /// @brief
-    char* getName() { return mName; }
-
-    /// @brief
-    void setValue(double _v);
-
-    /// @brief
-    double getValue() const { return q; }
-
-    /// @brief
-    double getMin() const { return qMin; }
-
-    /// @brief
-    double getMax() const { return qMax; }
-
-    /// @brief
-    void setMin(double _min) { qMin = _min; }
-
-    /// @brief
-    void setMax(double _max) { qMax = _max; }
-
-    /// @brief
-    int getSkelIndex() const { return mSkelIndex; }
-
-    /// @brief
-    void setSkelIndex(int _idx) { mSkelIndex = _idx; }
-
-    /// @brief
-    bool isVariable() const { return mVariable; }
-
-    /// @brief
-    void setVariable() { mVariable = true; }
-
-    /// @brief
-    void setTrans(Transformation *_t){ mTrans = _t; }
-
-    /// @brief
-    Transformation* getTrans() const{ return mTrans; }
-
-    /// @brief
-    void setJoint(Joint *_j) { mJoint = _j; }
-
-    /// @brief
-    Joint *getJoint() const { return mJoint; }
-
-protected:
-    /// @brief
-    char mName[MAX_DOF_NAME];
-
-    /// @brief Unique to dof in model.
-    int mSkelIndex;
-
-    /// @brief Transformation associated with
-    Transformation *mTrans;
-
-    /// @brief Joint to which it belongs.
-    Joint *mJoint;
-
-    /// @brief True when it is a variable and included int he model.
-    bool mVariable;
+    //double init_ddq;
 };
 
 } // namespace kinematics

@@ -2,8 +2,7 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>,
- *            Jeongseok Lee <jslee02@gmail.com>
+ * Author(s): Jeongseok Lee <jslee02@gmail.com>
  * Date: 05/21/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
@@ -36,46 +35,53 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "kinematics/Joint.h"
+#include "math/SO3.h"
+#include "kinematics/RevoluteJoint.h"
 
 namespace dart {
 namespace kinematics {
 
-Joint::Joint()
-    : mJointType(UNKNOWN),
-      mParentBody(NULL),
-      mChildBody(NULL),
-      mT_ParentBodyToJoint(math::SE3()),
-      mT_ChildBodyToJoint(math::SE3()),
-      mT(math::SE3()),
-      mV(math::se3()),
-      mS(math::Jacobian()),
-      mdS(math::Jacobian())
+RevoluteJoint::RevoluteJoint()
+    : Joint(),
+      mAxis(math::so3())
+{
+    mJointType = REVOLUTE;
+    mDofs.push_back(&mCoordinate);
+    mS.setSize(1);
+    mdS.setSize(1);
+}
+
+RevoluteJoint::~RevoluteJoint()
 {
 }
 
-Joint::~Joint()
+void RevoluteJoint::updateKinematics(bool _firstDerivative,
+                                     bool _secondDerivative)
 {
-}
+    // T
+    mT = mT_ParentBodyToJoint
+         * math::SE3(mAxis * mCoordinate.get_q())
+         * mT_ChildBodyToJoint.getInverse();
 
-void Joint::setParentBody(BodyNode* _body)
-{
-    mParentBody = _body;
-}
+    // S, V
+    if (_firstDerivative)
+    {
+        mS.setColumn(0, Ad(mT_ChildBodyToJoint, math::se3(mAxis)));
 
-void Joint::setChildBody(BodyNode* _body)
-{
-    mChildBody = _body;
-}
+        // V = S * dq
+        mV = mS * get_q();
+        //mV.setAngular(mAxis * mCoordinate.get_q());
 
-void Joint::setLocalTransformFromParentBody(const math::SE3& _T)
-{
-    mT_ParentBodyToJoint = _T;
-}
+        // dS, dV
+        if (_secondDerivative)
+        {
+            // dS = 0
+            mdS.setZero();
 
-void Joint::setLocalTransformFromChildBody(const math::SE3& _T)
-{
-    mT_ChildBodyToJoint = _T;
+            // dV = dS * dq + S * ddq
+            mdV = mS * get_ddq();
+        }
+    }
 }
 
 } // namespace kinematics

@@ -42,18 +42,17 @@
 
 extern "C" { struct aiScene; }
 
-namespace dart
-{
-
-namespace renderer {
-class RenderInterface;
-}
-
+namespace dart {
+namespace renderer { class RenderInterface; }
 namespace kinematics {
+
 class Transformation;
 
-class Shape {
+/// @brief
+class Shape
+{
 public:
+    /// @brief
     enum ShapeType {
         P_UNDEFINED,
         P_BOX,

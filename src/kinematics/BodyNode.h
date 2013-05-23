@@ -73,30 +73,15 @@ Runge-Kutta and fourth-order Runge Kutta.
 #ifndef DART_KINEMATICS_BODYNODE_H
 #define DART_KINEMATICS_BODYNODE_H
 
-#include <vector>
-#include <Eigen/Dense>
+#include "math/SE3.h"
+#include "dynamics/Inertia.h" // TODO:
 
-#include "utils/Deprecated.h"
-#include "math/EigenHelper.h"
-#include "math/UtilsMath.h"
-#include "math/Inertia.h"
+namespace dart {
+namespace kinematics {
 
-namespace dart
-{
-
-namespace renderer { class RenderInterface; }
-
-namespace kinematics
-{
-
-#define MAX_NODE3D_NAME 128
-
-class Marker;
-class Dof;
-class Transformation;
-class Shape;
 class Skeleton;
 class Joint;
+class Shape;
 
 /// @brief BodyNode class represents a single node of the skeleton.
 ///
@@ -113,344 +98,92 @@ class Joint;
 /// dV: generalized body acceleration (6x1 vector)
 /// F: generalized body force (6x1 vector)
 /// I: generalized body inertia (6x6 matrix)
-class BodyNode {
+class BodyNode
+{
 public:
-    // We need this aligned allocator because we have Matrix4d as members in
-    // this class.
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    /// @brief
+    BodyNode();
 
-public:
-    //--------------------------------------------------------------------------
-    // DEPRECATED
-    //--------------------------------------------------------------------------
-    Eigen::Matrix4d getLocalDeriv(Dof *_q) const; ///< First derivative of the local transformation w.r.t. the input dof.
-    Eigen::Matrix3d getInertia() const { return mIc; } ///< Superseded by getWorldInertia()
-    Eigen::Matrix4d getMassTensor() const; ///< Computes the "mass tensor" in lagrangian dynamics from the inertia matrix.
-    const MatrixXd& getJacobianLinear() const;
-    const MatrixXd& getJacobianAngular() const;
-    void evalVelocity(const Eigen::VectorXd &_qDotSkel); ///< Evaluates the velocity of the COM in the world frame.
-    void evalOmega(const Eigen::VectorXd &_qDotSkel);    ///< Evaluates the Omega in the world frame.
-    Eigen::Vector3d mVel;    ///< Linear velocity in the world frame
-    Eigen::Vector3d mOmega;  ///< Angular velocity in the world frame
-    void evalJacLin(); ///< Evaluate linear Jacobian of this body node (num cols == num dependent dofs)
-    void evalJacAng(); ///< Evaluate angular Jacobian of this body node (num cols == num dependent dofs)
-
-protected:
-    //--------------------------------------------------------------------------
-    // DEPRECATED
-    //--------------------------------------------------------------------------
-    double mMass; ///< Mass of this node; zero if no primitive
-    Eigen::Vector3d mCOMLocal; ///< COM of this body node in its local coordinate frame.
-    Eigen::Matrix3d mI;  ///< Inertia matrix in the body frame; defaults to Shape's inertia matrix
-    Eigen::Matrix3d mIc; ///< Inertia matrix in the world frame = R*Ibody*RT; updated by evalTransform
-    EIGEN_V_MAT4D mTq;   ///< Partial derivative of local transformation wrt local dofs; each element is a 4x4 matrix
-    EIGEN_V_MAT4D mWq;   ///< Partial derivative of world transformation wrt all dependent dofs; each element is a 4x4 matrix
-    Eigen::MatrixXd mJv; ///< Linear Jacobian; Cartesian_linear_velocity of the COM = mJv * generalized_velocity
-    Eigen::MatrixXd mJw; ///< Angular Jacobian; Cartesian_angular_velocity = mJw * generalized_velocity
-
-public:
-
-    /// @brief Default constructor. The name can be up to 128.
-    BodyNode(const char *_name = NULL);
-
-    /// @brief Default destructor.
+    /// @brief
     virtual ~BodyNode();
 
-    /// @brief Initialize the vector memebers with proper sizes.
-    void init();
+public:
+
+public:
+    /// @brief
+    void setGravityMode(bool _onoff) { mGravityMode = _onoff; }
 
     /// @brief
-    void setWorldTransform(const Eigen::Matrix4d& _W) { mW = _W; }
-
-    /// @brief Transformation from the local coordinates of this body node to
-    /// the world coordinates
-    Eigen::Matrix4d getWorldTransform() const { return mW; }
-
-    /// @brief Transformation from the world coordinates to the local
-    /// coordinates of this body node
-    Eigen::Matrix4d getWorldInvTransform() const { return mW.inverse(); }
-
-    /// @brief Transformation from the local coordinates of this body node to
-    /// the local coordinates of its parent
-    Eigen::Matrix4d getLocalTransform() const { return mT; }
-
-    /// @briefTransformation from the local coordinates of the parent node to
-    /// the local coordinates of this body node
-    Eigen::Matrix4d getLocalInvTransform() const { return mT.inverse(); }
-
-    /// @brief Given a 3D vector lp in the local coordinates of this body node.
-    /// @return The world coordinates of this vector
-    Eigen::Vector3d evalWorldPos(const Eigen::Vector3d& _lp) const;
-
-    /// @brief Set up the list of dependent dofs.
-    void setDependDofList();
-
-    /// @brief Test whether this dof is dependent or not.
-    /// @warning You may want to use getNumDependentDofs / getDependentDof for
-    /// efficiency.
-    bool dependsOn(int _dofIndex) const;
-
-    /// @brief The number of the dofs by which this node is affected.
-    int getNumDependentDofs() const { return mDependentDofs.size(); }
-
-    /// @brief Return an dof index from the array index (< getNumDependentDofs).
-    int getDependentDof(int _arrayIndex) { return mDependentDofs[_arrayIndex]; }
-
-    /// @brief Render the entire subtree rooted at this body node.
-    void draw(renderer::RenderInterface* _ri = NULL,
-              const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
-              bool _useDefaultColor = true,
-              int _depth = 0) const;
-
-    /// @brief Render the markers
-    void drawMarkers(renderer::RenderInterface* _ri = NULL,
-                     const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
-                     bool _useDefaultColor = true) const;
+    bool getGravityMode() const { return mGravityMode; }
 
     /// @brief
-    void setName(const char* _name) { strcpy(mName, _name); }
+    const math::SE3& getWorldTransformation() const { return mW; }
 
-    /// @brief
-    char* getName() { return mName; }
+    const math::se3& getBodyVelocity() const { return mV; }
 
-    /// @brief
-    void setLocalCOM(const Eigen::Vector3d& _off) { mCOMLocal = _off; }
+    const math::se3& getBodyAcceleration() const { return mdV; }
 
-    /// @brief
-    const Eigen::Vector3d& getLocalCOM() const { return mCOMLocal; }
+public:
+    void updateWorldTransformation();
 
-    /// @brief
-    Eigen::Vector3d getWorldCOM() const { return evalWorldPos(mCOMLocal); }
+    void updateBodyVelocity();
 
-    /// @brief
-    void setSkel(Skeleton* _skel) { mSkel = _skel; }
-
-    /// @brief
-    Skeleton* getSkel() const { return mSkel; }
-
-    /// @brief
-    void setSkelIndex(int _idx) { mSkelIndex = _idx; }
-
-    /// @brief
-    int getSkelIndex() const { return mSkelIndex; }
-
-    /// @brief
-    BodyNode* getParentNode() const { return mParentNode; }
-
-    /// @brief
-    void setMass(double _mass) { mMass = _mass; }
-
-    /// @brief
-    double getMass() const { return mMass; }
-
-    /// @brief
-    void setLocalInertia(double _Ixx, double _Iyy, double _Izz,
-                         double _Ixy, double _Ixz, double _Iyz)
-    {
-        mI(0,0) = _Ixx; mI(0,1) = _Ixy; mI(0,2) = _Ixz;
-        mI(1,0) = _Ixy; mI(1,1) = _Iyy; mI(1,2) = _Iyz;
-        mI(2,0) = _Ixz; mI(2,1) = _Iyz; mI(2,2) = _Izz;
-    }
-
-    /// @brief
-    void setLocalInertia(const Eigen::Matrix3d& _inertia)
-    { mI = _inertia; }
-
-    /// @brief
-    const Eigen::Matrix3d& getLocalInertia() const { return mI; }
-
-    /// @brief
-    const Eigen::Matrix3d& getWorldInertia() const { return mIc; }
-
-    /// @brief
-    void addMarker(Marker *_h) { mMarkers.push_back(_h); }
-
-    /// @brief
-    int getNumMarkers() const { return mMarkers.size(); }
-
-    /// @brief
-    Marker* getMarker(int _idx) const { return mMarkers[_idx]; }
-
-    /// @brief
-    void setShape(Shape *_p) { mVizShape = _p; mColShape = _p; }
-
-    /// @brief
-    Shape* getShape() const { return mVizShape; }
-
-    /// @brief
-    void setVisualizationShape(Shape *_p) { mVizShape = _p; }
-
-    /// @brief
-    Shape* getVisualizationShape() const { return mVizShape; }
-
-    /// @brief
-    void setCollisionShape(Shape *_p) { mColShape = _p; }
-
-    /// @brief
-    Shape* getCollisionShape() const { return mColShape; }
-
-    /// @brief
-    void addChildJoint(Joint *_c) { mJointsChild.push_back(_c); }
-
-    /// @brief
-    int getNumChildJoints() const { return mJointsChild.size(); }
-
-    /// @brief
-    Joint* getChildJoint(int _idx) const { return mJointsChild[_idx]; }
-
-    /// @brief
-    Joint* getParentJoint() const { return mParentJoint; }
-
-    /// @brief
-    void setParentJoint(Joint* _p);
-
-    /// @brief
-    void setColliding(bool _colliding) { mColliding = _colliding; }
-
-    /// @brief
-    bool getColliding() const { return mColliding; }
-
-    // wrapper functions for joints
-    /// @brief
-    BodyNode* getChildNode(int _idx) const;
-
-    /// @brief
-    int getNumLocalDofs() const;
-
-    /// @brief
-    Dof* getDof(int _idx) const;
-
-    /// @brief
-    bool isPresent(const Dof* _q);
-
-    /// @brief
-    bool getCollideState() const { return mCollidable; }
-
-    /// @brief
-    void setCollideState(bool _c) { mCollidable = _c; }
-
-    /// @brief
-    const Matrix4d& getDerivLocalTransform(int _index) const;
-
-    /// @brief
-    const Matrix4d& getDerivWorldTransform(int _index) const;
-
-    /// @brief Return calculated body Jacobian by evalJacobian().
-    const Eigen::MatrixXd& getBodyJacobian() const;
-
-    /// @brief Calculate world Jacobian from body Jacobian.
-    Eigen::MatrixXd getWorldJacobian() const;
-
-    /// @brief Evaluate generalized body velocity.
-    void evalBodyVelocity();
-
-    /// @brief Get generalized body velocity w.r.t. body frame.
-    const math::Vector6d& getBodyVelocity() const { return mBodyVelocity; }
-
-    /// @brief Get generalized body velocity w.r.t. world frame.
-    math::Vector6d getWorldVelocity() const;
-
-    /// @brief Get generalized body acceleration w.r.t. body frame.
-    const math::Vector6d& getBodyAcceleration() const
-    { return mBodyAcceleration; }
-
-    /// @brief Get generalized body acceleration w.r.t. world frame.
-    math::Vector6d getWorldAcceleration() const;
-
-    /// @brief Update the first derivatives of the transformations
-    void updateFirstDerivatives();
-
-    /// @brief Evaluate Jacobian of this body node w.r.t. body frame
-    /// (num cols == num dependent dofs)
-    void evalJacobian();
-
-    //--------------------------------------------------------------------------
-    // Sub-functions for kinematics
-    //--------------------------------------------------------------------------
-    /// @brief Update local transformations and world transformations.
-    /// T(i-1,i), W(i)
-    void updateTransform();
-
-    /// @brief Update generalized body velocity w.r.t. body frame.
-    /// V(i)
-    void updateVelocity();
-
-    /// @brief Update generalized body acceleration w.r.t. body frame.
-    /// dV(i)
-    void updateAcceleration();
+    void updateBodyAcceleration();
 
 protected:
-    /// @brief Name
-    char mName[MAX_NODE3D_NAME];
+    //--------------------------------------------------------------------------
+    // Constant Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    bool mGravityMode;
 
-    /// @brief Index in the model
-    int mSkelIndex;
+    /// @brief Generalized inertia.
+    dynamics::Inertia mI;
 
-    /// @brief Visual geometry of this body node
-    Shape* mVizShape;
+    /// @brief
+    std::vector<Shape*> mVizShapes;
 
-    /// @brief Collision geometry of this body node
-    Shape* mColShape;
+    /// @brief
+    std::vector<Shape*> mColShapes;
 
-    /// @brief List of joints that link to child nodes
-    std::vector<Joint*> mJointsChild;
+protected:
+    //--------------------------------------------------------------------------
+    // Structual Properties
+    //--------------------------------------------------------------------------
+    /// @brief Pointer to the model this body node belongs to.
+    Skeleton* mSkeleton;
 
-    /// @brief Joint connecting to parent node
+    /// @brief
     Joint* mParentJoint;
 
-    /// @brief Parent node
-    BodyNode *mParentNode;
+    /// @brief
+    Joint* mChildJoint;
 
-    /// @brief List of markers associated
-    std::vector<Marker*> mMarkers;
+    /// @brief
+    BodyNode* mParentBody;
 
-    /// @brief whether the node is currently in collision with another node
-    bool mColliding;
+    /// @brief
+    BodyNode* mChildNode;
 
-    /// @brief A list of dependent dof indices
-    std::vector<int> mDependentDofs;
-
-    /// @brief keep track of the root translation DOFs only if they are the
-    /// first ones
-    int mNumRootTrans;
-
-    /// @brief Pointer to the model this body node belongs to.
-    Skeleton* mSkel;
-
-    /// @brief Generalized inertia w.r.t. body frame.
-    math::Inertia mInertia;
-
+protected:
     //--------------------------------------------------------------------------
-    // TRANSFORMATIONS
+    // Variable Properties
     //--------------------------------------------------------------------------
-    /// @brief Local transformation from parent to itself
-    Eigen::Matrix4d mT;
+    /// @brief World transformation.
+    math::SE3 mW;
 
-    /// @brief Global transformation.
-    Eigen::Matrix4d mW;
+    /// @brief Generalized body velocity w.r.t. body frame.
+    math::se3 mV;
 
-    //--------------------------------------------------------------------------
-    // FIRST DERIVATIVES
-    //--------------------------------------------------------------------------
-    /// @brief Jacobian w.r.t body frame.
-    /// generalized_velocity_of_body = mJ * generalized_velocity.
-    Eigen::MatrixXd mBodyJacobian;
+    /// @brief Generalized body acceleration w.r.t. body frame.
+    math::se3 mdV;
 
-    /// @brief Generalized body velocity.
-    math::Vector6d mBodyVelocity;
+    /// @brief Generalized body force w.r.t. body frame.
+    math::dse3 mF;
 
-    /// @brief Generalized body acceleration.
-    math::Vector6d mBodyAcceleration;
 
 private:
-    /// @brief A unique ID of this node globally.
-    int mID;
 
-    /// @brief Counts the number of nodes globally.
-    static int msBodyNodeCount;
-
-    /// @brief Indicating whether this node is collidable.
-    bool mCollidable;
 };
 
 } // namespace kinematics

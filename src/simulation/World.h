@@ -41,34 +41,23 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SIMULATION_WORLD_H
-#define SIMULATION_WORLD_H
+#ifndef DART_SIMULATION_WORLD_H
+#define DART_SIMULATION_WORLD_H
 
 #include <vector>
 #include <Eigen/Dense>
 
-#include "integration/EulerIntegrator.h"
-#include "integration/RK4Integrator.h"
-#include "dynamics/SkeletonDynamics.h"
 #include "utils/Deprecated.h"
-//#include "utils/Console.h"
 
-namespace dart
-{
-
-namespace dynamics
-{
-class ContactDynamics;
-class ConstraintDynamics;
-class BodyNodeDynamics;
-} // namespace dynamics
-
-namespace simulation
-{
+namespace dart {
+namespace dynamics {
+class SkeletonDynamics;
+}
+namespace simulation {
 
 /// @class World
 /// @brief
-class World : public integration::IntegrableSystem
+class World
 {
 public:
     /// @brief Constructor.
@@ -85,9 +74,6 @@ public:
 
     /// @brief Calculate the dynamics and integrate the world for one step.
     void step();
-
-    // TODO: NOT IMPLEMENTED
-    void step2();
 
     /// @brief .
     /// @param[in] _gravity
@@ -128,12 +114,8 @@ public:
 
     /// @brief Get the collision handler.
     //dynamics::ContactDynamics* getCollisionHandle() const
-    dynamics::ConstraintDynamics* getCollisionHandle() const
-    { return mCollisionHandle; }
-
-    /// @brief Get the dof index for the indexed skeleton.
-    /// @param[in] _index
-    int getIndex(int _index) const { return mIndices[_index]; }
+//    dynamics::ConstraintDynamics* getCollisionHandle() const
+//    { return mCollisionHandle; }
 
     // Documentation inherited.
     virtual Eigen::VectorXd getState();
@@ -154,19 +136,6 @@ public:
 protected:
     /// @brief Skeletones in this world.
     std::vector<dynamics::SkeletonDynamics*> mSkeletons;
-
-    /// @brief The first indeices of each skeleton's dof in mDofs.
-    ///
-    /// For example, if this world has three skeletons and their dof are
-    /// 6, 1 and 2 then the mIndices goes like this: [0 6 7].
-    std::vector<int> mIndices;
-
-    /// @brief The integrator.
-    integration::EulerIntegrator mIntegrator;
-
-    /// @brief The collision handler.
-    //dynamics::ContactDynamics* mCollisionHandle;
-    dynamics::ConstraintDynamics* mCollisionHandle;
 
     /// @brief The gravity.
     Eigen::Vector3d mGravity;

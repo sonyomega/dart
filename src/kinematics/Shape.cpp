@@ -38,13 +38,10 @@
 #include "Shape.h"
 using namespace Eigen;
 
-
 #define PRIMITIVE_MAGIC_NUMBER 1000
 
-namespace dart
-{
-namespace kinematics
-{
+namespace dart {
+namespace kinematics {
 
 Shape::Shape(ShapeType _type) :
     mType(_type),
@@ -53,10 +50,12 @@ Shape::Shape(ShapeType _type) :
     mID(mCounter++),
     mColor(0.5, 0.5, 1.0),
     mOffset(0, 0, 0),
-    mTransform(Affine3d::Identity()) {
+    mTransform(Affine3d::Identity())
+{
 }
 
-void Shape::setDim(const Eigen::Vector3d& _dim) {
+void Shape::setDim(const Eigen::Vector3d& _dim)
+{
     mDim = _dim;
     computeVolume();
 }

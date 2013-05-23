@@ -2,9 +2,9 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>,
+ * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
  *            Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/21/2013
+ * Date: 05/14/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -36,47 +36,11 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "kinematics/Joint.h"
+#include "simulation/Builder.h"
 
 namespace dart {
-namespace kinematics {
+namespace simulation {
 
-Joint::Joint()
-    : mJointType(UNKNOWN),
-      mParentBody(NULL),
-      mChildBody(NULL),
-      mT_ParentBodyToJoint(math::SE3()),
-      mT_ChildBodyToJoint(math::SE3()),
-      mT(math::SE3()),
-      mV(math::se3()),
-      mS(math::Jacobian()),
-      mdS(math::Jacobian())
-{
-}
-
-Joint::~Joint()
-{
-}
-
-void Joint::setParentBody(BodyNode* _body)
-{
-    mParentBody = _body;
-}
-
-void Joint::setChildBody(BodyNode* _body)
-{
-    mChildBody = _body;
-}
-
-void Joint::setLocalTransformFromParentBody(const math::SE3& _T)
-{
-    mT_ParentBodyToJoint = _T;
-}
-
-void Joint::setLocalTransformFromChildBody(const math::SE3& _T)
-{
-    mT_ChildBodyToJoint = _T;
-}
-
-} // namespace kinematics
+} // namespace simulation
 } // namespace dart
+

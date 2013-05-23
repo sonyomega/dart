@@ -2,9 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>,
- *            Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/21/2013
+ * Author(s): Jeongseok Lee <jslee02@gmail.com>
+ * Date: 05/22/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -36,47 +35,37 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "kinematics/Joint.h"
+#ifndef DART_KINEMATICS_BUILDER_H
+#define DART_KINEMATICS_BUILDER_H
 
 namespace dart {
-namespace kinematics {
+namespace kinematics { class Joint; } // namespace kinematics
+namespace simulation {
 
-Joint::Joint()
-    : mJointType(UNKNOWN),
-      mParentBody(NULL),
-      mChildBody(NULL),
-      mT_ParentBodyToJoint(math::SE3()),
-      mT_ChildBodyToJoint(math::SE3()),
-      mT(math::SE3()),
-      mV(math::se3()),
-      mS(math::Jacobian()),
-      mdS(math::Jacobian())
+class World;
+
+/// @brief
+class Builder
 {
-}
+public:
+    /// @brief
+    Builder();
 
-Joint::~Joint()
-{
-}
+    /// @brief
+    virtual ~Builder();
 
-void Joint::setParentBody(BodyNode* _body)
-{
-    mParentBody = _body;
-}
+public:
+    bool detachJoint(kinematics::Joint* _joint);
 
-void Joint::setChildBody(BodyNode* _body)
-{
-    mChildBody = _body;
-}
+protected:
+    World* mWorld;
 
-void Joint::setLocalTransformFromParentBody(const math::SE3& _T)
-{
-    mT_ParentBodyToJoint = _T;
-}
+private:
 
-void Joint::setLocalTransformFromChildBody(const math::SE3& _T)
-{
-    mT_ChildBodyToJoint = _T;
-}
+};
 
-} // namespace kinematics
+} // namespace simulation
 } // namespace dart
+
+#endif // #ifndef DART_KINEMATICS_BUILDER_H
+

@@ -45,10 +45,8 @@
 
 // TODO: Let's use noalias().
 // TODO: Not using Eigen?
-namespace dart
-{
-namespace math
-{
+namespace dart {
+namespace math {
 
 class se3;  // se(3), Lie algebra of SE(3)
 class dse3; // se*(3), Dual space of se(3)
@@ -96,18 +94,18 @@ public:
     explicit se3(const Vector6d& _V);
 
     /// @brief
-    explicit se3(double _w0, double _w1, double _w2,
-                 double _v0, double _v1, double _v2);
+    se3(double _w0, double _w1, double _w2,
+        double _v0, double _v1, double _v2);
 
     /// @brief
-    explicit se3(const so3& _w,
-                 const Eigen::Vector3d& _v);
+    se3(const so3& _w,
+        const Eigen::Vector3d& _v);
 
     /// @brief
-    explicit se3(const math::so3& _w);
+    se3(const math::so3& _w);
 
     /// @brief
-    explicit se3(const Eigen::Vector3d& _v);
+    se3(const Eigen::Vector3d& _v);
 
     /// @brief Default destructor.
     virtual ~se3();

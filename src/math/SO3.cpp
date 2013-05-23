@@ -37,10 +37,8 @@
 
 #include "math/SO3.h"
 
-namespace dart
-{
-namespace math
-{
+namespace dart {
+namespace math {
 
 #define LIEGROUP_EPS 10e-9
 

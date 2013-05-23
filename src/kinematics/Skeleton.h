@@ -44,29 +44,15 @@
 
 #include "kinematics/System.h"
 
-namespace dart
-{
+namespace dart {
+namespace kinematics {
 
-namespace renderer { class RenderInterface; }
-
-namespace kinematics
-{
-
-class Transformation;
-class Marker;
-class Joint;
 class BodyNode;
-class Dof;
+class Joint;
 
+/// @brief
 class Skeleton : public System
 {
-public:
-    //--------------------------------------------------------------------------
-    // DEPRECATED
-    //--------------------------------------------------------------------------
-    Eigen::VectorXd getPose();
-    Eigen::VectorXd getPoseVelocity();
-
 public:
     /// @brief
     Skeleton();
@@ -74,118 +60,24 @@ public:
     /// @brief
     virtual ~Skeleton();
 
-    /// @brief
-    virtual BodyNode* createBodyNode(const char* const name = NULL);
-
-    /// @brief
-    void addMarker(Marker *_h);
-
-    /// @brief
-    void addNode(BodyNode *_b, bool _addParentJoint = true);
-
-    /// @brief
-    void addJoint(Joint *_j);
-
-    /// @brief
-    void addDof(Dof *_d);
-
-    /// @brief
-    void addTransform(Transformation *_t);
-
-    /// @brief Init the model after parsing.
-    void initSkel();
-
-    /// @brief
-    int getNumNodes() const { return mNodes.size(); }
-
-    /// @brief
-    int getNumMarkers() const { return mMarkers.size(); }
-
-    /// @brief
-    int getNumJoints() const { return mJoints.size();}
-
-    /// @brief
-    BodyNode* getNode(int _i) const { return mNodes[_i]; }
-
-    /// @brief
-    BodyNode* getRoot() { return mRoot; }
-
-    /// @brief
-    BodyNode* getNode(const char* const _name) const;
-
-    /// @brief
-    int getNodeIndex(const char* const _name) const;
-
-    /// @brief
-    Joint* getJoint(int _i) const { return mJoints[_i]; }
-
-    /// @brief
-    Joint* getJoint(const char* const _name) const;
-
-    /// @brief
-    int getJointIndex(const char* const _name) const;
-
-    /// @brief
-    Marker* getMarker(int _i) { return mMarkers[_i]; }
-
-    /// @brief
-    double getMass() { return mMass; }
-
-    /// @brief
-    Eigen::Vector3d getWorldCOM();
-
-    /// @brief
-    std::string getName() { return mName; }
-
-    /// @brief
-    void setName( std::string _name ) { mName = _name; }
-
-    /// @brief
-    virtual void setPose(const Eigen::VectorXd&,
-                         bool bCalcTrans = true,
-                         bool bCalcDeriv = true);
-
-    /// @brief
-    Eigen::VectorXd getConfig(std::vector<int> _id);
-
-    /// @brief
-    void setConfig(std::vector<int> _id,
-                   Eigen::VectorXd _vals,
-                   bool _calcTrans = true,
-                   bool _calcDeriv = true);
-
-    /// @brief
-    Eigen::MatrixXd getJacobian(BodyNode* _bd, Eigen::Vector3d& _localOffset);
-
-    /// @brief
-    void draw(renderer::RenderInterface* _ri = NULL,
-              const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
-              bool _useDefaultColor = true) const;
-
-    /// @brief
-    void drawMarkers(renderer::RenderInterface* _ri = NULL,
-                     const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
-                     bool _useDefaultColor = true ) const;
-
-    /// @brief
-    void setSelfCollidable(bool _selfCollidable)
-    { mSelfCollidable = _selfCollidable; }
-
-    /// @brief
-    bool getSelfCollidable() const { return mSelfCollidable; }
-
-    /// @brief
-    //void updateJointKinematics();
+public:
 
 protected:
     /// @brief
     std::string mName;
 
     /// @brief
-    std::vector<Marker*> mMarkers;
+    double mTotalMass;
 
     /// @brief
-    std::vector<Transformation*> mTransforms;
+    bool mSelfCollidable;
+
+protected:
+    //--------------------------------------------------------------------------
+    // Structual Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    BodyNode* mRootNode;
 
     /// @brief
     std::vector<BodyNode*> mNodes;
@@ -193,14 +85,8 @@ protected:
     /// @brief
     std::vector<Joint*> mJoints;
 
-    /// @brief
-    double mMass;
 
-    /// @brief
-    bool mSelfCollidable;
-
-    /// @brief
-    BodyNode* mRoot;
+private:
 };
 
 } // namespace kinematics

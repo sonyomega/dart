@@ -78,9 +78,15 @@ Eigen::MatrixXd Jacobian::getMatrix() const
     Eigen::MatrixXd J(6, getSize());
 
     for (int i = 0; i < getSize(); i++)
-    {
         J.col(i) = mJ[i].getVector();
-    }
+
+    return J;
+}
+
+void Jacobian::setZero()
+{
+    for (int i = 0; i < getSize(); i++)
+        mJ[i].setZero();
 }
 
 se3 Jacobian::getColumn(int _idx)
