@@ -66,6 +66,7 @@ public:
     /// @brief Destructor.
     virtual ~World();
 
+public:
     /// @breif Reset the world.
     ///
     /// Set Dofs and DofVels as zero (or initial value) and update all
@@ -107,28 +108,14 @@ public:
     dynamics::SkeletonDynamics* getSkeleton(const char* const _name) const;
 
     /// @brief Get the number of skeletons.
-    unsigned int getNumSkeletons() const { return mSkeletons.size(); }
+    int getNumSkeletons() const { return mSkeletons.size(); }
 
     /// @brief Get the number of simulated frames.
     int getSimFrames() const { return mFrame; }
 
-    /// @brief Get the collision handler.
-    //dynamics::ContactDynamics* getCollisionHandle() const
-//    dynamics::ConstraintDynamics* getCollisionHandle() const
-//    { return mCollisionHandle; }
-
-    // Documentation inherited.
-    virtual Eigen::VectorXd getState();
-
-    // Documentation inherited.
-    virtual void setState(const Eigen::VectorXd& _newState);
-
-    // Documentation inherited.
-    virtual Eigen::VectorXd evalDeriv();
-
     /// @brief .
     /// @param[in] _skel
-    bool addSkeleton(dynamics::SkeletonDynamics* _skeleton);
+    void addSkeleton(dynamics::SkeletonDynamics* _skeleton);
 
     /// @brief
     bool checkCollision(bool checkAllCollisions = false);

@@ -52,7 +52,8 @@ namespace dynamics
 {
 
 SkeletonDynamics::SkeletonDynamics()
-    : kinematics::Skeleton()
+    : kinematics::Skeleton(),
+      mTotalMass(0.0)
 {
 }
 

@@ -50,16 +50,32 @@ namespace dynamics {
 class SkeletonDynamics : public kinematics::Skeleton
 {
 public:
-    /// @brief
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
     /// @brief
     SkeletonDynamics();
 
     /// @brief
     virtual ~SkeletonDynamics();
 
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    double getTotalMass() const { return mTotalMass; }
 
+protected:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    double mTotalMass;
+
+private:
+
+public:
+    //
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 } // namespace dynamics

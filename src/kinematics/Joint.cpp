@@ -36,6 +36,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "kinematics/BodyNode.h"
 #include "kinematics/Joint.h"
 
 namespace dart {
@@ -50,6 +51,7 @@ Joint::Joint()
       mT(math::SE3()),
       mV(math::se3()),
       mS(math::Jacobian()),
+      mdV(math::se3()),
       mdS(math::Jacobian())
 {
 }
@@ -61,6 +63,9 @@ Joint::~Joint()
 void Joint::setParentBody(BodyNode* _body)
 {
     mParentBody = _body;
+
+    if (mParentBody != NULL)
+        mParentBody->addChildJoint(this);
 }
 
 void Joint::setChildBody(BodyNode* _body)

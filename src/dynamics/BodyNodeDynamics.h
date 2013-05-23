@@ -42,8 +42,7 @@
 #include <Eigen/Dense>
 
 #include "kinematics/BodyNode.h"
-#include "math/EigenHelper.h"
-#include "math/UtilsMath.h"
+#include "dynamics/Inertia.h"
 
 namespace dart {
 namespace dynamics {
@@ -53,20 +52,46 @@ namespace dynamics {
 class BodyNodeDynamics : public kinematics::BodyNode
 {
 public:
-    // We need this aligned allocator because we have Matrix4d as members in
-    // this class.
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-    /// @brief Default constructor. The name can be up to 128.
-    BodyNodeDynamics(const char* const _name = NULL);
+    //--------------------------------------------------------------------------
+    // CONSTRUCTORS AND DESTRUCTOR
+    //--------------------------------------------------------------------------
+    /// @brief Default constructor.
+    BodyNodeDynamics();
 
     /// @brief Default destructor
     virtual ~BodyNodeDynamics();
 
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    void setGravityMode(bool _onoff) { mGravityMode = _onoff; }
+
+    /// @brief
+    bool getGravityMode() const { return mGravityMode; }
+
+protected:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
     /// @brief If the gravity mode is false, this body node does not
     /// being affected by gravity.
     /// TODO: Not implemented yet!
     bool mGravityMode;
+
+    /// @brief Generalized inertia.
+    dynamics::Inertia mI;
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief Generalized body force w.r.t. body frame.
+    math::dse3 mF;
+private:
+
+public:
+    //
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 } // namespace dynamics

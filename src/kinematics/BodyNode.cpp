@@ -43,11 +43,35 @@ namespace dart {
 namespace kinematics {
 
 BodyNode::BodyNode()
+    : mVizShapes(std::vector<Shape*>(1, static_cast<Shape*>(NULL))),
+      mColShapes(std::vector<Shape*>(1, static_cast<Shape*>(NULL))),
+      mSkeleton(NULL),
+      mParentJoint(NULL),
+      mChildJoints(std::vector<Joint*>(0)),
+      mParentBody(NULL),
+      mChildBodies(std::vector<BodyNode*>(0)),
+      mW(math::SE3()),
+      mV(math::se3()),
+      mdV(math::se3())
 {
 }
 
 BodyNode::~BodyNode()
 {
+}
+
+void BodyNode::addChildJoint(Joint* _joint)
+{
+    assert(_joint != NULL);
+
+    mChildJoints.push_back(_joint);
+}
+
+Joint*BodyNode::getChildJoint(int _idx) const
+{
+    assert(0 <= _idx && _idx < mChildJoints.size());
+
+    return mChildJoints[_idx];
 }
 
 void BodyNode::updateWorldTransformation()

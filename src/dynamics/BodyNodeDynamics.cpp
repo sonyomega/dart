@@ -43,5 +43,17 @@
 namespace dart {
 namespace dynamics {
 
+BodyNodeDynamics::BodyNodeDynamics()
+    : mGravityMode(true),
+      mI(dynamics::Inertia()),
+      mF(math::dse3())
+
+{
+}
+
+BodyNodeDynamics::~BodyNodeDynamics()
+{
+}
+
 } // namespace dynamics
 } // namespace dart

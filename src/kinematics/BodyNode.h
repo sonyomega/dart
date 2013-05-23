@@ -74,7 +74,6 @@ Runge-Kutta and fourth-order Runge Kutta.
 #define DART_KINEMATICS_BODYNODE_H
 
 #include "math/SE3.h"
-#include "dynamics/Inertia.h" // TODO:
 
 namespace dart {
 namespace kinematics {
@@ -101,33 +100,57 @@ class Shape;
 class BodyNode
 {
 public:
+    //--------------------------------------------------------------------------
+    // CONSTRUCTORS AND DESTRUCTOR
+    //--------------------------------------------------------------------------
     /// @brief
     BodyNode();
 
     /// @brief
     virtual ~BodyNode();
 
-public:
+    //--------------------------------------------------------------------------
+    // KINEMATICAL PROPERTIES
+    //--------------------------------------------------------------------------
 
-public:
+
+    //--------------------------------------------------------------------------
+    // STRUCTURAL PROPERTIES
+    //--------------------------------------------------------------------------
     /// @brief
-    void setGravityMode(bool _onoff) { mGravityMode = _onoff; }
+    void setParentJoint(Joint* _joint) { mParentJoint = _joint; }
 
     /// @brief
-    bool getGravityMode() const { return mGravityMode; }
+    Joint* getParentJoint() const { return mParentJoint; }
 
+    /// @brief
+    void addChildJoint(Joint* _joint);
+
+    /// @brief
+    Joint* getChildJoint(int _idx) const;
+
+    /// @brief
+    const std::vector<Joint*>& getChildJoints() const { return mChildJoints; }
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
     /// @brief
     const math::SE3& getWorldTransformation() const { return mW; }
 
+    /// @brief
     const math::se3& getBodyVelocity() const { return mV; }
 
+    /// @brief
     const math::se3& getBodyAcceleration() const { return mdV; }
 
-public:
+    /// @brief
     void updateWorldTransformation();
 
+    /// @brief
     void updateBodyVelocity();
 
+    /// @brief
     void updateBodyAcceleration();
 
 protected:
@@ -135,18 +158,11 @@ protected:
     // Constant Properties
     //--------------------------------------------------------------------------
     /// @brief
-    bool mGravityMode;
-
-    /// @brief Generalized inertia.
-    dynamics::Inertia mI;
-
-    /// @brief
     std::vector<Shape*> mVizShapes;
 
     /// @brief
     std::vector<Shape*> mColShapes;
 
-protected:
     //--------------------------------------------------------------------------
     // Structual Properties
     //--------------------------------------------------------------------------
@@ -157,15 +173,14 @@ protected:
     Joint* mParentJoint;
 
     /// @brief
-    Joint* mChildJoint;
+    std::vector<Joint*> mChildJoints;
 
     /// @brief
     BodyNode* mParentBody;
 
     /// @brief
-    BodyNode* mChildNode;
+    std::vector<BodyNode*> mChildBodies;
 
-protected:
     //--------------------------------------------------------------------------
     // Variable Properties
     //--------------------------------------------------------------------------
@@ -177,10 +192,6 @@ protected:
 
     /// @brief Generalized body acceleration w.r.t. body frame.
     math::se3 mdV;
-
-    /// @brief Generalized body force w.r.t. body frame.
-    math::dse3 mF;
-
 
 private:
 

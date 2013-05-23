@@ -499,6 +499,13 @@ SE3::SE3()
 {
 }
 
+SE3::SE3(const SE3& _T)
+    : mRotation(_T.mRotation),
+      mPosition(_T.mPosition)
+{
+
+}
+
 SE3::SE3(const Eigen::Matrix4d& _T)
     : mRotation(_T.topLeftCorner<3,3>()),
       mPosition(_T.topRightCorner<3,1>())

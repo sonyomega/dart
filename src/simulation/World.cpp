@@ -113,10 +113,11 @@ dynamics::SkeletonDynamics* World::getSkeleton(const char* const _name) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool World::addSkeleton(dynamics::SkeletonDynamics* _skeleton)
+void World::addSkeleton(dynamics::SkeletonDynamics* _skeleton)
 {
+    assert(_skeleton != NULL);
 
-    return true;
+    mSkeletons.push_back(_skeleton);
 }
 
 bool World::checkCollision(bool checkAllCollisions)

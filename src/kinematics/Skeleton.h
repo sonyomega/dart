@@ -61,13 +61,12 @@ public:
     virtual ~Skeleton();
 
 public:
+    /// @brief
+    void setRootBody(BodyNode* _body) { mRootBody = _body; }
 
 protected:
     /// @brief
     std::string mName;
-
-    /// @brief
-    double mTotalMass;
 
     /// @brief
     bool mSelfCollidable;
@@ -77,7 +76,7 @@ protected:
     // Structual Properties
     //--------------------------------------------------------------------------
     /// @brief
-    BodyNode* mRootNode;
+    BodyNode* mRootBody;
 
     /// @brief
     std::vector<BodyNode*> mNodes;

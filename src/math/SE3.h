@@ -336,10 +336,10 @@ public: // Constructors and destructor
     explicit SE3(const Eigen::Matrix4d& _T);
     
     /// @brief
-    explicit SE3(const SO3& _R, const Eigen::Vector3d& _p);
+    SE3(const SO3& _R, const Eigen::Vector3d& _p);
     
     /// @brief Constructor rotation and position part */
-    explicit SE3(double _R00, double _R01, double _R02,
+    SE3(double _R00, double _R01, double _R02,
                  double _R10, double _R11, double _R12,
                  double _R20, double _R21, double _R22,
                  double _p0, double _p1, double _p2);	// p
@@ -348,13 +348,13 @@ public: // Constructors and destructor
     explicit SE3(const so3& _w);
     
     /// @brief
-    explicit SE3(const so3& _w, double _theta);
+    SE3(const so3& _w, double _theta);
     
     /// @brief
     explicit SE3(const se3& _S);
     
     /// @brief
-    explicit SE3(const se3& _S, double _theta);
+    SE3(const se3& _S, double _theta);
     
     /// @brief
     virtual ~SE3();
@@ -474,10 +474,10 @@ public: // CONSTRUCTORS AND DESTRUCTOR -----------------------------------------
     TSE3(const TSE3& _dT);
     
     /// @brief
-    explicit TSE3(const se3& _S, const SE3& _T);
+    TSE3(const se3& _S, const SE3& _T);
 
     /// @brief
-    explicit TSE3(const SE3& _T, const se3& _S);
+    TSE3(const SE3& _T, const se3& _S);
     
     /// @brief Default destructor.
     ~TSE3();
