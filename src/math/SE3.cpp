@@ -140,6 +140,8 @@ const se3& se3::operator=(const se3& _V)
         mLinear = _V.mLinear;
         mAngular = _V.mAngular;
     }
+    
+    return *this;
 }
 
 //double& se3::operator()(int _i)
@@ -231,7 +233,7 @@ TSE3 se3::operator*(const SE3& _T) const
     //             = | [w] * R   [w] * p + v |
     //               |       0             0 |
 
-    const Eigen::Matrix3d& wSkewSymmetric = mAngular.getSkewSymmetrixMatrix();
+    //const Eigen::Matrix3d& wSkewSymmetric = mAngular.getSkewSymmetrixMatrix();
 
 //    return TSE3(wSkewSymmetric * _T.getRotation().getMatrix(),
 //                wSkewSymmetric * _T.getPosition() + mLinear);
@@ -369,6 +371,8 @@ const dse3& dse3::operator = (const dse3& _F)
         mLinear = _F.mLinear;
         mAngular = _F.mAngular;
     }
+    
+    return *this;
 }
 
 dse3 dse3::operator + (void) const
@@ -953,6 +957,7 @@ TSE3 TSE3::operator*(const se3& _S) const
 
 //    return TSE3(mRotation * wSkeySymemetrix,
 //                mRotation * v);
+    return TSE3();
 }
 
 void TSE3::setZero()

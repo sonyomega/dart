@@ -135,11 +135,18 @@ math::Vector6d Inertia::operator*(const math::Vector6d& _V) const
 Inertia Inertia::getTransformed(const Eigen::Matrix4d& _T12) const
 {
 	// TODO: Not implemented.
+    
+    Inertia ret;
+    
+    return ret;
 }
 
 Inertia Inertia::getTransformedInverse(const Eigen::Matrix4d& _T21) const
 {
 	// TODO: Not implemented.
+    Inertia ret;
+    
+    return ret;
 }
 
 Eigen::Matrix<double,6,6> Inertia::getInertiaTensor() const
