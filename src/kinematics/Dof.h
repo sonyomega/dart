@@ -58,10 +58,12 @@ class Transformation;
 //   of parameters of the system that may vary independently. For example, the
 //   position of a figure in the plane has three degrees of freedom: its
 //   orientation and the two coordinates of any fixed point of the figure.
-/// @brief
+/// @brief Generalized coordinate.
+/// A set of generalized coordiante describes the configuration of a system.
 class Coordinate
 {
 public:
+    // TODO: Use get_q(), get_qMin(), get_qMax instead.
     DEPRECATED double getValue() const { return q; }
     DEPRECATED double getMax() const { return qMin; }
     DEPRECATED double getMin() const { return qMax; }
