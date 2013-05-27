@@ -68,7 +68,19 @@ se3 Ad(const SE3& _T12, const se3& _vel2);
 /// @param[in] _T12 Transformation matrix from frame 1 to frame 2.
 /// @param[in] _vel1 Generalized velocity represented in frame 1.
 /// @return Generalized velocity represented in frame 2.
-//se3 InvAd(const SE3& _T21, const se3& _vel2);
+se3 InvAd(const SE3& _T21, const se3& _vel2);
+
+/// @brief
+dse3 dAd(const SE3& _T12, const dse3& _force2);
+
+/// @brief
+dse3 InvdAd(const SE3& _T21, const dse3& _force2);
+
+/// @brief
+se3 ad(const se3& V1, const se3& V2);
+
+/// @brief
+dse3 dad(const se3& V, const dse3& F);
 
 //==============================================================================
 /// @brief se3 is a class for representing \f$se(3)\f$, the Lie algebra of
@@ -201,6 +213,14 @@ public:
     /// @brief
     void setad(const se3& _V1, const se3& _V2);
     
+    /// @brief
+    /// @note \f$ \langle F, V\rangle = \langle V, F\rangle = \langle m, w\rangle + \langle f, v\rangle \f$
+    ///	,where \f$F=(m,f)\in se(3)^*,\quad V=(w,v)\in se(3)\f$.
+    double innerProduct(const dse3& _F) const;
+
+    /// @brief
+    std::string toString() const;
+
 protected:
     /// @brief
     so3 mAngular;
@@ -336,13 +356,19 @@ public: // Constructors and destructor
     explicit SE3(const Eigen::Matrix4d& _T);
     
     /// @brief
+    explicit SE3(const SO3& _R);
+
+    /// @brief
+    explicit SE3(const Eigen::Vector3d& _p);
+
+    /// @brief
     SE3(const SO3& _R, const Eigen::Vector3d& _p);
     
     /// @brief Constructor rotation and position part */
     SE3(double _R00, double _R01, double _R02,
-                 double _R10, double _R11, double _R12,
-                 double _R20, double _R21, double _R22,
-                 double _p0, double _p1, double _p2);	// p
+        double _R10, double _R11, double _R12,
+        double _R20, double _R21, double _R22,
+        double _p0, double _p1, double _p2);	// p
     
     /// @brief
     explicit SE3(const so3& _w);
@@ -356,6 +382,10 @@ public: // Constructors and destructor
     /// @brief
     SE3(const se3& _S, double _theta);
     
+    /// @brief
+    SE3(double _EulerX, double _EulerY, double _EulerZ,
+        double _x, double _y, double _z);
+
     /// @brief
     virtual ~SE3();
     
@@ -407,6 +437,19 @@ public: // OPERATORS -----------------------------------------------------------
     /// @brief
     bool operator==(const SE3& _T) const;
     
+    /// @brief std::ostream standard output
+    friend std::ostream& operator<<(std::ostream& _os, const SE3& _T)
+    {
+        Eigen::RowVector3d rowVec = _T.mPosition.transpose();
+        _os << _T.mRotation
+            << " "
+            << math::precision(rowVec(0), 6)
+            << " "
+            << math::precision(rowVec(1), 6)
+            << " "
+            << math::precision(rowVec(2), 6);
+    }
+
 public:
     /// @brief
     void setValues(double _R00, double _R01, double _R02,
@@ -439,6 +482,10 @@ public:
     void setExp(const se3& _S, double _theta);
     
     /// @brief
+    void setValues(double _EulerX, double _EulerY, double _EulerZ,
+                   double _x, double _y, double _z);
+
+    /// @brief
     void setIdentity(void);
     
     /// @brief
@@ -449,7 +496,7 @@ public:
     
     /// @brief
     Eigen::Matrix4d getMatrix() const;
-    
+
 protected:
     /// @brief
     SO3 mRotation;
@@ -458,6 +505,7 @@ protected:
     Eigen::Vector3d mPosition;
     
     friend class TSE3;
+
 private:
 };
 

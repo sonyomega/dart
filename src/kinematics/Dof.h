@@ -41,6 +41,8 @@
 
 #include <string>
 
+#include "utils/Deprecated.h"
+
 namespace dart {
 namespace kinematics {
 
@@ -52,44 +54,9 @@ class Transformation;
 class Dof
 {
 public:
-    double get_q() const { return q; }           ///< Coordinate
-    double get_dq() const { return dq; }         ///< Velocity
-    double get_ddq() const { return ddq; }       ///< Acceleration
-    double get_tau() const { return tau; }       ///< torque or force
-
-    double get_qMin() const { return qMin; }     ///< Minimum value of q
-    double get_dqMin() const { return dqMin; }   ///< Minimum value of dq
-    double get_ddqMin() const { return ddqMin; } ///< Minimum value of ddq
-    double get_tauMin() const { return tauMin; } ///< Minimum value of tau
-
-    double get_qMax() const { return qMax; }     ///< Maximum value of q
-    double get_dqMax() const { return dqMax; }   ///< Maximum value of dq
-    double get_ddqMax() const { return ddqMax; } ///< Maximum value of ddq
-    double get_tauMax() const { return tauMax; } ///< Maximum value of tau
-
-    double get_init_q() const { return init_q; }   ///< Initial value of q
-    double get_init_dq() const { return init_dq; } ///< Initial value of dq
-
-    void set_q(double _q) { q = _q; }
-    void set_dq(double _dq) { dq = _dq; }
-    void set_ddq(double _ddq) { ddq = _ddq; }
-    void set_tau(double _tau) { tau = _tau; }
-
-    void set_qMin(double _qMin) { qMin = _qMin; }
-    void set_dqMin(double _dqMin) { dqMin = _dqMin; }
-    void set_ddqMin(double _ddqMin) { ddqMin = _ddqMin; }
-    void set_tauMin(double _tauMin) { tauMin = _tauMin; }
-
-    void set_qMax(double _qMax) { qMax = _qMax; }
-    void set_dqMax(double _dqMax) { dqMax = _dqMax; }
-    void set_ddqMax(double _ddqMax) { ddqMax = _ddqMax; }
-    void set_tauMax(double _tauMax) { tauMax = _tauMax; }
-
-    void set_init_q(double _init_q) { init_q = _init_q; }
-    void set_init_dq(double _init_dq) { init_dq = _init_dq; }
-
-    void backupInitState();
-    void restoreInitState();
+    DEPRECATED double getValue() const { return q; }
+    DEPRECATED double getMax() const { return qMin; }
+    DEPRECATED double getMin() const { return qMax; }
 
 public:
     /// @brief
@@ -131,6 +98,46 @@ public:
 
     /// @brief
     //Joint *getJoint() const { return mJoint; }
+
+public:
+    double get_q() const { return q; }           ///< Coordinate
+    double get_dq() const { return dq; }         ///< Velocity
+    double get_ddq() const { return ddq; }       ///< Acceleration
+    double get_tau() const { return tau; }       ///< torque or force
+
+    double get_qMin() const { return qMin; }     ///< Minimum value of q
+    double get_dqMin() const { return dqMin; }   ///< Minimum value of dq
+    double get_ddqMin() const { return ddqMin; } ///< Minimum value of ddq
+    double get_tauMin() const { return tauMin; } ///< Minimum value of tau
+
+    double get_qMax() const { return qMax; }     ///< Maximum value of q
+    double get_dqMax() const { return dqMax; }   ///< Maximum value of dq
+    double get_ddqMax() const { return ddqMax; } ///< Maximum value of ddq
+    double get_tauMax() const { return tauMax; } ///< Maximum value of tau
+
+    double get_init_q() const { return init_q; }   ///< Initial value of q
+    double get_init_dq() const { return init_dq; } ///< Initial value of dq
+
+    void set_q(double _q) { q = _q; }
+    void set_dq(double _dq) { dq = _dq; }
+    void set_ddq(double _ddq) { ddq = _ddq; }
+    void set_tau(double _tau) { tau = _tau; }
+
+    void set_qMin(double _qMin) { qMin = _qMin; }
+    void set_dqMin(double _dqMin) { dqMin = _dqMin; }
+    void set_ddqMin(double _ddqMin) { ddqMin = _ddqMin; }
+    void set_tauMin(double _tauMin) { tauMin = _tauMin; }
+
+    void set_qMax(double _qMax) { qMax = _qMax; }
+    void set_dqMax(double _dqMax) { dqMax = _dqMax; }
+    void set_ddqMax(double _ddqMax) { ddqMax = _ddqMax; }
+    void set_tauMax(double _tauMax) { tauMax = _tauMax; }
+
+    void set_init_q(double _init_q) { init_q = _init_q; }
+    void set_init_dq(double _init_dq) { init_dq = _init_dq; }
+
+    void backupInitState();
+    void restoreInitState();
 
 protected:
     /// @brief

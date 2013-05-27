@@ -35,6 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "utils/UtilsCode.h"
 #include "math/SO3.h"
 
 namespace dart {
@@ -87,6 +88,11 @@ const double& so3::operator()(int _i) const
     return mw[_i];
 }
 
+bool so3::operator==(const so3& _w) const
+{
+    return mw == _w.mw ? true : false;
+}
+
 so3 so3::operator+(void) const
 {
     return *this;
@@ -128,6 +134,15 @@ so3 so3::operator-(const so3& _w) const
 so3 so3::operator*(double _c) const
 {
     return so3(mw * _c);
+}
+
+std::string so3::toString() const
+{
+    std::string ret;
+
+    dterr << "Not implemented.\n";
+
+    return ret;
 }
 
 void so3::setValues(double _w0, double _w1, double _w2)
@@ -208,7 +223,13 @@ SO3::SO3(double _R00, double _R01, double _R02,
 
 SO3::SO3(const so3& _w)
 {
-	setExp(_w);
+    setExp(_w);
+}
+
+SO3::SO3(double _EulerX, double _EulerY, double _EulerZ)
+{
+    // TODO: NOT IMPLEMETATION
+    dterr << "NOT IMPLEMENTED.\n";
 }
 
 SO3::~SO3()
@@ -286,10 +307,7 @@ so3 SO3::operator*(const so3& _w) const
 
 bool SO3::operator==(const SO3& _R) const
 {
-	if (mRotation == _R.mRotation)
-		return true;
-	else
-		return false;
+	return mRotation == _R.mRotation ? true : false;
 }
 
 void SO3::setValues(double _R00, double _R01, double _R02, double _R10, double _R11, double _R12, double _R20, double _R21, double _R22)
@@ -357,7 +375,96 @@ void SO3::setExp(const so3& _S, double theta)
 	mRotation(2,1) = vt * s[1] * s[2] + sts[0];
 	mRotation(0,2) = vt * s[0] * s[2] + sts[1];
 	mRotation(1,2) = vt * s[1] * s[2] - sts[0];
-	mRotation(2,2) = 1.0 + vt * (s2[2] - 1.0);
+    mRotation(2,2) = 1.0 + vt * (s2[2] - 1.0);
+}
+
+void SO3::setEulerXYZ(const Eigen::Vector3d& _EulerAngles)
+{
+    // TODO: NOT IMPLEMENTED
+    dterr << "NOT IMPLEMENTED.\n";
+}
+
+void SO3::setEulerZXY(const Eigen::Vector3d& _EulerAngles)
+{
+    // TODO: NOT IMPLEMENTED
+    dterr << "NOT IMPLEMENTED.\n";
+}
+
+void SO3::setEulerZYX(const Eigen::Vector3d& _EulerAngles)
+{
+    // TODO: NOT IMPLEMENTED
+    dterr << "NOT IMPLEMENTED.\n";
+}
+
+void SO3::setEulerZYZ(const Eigen::Vector3d& _EulerAngles)
+{
+    // TODO: NOT IMPLEMENTED
+    dterr << "NOT IMPLEMENTED.\n";
+}
+
+Eigen::Vector3d SO3::getEulerXYZ() const
+{
+    Eigen::Vector3d ret;
+
+    // TODO: NOT IMPLEMENTED
+    dterr << "NOT IMPLEMENTED.\n";
+    ret << 0, 0, 0;
+
+    return ret;
+}
+
+Eigen::Vector3d SO3::getEulerZXY() const
+{
+    Eigen::Vector3d ret;
+
+    // TODO: NOT IMPLEMENTED
+    dterr << "NOT IMPLEMENTED.\n";
+
+    return ret;
+}
+
+Eigen::Vector3d SO3::getEulerZYX() const
+{
+    Eigen::Vector3d ret;
+
+    // TODO: NOT IMPLEMENTED
+    dterr << "NOT IMPLEMENTED.\n";
+
+    return ret;
+}
+
+Eigen::Vector3d SO3::getEulerZYZ() const
+{
+    Eigen::Vector3d ret;
+
+    // TODO: NOT IMPLEMENTED
+    dterr << "NOT IMPLEMENTED.\n";
+
+    return ret;
+}
+
+so3 SO3::getLog() const
+{
+    so3 ret;
+
+    dterr << "NOT IMPLEMENTED.\n";
+
+    return ret;
+}
+
+double SO3::getAxisAngle(Eigen::Vector3d* _axis, double* _angle) const
+{
+    assert(_axis != NULL);
+    assert(_angle != NULL);
+
+    double ret;
+
+    (*_axis);
+    (*_angle);
+
+    dterr << "NOT IMPLEMENTED.\n";
+
+    return ret;
 }
 
 } // namespace math

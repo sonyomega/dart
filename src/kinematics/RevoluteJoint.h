@@ -49,17 +49,48 @@ namespace kinematics {
 class RevoluteJoint : public Joint
 {
 public:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
     /// @brief
     RevoluteJoint();
 
     /// @brief
     virtual ~RevoluteJoint();
 
-    //
-    virtual void updateKinematics(bool _firstDerivative = true,
-                        bool _secondDerivative = true);
+    //--------------------------------------------------------------------------
+    // Kinematical Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    void setAxis(const math::so3& _axis) { mAxis = _axis; }
+
+    /// @brief
+    const math::so3& getAxis() const { return mAxis; }
+
+    //--------------------------------------------------------------------------
+    // Structueral Properties
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    // Recursive Kinematics Algorithms
+    //--------------------------------------------------------------------------
 
 protected:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    // Document inherited.
+    virtual void _updateTransformation();
+
+    // Document inherited.
+    virtual void _updateVelocity();
+
+    // Document inherited.
+    virtual void _updateAcceleration();
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
     /// @brief
     Dof mCoordinate;
 

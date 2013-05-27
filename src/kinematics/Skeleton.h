@@ -42,9 +42,12 @@
 #include <vector>
 #include <Eigen/Dense>
 
+#include "utils/Deprecated.h"
+#include "math/Jacobian.h"
 #include "kinematics/System.h"
 
 namespace dart {
+namespace renderer { class RenderInterface; }
 namespace kinematics {
 
 class BodyNode;
@@ -54,15 +57,116 @@ class Joint;
 class Skeleton : public System
 {
 public:
+    //--------------------------------------------------------------------------
+    // Constructor and Destructor
+    //--------------------------------------------------------------------------
     /// @brief
     Skeleton();
 
     /// @brief
     virtual ~Skeleton();
 
-public:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
     /// @brief
-    void setRootBody(BodyNode* _body) { mRootBody = _body; }
+    void initKinematics();
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    void setName(const std::string& _name) { mName = _name; }
+
+    /// @brief
+    const std::string& getName() const { return mName; }
+
+    //--------------------------------------------------------------------------
+    // Kinematical Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    void setSelfCollidable(bool _selfCollidable)
+    { mSelfCollidable = _selfCollidable; }
+
+    /// @brief
+    bool getSelfCollidable() const { return mSelfCollidable; }
+
+
+    //--------------------------------------------------------------------------
+    // Structueral Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    void addBody(BodyNode* _body, bool _addParentJoint = true);
+
+    /// @brief
+    void addJoint(Joint* _joint);
+
+    /// @brief
+    //void setRootBody(BodyNode* _body) { mRootBody = _body; }
+
+    /// @brief
+    // TODO: rename
+    //int getNumBodies() const { return mBodies.size(); }
+    int getNumNodes() const { return mBodies.size(); }
+
+    /// @brief
+    int getNumJoints() const { return mJoints.size(); }
+
+    /// @brief
+    // TODO: rename
+    //BodyNode* getBody(int _idx) const { return mBodies[_idx]; }
+    BodyNode* getNode(int _idx) const { return mBodies[_idx]; }
+
+    /// @brief
+    // TODO: rename
+    //BodyNode* findBody(const std::string& _name) const;
+    BodyNode* findBody(const std::string& _name) const;
+
+    //--------------------------------------------------------------------------
+    // Recursive Kinematics Algorithms
+    //--------------------------------------------------------------------------
+    /// @brief
+    /// @todo Use set_q(const Eigen::VectorXd& _state) instead.
+    DEPRECATED void setPose(const Eigen::VectorXd& _pose,
+                            bool bCalcTrans = true,
+                            bool bCalcDeriv = true);
+
+    /// @brief
+    /// @todo Use get_q() instead.
+    DEPRECATED Eigen::VectorXd getPose() const { return get_q(); }
+
+    /// @brief
+    /// @todo Use get_dq() instead.
+    DEPRECATED Eigen::VectorXd getPoseVelocity() const { return get_dq(); }
+
+    /// @brief (q, dq, ddq) --> (W, V, dV)
+    void updateForwardKinematics(bool _firstDerivative = true,
+                                 bool _secondDerivative = true);
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    math::Jacobian getJacobian() const;
+
+    //--------------------------------------------------------------------------
+    // Rendering
+    //--------------------------------------------------------------------------
+    void draw(renderer::RenderInterface* _ri = NULL,
+              const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
+              bool _useDefaultColor = true) const;
+
+protected:
+    //--------------------------------------------------------------------------
+    // Sub-functions for Recursive Algorithms
+    //--------------------------------------------------------------------------
+    /// @brief Update joint kinematics (T, S, V, dS, dV)
+    void _updateJointKinematics(bool _firstDerivative = true,
+                                     bool _secondDerivative = true);
+
+    /// @brief Update body kinematics (W, V, dV)
+    void _updateBodyForwardKinematics(bool _firstDerivative = true,
+                                      bool _secondDerivative = true);
+
 
 protected:
     /// @brief
@@ -76,13 +180,16 @@ protected:
     // Structual Properties
     //--------------------------------------------------------------------------
     /// @brief
-    BodyNode* mRootBody;
+    // TODO: rename
+    //BodyNode* mRootBody;
+    BodyNode* mRoot;
 
     /// @brief
-    std::vector<BodyNode*> mNodes;
+    std::vector<BodyNode*> mBodies;
 
     /// @brief
     std::vector<Joint*> mJoints;
+
 
 
 private:

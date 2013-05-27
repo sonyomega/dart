@@ -67,7 +67,12 @@ public:
     virtual ~Jacobian();
     
 public:
-    se3 operator* (const Eigen::VectorXd& _qdot);
+    /// @brief
+    se3 operator*(const Eigen::VectorXd& _qdot);
+
+    /// @brief
+    /// @return Generalized forces.
+    Eigen::VectorXd getInnerProduct(const dse3& _F) const;
 
 public:
     /// @brief
@@ -106,6 +111,14 @@ public:
     /// @brief
     so3 getAngular(int _idx) const { return mJ[_idx].getAngular(); }
     
+    /// @brief
+    // TODO: NOT IMPLEMENTED
+    Jacobian getAdjointed(const SE3& _T) const;
+
+    /// @brief
+    // TODO: NOT IMPLEMENTED
+    Jacobian getAdjointedInv(const SE3& _Tinv) const;
+
 protected:
     /// @brief
     std::vector<se3> mJ;

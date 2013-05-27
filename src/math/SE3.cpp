@@ -35,6 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "utils/UtilsCode.h"
 #include "math/SE3.h"
 
 namespace dart {
@@ -65,9 +66,9 @@ se3 Ad(const SE3& _T12, const se3& _vel2)
     return vel1;
 }
 
-//se3 InvAd(const SE3& _T21, const se3& _vel2)
-//{
-//    se3 vel1;
+se3 InvAd(const SE3& _T21, const se3& _vel2)
+{
+    se3 vel1;
 
 //    // _T21 = | R p |, vel1 = | w1 |, _vel2 = | w2 |
 //    //        | 0 1 |         | v1 |          | v2 |
@@ -81,8 +82,39 @@ se3 Ad(const SE3& _T12, const se3& _vel2)
 //    // w1 = R * w2
 //    // v1 = [p]R * w2 + R * v2
 
-//    return vel1;
-//}
+    dterr << "Not implemented.\n";
+
+    return vel1;
+}
+
+
+dse3 dAd(const SE3& _T12, const dse3& _force2)
+{
+    dterr << "Not implemented.\n";
+}
+
+dse3 InvdAd(const SE3& _T21, const dse3& _force2)
+{
+    dterr << "Not implemented.\n";
+}
+
+se3 ad(const se3& V1, const se3& V2)
+{
+    se3 ret;
+
+    dterr << "Not implemented.\n";
+
+    return ret;
+}
+
+dse3 dad(const se3& V, const dse3& F)
+{
+    dse3 ret;
+
+    dterr << "Not implemented.\n";
+
+    return ret;
+}
 
 //==============================================================================
 se3::se3()
@@ -237,6 +269,8 @@ TSE3 se3::operator*(const SE3& _T) const
 
 //    return TSE3(wSkewSymmetric * _T.getRotation().getMatrix(),
 //                wSkewSymmetric * _T.getPosition() + mLinear);
+    dterr << "Not implemented.\n";
+
     return TSE3(*this, _T);
 }
 
@@ -324,7 +358,22 @@ void se3::setad(const se3& _V1, const se3& _V2)
 	const so3& w2 = _V2.getAngular();
 
 	mAngular.setVector(w1.mw.cross(w2.mw));
-	mLinear = v1.cross(w2.mw) + w1.mw.cross(v2);
+    mLinear = v1.cross(w2.mw) + w1.mw.cross(v2);
+}
+
+double se3::innerProduct(const dse3& _F) const
+{
+    return mAngular.getVector().dot(_F.getAngular())
+            + mLinear.dot(_F.getLinear());
+}
+
+std::string se3::toString() const
+{
+    std::string ret;
+
+    dterr << "NOT IMPLEMENTED.\n";
+
+    return ret;
 }
 
 //==============================================================================
@@ -375,12 +424,12 @@ const dse3& dse3::operator = (const dse3& _F)
     return *this;
 }
 
-dse3 dse3::operator + (void) const
+dse3 dse3::operator+(void) const
 {
     return *this;
 }
 
-dse3 dse3::operator - (void) const
+dse3 dse3::operator-(void) const
 {
     return dse3(-mLinear, -mAngular);
 }
@@ -521,6 +570,18 @@ SE3::SE3(const Eigen::Matrix4d& _T)
     assert(_T(3,3) == 1);
 }
 
+SE3::SE3(const SO3& _R)
+    : mRotation(_R),
+      mPosition(Eigen::Vector3d::Zero())
+{
+}
+
+SE3::SE3(const Eigen::Vector3d& _p)
+    : mRotation(SO3()),
+      mPosition(_p)
+{
+}
+
 SE3::SE3(const SO3& _R, const Eigen::Vector3d& _p)
     : mRotation(_R),
       mPosition(_p)
@@ -556,6 +617,13 @@ SE3::SE3(const se3& _S)
 SE3::SE3(const se3& _S, double _theta)
 {
     setExp(_S, _theta);
+}
+
+SE3::SE3(double _EulerX, double _EulerY, double _EulerZ,
+         double _x, double _y, double _z)
+    : mRotation(_EulerX, _EulerY, _EulerZ)
+{
+    mPosition << _x, _y, _z;
 }
 
 SE3::~SE3()
@@ -769,7 +837,19 @@ void SE3::setExp(const se3& _S, double _theta)
 
 //	mRotation(0,3) = st * _S[3] + ut * _S[0] + vt * (_S[1] * _S[5] - _S[2] * _S[4]);
 //	mRotation(1,3) = st * _S[4] + ut * _S[1] + vt * (_S[2] * _S[3] - _S[0] * _S[5]);
-//	mRotation(2,3) = st * _S[5] + ut * _S[2] + vt * (_S[0] * _S[4] - _S[1] * _S[3]);
+    //	mRotation(2,3) = st * _S[5] + ut * _S[2] + vt * (_S[0] * _S[4] - _S[1] * _S[3]);
+
+    dterr << "Not implemented.\n";
+}
+
+void SE3::setValues(double _EulerX, double _EulerY, double _EulerZ,
+                    double _x, double _y, double _z)
+{
+    Eigen::Vector3d EulerXYZ;
+    EulerXYZ << _EulerX, _EulerY, _EulerZ;
+
+    mRotation.setEulerXYZ(EulerXYZ);
+    mPosition << _x, _y, _z;
 }
 
 void SE3::setIdentity()
@@ -884,6 +964,8 @@ const TSE3& TSE3::operator*=(const SE3& _T)
 //    mPosition = mRotation * _T.mPosition + mPosition;
 //    mRotation = mRotation * _T.mRotation.getMatrix();
 
+    dterr << "Not implemented.\n";
+
     return  *this;
 }
 
@@ -901,6 +983,7 @@ const TSE3& TSE3::operator*=(const se3& _S)
 
 //    mPosition = mRotation * _S.getLinear();
 //    mRotation = mRotation * _S.getAngular().getSkewSymmetrixMatrix();
+    dterr << "Not implemented.\n";
 
     return  *this;
 }
@@ -957,13 +1040,15 @@ TSE3 TSE3::operator*(const se3& _S) const
 
 //    return TSE3(mRotation * wSkeySymemetrix,
 //                mRotation * v);
+    dterr << "Not implemented.\n";
+
     return TSE3();
 }
 
 void TSE3::setZero()
 {
 	mS.setZero();
-	mT.setIdentity();
+    mT.setIdentity();
 }
 
 } // namespace math

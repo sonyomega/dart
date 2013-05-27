@@ -32,6 +32,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "utils/UtilsCode.h"
 #include "math/UtilsRotation.h"
 #include "math/UtilsMath.h"
 #include <iostream>
@@ -91,7 +92,6 @@ TEST(UTILS, UTILS) {
   Vector3d expected(4.0, 2.5, 2.0);
   EXPECT_NEAR( (result - expected).norm(), 0.0, M_EPSILON)
     << "result = " << result << " expected = " << expected;
-  
 }
 
 /* ********************************************************************************************* */

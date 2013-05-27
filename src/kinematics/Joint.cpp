@@ -36,6 +36,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "renderer/RenderInterface.h"
 #include "kinematics/BodyNode.h"
 #include "kinematics/Joint.h"
 
@@ -43,7 +44,8 @@ namespace dart {
 namespace kinematics {
 
 Joint::Joint()
-    : mJointType(UNKNOWN),
+    : mName("Unknown joint"),
+      mJointType(UNKNOWN),
       mParentBody(NULL),
       mChildBody(NULL),
       mT_ParentBodyToJoint(math::SE3()),
@@ -64,13 +66,34 @@ void Joint::setParentBody(BodyNode* _body)
 {
     mParentBody = _body;
 
+    // TODO: Use builder
     if (mParentBody != NULL)
+    {
         mParentBody->addChildJoint(this);
+
+        if (mChildBody != NULL)
+        {
+            mChildBody->setParentBody(mParentBody);
+            mParentBody->addChildBody(mChildBody);
+        }
+    }
 }
 
 void Joint::setChildBody(BodyNode* _body)
 {
     mChildBody = _body;
+
+    // TODO: Use builder
+    if (mChildBody != NULL)
+    {
+        mChildBody->setParentJoint(this);
+
+        if (mParentBody != NULL)
+        {
+            mParentBody->addChildBody(mChildBody);
+            mChildBody->setParentBody(mParentBody);
+        }
+    }
 }
 
 void Joint::setLocalTransformFromParentBody(const math::SE3& _T)
@@ -81,6 +104,25 @@ void Joint::setLocalTransformFromParentBody(const math::SE3& _T)
 void Joint::setLocalTransformFromChildBody(const math::SE3& _T)
 {
     mT_ChildBodyToJoint = _T;
+}
+
+void Joint::updateKinematics(bool _firstDerivative,
+                                  bool _secondDerivative)
+{
+    _updateTransformation();
+    _updateVelocity();
+    _updateAcceleration();
+}
+
+void Joint::applyGLTransform(renderer::RenderInterface* _ri)
+{
+    Eigen::Vector3d offset = mT.getPosition();
+    Eigen::Vector3d axis;
+    double rad;
+    mT.getRotation().getAxisAngle(&axis, &rad);
+
+    _ri->translate(offset);
+    _ri->rotate(axis, rad);
 }
 
 } // namespace kinematics

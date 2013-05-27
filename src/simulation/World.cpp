@@ -43,17 +43,20 @@
 #include <iostream>
 
 #include "kinematics/Dof.h"
+#include "dynamics/ConstraintDynamics.h"
+#include "dynamics/SkeletonDynamics.h"
 #include "simulation/World.h"
 
-namespace dart
-{
-namespace simulation
-{
+namespace dart {
+namespace simulation {
 
 ////////////////////////////////////////////////////////////////////////////////
 World::World()
-
+    : mTime(0.0),
+      mTimeStep(0.001)
 {
+    mIndices.push_back(0);
+    mCollisionHandle = new dynamics::ConstraintDynamics(mSkeletons, mTimeStep);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +68,7 @@ World::~World()
 void World::setTimeStep(double _timeStep)
 {
     mTimeStep = _timeStep;
-    //mCollisionHandle->setTimeStep(_timeStep);
+    mCollisionHandle->setTimeStep(_timeStep);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,12 +90,15 @@ void World::step()
 
     //--------------------------------------------------------------------------
     // Forward dynamics: [q(k), dq(k), tau(k)] --> ddq(k)
+    _computeForwardDynamics();
 
     //--------------------------------------------------------------------------
     // Integration: [q(k), dq(k), ddq(k)] --> [q(k+1), dq(k+1)]
+    _integrate();
 
     //--------------------------------------------------------------------------
     // Forward kinematics: [q(k+1), dq(k+1)] --> W, V, dV, ...
+    _updateForwardKinematics();
 
     mTime += mTimeStep;
     mFrame++;
@@ -105,11 +111,18 @@ dynamics::SkeletonDynamics* World::getSkeleton(int _index) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-dynamics::SkeletonDynamics* World::getSkeleton(const char* const _name) const
+dynamics::SkeletonDynamics* World::getSkeleton(const std::string& _name) const
 {
-    dynamics::SkeletonDynamics* result = NULL;
+    for (std::vector<dynamics::SkeletonDynamics*>::const_iterator itrSkeleton
+         = mSkeletons.begin();
+         itrSkeleton != mSkeletons.end();
+         ++itrSkeleton)
+    {
+        if ((*itrSkeleton)->getName() == _name)
+            return *itrSkeleton;
+    }
 
-    return result;
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,12 +131,28 @@ void World::addSkeleton(dynamics::SkeletonDynamics* _skeleton)
     assert(_skeleton != NULL);
 
     mSkeletons.push_back(_skeleton);
+
+    _skeleton->initKinematics();
+    _skeleton->initDynamics();
+
+    mIndices.push_back(mIndices.back() + _skeleton->getNumDofs());
 }
 
 bool World::checkCollision(bool checkAllCollisions)
 {
-//    return mCollisionHandle->getCollisionChecker()->checkCollision(checkAllCollisions, false);
-    return false;
+    return mCollisionHandle->getCollisionChecker()->checkCollision(checkAllCollisions, false);
+}
+
+void World::_computeForwardDynamics()
+{
+}
+
+void World::_integrate()
+{
+}
+
+void World::_updateForwardKinematics()
+{
 }
 
 } // namespace simulation

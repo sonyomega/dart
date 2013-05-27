@@ -45,6 +45,7 @@ RevoluteJoint::RevoluteJoint()
     : Joint(),
       mAxis(math::so3())
 {
+    mName.assign("Revolute joint");
     mJointType = REVOLUTE;
     mDofs.push_back(&mCoordinate);
     mS.setSize(1);
@@ -55,33 +56,31 @@ RevoluteJoint::~RevoluteJoint()
 {
 }
 
-void RevoluteJoint::updateKinematics(bool _firstDerivative,
-                                     bool _secondDerivative)
+void RevoluteJoint::_updateTransformation()
 {
     // T
     mT = mT_ParentBodyToJoint
          * math::SE3(mAxis * mCoordinate.get_q())
          * mT_ChildBodyToJoint.getInverse();
+}
 
-    // S, V
-    if (_firstDerivative)
-    {
-        mS.setColumn(0, Ad(mT_ChildBodyToJoint, math::se3(mAxis)));
+void RevoluteJoint::_updateVelocity()
+{
+    // S
+    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(mAxis)));
 
-        // V = S * dq
-        mV = mS * get_q();
-        //mV.setAngular(mAxis * mCoordinate.get_q());
+    // V = S * dq
+    mV = mS * get_q();
+    //mV.setAngular(mAxis * mCoordinate.get_q());
+}
 
-        // dS, dV
-        if (_secondDerivative)
-        {
-            // dS = 0
-            mdS.setZero();
+void RevoluteJoint::_updateAcceleration()
+{
+    // dS = 0
+    mdS.setZero();
 
-            // dV = dS * dq + S * ddq
-            mdV = mS * get_ddq();
-        }
-    }
+    // dV = dS * dq + S * ddq
+    mdV = mS * get_ddq();
 }
 
 } // namespace kinematics

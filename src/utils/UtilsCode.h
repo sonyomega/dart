@@ -2,8 +2,9 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sumit Jain <sumit@cc.gatech.edu>
- * Date: 07/21/2011
+ * Author(s): Sumit Jain <sumit@cc.gatech.edu>,
+ *            Jeongseok Lee <jslee02@gmail.com>
+ * Date: 05/26/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -47,35 +48,62 @@
 #include <fstream>
 #include <sstream>
 
-namespace dart
-{
-namespace utils
-{
+namespace dart {
+namespace utils {
 
-void tokenize(const std::string& _str, std::vector<std::string>& _tokens, const std::string& _delimiters = " ");    // breaks the _str string into a vector of _tokens using delimiters from input _delimiters
+/// @briefOutput a message
+#define dtmsg (dart::utils::colorMsg("Msg", 32))
 
-template <class T>
-std::vector<T> stringToVec( const std::string &_str ){
-    std::vector<T> myVec;
-    std::istringstream iss (_str, std::istringstream::in);
-    copy(std::istream_iterator<T>(iss), std::istream_iterator<T>(), back_inserter(myVec));
-    //check http://www.sgi.com/tech/stl/istream_iterator.html
-    return myVec;
-}
+/// @briefOutput a debug message
+#define dtdbg (dart::utils::colorMsg("Dbg", 36))
 
+/// @brief Output a warning message
+#define dtwarn (dart::utils::colorErr("Warning", __FILE__, __LINE__, 33))
 
-double strTodouble(const std::string& str);
+/// @brief Output an error message
+#define dterr (dart::utils::colorErr("Error", __FILE__, __LINE__, 31))
 
-template <typename T_POINTER> inline void swapPointers(T_POINTER *&_p1, T_POINTER *&_p2){
-    T_POINTER *temp = _p2;
-    _p2=_p1;
-    _p1=temp;
-}
+/// @brief
+std::ostream& colorMsg(const std::string& _msg, int _color);
 
+/// @brief
+std::ostream& colorErr(const std::string& _msg,
+                       const std::string& _file,
+                       unsigned int _line,
+                       int _color);
 
-inline bool isNaN(double _v){
-    return _v != _v;
-}
+/// @brief
+//void tokenize(const std::string& _str, std::vector<std::string>& _tokens, const std::string& _delimiters = " ");    // breaks the _str string into a vector of _tokens using delimiters from input _delimiters
+
+/// @brief
+//template <class T>
+//inline std::vector<T> stringToVec( const std::string &_str )
+//{
+//    std::vector<T> myVec;
+//    std::istringstream iss (_str, std::istringstream::in);
+//    copy(std::istream_iterator<T>(iss), std::istream_iterator<T>(), back_inserter(myVec));
+//    //check http://www.sgi.com/tech/stl/istream_iterator.html
+//    return myVec;
+//}
+
+/// @brief
+//double strTodouble(const std::string& str);
+
+/// @brief
+//template <typename T_POINTER>
+//inline void swapPointers(T_POINTER *&_p1, T_POINTER *&_p2)
+//{
+//    T_POINTER *temp = _p2;
+//    _p2=_p1;
+//    _p1=temp;
+//}
+
+/// @brief
+//inline bool isNaN(double _v)
+//{
+//    return _v != _v;
+//}
+
 
 } // namespace utils
 } // namespace dart

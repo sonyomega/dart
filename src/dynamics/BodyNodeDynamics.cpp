@@ -37,6 +37,7 @@
 
 #include <iostream>
 
+#include "utils/UtilsCode.h"
 #include "kinematics/Joint.h"
 #include "dynamics/BodyNodeDynamics.h"
 
@@ -47,12 +48,116 @@ BodyNodeDynamics::BodyNodeDynamics()
     : mGravityMode(true),
       mI(dynamics::Inertia()),
       mF(math::dse3())
-
 {
 }
 
 BodyNodeDynamics::~BodyNodeDynamics()
 {
+}
+
+void BodyNodeDynamics::setLocalInertia(double _Ixx, double _Iyy, double _Izz,
+                                       double _Ixy, double _Ixz, double _Iyz)
+{
+    setMomentOfInertia(_Ixx, _Iyy, _Izz, _Ixy, _Ixz, _Iyz);
+}
+
+void BodyNodeDynamics::setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
+                                          double _Ixy, double _Ixz, double _Iyz)
+{
+    mI.setPrincipals(_Ixx, _Iyy, _Izz);
+    mI.setProducts(_Ixy, _Ixz, _Iyz);
+}
+
+void BodyNodeDynamics::setExternalForceLocal(const math::dse3& _FextLocal)
+{
+    mFext = _FextLocal;
+}
+
+void BodyNodeDynamics::setExternalForceGlobal(const math::dse3& _FextWorld)
+{
+    mFext = _FextWorld;
+}
+
+void BodyNodeDynamics::setExternalForceLocal(
+        const Eigen::Vector3d& _posLocal,
+        const Eigen::Vector3d& _linearForceGlobal)
+{
+}
+
+void BodyNodeDynamics::addExtForce(const Eigen::Vector3d& _offset, const Eigen::Vector3d& _force, bool _isOffsetLocal, bool _isForceLocal)
+{
+    dterr << "Not implemented.\n";
+}
+
+void BodyNodeDynamics::addExternalForceLocal(const math::dse3& _FextLocal)
+{
+    mFext += _FextLocal;
+}
+
+void BodyNodeDynamics::addExternalForceGlobal(const math::dse3& _FextWorld)
+{
+    mFext += _FextWorld;
+}
+
+void BodyNodeDynamics::addExternalForceLocal(
+        const Eigen::Vector3d& _posLocal,
+        const Eigen::Vector3d& _linearForceGlobal)
+{
+    dterr << "Not implemented.\n";
+}
+
+math::dse3 BodyNodeDynamics::getExternalForceGlobal() const
+{
+    dterr << "Not implemented.\n";
+}
+
+void BodyNodeDynamics::_updateBodyForce(const Eigen::Vector3d& _gravity)
+{
+    mFgravity = mI * math::InvAd(mW, math::se3(_gravity));
+
+    mF = mI * mdV;                // Inertial force
+    mF -= mFext;                  // External force
+    mF -= mFgravity;              // Gravity force
+    mF -= math::dad(mV, mI * mV); // Coriolis force
+
+    for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
+         itrBody != mChildBodies.end();
+         ++itrBody)
+    {
+        kinematics::Joint* childJoint = (*itrBody)->getParentJoint();
+        assert(childJoint != NULL);
+        BodyNodeDynamics* bodyDyn = dynamic_cast<BodyNodeDynamics*>(*itrBody);
+        assert(bodyDyn != NULL);
+
+        mF += math::InvdAd(childJoint->getLocalTransformation(),
+                           bodyDyn->getBodyForce());
+    }
+}
+
+void BodyNodeDynamics::_updateGeneralizedForce()
+{
+    assert(mJointParent != NULL);
+
+    const math::Jacobian& J = mJointParent->getLocalJacobian();
+
+    assert(J.getSize() == mJointParent->getNumDofs());
+
+    mJointParent->set_tau(J.getInnerProduct(mF));
+}
+
+void BodyNodeDynamics::_updateDampingForce()
+{
+    dterr << "Not implemented.\n";
+}
+
+void BodyNodeDynamics::addExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
+{
+    dterr << "Not implemented.\n";
+}
+
+void BodyNodeDynamics::clearExternalForces()
+{
+    dterr << "Not implemented.\n";
 }
 
 } // namespace dynamics

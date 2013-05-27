@@ -88,6 +88,9 @@ public: // Operators
     /// @brief Access to the idx th element.
     const double& operator()(int _i) const;
 
+    // TODO:
+    bool operator==(const so3& _w) const;
+
     /// @brief Unary plus operator.
     so3 operator+(void) const;
 
@@ -114,6 +117,19 @@ public: // Operators
 
     /// @brief Double multiplication.
     friend so3 operator*(double c, const so3& _w);
+
+    /// @brief std::ostream standard output
+    friend std::ostream& operator<<(std::ostream& _os, const so3& _w)
+    {
+        _os << math::precision(_w.mw(0), 6)
+            << " "
+            << math::precision(_w.mw(1), 6)
+            << " "
+            << math::precision(_w.mw(2), 6);
+    }
+
+    /// @brief
+    std::string toString() const;
 
 public:
     /// @brief
@@ -180,6 +196,10 @@ public: // Constructors and destructor
     explicit SO3(const so3& _w);
     
     /// @brief
+    // TODO: NOT IMPLEMENTED !
+    SO3(double _EulerX, double _EulerY, double _EulerZ);
+
+    /// @brief
     virtual ~SO3();
     
 public:
@@ -231,6 +251,18 @@ public:
     /// @brief
     bool operator==(const SO3& _R) const;
 
+    // @brief std::ostream standard output
+    friend std::ostream& operator<<(std::ostream& _os, const SO3& _R)
+    {
+        Eigen::Vector3d vec = _R.getEulerXYZ();
+
+        _os << math::precision(vec(0), 6)
+            << " "
+            << math::precision(vec(1), 6)
+            << " "
+            << math::precision(vec(2), 6);
+    }
+
 public:
     /// @brief
     void setValues(double _R00, double _R01, double _R02,		//Rx
@@ -251,7 +283,38 @@ public:
     
     /// @brief
     const Eigen::Matrix3d& getMatrix() const { return mRotation; }
+
+    /// @brief
+    void setEulerXYZ(const Eigen::Vector3d& _EulerAngles);
+
+    /// @brief
+    void setEulerZXY(const Eigen::Vector3d& _EulerAngles);
+
+    /// @brief
+    void setEulerZYX(const Eigen::Vector3d& _EulerAngles);
+
+    /// @brief
+    void setEulerZYZ(const Eigen::Vector3d& _EulerAngles);
+
+    /// @brief
+    Eigen::Vector3d getEulerXYZ() const;
+
+    /// @brief
+    Eigen::Vector3d getEulerZXY() const;
+
+    /// @brief
+    Eigen::Vector3d getEulerZYX() const;
+
+    /// @brief
+    Eigen::Vector3d getEulerZYZ() const;
     
+    /// @brief
+    // TODO: NOT IMPLEMENTED
+    so3 getLog() const;
+
+    /// @brief
+    double getAxisAngle(Eigen::Vector3d* _axis, double* _angle) const;
+
 protected:
     /// @brief
     Eigen::Matrix3d mRotation;

@@ -47,10 +47,8 @@ typedef struct {
 } stopWatch;
 #endif
 
-namespace dart
-{
-namespace utils
-{
+namespace dart {
+namespace utils {
 
 class Timer;
 

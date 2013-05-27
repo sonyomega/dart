@@ -57,6 +57,116 @@ Skeleton::~Skeleton()
 {
 }
 
+void Skeleton::addBody(BodyNode* _body, bool _addParentJoint)
+{
+    assert(_body != NULL);
+
+    mBodies.push_back(_body);
+
+    // The parent joint possibly be null
+    if (_addParentJoint)
+        addJoint(_body->getParentJoint());
+}
+
+void Skeleton::addJoint(Joint* _joint)
+{
+    assert(_joint != NULL);
+
+    mJoints.push_back(_joint);
+}
+
+BodyNode*Skeleton::findBody(const string& _name) const
+{
+    assert(!_name.empty());
+
+    for (std::vector<BodyNode*>::const_iterator itrBody = mBodies.begin();
+         itrBody != mBodies.end();
+         ++itrBody)
+    {
+        if ((*itrBody)->getName() == _name)
+            return *itrBody;
+    }
+
+    return NULL;
+}
+
+void Skeleton::setPose(const Eigen::VectorXd& _pose,
+                       bool bCalcTrans,
+                       bool bCalcDeriv)
+{
+    for (int i = 0; i < getNumDofs(); i++)
+        mDofs.at(i)->set_q(_pose[i]);
+
+    if (bCalcTrans)
+    {
+        if (bCalcDeriv)
+            updateForwardKinematics(true, false);
+        else
+            updateForwardKinematics(false, false);
+    }
+}
+
+void Skeleton::initKinematics()
+{
+    mRoot = mBodies[0];
+
+	//--------------------------------------------------------------------------
+	// Set dofs
+	//--------------------------------------------------------------------------
+	mDofs.clear();
+
+	for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
+		 itrJoint != mJoints.end();
+		 ++itrJoint)
+	{
+		const std::vector<Dof*>& dofs = (*itrJoint)->getDofs();
+
+		for (std::vector<Dof*>::const_iterator itrDof = dofs.begin();
+			 itrDof != dofs.end();
+			 ++itrDof)
+		{
+			mDofs.push_back((*itrDof));
+		}
+	}
+}
+
+void Skeleton::updateForwardKinematics(bool _firstDerivative,
+                                       bool _secondDerivative)
+{
+    _updateJointKinematics(_firstDerivative, _secondDerivative);
+    _updateBodyForwardKinematics(_firstDerivative, _secondDerivative);
+}
+
+void Skeleton::draw(renderer::RenderInterface* _ri,
+                    const Eigen::Vector4d& _color,
+                    bool _useDefaultColor) const
+{
+    mRoot->draw(_ri, _color, _useDefaultColor);
+}
+
+void Skeleton::_updateJointKinematics(bool _firstDerivative,
+                                           bool _secondDerivative)
+{
+    for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
+         itrJoint != mJoints.end();
+         ++itrJoint)
+    {
+        (*itrJoint)->updateKinematics(_firstDerivative,
+                                           _secondDerivative);
+    }
+}
+
+void Skeleton::_updateBodyForwardKinematics(bool _firstDerivative,
+                                            bool _secondDerivative)
+{
+    for (std::vector<BodyNode*>::iterator itrBody = mBodies.begin();
+         itrBody != mBodies.end();
+         ++itrBody)
+    {
+        (*itrBody)->updateForwardKinematics(_firstDerivative,
+                                            _secondDerivative);
+    }
+}
 
 
 } // namespace kinematics

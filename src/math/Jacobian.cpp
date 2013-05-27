@@ -36,11 +36,10 @@
  */
 
 #include "math/Jacobian.h"
+#include "utils/UtilsCode.h"
 
-namespace dart
-{
-namespace math
-{
+namespace dart {
+namespace math {
 
 #define LIEGROUP_EPS 10e-9
 
@@ -108,6 +107,24 @@ Jacobian Jacobian::getColumns(int _idx, int _size)
     return J;
 }
 
+Jacobian Jacobian::getAdjointed(const SE3& _T) const
+{
+    Jacobian ret;
+
+    dterr << "NOT IMPLEMENTED.\n";
+
+    return ret;
+}
+
+Jacobian Jacobian::getAdjointedInv(const SE3& _Tinv) const
+{
+    Jacobian ret;
+
+    dterr << "NOT IMPLEMENTED.\n";
+
+    return ret;
+}
+
 se3 Jacobian::operator*(const Eigen::VectorXd& _qdot)
 {
     assert(_qdot.size() == getSize());
@@ -116,6 +133,19 @@ se3 Jacobian::operator*(const Eigen::VectorXd& _qdot)
 
     for (int i = 0; i < getSize(); ++i)
         ret = mJ[i] * _qdot(i);
+
+    return ret;
+}
+
+Eigen::VectorXd Jacobian::getInnerProduct(const dse3& _F) const
+{
+    Eigen::VectorXd ret = Eigen::VectorXd::Zero(getSize());
+
+    assert(ret.size() == getSize());
+
+    int size = getSize();
+    for (int i = 0; i < size; ++i)
+        ret(i) = mJ[i].innerProduct(_F);
 
     return ret;
 }

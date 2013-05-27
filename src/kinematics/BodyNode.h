@@ -73,9 +73,12 @@ Runge-Kutta and fourth-order Runge Kutta.
 #ifndef DART_KINEMATICS_BODYNODE_H
 #define DART_KINEMATICS_BODYNODE_H
 
+#include "utils/Deprecated.h"
 #include "math/SE3.h"
+#include "math/Jacobian.h"
 
 namespace dart {
+namespace renderer { class RenderInterface; }
 namespace kinematics {
 
 class Skeleton;
@@ -101,7 +104,7 @@ class BodyNode
 {
 public:
     //--------------------------------------------------------------------------
-    // CONSTRUCTORS AND DESTRUCTOR
+    // Constructor and Desctructor
     //--------------------------------------------------------------------------
     /// @brief
     BodyNode();
@@ -110,18 +113,81 @@ public:
     virtual ~BodyNode();
 
     //--------------------------------------------------------------------------
-    // KINEMATICAL PROPERTIES
-    //--------------------------------------------------------------------------
-
-
-    //--------------------------------------------------------------------------
-    // STRUCTURAL PROPERTIES
+    //
     //--------------------------------------------------------------------------
     /// @brief
-    void setParentJoint(Joint* _joint) { mParentJoint = _joint; }
+    void setName(const std::string& _name) { mName = _name; }
 
     /// @brief
-    Joint* getParentJoint() const { return mParentJoint; }
+    const std::string& getName() const { return mName; }
+
+    /// @brief
+    void setVisualizationShape(Shape* _shape) { mVizShape = _shape; }
+
+    /// @brief
+    Shape* getVisualizationShape() const { return mVizShape; }
+
+    /// @brief
+    void setCollisionShape(Shape* _shape) { mColShape = _shape; }
+
+    /// @brief
+    Shape* getCollisionShape() const { return mColShape; }
+
+    /// @brief
+    void setColliding(bool _colliding) { mColliding = _colliding; }
+
+    /// @brief
+    bool getColliding() { return mColliding; }
+
+    /// @brief
+    bool getCollideState() const { return mCollidable; }
+
+    /// @brief
+    void setCollideState(bool _c) { mCollidable = _c; }
+
+    //--------------------------------------------------------------------------
+    // Kinematical Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    void setWorldTransformation(const math::SE3& _W) { mW = _W; }
+
+    /// @brief Transformation from the local coordinates of this body node to
+    /// the world coordinates.
+    DEPRECATED const Eigen::Matrix4d& getWorldTransform() const
+    { return mW.getMatrix(); }
+    const math::SE3& getWorldTransformation() const { return mW; }
+
+    /// @brief Transformation from the world coordinates to the local
+    /// coordinates of this body node.
+    DEPRECATED Eigen::Matrix4d getWorldInvTransform() const
+    { return mW.getInverse().getMatrix(); }
+
+    /// @brief
+    const math::Jacobian& getJacobianBody() const { return mJacobianBody; }
+
+    /// @brief
+    ///
+    math::Jacobian getJacobianWorld() const
+    { return mJacobianBody.getAdjointed(math::SE3(mW.getRotation())); }
+
+    /// @brief
+    const math::se3& getBodyVelocity() const { return mV; }
+
+    /// @brief
+    const math::se3& getBodyAcceleration() const { return mdV; }
+
+    //--------------------------------------------------------------------------
+    // Structueral Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    DEPRECATED Skeleton* getSkel() const { return mSkeleton; }
+    Skeleton* getSkeleton() const { return mSkeleton; }
+
+    /// @brief
+    void setParentJoint(Joint* _joint) { mJointParent = _joint; }
+
+    /// @brief
+    Joint* getParentJoint() const { return mJointParent; }
 
     /// @brief
     void addChildJoint(Joint* _joint);
@@ -130,38 +196,88 @@ public:
     Joint* getChildJoint(int _idx) const;
 
     /// @brief
-    const std::vector<Joint*>& getChildJoints() const { return mChildJoints; }
+    const std::vector<Joint*>& getChildJoints() const { return mJointsChild; }
+
+    /// @brief
+    int getNumChildJoints() const { return mJointsChild.size(); }
+
+    /// @brief
+    void setParentBody(BodyNode* _body) { mParentBody = _body; }
+
+    /// @brief
+    BodyNode* getParentBody() const { return mParentBody; }
+
+    /// @brief
+    void addChildBody(BodyNode* _body);
+
+    /// @brief
+    DEPRECATED BodyNode* getChildNode(int _idx) const;
+    BodyNode* getChildBody(int _idx) const;
+
+    /// @brief
+    const std::vector<BodyNode*>& getChildBodies() const { return mChildBodies; }
 
     //--------------------------------------------------------------------------
-    //
+    // Recursive Kinematics Algorithms
+    //--------------------------------------------------------------------------
+    /// @brief (q, dq, ddq) --> (W, V, dV)
+    void updateForwardKinematics(bool _firstDerivative = true,
+                                 bool _secondDerivative = true);
+
+    //--------------------------------------------------------------------------
+    // Rendering
+    //--------------------------------------------------------------------------
+    /// @brief Render the entire subtree rooted at this body node.
+    void draw(renderer::RenderInterface* _ri = NULL,
+              const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
+              bool _useDefaultColor = true, int _depth = 0) const;
+
+    //--------------------------------------------------------------------------
+    // Sub-functions for Recursive Kinematics Algorithms
     //--------------------------------------------------------------------------
     /// @brief
-    const math::SE3& getWorldTransformation() const { return mW; }
+    /// parentJoint.T, parentBody.W --> W
+    void _updateTransformation();
 
     /// @brief
-    const math::se3& getBodyVelocity() const { return mV; }
+    /// parentJoint.V, parentBody.V --> V
+    /// parentJoint.S --> J
+    void _updateVelocity(bool _updateJacobian = false);
 
     /// @brief
-    const math::se3& getBodyAcceleration() const { return mdV; }
-
-    /// @brief
-    void updateWorldTransformation();
-
-    /// @brief
-    void updateBodyVelocity();
-
-    /// @brief
-    void updateBodyAcceleration();
+    /// parentJoint.V, parentJoint.dV, parentBody.dV, V --> dV
+    /// parentJoint.dS --> dJ
+    void _updateAcceleration(bool _updateJacobianDeriv = false);
 
 protected:
     //--------------------------------------------------------------------------
-    // Constant Properties
+    //
     //--------------------------------------------------------------------------
-    /// @brief
-    std::vector<Shape*> mVizShapes;
+    /// @brief A unique ID of this node globally.
+    int mID;
+
+    /// @brief Counts the number of nodes globally.
+    static int msBodyNodeCount;
 
     /// @brief
-    std::vector<Shape*> mColShapes;
+    std::string mName;
+
+    //--------------------------------------------------------------------------
+    // Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    //std::vector<Shape*> mVizShapes;
+    Shape* mVizShape;
+
+    /// @brief
+    //std::vector<Shape*> mColShapes;
+    Shape* mColShape;
+
+    /// @brief Indicating whether this node is collidable.
+    bool mCollidable;
+
+    /// @brief Whether the node is currently in collision with another node.
+    bool mColliding;
 
     //--------------------------------------------------------------------------
     // Structual Properties
@@ -170,10 +286,14 @@ protected:
     Skeleton* mSkeleton;
 
     /// @brief
-    Joint* mParentJoint;
+    // TODO: rename
+    //Joint* mParentJoint;
+    Joint* mJointParent;
 
     /// @brief
-    std::vector<Joint*> mChildJoints;
+    // TODO: rename
+    //std::vector<Joint*> mChildJoints;
+    std::vector<Joint*> mJointsChild;
 
     /// @brief
     BodyNode* mParentBody;
@@ -186,6 +306,9 @@ protected:
     //--------------------------------------------------------------------------
     /// @brief World transformation.
     math::SE3 mW;
+
+    /// @brief
+    math::Jacobian mJacobianBody;
 
     /// @brief Generalized body velocity w.r.t. body frame.
     math::se3 mV;

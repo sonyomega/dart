@@ -39,7 +39,9 @@
 #define DART_DYNAMICS_INERTIA_H
 
 #include <Eigen/Dense>
+
 #include "math/UtilsMath.h"
+#include "math/SE3.h"
 
 namespace dart {
 namespace dynamics {
@@ -100,6 +102,9 @@ public: // Operators
     /// where \f$J = (I,m,r)\in\f$ Inertia, \f$V = (w,v)\in se(3)\f$.
     math::Vector6d operator*(const math::Vector6d& _V) const;
 
+    /// @brief
+    math::dse3 operator*(const math::se3& V) const;
+
 public: // Others
     /// @brief
     void setMass(double _mass) { mMass = _mass; }
@@ -143,7 +148,7 @@ public: // Others
     Eigen::Matrix3d getMomentsOfInertia() const;
     
     /// @brief
-    void setCenterOfMass(const Eigen::Vector3d& _com);
+    void setCenterOfMass(const Eigen::Vector3d& _com) { mCOM = _com; }
     
     /// @brief
     const Eigen::Vector3d& getCenterOfMass() const { return mCOM; }

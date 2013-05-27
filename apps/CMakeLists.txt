@@ -4,20 +4,21 @@ set_property(DIRECTORY PROPERTY EXCLUDE_FROM_DEFAULT_BUILD ON)
 
 # List of all the subdirectories to include
 foreach(APPDIR
-	meshCollision
-	viewer
-	forwardSim
-	cubes
-	motionAnalysis
-	pdController
-	balance
-	ik
-	hybrid
-	hanging
-	hardcodedDesign
-	closedLoop
-	drawRRT
-	spheres
+	#meshCollision
+	#viewer
+	viewer_DART
+	#forwardSim
+	#cubes
+	#motionAnalysis
+	#pdController
+	#balance
+	#ik
+	#hybrid
+	#hanging
+	#hardcodedDesign
+	#closedLoop
+	#drawRRT
+	#spheres
 	)
     add_subdirectory(${APPDIR})
     if(WIN32)

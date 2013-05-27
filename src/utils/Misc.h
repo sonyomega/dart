@@ -78,7 +78,7 @@
         var##_ = _val;                          \
     }                                           \
 private:                                        \
-type var##_                 
+type var##_
 
 
 #endif // #ifndef UTILS_MISC_H

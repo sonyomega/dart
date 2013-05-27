@@ -45,10 +45,8 @@ using namespace std;
 //#define CLOCKS_PER_SEC 1000
 //#endif
 
-namespace dart
-{
-namespace utils
-{
+namespace dart {
+namespace utils {
 
 double subtractTimes( double endTime, double startTime) {
     return (endTime - startTime) / CLOCKS_PER_SEC;

@@ -132,6 +132,13 @@ math::Vector6d Inertia::operator*(const math::Vector6d& _V) const
 	return res;
 }
 
+math::dse3 Inertia::operator*(const math::se3& V) const
+{
+	math::dse3 ret;
+
+	return ret;
+}
+
 Inertia Inertia::getTransformed(const Eigen::Matrix4d& _T12) const
 {
 	// TODO: Not implemented.

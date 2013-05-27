@@ -2,8 +2,9 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sumit Jain <sumit@cc.gatech.edu>
- * Date: 07/21/2011
+ * Author(s): Sumit Jain <sumit@cc.gatech.edu>,
+ *            Jeongseok Lee <jslee02@gmail.com>
+ * Date: 05/26/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -38,34 +39,51 @@
 #include "UtilsCode.h"
 using namespace std;
 
-namespace dart
-{
-namespace utils
-{
+namespace dart {
+namespace utils {
 
-void tokenize(const string& str, vector<string>& tokens, const string& delimiters){
-    // Skip delimiters at beginning.
-    string::size_type lastPos = str.find_first_not_of(delimiters, 0);
-    // Find first "non-delimiter".
-    string::size_type pos     = str.find_first_of(delimiters, lastPos);
-
-    while (string::npos != pos || string::npos != lastPos)
-    {
-        // Found a token, add it to the vector.
-        tokens.push_back(str.substr(lastPos, pos - lastPos));
-        // Skip delimiters.  Note the "not_of"
-        lastPos = str.find_first_not_of(delimiters, pos);
-        // Find next "non-delimiter"
-        pos = str.find_first_of(delimiters, lastPos);
-    }
+std::ostream& colorMsg(const std::string& _msg, int _color)
+{
+    std::cout << "\033[1;" << _color << "m" << _msg << "\033[0m ";
+    return std::cout;
 }
 
-double strTodouble(const string& str) {
-    stringstream ss(str);
-    double value;
-    ss >> value;
-    return value;
+std::ostream& colorErr(const std::string& _msg,
+                       const std::string& _file,
+                       unsigned int _line,
+                       int _color)
+{
+    int index = _file.find_last_of("/") + 1;
+
+    std::cerr << "\033[1;" << _color << "m" << _msg << " [" <<
+                 _file.substr(index , _file.size() - index)<< ":" << _line << "]\033[0m ";
+
+    return std::cerr;
 }
+
+//void tokenize(const string& str, vector<string>& tokens, const string& delimiters){
+//    // Skip delimiters at beginning.
+//    string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+//    // Find first "non-delimiter".
+//    string::size_type pos     = str.find_first_of(delimiters, lastPos);
+
+//    while (string::npos != pos || string::npos != lastPos)
+//    {
+//        // Found a token, add it to the vector.
+//        tokens.push_back(str.substr(lastPos, pos - lastPos));
+//        // Skip delimiters.  Note the "not_of"
+//        lastPos = str.find_first_not_of(delimiters, pos);
+//        // Find next "non-delimiter"
+//        pos = str.find_first_of(delimiters, lastPos);
+//    }
+//}
+
+//double strTodouble(const string& str) {
+//    stringstream ss(str);
+//    double value;
+//    ss >> value;
+//    return value;
+//}
 
 }  // namespace utils
 } // namespace dart

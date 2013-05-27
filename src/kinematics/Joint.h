@@ -44,6 +44,7 @@
 #include "kinematics/System.h"
 
 namespace dart {
+namespace renderer { class RenderInterface; }
 namespace kinematics {
 
 class BodyNode;
@@ -61,6 +62,9 @@ class BodyNode;
 class Joint : public System
 {
 public:
+    //--------------------------------------------------------------------------
+    // Types
+    //--------------------------------------------------------------------------
     /// @brief
     enum JointType
     {
@@ -75,42 +79,49 @@ public:
         FREE           // 6 dof
     };
 
-public:
+    //--------------------------------------------------------------------------
+    // Constructor and Destructor
+    //--------------------------------------------------------------------------
     /// @brief
     Joint();
 
     /// @brief
     virtual ~Joint();
 
-public:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
     /// @brief
-    virtual void updateKinematics(bool _firstDerivative = true,
-                        bool _secondDerivative = true) = 0;
+    void setName(const std::string& _name) { mName = _name; }
 
-public:
+    /// @brief
+    const std::string& getName() const { return mName; }
+
+    //--------------------------------------------------------------------------
+    // Kinematical Properties
+    //--------------------------------------------------------------------------
     /// @brief
     JointType getJointType() const { return mJointType; }
-
-    /// @brief
-    BodyNode* getParentNode() const { return mParentBody; }
-
-    /// @brief
-    BodyNode* getChildNode() const { return mChildBody; }
 
     /// @brief
     const math::SE3& getLocalTransformation() const { return mT; }
 
     /// @brief
-    const math::se3& getLocalVelocity() const { return mV; }
+    const math::Jacobian& getLocalJacobian() const { return mS; }
 
     /// @brief
-    const math::Jacobian& getLocalJacobian() const { return mS; }
+    const math::se3& getLocalVelocity() const { return mV; }
 
     /// @brief
     const math::Jacobian& getLocalJacobianFirstDerivative() const
     { return mdS; }
 
-public:
+    /// @brief
+    const math::se3& getLocalAcceleration() const { return mdV; }
+
+    //--------------------------------------------------------------------------
+    // Structueral Properties
+    //--------------------------------------------------------------------------
     /// @brief
     void setParentBody(BodyNode* _body);
 
@@ -124,9 +135,11 @@ public:
     void setLocalTransformFromChildBody(const math::SE3& _T);
 
     /// @brief
+    DEPRECATED BodyNode* getParentNode() const { return mParentBody; }
     BodyNode* getParentBody() const { return mParentBody; }
 
     /// @brief
+    DEPRECATED BodyNode* getChildNode() const { return mChildBody; }
     BodyNode* getChildBody() const { return mChildBody; }
 
     /// @brief
@@ -137,7 +150,48 @@ public:
     const math::SE3& getLocalTransformationFromChildBody() const
     { return mT_ChildBodyToJoint; }
 
+    //--------------------------------------------------------------------------
+    // Recursive Kinematics Algorithms
+    //--------------------------------------------------------------------------
+    /// @brief
+    void updateKinematics(bool _firstDerivative = true,
+                          bool _secondDerivative = true);
+
+
+    void updateGlobalKinematics();
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    void applyGLTransform(renderer::RenderInterface* _ri);
+
 protected:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    /// q --> T(q)
+    virtual void _updateTransformation() = 0;
+
+    /// @brief
+    /// q, dq --> S(q), V(q, dq)
+    /// V(q, dq) = S(q) * dq
+    virtual void _updateVelocity() = 0;
+
+    /// @brief
+    /// dq, ddq, S(q) --> dS(q), dV(q, dq, ddq)
+    /// dV(q, dq, ddq) = dS(q) * dq + S(q) * ddq
+    virtual void _updateAcceleration() = 0;
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    std::string mName;
+
+    //--------------------------------------------------------------------------
+    // Structueral Properties
+    //--------------------------------------------------------------------------
     /// @brief Type of joint e.g. ball, hinge etc.
     JointType mJointType;
 
@@ -153,7 +207,9 @@ protected:
     /// @brief
     math::SE3 mT_ChildBodyToJoint;
 
-protected:
+    //--------------------------------------------------------------------------
+    // Kinematical Properties
+    //--------------------------------------------------------------------------
     /// @brief Local transformation.
     math::SE3 mT;
 
@@ -168,9 +224,6 @@ protected:
 
     /// @brief Time derivative of local Jacobian.
     math::Jacobian mdS;
-
-    // Eigen3 aligned allocator
-    //EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 private:
 

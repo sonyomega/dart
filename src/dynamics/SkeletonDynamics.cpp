@@ -42,14 +42,8 @@
 #include "dynamics/SkeletonDynamics.h"
 #include "dynamics/BodyNodeDynamics.h"
 
-using namespace Eigen;
-using namespace dart;
-using namespace kinematics;
-
-namespace dart
-{
-namespace dynamics
-{
+namespace dart {
+namespace dynamics {
 
 SkeletonDynamics::SkeletonDynamics()
     : kinematics::Skeleton(),
@@ -59,6 +53,114 @@ SkeletonDynamics::SkeletonDynamics()
 
 SkeletonDynamics::~SkeletonDynamics()
 {
+}
+
+void SkeletonDynamics::initDynamics()
+{
+//    mDynamicsBodies.clear();
+
+//    for (std::vector<kinematics::BodyNode*>::iterator itrBody = mBodies.begin();
+//         itrBody != mBodies.end();
+//         ++itrBody)
+//        mDynamicsBodies.push_back(dynamic_cast<BodyNodeDynamics*>(*itrBody));
+}
+
+void SkeletonDynamics::computeInverseDynamics(const Eigen::Vector3d& _gravity)
+{
+    _inverseDynamicsFwdRecursion();
+    _inverseDynamicsBwdRecursion(_gravity);
+}
+
+void SkeletonDynamics::computeForwardDynamics(
+        const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
+{
+}
+
+void SkeletonDynamics::computeForwardDynamicsID(
+        const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
+{
+    int n = getNumDofs();
+
+    // Save current tau
+    Eigen::VectorXd tau_old = get_tau();
+
+    // Set ddq as zero
+    set_ddq(Eigen::VectorXd::Zero(n));
+
+    //
+    mM = Eigen::Matrix4d::Zero(n,n);
+
+    // M(q) * ddq + b(q,dq) = tau
+    computeInverseDynamics(_gravity);
+    Eigen::VectorXd b = get_tau();
+
+    // Calcualtion M
+    for (int i = 0; i < n; ++i)
+    {
+        Eigen::VectorXd basis = Eigen::VectorXd::Zero(n);
+        basis(i) = 1;
+        set_ddq(basis);
+        computeInverseDynamics(_gravity);
+        mM.col(i) = get_tau() - b;
+    }
+
+    //
+    set_tau(tau_old);
+
+    // TODO:
+    mMInv = mM.inverse();
+    //mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
+
+    Eigen::VectorXd new_ddq = mMInv * (tau_old - b);
+    set_ddq(new_ddq);
+}
+
+void SkeletonDynamics::computeForwardDynamicsFS(
+        const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
+{
+}
+
+void SkeletonDynamics::computeHybridDynamicsFS(
+        const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
+{
+}
+
+void SkeletonDynamics::computeEquationsOfMotionID(
+        const Eigen::Vector3d& _gravity)
+{
+}
+
+void SkeletonDynamics::computeEquationsOfMotionRecursive(
+        const Eigen::Vector3d& _gravity)
+{
+}
+
+void SkeletonDynamics::_inverseDynamicsFwdRecursion()
+{
+    // Forward recursion
+    for (std::vector<kinematics::BodyNode*>::iterator itrBody = mBodies.begin();
+         itrBody != mBodies.end();
+         ++itrBody)
+    {
+        (*itrBody)->_updateTransformation();
+        (*itrBody)->_updateVelocity();
+        (*itrBody)->_updateAcceleration();
+    }
+}
+
+void SkeletonDynamics::_inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity)
+{
+    // Backward recursion
+    for (std::vector<kinematics::BodyNode*>::reverse_iterator ritrBody = mBodies.rbegin();
+         ritrBody != mBodies.rend();
+         ++ritrBody)
+    {
+        dynamics::BodyNodeDynamics* body
+                = dynamic_cast<dynamics::BodyNodeDynamics*>(*ritrBody);
+
+        body->_updateBodyForce(_gravity);
+        body->_updateGeneralizedForce();
+    }
 }
 
 
