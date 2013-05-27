@@ -62,6 +62,11 @@ public:
     virtual ~SkeletonDynamics();
 
     //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    BodyNodeDynamics* createBodyNode() const;
+
+    //--------------------------------------------------------------------------
     // Dynamical Properties
     //--------------------------------------------------------------------------
     /// @brief
@@ -110,19 +115,19 @@ public:
 
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamics(const Eigen::Vector3d& _gravity,
-                                bool _equationsOfMotion);
+                                bool _equationsOfMotion = true);
 
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamicsID(const Eigen::Vector3d& _gravity,
-                                   bool _equationsOfMotion);
+                                   bool _equationsOfMotion = true);
 
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamicsFS(const Eigen::Vector3d& _gravity,
-                                   bool _equationsOfMotion);
+                                   bool _equationsOfMotion = true);
 
     /// @brief (q, dq, ddq_v, tau_u) --> (tau_v, ddq_u)
     void computeHybridDynamicsFS(const Eigen::Vector3d& _gravity,
-                                  bool _equationsOfMotion);
+                                  bool _equationsOfMotion = true);
 
     /// @brief (q, dq) --> M, C, G
     void computeEquationsOfMotionID(const Eigen::Vector3d& _gravity);

@@ -98,7 +98,7 @@ void World::step()
 
     //--------------------------------------------------------------------------
     // Forward kinematics: [q(k+1), dq(k+1)] --> W, V, dV, ...
-    _updateForwardKinematics();
+    _computeForwardDynamics();
 
     mTime += mTimeStep;
     mFrame++;
@@ -145,14 +145,17 @@ bool World::checkCollision(bool checkAllCollisions)
 
 void World::_computeForwardDynamics()
 {
+    for (std::vector<dynamics::SkeletonDynamics*>::iterator itrSkeleton = mSkeletons.begin();
+         itrSkeleton != mSkeletons.end();
+         ++itrSkeleton)
+    {
+        (*itrSkeleton)->computeForwardDynamicsID(mGravity);
+    }
 }
 
 void World::_integrate()
 {
-}
 
-void World::_updateForwardKinematics()
-{
 }
 
 } // namespace simulation

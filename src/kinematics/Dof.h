@@ -49,9 +49,17 @@ namespace kinematics {
 class Joint;
 class Transformation;
 
+
+// TODO: Change name (Dof --> GeneralizedCoordinate).
+// A degrees of freedom is just a number of generalized coordinates.
+//
+// http://en.wikipedia.org/wiki/Degree_of_freedom:
+//   In many scientific fields, the degrees of freedom of a system is the number
+//   of parameters of the system that may vary independently. For example, the
+//   position of a figure in the plane has three degrees of freedom: its
+//   orientation and the two coordinates of any fixed point of the figure.
 /// @brief
-// TODO: Change name (Dof --> Coordinate) since Dof is generalized coordiante.
-class Dof
+class Coordinate
 {
 public:
     DEPRECATED double getValue() const { return q; }
@@ -60,10 +68,10 @@ public:
 
 public:
     /// @brief
-    Dof();
+    Coordinate();
 
     /// @brief
-    virtual ~Dof();
+    virtual ~Coordinate();
 
 public:
     /// @brief

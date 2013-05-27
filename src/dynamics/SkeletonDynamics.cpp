@@ -55,6 +55,11 @@ SkeletonDynamics::~SkeletonDynamics()
 {
 }
 
+BodyNodeDynamics*SkeletonDynamics::createBodyNode() const
+{
+    return new BodyNodeDynamics();
+}
+
 void SkeletonDynamics::initDynamics()
 {
 //    mDynamicsBodies.clear();

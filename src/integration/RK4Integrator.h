@@ -2,9 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
- *            Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/14/2013
+ * Author(s): Kristin Siu <kasiu@gatech.edu>
+ * Date: 09/16/2011
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -36,69 +35,37 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <limits>
+#ifndef DART_INTEGRATION_RK4_INTEGRATOR_H
+#define DART_INTEGRATION_RK4_INTEGRATOR_H
 
-#include "Dof.h"
-//#include "Transformation.h"
+#include <Eigen/Dense>
+#include "integration/Integrator.h"
 
 namespace dart {
-namespace kinematics {
+namespace integration {
 
-Coordinate::Coordinate()
-    : q(0.0),
-      dq(0.0),
-      ddq(0.0),
-      tau(0.0),
-      qMin(-std::numeric_limits<double>::infinity()),
-      dqMin(-std::numeric_limits<double>::infinity()),
-      ddqMin(-std::numeric_limits<double>::infinity()),
-      tauMin(-std::numeric_limits<double>::infinity()),
-      qMax(std::numeric_limits<double>::infinity()),
-      dqMax(std::numeric_limits<double>::infinity()),
-      ddqMax(std::numeric_limits<double>::infinity()),
-      tauMax(std::numeric_limits<double>::infinity()),
-      DqDp(0.0),
-      DdqDp(0.0),
-      DddqDp(0.0),
-      DtauDp(0.0),
-//      mSkelIndex(-1),
-//      mVariable(false),
-//      mTrans(NULL),
-//      mJoint(NULL),
-      mName("dof")
+/// @brief
+class RK4Integrator : public Integrator
 {
-}
+public:
+    /// @brief
+    RK4Integrator() {}
 
-Coordinate::~Coordinate()
-{
-}
+    /// @brief
+    virtual ~RK4Integrator() {}
 
-void Coordinate::init()
-{
-    mName.assign("dof");
+    // Documentation inherited.
+    //virtual void integrate(IntegrableSystem* system, double dt) const;
 
-    q = dq = ddq = tau = 0.0;
-    qMin = dqMin = ddqMin = tauMin = -std::numeric_limits<double>::infinity();
-    qMax = dqMax = ddqMax = tauMax = std::numeric_limits<double>::infinity();
-    DqDp = DdqDp = DddqDp = DtauDp = 0.0;
+    // Documentation inherited.
+    virtual void integrate(kinematics::System* _system, double _dt) const;
 
-//    mSkelIndex = -1;
-//    mVariable = false;
-//    mTrans = NULL;
-    //    mJoint = NULL;	// remains null if const dof
-}
+private:
+    /// @brief
+    mutable Eigen::VectorXd k1, k2, k3, k4;
+};
 
-void Coordinate::backupInitState()
-{
-    init_q = q;
-    init_dq = dq;
-}
-
-void Coordinate::restoreInitState()
-{
-    q = init_q;
-    dq = init_dq;
-}
-
-} // namespace kinematics
+} // namespace integration
 } // namespace dart
+
+#endif // DART_INTEGRATION_RK4_INTEGRATOR_H

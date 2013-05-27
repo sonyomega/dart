@@ -57,16 +57,18 @@ public:
     virtual ~System();
 
     /// @brief
-    int getNumDofs() const { return mDofs.size(); }
+    DEPRECATED int getNumDofs() const { return mDofs.size(); }
+    int getDegreeOfFreedom() const { return mDofs.size(); }
+    int getDOF() const { return mDofs.size(); }
 
     /// @brief
-    const std::vector<Dof*>& getDofs() const { return mDofs; }
+    const std::vector<Coordinate*>& getDofs() const { return mDofs; }
 
     /// @brief
-    Dof* getDof(int _idx) const;
+    Coordinate* getDof(int _idx) const;
 
     /// @brief
-    Dof* getDof(const std::string& _name) const;
+    Coordinate* getDof(const std::string& _name) const;
 
     /// @brief Backup current state as initial state.
     void backupInitState();
@@ -80,7 +82,7 @@ public:
     void set_q(const Eigen::VectorXd& _q);     ///< Set generalized coordinate vector
     void set_dq(const Eigen::VectorXd& _dq);   ///< Set generalized velocity vector
     void set_ddq(const Eigen::VectorXd& _ddq); ///< Set generalized acceleration vector
-    void set_tau(const Eigen::VectorXd& _tau); ///< Set generalized force vector
+    void set_tau(const Eigen::VectorXd& _tau); ///< Set generalized force vector (internal forces)
 
     void set_qMin(const Eigen::VectorXd& _qMin);
     void set_dqMin(const Eigen::VectorXd& _dqMin);
@@ -96,7 +98,6 @@ public:
     void set_DdqDp(const Eigen::VectorXd& _DdqDp);
     void set_DddqDp(const Eigen::VectorXd& _DddqDp);
     void set_DtauDp(const Eigen::VectorXd& _DtauDp);
-
 
     //--------------------------------------------------------------------------
     //
@@ -121,9 +122,19 @@ public:
     Eigen::VectorXd get_DddqDp() const;
     Eigen::VectorXd get_DtauDp() const;
 
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    void setState(const Eigen::VectorXd& _state);
+
+    /// @brief
+    Eigen::VectorXd getState() const;
+
 protected:
     /// @brief Pointers to Dofs.
-    std::vector<Dof*> mDofs;
+    std::vector<Coordinate*> mDofs;
 
 private:
 

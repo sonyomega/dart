@@ -2,8 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/21/2013
+ * Author(s): Kristin Siu <kasiu@gatech.edu>
+ * Date: 09/16/2011
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,77 +35,38 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_KINEMATICS_REVOLUTE_JOINT_H
-#define DART_KINEMATICS_REVOLUTE_JOINT_H
+#include "kinematics/System.h"
+#include "integration/EulerIntegrator.h"
 
-#include <Eigen/Dense>
-
-#include "kinematics/Dof.h"
-#include "kinematics/Joint.h"
+using namespace Eigen;
 
 namespace dart {
-namespace kinematics {
+namespace integration {
 
-class RevoluteJoint : public Joint
+//void EulerIntegrator::integrate(IntegrableSystem* system, double dt) const
+//{
+//    VectorXd deriv = system->evalDeriv();
+//    system->setState(system->getState() + (dt * deriv));
+//    //        system->setState(x + (dt * system->evalDeriv()));
+//}
+
+void EulerIntegrator::integrate(kinematics::System* _system, double _dt) const
 {
-public:
     //--------------------------------------------------------------------------
-    //
-    //--------------------------------------------------------------------------
-    /// @brief
-    RevoluteJoint();
-
-    /// @brief
-    virtual ~RevoluteJoint();
+    // Explicit Euler Method
+    _system->set_q(_system->get_q() + _dt * _system->get_q());
+    _system->set_dq(_system->get_dq() + _dt * _system->get_ddq());
 
     //--------------------------------------------------------------------------
-    // Kinematical Properties
-    //--------------------------------------------------------------------------
-    /// @brief
-    void setAxis(const math::so3& _axis) { mAxis = _axis; }
-
-    /// @brief
-    const math::so3& getAxis() const { return mAxis; }
+    // Semi-implicit Euler Method
+    _system->set_dq(_system->get_dq() + _dt * _system->get_ddq());
+    _system->set_q(_system->get_q() + _dt * _system->get_q());
 
     //--------------------------------------------------------------------------
-    // Structueral Properties
-    //--------------------------------------------------------------------------
+    // Euler-Verlet Method
+    _system->set_dq(_system->get_dq() + _dt * _dt * _system->get_ddq());
+    _system->set_q(_system->get_q() + _system->get_dq());
+}
 
-    //--------------------------------------------------------------------------
-    // Recursive Kinematics Algorithms
-    //--------------------------------------------------------------------------
-
-protected:
-    //--------------------------------------------------------------------------
-    //
-    //--------------------------------------------------------------------------
-    // Document inherited.
-    virtual void _updateTransformation();
-
-    // Document inherited.
-    virtual void _updateVelocity();
-
-    // Document inherited.
-    virtual void _updateAcceleration();
-
-    //--------------------------------------------------------------------------
-    //
-    //--------------------------------------------------------------------------
-    /// @brief
-    Coordinate mCoordinate;
-
-    /// @brief Rotational axis.
-    math::so3 mAxis;
-
-private:
-
-public:
-    //
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-};
-
-} // namespace kinematics
+} // namespace integration
 } // namespace dart
-
-#endif // #ifndef DART_KINEMATICS_REVOLUTE_JOINT_H
-

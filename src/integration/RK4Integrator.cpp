@@ -2,9 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
- *            Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/14/2013
+ * Author(s): Kristin Siu <kasiu@gatech.edu>
+ * Date: 09/16/2011
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -36,69 +35,59 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <limits>
+#include "utils/UtilsCode.h"
+#include "integration/RK4Integrator.h"
 
-#include "Dof.h"
-//#include "Transformation.h"
+using namespace Eigen;
 
 namespace dart {
-namespace kinematics {
+namespace integration {
 
-Coordinate::Coordinate()
-    : q(0.0),
-      dq(0.0),
-      ddq(0.0),
-      tau(0.0),
-      qMin(-std::numeric_limits<double>::infinity()),
-      dqMin(-std::numeric_limits<double>::infinity()),
-      ddqMin(-std::numeric_limits<double>::infinity()),
-      tauMin(-std::numeric_limits<double>::infinity()),
-      qMax(std::numeric_limits<double>::infinity()),
-      dqMax(std::numeric_limits<double>::infinity()),
-      ddqMax(std::numeric_limits<double>::infinity()),
-      tauMax(std::numeric_limits<double>::infinity()),
-      DqDp(0.0),
-      DdqDp(0.0),
-      DddqDp(0.0),
-      DtauDp(0.0),
-//      mSkelIndex(-1),
-//      mVariable(false),
-//      mTrans(NULL),
-//      mJoint(NULL),
-      mName("dof")
+// TODO (kasiu): Slow. Needs to be optimized.
+//void RK4Integrator::integrate(IntegrableSystem* system, double dt) const {
+//    // calculates the four weighted deltas
+//    VectorXd deriv = system->evalDeriv();
+//    VectorXd x = system->getState();
+//    k1 = deriv * dt;
+
+//    system->setState(x + (k1 * 0.5));
+//    deriv = system->evalDeriv();
+//    k2 = deriv * dt;
+
+//    system->setState(x + (k2 * 0.5));
+//    deriv = system->evalDeriv();
+//    k3 = deriv * dt;
+
+//    system->setState(x + k3);
+//    deriv = system->evalDeriv();
+//    k4 = deriv * dt;
+
+//    system->setState(x + ((1.0/6.0) * (k1 + (2.0 * k2) + (2.0 * k3) + k4)));
+//}
+
+// TODO (kasiu): Slow. Needs to be optimized.
+void RK4Integrator::integrate(kinematics::System* _system, double _dt) const
 {
+//    // calculates the four weighted deltas
+//    VectorXd deriv = _system->evalDeriv();
+//    VectorXd x = _system->getState();
+//    k1 = deriv * _dt;
+
+//    _system->setState(x + (k1 * 0.5));
+//    deriv = _system->evalDeriv();
+//    k2 = deriv * _dt;
+
+//    _system->setState(x + (k2 * 0.5));
+//    deriv = _system->evalDeriv();
+//    k3 = deriv * _dt;
+
+//    _system->setState(x + k3);
+//    deriv = _system->evalDeriv();
+//    k4 = deriv * _dt;
+
+//    _system->setState(x + ((1.0/6.0) * (k1 + (2.0 * k2) + (2.0 * k3) + k4)));
+    dterr << "Not implemented.\n";
 }
 
-Coordinate::~Coordinate()
-{
-}
-
-void Coordinate::init()
-{
-    mName.assign("dof");
-
-    q = dq = ddq = tau = 0.0;
-    qMin = dqMin = ddqMin = tauMin = -std::numeric_limits<double>::infinity();
-    qMax = dqMax = ddqMax = tauMax = std::numeric_limits<double>::infinity();
-    DqDp = DdqDp = DddqDp = DtauDp = 0.0;
-
-//    mSkelIndex = -1;
-//    mVariable = false;
-//    mTrans = NULL;
-    //    mJoint = NULL;	// remains null if const dof
-}
-
-void Coordinate::backupInitState()
-{
-    init_q = q;
-    init_dq = dq;
-}
-
-void Coordinate::restoreInitState()
-{
-    q = init_q;
-    dq = init_dq;
-}
-
-} // namespace kinematics
+} // namespace integration
 } // namespace dart

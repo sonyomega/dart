@@ -159,8 +159,6 @@ protected:
     /// @brief
     void _integrate();
 
-    /// @brief
-    void _updateForwardKinematics();
 
     //--------------------------------------------------------------------------
     // Dynamics Algorithms

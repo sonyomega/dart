@@ -57,6 +57,11 @@ Skeleton::~Skeleton()
 {
 }
 
+BodyNode* Skeleton::createBodyNode() const
+{
+    return new BodyNode();
+}
+
 void Skeleton::addBody(BodyNode* _body, bool _addParentJoint)
 {
     assert(_body != NULL);
@@ -119,9 +124,9 @@ void Skeleton::initKinematics()
 		 itrJoint != mJoints.end();
 		 ++itrJoint)
 	{
-		const std::vector<Dof*>& dofs = (*itrJoint)->getDofs();
+        const std::vector<Coordinate*>& dofs = (*itrJoint)->getDofs();
 
-		for (std::vector<Dof*>::const_iterator itrDof = dofs.begin();
+        for (std::vector<Coordinate*>::const_iterator itrDof = dofs.begin();
 			 itrDof != dofs.end();
 			 ++itrDof)
 		{

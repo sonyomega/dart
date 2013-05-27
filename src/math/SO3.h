@@ -88,7 +88,7 @@ public: // Operators
     /// @brief Access to the idx th element.
     const double& operator()(int _i) const;
 
-    // TODO:
+    /// @brief
     bool operator==(const so3& _w) const;
 
     /// @brief Unary plus operator.
