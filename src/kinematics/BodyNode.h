@@ -163,12 +163,12 @@ public:
     { return mW.getInverse().getMatrix(); }
 
     /// @brief
-    const math::Jacobian& getJacobianBody() const { return mJacobianBody; }
+    //const math::Jacobian& getJacobianBody() const { return mJacobianBody; }
 
     /// @brief
     ///
     math::Jacobian getJacobianWorld() const
-    { return mJacobianBody.getAdjointed(math::SE3(mW.getRotation())); }
+    { return mJacobianBody.getAdjointed(math::SE3(mW.getOrientation())); }
 
     /// @brief
     const math::se3& getBodyVelocity() const { return mV; }
@@ -309,6 +309,9 @@ protected:
 
     /// @brief
     math::Jacobian mJacobianBody;
+
+    /// @brief
+    math::Jacobian mJacobianBodyDeriv;
 
     /// @brief Generalized body velocity w.r.t. body frame.
     math::se3 mV;

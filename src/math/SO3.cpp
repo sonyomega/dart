@@ -42,6 +42,9 @@ namespace dart {
 namespace math {
 
 #define LIEGROUP_EPS 10e-9
+#define LIEGROUP_PI				(3.1415926535897932384626433832795)	//< $\pi$
+#define LIEGROUP_PI_SQRT2		(2.22144146907918312351)	//< $\frac {pi}{\sqrt{2}}$
+#define LIEGROUP_PI_SQR			(9.86960440108935861883)	//< $\pi^2$
 
 //==============================================================================
 so3::so3()
@@ -194,12 +197,12 @@ so3 operator*(double _c, const so3& _w)
 
 //==============================================================================
 SO3::SO3()
-    : mRotation(Eigen::Matrix3d::Identity())
+    : mR(Eigen::Matrix3d::Identity())
 {
 }
 
 SO3::SO3(const Eigen::Matrix3d& _rotation)
-	: mRotation(_rotation)
+    : mR(_rotation)
 {
 }
 
@@ -216,7 +219,7 @@ SO3::SO3(double _R00, double _R01, double _R02,
 		 double _R10, double _R11, double _R12,
 		 double _R20, double _R21, double _R22)
 {
-	mRotation << _R00, _R01, _R02,
+    mR << _R00, _R01, _R02,
 			_R10, _R11, _R12,
 			_R20, _R21, _R22;
 }
@@ -241,7 +244,7 @@ double& SO3::operator()(int _i, int _j)
 	assert(0 <= _i && _i <= 2);
 	assert(0 <= _j && _j <= 2);
 
-	return mRotation(_i, _j);
+    return mR(_i, _j);
 }
 
 const double& SO3::operator()(int _i, int _j) const
@@ -249,7 +252,7 @@ const double& SO3::operator()(int _i, int _j) const
 	assert(0 <= _i && _i <= 2);
 	assert(0 <= _j && _j <= 2);
 
-	return mRotation(_i, _j);
+    return mR(_i, _j);
 }
 
 /// @brief Substitution operator.
@@ -257,7 +260,7 @@ const SO3& SO3::operator=(const SO3& _R)
 {
 	if (this != &_R)
 	{
-		mRotation = _R.mRotation;
+        mR = _R.mR;
 	}
 
 	return *this;
@@ -265,7 +268,7 @@ const SO3& SO3::operator=(const SO3& _R)
 
 const SO3& SO3::operator*=(const SO3 & _R)
 {
-	mRotation *= _R.mRotation;
+    mR *= _R.mR;
 
 	return *this;
 }
@@ -282,7 +285,7 @@ const SO3& SO3::operator*=(const SO3 & _R)
 
 SO3 SO3::operator*(const SO3& _R) const
 {
-	return SO3(mRotation * _R.mRotation);
+    return SO3(mR * _R.mR);
 }
 
 //SO3 SO3::operator/(const SO3& _R) const
@@ -297,22 +300,22 @@ SO3 SO3::operator*(const SO3& _R) const
 
 Eigen::Vector3d SO3::operator*(const Eigen::Vector3d& _q) const
 {
-	return mRotation * _q;
+    return mR * _q;
 }
 
 so3 SO3::operator*(const so3& _w) const
 {
-	return so3(mRotation * _w.mw);
+    return so3(mR * _w.mw);
 }
 
 bool SO3::operator==(const SO3& _R) const
 {
-	return mRotation == _R.mRotation ? true : false;
+    return mR == _R.mR ? true : false;
 }
 
 void SO3::setValues(double _R00, double _R01, double _R02, double _R10, double _R11, double _R12, double _R20, double _R21, double _R22)
 {
-	mRotation << _R00, _R01, _R02,
+    mR << _R00, _R01, _R02,
 			_R10, _R11, _R12,
 			_R20, _R21, _R22;
 }
@@ -341,15 +344,15 @@ void SO3::setExp(const so3& _S)
 		ct_t = (1.0 - cos(theta)) / theta / theta;
 	}
 
-	mRotation(0,0) = 1.0 - ct_t * (s2[1] + s2[2]);
-	mRotation(1,0) = ct_t * s[0] * s[1] + st_t * s[2];
-	mRotation(2,0) = ct_t * s[0] * s[2] - st_t * s[1];
-	mRotation(0,1) = ct_t * s[0] * s[1] - st_t * s[2];
-	mRotation(1,1) = 1.0 - ct_t * (s2[0] + s2[2]);
-	mRotation(2,1) = ct_t * s[1] * s[2] + st_t * s[0];
-	mRotation(0,2) = ct_t * s[0] * s[2] + st_t * s[1];
-	mRotation(1,2) = ct_t * s[1] * s[2] - st_t * s[0];
-	mRotation(2,2) = 1.0 - ct_t * (s2[0] + s2[1]);
+    mR(0,0) = 1.0 - ct_t * (s2[1] + s2[2]);
+    mR(1,0) = ct_t * s[0] * s[1] + st_t * s[2];
+    mR(2,0) = ct_t * s[0] * s[2] - st_t * s[1];
+    mR(0,1) = ct_t * s[0] * s[1] - st_t * s[2];
+    mR(1,1) = 1.0 - ct_t * (s2[0] + s2[2]);
+    mR(2,1) = ct_t * s[1] * s[2] + st_t * s[0];
+    mR(0,2) = ct_t * s[0] * s[2] + st_t * s[1];
+    mR(1,2) = ct_t * s[1] * s[2] - st_t * s[0];
+    mR(2,2) = 1.0 - ct_t * (s2[0] + s2[1]);
 }
 
 void SO3::setExp(const so3& _S, double theta)
@@ -367,15 +370,15 @@ void SO3::setExp(const so3& _S, double theta)
 			vt = 1.0 - cos(theta),
 			sts[] = { st * s[0], st * s[1], st * s[2] };
 
-	mRotation(0,0) = 1.0 + vt * (s2[0] - 1.0);
-	mRotation(1,0) = vt * s[0] * s[1] + sts[2];
-	mRotation(2,0) = vt * s[0] * s[2] - sts[1];
-	mRotation(0,1) = vt * s[0] * s[1] - sts[2];
-	mRotation(1,1) = 1.0 + vt * (s2[1] - 1.0);
-	mRotation(2,1) = vt * s[1] * s[2] + sts[0];
-	mRotation(0,2) = vt * s[0] * s[2] + sts[1];
-	mRotation(1,2) = vt * s[1] * s[2] - sts[0];
-    mRotation(2,2) = 1.0 + vt * (s2[2] - 1.0);
+    mR(0,0) = 1.0 + vt * (s2[0] - 1.0);
+    mR(1,0) = vt * s[0] * s[1] + sts[2];
+    mR(2,0) = vt * s[0] * s[2] - sts[1];
+    mR(0,1) = vt * s[0] * s[1] - sts[2];
+    mR(1,1) = 1.0 + vt * (s2[1] - 1.0);
+    mR(2,1) = vt * s[1] * s[2] + sts[0];
+    mR(0,2) = vt * s[0] * s[2] + sts[1];
+    mR(1,2) = vt * s[1] * s[2] - sts[0];
+    mR(2,2) = 1.0 + vt * (s2[2] - 1.0);
 }
 
 void SO3::setEulerXYZ(const Eigen::Vector3d& _EulerAngles)
@@ -445,26 +448,63 @@ Eigen::Vector3d SO3::getEulerZYZ() const
 
 so3 SO3::getLog() const
 {
-    so3 ret;
+    double theta = 0.5 * (mR(0,0) + mR(1,1) + mR(2,2) - 1.0);
+    double t_st = 0.0;
 
-    dterr << "NOT IMPLEMENTED.\n";
+    if ( theta < LIEGROUP_EPS - 1.0 )
+    {
+        if ( mR(0,0) > 1.0 - LIEGROUP_EPS )
+        {
+            return so3(LIEGROUP_PI, 0.0, 0.0);
+        }
+        else if ( mR(1,1) > 1.0 - LIEGROUP_EPS )
+        {
+            return so3(0.0, LIEGROUP_PI, 0.0);
+        }
+        else if ( mR(2,2) > 1.0 - LIEGROUP_EPS )
+        {
+            return so3(0.0, 0.0, LIEGROUP_PI);
+        }
 
-    return ret;
+        return so3(LIEGROUP_PI_SQRT2 * sqrt((mR(1,0) * mR(1,0) + mR(2,0) * mR(2,0)) / (1.0 - mR(0,0))),
+                   LIEGROUP_PI_SQRT2 * sqrt((mR(0,1) * mR(0,1) + mR(3,1) * mR(3,1)) / (1.0 - mR(1,1))),
+                   LIEGROUP_PI_SQRT2 * sqrt((mR(0,2) * mR(0,2) + mR(1,2) * mR(1,2)) / (1.0 - mR(2,2))));
+    }
+    else
+    {
+        if (theta > 1.0)
+        {
+            theta = 1.0;
+        }
+        else if(theta < -1.0)
+        {
+            theta = -1.0;
+        }
+
+        theta = acos(theta);
+
+        if (theta < LIEGROUP_EPS)
+            t_st = 3.0 / (6.0 - theta * theta);
+        else
+            t_st = theta / (2.0 * sin(theta));
+
+        return so3(t_st * (mR(2,1) - mR(1,2)),
+                   t_st * (mR(0,2) - mR(2,0)),
+                   t_st * (mR(1,0) - mR(0,1)));
+    }
 }
 
-double SO3::getAxisAngle(Eigen::Vector3d* _axis, double* _angle) const
+void SO3::getAxisAngle(Eigen::Vector3d* _axis, double* _angle) const
 {
     assert(_axis != NULL);
     assert(_angle != NULL);
 
-    double ret;
-
-    (*_axis);
-    (*_angle);
-
-    dterr << "NOT IMPLEMENTED.\n";
-
-    return ret;
+    // TODO: speed up!
+    so3 log = getLog();
+    double angle = log.getAngle();
+    log.setNormalize();
+    (*_axis) = log.getVector();
+    (*_angle) = angle;
 }
 
 } // namespace math

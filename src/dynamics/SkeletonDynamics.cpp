@@ -62,16 +62,18 @@ BodyNodeDynamics*SkeletonDynamics::createBodyNode() const
 
 void SkeletonDynamics::initDynamics()
 {
-//    mDynamicsBodies.clear();
-
-//    for (std::vector<kinematics::BodyNode*>::iterator itrBody = mBodies.begin();
-//         itrBody != mBodies.end();
-//         ++itrBody)
-//        mDynamicsBodies.push_back(dynamic_cast<BodyNodeDynamics*>(*itrBody));
+    mM = MatrixXd::Zero(getDOF(), getDOF());
+    mC = MatrixXd::Zero(getDOF(), getDOF());
+    mCvec = VectorXd::Zero(getDOF());
+    mG = VectorXd::Zero(getDOF());
+    mCg = VectorXd::Zero(getDOF());
+    mFint = VectorXd::Zero(getDOF());
+    mFext = VectorXd::Zero(getNumDofs());
 }
 
 void SkeletonDynamics::computeInverseDynamics(const Eigen::Vector3d& _gravity)
 {
+    _updateJointKinematics();
     _inverseDynamicsFwdRecursion();
     _inverseDynamicsBwdRecursion(_gravity);
 }
@@ -93,11 +95,12 @@ void SkeletonDynamics::computeForwardDynamicsID(
     set_ddq(Eigen::VectorXd::Zero(n));
 
     //
-    mM = Eigen::Matrix4d::Zero(n,n);
+    mM = Eigen::MatrixXd::Zero(n,n);
 
     // M(q) * ddq + b(q,dq) = tau
     computeInverseDynamics(_gravity);
     Eigen::VectorXd b = get_tau();
+    mCg = b;
 
     // Calcualtion M
     for (int i = 0; i < n; ++i)

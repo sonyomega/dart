@@ -48,8 +48,13 @@
 #include <Eigen/Dense>
 
 #include "utils/Deprecated.h"
+#include "integration/Integrator.h"
 
 namespace dart {
+
+namespace integration {
+class Integrator;
+}
 
 namespace dynamics {
 class SkeletonDynamics;
@@ -60,7 +65,7 @@ namespace simulation {
 
 /// @class World
 /// @brief
-class World
+class World : public integration::IntegrableSystem
 {
 public:
     //--------------------------------------------------------------------------
@@ -71,6 +76,17 @@ public:
 
     /// @brief Destructor.
     virtual ~World();
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    virtual Eigen::VectorXd getState() const;
+
+    virtual void setState(const Eigen::VectorXd &_newState);
+
+    virtual void setControlInput();
+
+    virtual Eigen::VectorXd evalDeriv();
 
     //--------------------------------------------------------------------------
     // Simulation
@@ -156,9 +172,6 @@ protected:
     /// @brief
     void _computeForwardDynamics();
 
-    /// @brief
-    void _integrate();
-
 
     //--------------------------------------------------------------------------
     // Dynamics Algorithms
@@ -186,6 +199,9 @@ protected:
 
     /// @brief The simulated frame number.
     int mFrame;
+
+    /// @brief The integrator.
+    integration::Integrator* mIntegrator;
 
     /// @brief The collision handler.
     dynamics::ConstraintDynamics* mCollisionHandle;

@@ -119,10 +119,10 @@ void Joint::applyGLTransform(renderer::RenderInterface* _ri)
     Eigen::Vector3d offset = mT.getPosition();
     Eigen::Vector3d axis;
     double rad;
-    mT.getRotation().getAxisAngle(&axis, &rad);
+    mT.getOrientation().getAxisAngle(&axis, &rad);
 
     _ri->translate(offset);
-    _ri->rotate(axis, rad);
+    _ri->rotate(axis, rad * 180.0 / M_PI);
 }
 
 } // namespace kinematics

@@ -59,30 +59,40 @@ se3 Ad(const SE3& _T12, const se3& _vel2)
 
     se3 vel1;
 
-    vel1.setAngular(_T12.getRotation() * _vel2.getAngular());
+    vel1.setAngular(_T12.getOrientation() * _vel2.getAngular());
     vel1.setLinear(_T12.getPosition().cross(vel1.getAngular().getVector())
-                   + _T12.getRotation() * _vel2.getLinear());
+                   + _T12.getOrientation() * _vel2.getLinear());
 
     return vel1;
 }
 
 se3 InvAd(const SE3& _T21, const se3& _vel2)
 {
+    // S' = _T * _S * _T^{-1}
+
+    // _T21 = | R p |, vel1 = | w1 |, _vel2 = | w2 |
+    //        | 0 1 |         | v1 |          | v2 |
+    //
+    // T12 = | R12 p12 | = | R^T   -R^T * p |
+    //       |   0   1 |   |   0          1 |
+    //
+    // vel1 = Ad(T12, _vel2)
+    //      = Ad(T12) * _vel2
+    //      = | R12        0 | * | w2 |
+    //        | [p12]R12 R12 | * | v2 |
+    //      = | R^T               0 | * | w2 |
+    //        | [-R^T * p]R^T   R^T | * | v2 |
+    //      = | R^T * w2                      |
+    //        | [-R^T * p]R^T * w2 + R^T * v2 |
+    // w1 = R^T * w2
+    // v1 = [-R^T * p]R^T * w2 + R^T * v2
+
     se3 vel1;
 
-//    // _T21 = | R p |, vel1 = | w1 |, _vel2 = | w2 |
-//    //        | 0 1 |         | v1 |          | v2 |
-//    //
-//    // vel1 = Ad(_T12, _vel2)
-//    //      = Ad(_T12) * _vel2
-//    //      = | R    0 | * | w2 |
-//    //        | [p]R R | * | v2 |
-//    //      = | Rw2         |
-//    //        | [p]Rw2 + Rv2 |
-//    // w1 = R * w2
-//    // v1 = [p]R * w2 + R * v2
-
-    dterr << "Not implemented.\n";
+    // TODO: speed up!
+    vel1.setAngular(_T21.getOrientation().getInverse() * _vel2.getAngular());
+    vel1.setLinear(-(_T21.getOrientation().getInverse() * _T21.getPosition()).cross(vel1.getAngular().getVector())
+                   + _T21.getOrientation().getInverse() * _vel2.getLinear());
 
     return vel1;
 }
@@ -93,27 +103,36 @@ dse3 dAd(const SE3& _T12, const dse3& _force2)
     dterr << "Not implemented.\n";
 }
 
-dse3 InvdAd(const SE3& _T21, const dse3& _force2)
+dse3 InvdAd(const SE3& _T, const dse3& _F)
 {
-    dterr << "Not implemented.\n";
+    dse3 newF;
+
+    // TODO: speed up!
+    newF.setLinear(_T.getOrientation() * _F.getLinear());
+    newF.setAngular(_T.getOrientation() * _F.getAngular()
+                  + _T.getPosition().cross(newF.getLinear()));
+
+    return newF;
 }
 
 se3 ad(const se3& V1, const se3& V2)
 {
-    se3 ret;
-
-    dterr << "Not implemented.\n";
-
-    return ret;
+    return se3(	V1[1] * V2[2] - V1[2] * V2[1],
+                V1[2] * V2[0] - V1[0] * V2[2],
+                V1[0] * V2[1] - V1[1] * V2[0],
+                V1[1] * V2[5] - V1[2] * V2[4] - V2[1] * V1[5] + V2[2] * V1[4],
+                V1[2] * V2[3] - V1[0] * V2[5] - V2[2] * V1[3] + V2[0] * V1[5],
+                V1[0] * V2[4] - V1[1] * V2[3] - V2[0] * V1[4] + V2[1] * V1[3]);
 }
 
 dse3 dad(const se3& V, const dse3& F)
 {
-    dse3 ret;
-
-    dterr << "Not implemented.\n";
-
-    return ret;
+    return dse3(F[1] * V[2] - F[2] * V[1] + F[4] * V[5] - F[5] * V[4],
+                F[2] * V[0] - F[0] * V[2] + F[5] * V[3] - F[3] * V[5],
+                F[0] * V[1] - F[1] * V[0] + F[3] * V[4] - F[4] * V[3],
+                F[4] * V[2] - F[5] * V[1],
+                F[5] * V[0] - F[3] * V[2],
+                F[3] * V[1] - F[4] * V[0]);
 }
 
 //==============================================================================
@@ -187,6 +206,26 @@ const se3& se3::operator=(const se3& _V)
 //{
 
 //}
+
+double& se3::operator[](int _i)
+{
+    assert(0 <= _i && _i <= 5);
+
+    if (_i < 3)
+        return mAngular(_i);
+    else
+        return mLinear(_i - 3);
+}
+
+const double& se3::operator[](int _i) const
+{
+    assert(0 <= _i && _i <= 5);
+
+    if (_i < 3)
+        return mAngular(_i);
+    else
+        return mLinear(_i - 3);
+}
 
 se3 se3::operator+(void) const
 {
@@ -312,7 +351,7 @@ void se3::setAd(const SE3& _T12, const se3& _V2)
 
     const Eigen::Vector3d& v2 = _V2.getLinear();
     const so3& w2 = _V2.getAngular();
-    const SO3& R12 = _T12.getRotation();
+    const SO3& R12 = _T12.getOrientation();
     const Eigen::Vector3d& p12 = _T12.getPosition();
 
     mAngular = R12 * w2;
@@ -340,7 +379,7 @@ void se3::setInvAd(const SE3& _T21, const se3& _V2)
 
 	const Eigen::Vector3d& v2 = _V2.getLinear();
 	const so3& w2 = _V2.getAngular();
-	const SO3& R12 = _T21.getRotation().getInverse();
+    const SO3& R12 = _T21.getOrientation().getInverse();
 	//const Eigen::Vector3d& p21 = _T21.getPosition();
 	const Eigen::Vector3d& p12 = -(R12 * _T21.getPosition());
 
@@ -424,6 +463,26 @@ const dse3& dse3::operator = (const dse3& _F)
     return *this;
 }
 
+double& dse3::operator[](int _i)
+{
+    assert(0 <= _i && _i <= 5);
+
+    if (_i < 3)
+        return mAngular(_i);
+    else
+        return mLinear(_i - 3);
+}
+
+const double& dse3::operator[](int _i) const
+{
+    assert(0 <= _i && _i <= 5);
+
+    if (_i < 3)
+        return mAngular(_i);
+    else
+        return mLinear(_i - 3);
+}
+
 dse3 dse3::operator+(void) const
 {
     return *this;
@@ -493,7 +552,7 @@ void dse3::setdAd(const SE3& _T12, const dse3& _F2)
 
     const Eigen::Vector3d& f2 = _F2.getLinear();
     const Eigen::Vector3d& m2 = _F2.getAngular();
-    const SO3& R12 = _T12.getRotation();
+    const SO3& R12 = _T12.getOrientation();
     const Eigen::Vector3d& p12 = _T12.getPosition();
 
     mLinear = R12 * f2;
@@ -521,7 +580,7 @@ void dse3::setInvdAd(const SE3& _T21, const dse3& _F2)
 
 	const Eigen::Vector3d& f2 = _F2.getLinear();
 	const Eigen::Vector3d& m2 = _F2.getAngular();
-	const SO3& R12 = _T21.getRotation().getInverse();
+    const SO3& R12 = _T21.getOrientation().getInverse();
 	const Eigen::Vector3d& p12 = -(R12 * _T21.getPosition());
 
 	mLinear = R12 * f2;

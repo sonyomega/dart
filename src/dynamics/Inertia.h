@@ -100,7 +100,7 @@ public: // Operators
     /// @brief Multiplication operator.
     /// @note \f$J V = ( Iw + r\times v,~ mv-r\times w)\in se(3)^*\f$,
     /// where \f$J = (I,m,r)\in\f$ Inertia, \f$V = (w,v)\in se(3)\f$.
-    math::Vector6d operator*(const math::Vector6d& _V) const;
+    //math::Vector6d operator*(const math::Vector6d& _V) const;
 
     /// @brief
     math::dse3 operator*(const math::se3& V) const;

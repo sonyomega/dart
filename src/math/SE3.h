@@ -61,20 +61,20 @@ typedef Matrix<double, 6, 1> Vector6d;
 /// @param[in] _T12 Transformation matrix from frame 1 to frame 2.
 /// @param[in] _vel2 Generalized velocity represented in frame 2.
 /// @return Generalized velocity represented in frame 1.
-se3 Ad(const SE3& _T12, const se3& _vel2);
+se3 Ad(const SE3& T, const se3& s);
 
 /// @brief Transform the reference frame of the generalized velocity
 /// (angular velocity + linear velocity) from frame 1 to frame 2.
 /// @param[in] _T12 Transformation matrix from frame 1 to frame 2.
 /// @param[in] _vel1 Generalized velocity represented in frame 1.
 /// @return Generalized velocity represented in frame 2.
-se3 InvAd(const SE3& _T21, const se3& _vel2);
+se3 InvAd(const SE3& _T, const se3& _S);
 
 /// @brief
 dse3 dAd(const SE3& _T12, const dse3& _force2);
 
 /// @brief
-dse3 InvdAd(const SE3& _T21, const dse3& _force2);
+dse3 InvdAd(const SE3& _T, const dse3& _F);
 
 /// @brief
 se3 ad(const se3& V1, const se3& V2);
@@ -139,6 +139,12 @@ public:
 
 //    /// @brief Access to the idx th element.
 //    const double& operator()(int _i) const;
+
+    /// @brief Access to the idx th element.
+    double& operator[](int _i);
+
+    /// @brief Access to the idx th element.
+    const double& operator[](int _i) const;
 
     /// @brief Unary plus operator.
     se3 operator+(void) const;
@@ -252,12 +258,12 @@ public: // Constructors and destructor -----------------------------------------
     explicit dse3(const Vector6d& _V);
 
     /// @brief
-    explicit dse3(double _m0, double _m1, double _m2,	// angular force
+    dse3(double _m0, double _m1, double _m2,	// angular force
                   double _f0, double _f1, double _f2);	// linear force
 
     /// @brief
-    explicit dse3(const Eigen::Vector3d& _angular,
-                  const Eigen::Vector3d& _linear);
+    dse3(const Eigen::Vector3d& _angular,
+         const Eigen::Vector3d& _linear);
 
     /// @brief Default destructor.
     virtual ~dse3();
@@ -271,6 +277,12 @@ public: // Operators -----------------------------------------------------------
 
     /// @brief Const Casting operator.
     const dse3* operator&() const { return this; }
+
+    /// @brief Access to the idx th element.
+    double& operator[](int _i);
+
+    /// @brief Access to the idx th element.
+    const double& operator[](int _i) const;
 
     /// @brief Unary plus operator.
     dse3 operator+(void) const;
@@ -461,7 +473,7 @@ public:
     void setRotation(const SO3& _rotation) { mRotation = _rotation; }
     
     /// @brief
-    const SO3& getRotation() const { return mRotation; }
+    const SO3& getOrientation() const { return mRotation; }
     
     /// @brief
     void setPosition(const Eigen::Vector3d& _position) { mPosition = _position; }

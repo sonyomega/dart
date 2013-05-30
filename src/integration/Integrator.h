@@ -58,16 +58,22 @@ public:
 
 public:
     /// @brief
-    //virtual Eigen::VectorXd getState() = 0;
+    virtual Eigen::VectorXd getState() const = 0;
 
     /// @brief
-    //virtual void setState(const Eigen::VectorXd& _state) = 0;
+    virtual void setState(const Eigen::VectorXd& _state) = 0;
 
     /// @brief
-    //Eigen::VectorXd evalDeriv() { evalDeriv(getState()); }
+    virtual void setControlInput() {}
 
     /// @brief
-    virtual Eigen::VectorXd evalDeriv(const Eigen::VectorXd& _state) = 0;
+    virtual Eigen::VectorXd evalDeriv() = 0;
+
+//    /// @brief
+//    Eigen::VectorXd evalDeriv() { evalDeriv(getState()); }
+
+//    /// @brief
+//    virtual Eigen::VectorXd evalDeriv(const Eigen::VectorXd& _state) = 0;
 };
 
 // TODO (kasiu) Consider templating the class (which currently only works on
@@ -87,7 +93,7 @@ public:
     virtual void integrate(IntegrableSystem* system, double dt) const = 0;
 
     /// @brief
-    virtual void integrate(kinematics::System* _system, double _dt) const = 0;
+//    virtual void integrate(kinematics::System* _system, double _dt) const = 0;
 };
 
 } // namespace integration

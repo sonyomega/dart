@@ -38,9 +38,49 @@
                     </geometry>
                 </collision_shape>                                
             </body>
+            <body name="link 2">
+                <gravity>1</gravity>
+                <transformation>0 0 0 0.3 0 0</transformation>
+                <inertia>
+                    <mass>5</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>2</iyy>
+                        <izz>3</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
+                <visualization_shape>
+                    <transformation>0 0 0 0 0 0</transformation>
+                    <geometry>
+                        <box>
+                            <size>0.1 0.2 0.3</size>
+                        </box>
+                    </geometry>
+                </visualization_shape>
+                <collision_shape>
+                    <transformation>0 0 0 0 0 0</transformation>
+                    <geometry>
+                        <box>
+                            <size>0.1 0.2 0.3</size>
+                        </box>
+                    </geometry>
+                </collision_shape>                                
+            </body>
             <joint type="revolute" name="joint 1">
                 <parent>world</parent>
                 <child>link 1</child>
+                <transformation>0 0 0 -0.1 0 0</transformation>
+                <axis>
+                    <xyz>0 0 1</xyz>
+                </axis>
+            </joint>
+            <joint type="revolute" name="joint 2">
+                <parent>link 1</parent>
+                <child>link 2</child>
                 <transformation>0 0 0 -0.1 0 0</transformation>
                 <axis>
                     <xyz>0 0 1</xyz>

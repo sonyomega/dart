@@ -45,6 +45,7 @@
 #include "kinematics/Dof.h"
 #include "dynamics/ConstraintDynamics.h"
 #include "dynamics/SkeletonDynamics.h"
+#include "integration/EulerIntegrator.h"
 #include "simulation/World.h"
 
 namespace dart {
@@ -52,16 +53,95 @@ namespace simulation {
 
 ////////////////////////////////////////////////////////////////////////////////
 World::World()
-    : mTime(0.0),
-      mTimeStep(0.001)
+    : integration::IntegrableSystem(),
+      mTime(0.0),
+      mTimeStep(0.001),
+      mFrame(0),
+      mIntegrator(new integration::EulerIntegrator()),
+      mCollisionHandle(new dynamics::ConstraintDynamics(mSkeletons, mTimeStep))
 {
     mIndices.push_back(0);
-    mCollisionHandle = new dynamics::ConstraintDynamics(mSkeletons, mTimeStep);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 World::~World()
 {
+    delete mIntegrator;
+    delete mCollisionHandle;
+}
+
+Eigen::VectorXd World::getState() const
+{
+    Eigen::VectorXd state(mIndices.back() * 2);
+
+    for (unsigned int i = 0; i < getNumSkeletons(); i++)
+    {
+        int start = mIndices[i] * 2;
+        int size = getSkeleton(i)->getNumDofs();
+        state.segment(start, size) = getSkeleton(i)->get_q();
+        state.segment(start + size, size) = getSkeleton(i)->get_dq();
+    }
+
+    return state;
+}
+
+void World::setState(const Eigen::VectorXd& _newState)
+{
+    for (int i = 0; i < getNumSkeletons(); i++)
+    {
+        int start = mIndices[i] * 2;
+        int size = getSkeleton(i)->getNumDofs();
+
+        VectorXd q = _newState.segment(start, size);
+        VectorXd dq = _newState.segment(start + size, size);
+
+        getSkeleton(i)->set_q(q);
+        getSkeleton(i)->set_dq(dq);
+        getSkeleton(i)->updateForwardKinematics();
+    }
+}
+
+void World::setControlInput()
+{
+    for (int i = 0; i < getNumSkeletons(); i++)
+    {
+        getSkeleton(i);
+    }
+}
+
+Eigen::VectorXd World::evalDeriv()
+{
+    _computeForwardDynamics();
+
+    // compute contact forces
+//    mCollisionHandle->computeConstraintForces();
+
+    // compute derivatives for integration
+    Eigen::VectorXd deriv = Eigen::VectorXd::Zero(mIndices.back() * 2);
+
+    for (unsigned int i = 0; i < getNumSkeletons(); i++)
+    {
+        // skip immobile objects in forward simulation
+        if (mSkeletons[i]->getImmobileState())
+            continue;
+        int start = mIndices[i] * 2;
+        int size = getSkeleton(i)->getNumDofs();
+
+        Eigen::VectorXd qddot = mSkeletons[i]->getInvMassMatrix()
+                                * (-mSkeletons[i]->getCombinedVector()
+//                                   + mSkeletons[i]->getExternalForces()
+//                                   + mSkeletons[i]->getInternalForces()
+//                                   + mCollisionHandle->getTotalConstraintForce(i)
+                                   );
+
+        // set velocities
+        deriv.segment(start, size) = getSkeleton(i)->get_dq();
+
+        // set qddot (accelerations)
+        deriv.segment(start + size, size) = qddot;
+    }
+
+    return deriv;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,20 +165,7 @@ void World::reset()
 ////////////////////////////////////////////////////////////////////////////////
 void World::step()
 {
-    //--------------------------------------------------------------------------
-    // Apply forces (internal force + external force)
-
-    //--------------------------------------------------------------------------
-    // Forward dynamics: [q(k), dq(k), tau(k)] --> ddq(k)
-    _computeForwardDynamics();
-
-    //--------------------------------------------------------------------------
-    // Integration: [q(k), dq(k), ddq(k)] --> [q(k+1), dq(k+1)]
-    _integrate();
-
-    //--------------------------------------------------------------------------
-    // Forward kinematics: [q(k+1), dq(k+1)] --> W, V, dV, ...
-    _computeForwardDynamics();
+    mIntegrator->integrate(this, mTimeStep);
 
     mTime += mTimeStep;
     mFrame++;
@@ -134,8 +201,11 @@ void World::addSkeleton(dynamics::SkeletonDynamics* _skeleton)
 
     _skeleton->initKinematics();
     _skeleton->initDynamics();
+    _skeleton->updateForwardKinematics();
 
     mIndices.push_back(mIndices.back() + _skeleton->getNumDofs());
+
+    mCollisionHandle->addSkeleton(_skeleton);
 }
 
 bool World::checkCollision(bool checkAllCollisions)
@@ -153,10 +223,6 @@ void World::_computeForwardDynamics()
     }
 }
 
-void World::_integrate()
-{
-
-}
 
 } // namespace simulation
 } // namespace dart

@@ -103,38 +103,60 @@ const Inertia& Inertia::operator = (const Inertia& _I)
 	return (*this);
 }
 
-math::Vector6d Inertia::operator*(const math::Vector6d& _V) const
-{
-	/*--------------------------------------------------------------------------
-	(angluar) M = I * w + m * (r X v - r X (r X w))
-	(linear)  F = m * (v - r X w)
-	--------------------------------------------------------------------------*/
+//math::Vector6d Inertia::operator*(const math::Vector6d& _V) const
+//{
+//	/*--------------------------------------------------------------------------
+//	(angluar) M = I * w + m * (r X v - r X (r X w))
+//	(linear)  F = m * (v - r X w)
+//	--------------------------------------------------------------------------*/
 
-	math::Vector6d res;
+//	math::Vector6d res;
 
-	const Eigen::Vector3d& v = _V.tail<3>();
-	const Eigen::Vector3d& w = _V.head<3>();
+//	const Eigen::Vector3d& v = _V.tail<3>();
+//	const Eigen::Vector3d& w = _V.head<3>();
 
-	Eigen::Vector3d Iw;
-	Iw(0) = mPrincipals(0) * w(0)
-			+ mProducts(0) * w(1)
-			+ mProducts(1) * w(2);
-	Iw(1) = mProducts(0) * w(0)
-			+ mPrincipals(1) * w(1)
-			+ mProducts(2) * w(2);
-	Iw(2) = mProducts(1) * w(0)
-			+ mProducts(2) * w(1)
-			+ mPrincipals(2) * w(2);
+//	Eigen::Vector3d Iw;
+//	Iw(0) = mPrincipals(0) * w(0)
+//			+ mProducts(0) * w(1)
+//			+ mProducts(1) * w(2);
+//	Iw(1) = mProducts(0) * w(0)
+//			+ mPrincipals(1) * w(1)
+//			+ mProducts(2) * w(2);
+//	Iw(2) = mProducts(1) * w(0)
+//			+ mProducts(2) * w(1)
+//			+ mPrincipals(2) * w(2);
 
-	res.tail<3>() = mMass * (v - mCOM.cross(w));
-	res.head<3>() = Iw + mCOM.cross(res.tail<3>());
+//	res.tail<3>() = mMass * (v - mCOM.cross(w));
+//	res.head<3>() = Iw + mCOM.cross(res.tail<3>());
 
-	return res;
-}
+//	return res;
+//}
 
 math::dse3 Inertia::operator*(const math::se3& V) const
 {
+    /*--------------------------------------------------------------------------
+    (angluar) M = I * w + m * (r X v - r X (r X w))
+    (linear)  F = m * (v - r X w)
+    --------------------------------------------------------------------------*/
+
 	math::dse3 ret;
+
+    const Eigen::Vector3d& v = V.getLinear();
+    const Eigen::Vector3d& w = V.getAngular().getVector();
+
+    Eigen::Vector3d Iw;
+    Iw(0) = mPrincipals(0) * w(0)
+            + mProducts(0) * w(1)
+            + mProducts(1) * w(2);
+    Iw(1) = mProducts(0) * w(0)
+            + mPrincipals(1) * w(1)
+            + mProducts(2) * w(2);
+    Iw(2) = mProducts(1) * w(0)
+            + mProducts(2) * w(1)
+            + mPrincipals(2) * w(2);
+
+    ret.setLinear(mMass * (v - mCOM.cross(w)));
+    ret.setAngular(Iw + mCOM.cross(ret.getLinear()));
 
 	return ret;
 }

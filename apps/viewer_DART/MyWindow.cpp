@@ -16,9 +16,9 @@ MyWindow::MyWindow()
 
 void MyWindow::timeStepping()
 {
-    static_cast<BodyNodeDynamics*>(mWorld->getSkeleton(1)->getNode(0))->addExtForce(Vector3d(0.0, 0.0, 0.0), mForce);
+    //static_cast<BodyNodeDynamics*>(mWorld->getSkeleton(1)->getNode(0))->addExtForce(Vector3d(0.0, 0.0, 0.0), mForce);
     mWorld->step();
-    mForce /= 2.0;
+    //mForce /= 2.0;
 }
 
 void MyWindow::keyboard(unsigned char key, int x, int y)

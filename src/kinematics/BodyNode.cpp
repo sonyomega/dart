@@ -147,9 +147,10 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
 void BodyNode::_updateTransformation()
 {
     if (mParentBody)
-        mW = mParentBody->getWorldTransformation();
-
-    mW *= mJointParent->getLocalTransformation();
+        mW = mParentBody->getWorldTransformation()
+             * mJointParent->getLocalTransformation();
+    else
+        mW = mJointParent->getLocalTransformation();
 }
 
 void BodyNode::_updateVelocity(bool _updateJacobian)
@@ -166,7 +167,8 @@ void BodyNode::_updateVelocity(bool _updateJacobian)
         mV = mJointParent->getLocalVelocity();
     }
 
-    dterr << "Not implemented: Jacobian update.\n";
+    // TODO:
+    //dterr << "Not implemented: Jacobian update.\n";
 }
 
 void BodyNode::_updateAcceleration(bool _updateJacobianDeriv)
@@ -186,7 +188,8 @@ void BodyNode::_updateAcceleration(bool _updateJacobianDeriv)
               + mJointParent->getLocalAcceleration();
     }
 
-    dterr << "Not implemented: JacobianDeriv update.\n";
+    //
+    //dterr << "Not implemented: JacobianDeriv update.\n";
 }
 
 } // namespace kinematics

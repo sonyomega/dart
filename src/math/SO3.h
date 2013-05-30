@@ -64,7 +64,7 @@ public: // Constructors and destructor
     so3();
     
     /// @brief
-    explicit so3(double _w0, double _w1, double _w2);
+    so3(double _w0, double _w1, double _w2);
     
     /// @brief
     explicit so3(const Eigen::Vector3d& _w);
@@ -270,7 +270,7 @@ public:
                    double _R20, double _R21, double _R22);
     
     /// @brief
-    void setIdentity(void) { mRotation.setIdentity(); }
+    void setIdentity(void) { mR.setIdentity(); }
     
     /// @brief
     void setExp(const so3& _S);
@@ -279,10 +279,10 @@ public:
     void setExp(const so3& _S, double theta);
     
     /// @brief
-    const SO3 getInverse() const { return SO3(mRotation.transpose()); }
+    const SO3 getInverse() const { return SO3(mR.transpose()); }
     
     /// @brief
-    const Eigen::Matrix3d& getMatrix() const { return mRotation; }
+    const Eigen::Matrix3d& getMatrix() const { return mR; }
 
     /// @brief
     void setEulerXYZ(const Eigen::Vector3d& _EulerAngles);
@@ -313,11 +313,12 @@ public:
     so3 getLog() const;
 
     /// @brief
-    double getAxisAngle(Eigen::Vector3d* _axis, double* _angle) const;
+    // TODO: Do we need this?
+    void getAxisAngle(Eigen::Vector3d* _axis, double* _angle) const;
 
 protected:
     /// @brief
-    Eigen::Matrix3d mRotation;
+    Eigen::Matrix3d mR;
     
 private:
 };

@@ -58,7 +58,6 @@ public:
 
     /// @brief
     DEPRECATED int getNumDofs() const { return mDofs.size(); }
-    int getDegreeOfFreedom() const { return mDofs.size(); }
     int getDOF() const { return mDofs.size(); }
 
     /// @brief
@@ -126,11 +125,11 @@ public:
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
-    /// @brief
-    void setState(const Eigen::VectorXd& _state);
+//    /// @brief
+//    void setState(const Eigen::VectorXd& _state);
 
-    /// @brief
-    Eigen::VectorXd getState() const;
+//    /// @brief
+//    Eigen::VectorXd getState() const;
 
 protected:
     /// @brief Pointers to Dofs.

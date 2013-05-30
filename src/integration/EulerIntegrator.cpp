@@ -43,30 +43,49 @@ using namespace Eigen;
 namespace dart {
 namespace integration {
 
-//void EulerIntegrator::integrate(IntegrableSystem* system, double dt) const
-//{
-//    VectorXd deriv = system->evalDeriv();
-//    system->setState(system->getState() + (dt * deriv));
-//    //        system->setState(x + (dt * system->evalDeriv()));
-//}
-
-void EulerIntegrator::integrate(kinematics::System* _system, double _dt) const
+EulerIntegrator::EulerIntegrator()
+    : Integrator()
 {
-    //--------------------------------------------------------------------------
-    // Explicit Euler Method
-    _system->set_q(_system->get_q() + _dt * _system->get_q());
-    _system->set_dq(_system->get_dq() + _dt * _system->get_ddq());
-
-    //--------------------------------------------------------------------------
-    // Semi-implicit Euler Method
-    _system->set_dq(_system->get_dq() + _dt * _system->get_ddq());
-    _system->set_q(_system->get_q() + _dt * _system->get_q());
-
-    //--------------------------------------------------------------------------
-    // Euler-Verlet Method
-    _system->set_dq(_system->get_dq() + _dt * _dt * _system->get_ddq());
-    _system->set_q(_system->get_q() + _system->get_dq());
 }
+
+EulerIntegrator::~EulerIntegrator()
+{
+}
+
+void EulerIntegrator::integrate(IntegrableSystem* system, double dt) const
+{
+    // Explicit Euler Method
+    VectorXd deriv = system->evalDeriv();
+    system->setState(system->getState() + (dt * deriv));
+
+    // Semi-implicit Euler Method
+//    int n = system->getState().size() / 2;
+//    VectorXd deriv = system->evalDeriv();
+//    VectorXd newState = system->getState();
+
+//    newState.segment(n,n) += dt * deriv.segment(n,n);
+//    newState.segment(0,n) += dt * newState.segment(n,n);
+
+//    system->setState(newState);
+}
+
+//void EulerIntegrator::integrate(kinematics::System* _system, double _dt) const
+//{
+//    //--------------------------------------------------------------------------
+//    // Explicit Euler Method
+//    _system->set_q(_system->get_q() + _dt * _system->get_q());
+//    _system->set_dq(_system->get_dq() + _dt * _system->get_ddq());
+
+//    //--------------------------------------------------------------------------
+//    // Semi-implicit Euler Method
+//    _system->set_dq(_system->get_dq() + _dt * _system->get_ddq());
+//    _system->set_q(_system->get_q() + _dt * _system->get_dq());
+
+//    //--------------------------------------------------------------------------
+//    // Euler-Verlet Method
+//    _system->set_dq(_system->get_dq() + _dt * _dt * _system->get_ddq());
+//    _system->set_q(_system->get_q() + _system->get_dq());
+//}
 
 } // namespace integration
 } // namespace dart
