@@ -8,10 +8,10 @@ int main(int argc, char* argv[])
     // create and initialize the world
     dart::simulation::World *myWorld
             = dart::simulation::readDARTFile(
-                  //DART_DATA_PATH"/dart/single_pendulum.dart");
+                  DART_DATA_PATH"/dart/single_pendulum.dart");
                   //DART_DATA_PATH"/dart/double_pendulum.dart");
                   //DART_DATA_PATH"/dart/boxes.dart");
-                  DART_DATA_PATH"/dart/ball_joints.dart");
+                  //DART_DATA_PATH"/dart/ball_joints.dart");
                   //DART_DATA_PATH"/dart/translational_joints.dart");
     assert(myWorld != NULL);
 
@@ -19,11 +19,11 @@ int main(int argc, char* argv[])
     MyWindow window;
     window.setWorld(myWorld);
 
-    cout << "space bar: simulation on/off" << endl;
-    cout << "'p': playback/stop" << endl;
-    cout << "'[' and ']': play one frame backward and forward" << endl;
-    cout << "'v': visualization on/off" << endl;
-    cout << "'1'--'4': programmed interaction" << endl;
+    std::cout << "space bar: simulation on/off" << std::endl;
+    std::cout << "'p': playback/stop" << std::endl;
+    std::cout << "'[' and ']': play one frame backward and forward" << std::endl;
+    std::cout << "'v': visualization on/off" << std::endl;
+    std::cout << "'1'--'4': programmed interaction" << std::endl;
 
     glutInit(&argc, argv);
     window.initWindow(640, 480, "Boxes");

@@ -40,6 +40,7 @@
 #include "TestHelpers.h"
 
 #include "utils/UtilsCode.h"
+#include "math/LieGroup.h"
 #include "math/UtilsMath.h"
 #include "kinematics/BallJoint.h"
 #include "kinematics/RevoluteJoint.h"
@@ -148,20 +149,28 @@ void JOINTS::kinematicsTest(Joint* _joint)
             EXPECT_NEAR(J[i][j], numericJ[i][j], JOINT_TOL);
 }
 
-TEST_F(JOINTS, KINEMATICS)
+TEST_F(JOINTS, REVOLUTE_JOINT)
 {
-    RevoluteJoint revJoint;
+//    RevoluteJoint revJoint;
+
+//    dtdbg << "RevoluteJoint\n";
+//    kinematicsTest(&revJoint);
+}
+
+TEST_F(JOINTS, BALL_JOINT)
+{
     BallJoint ballJoint;
-    TranslationalJoint translationalJoint;
 
-    dtdbg << "RevoluteJoint\n";
-    kinematicsTest(&revJoint);
+    dtdbg << "BallJoint\n";
+    kinematicsTest(&ballJoint);
+}
 
-//    dtdbg << "BallJoint\n";
-//    kinematicsTest(&ballJoint);
+TEST_F(JOINTS, TRANSLATIONAL_JOINT)
+{
+//    TranslationalJoint translationalJoint;
 
-    dtdbg << "TranslationalJoint\n";
-    kinematicsTest(&translationalJoint);
+//    dtdbg << "TranslationalJoint\n";
+//    kinematicsTest(&translationalJoint);
 }
 
 /******************************************************************************/

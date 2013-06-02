@@ -64,8 +64,8 @@ void BallJoint::_updateTransformation()
             mCoordinate[1].get_q(),
             mCoordinate[2].get_q());
     mT = mT_ParentBodyToJoint
-         * math::Exp(math::se3(w, math::Vec3(0.0, 0.0, 0.0)))
-         * math::Inv(mT_ChildBodyToJoint);
+         * math::Exp(w)
+         / mT_ChildBodyToJoint;
 }
 
 void BallJoint::_updateVelocity()
@@ -79,11 +79,11 @@ void BallJoint::_updateVelocity()
             mCoordinate[1].get_q(),
             mCoordinate[2].get_q());
     mS.setColumn(0, math::Ad(mT_ChildBodyToJoint,
-                             math::InvAd(math::Exp(math::se3(w, math::Vec3(0.0, 0.0, 0.0))), math::se3(1, 0, 0, 0, 0, 0))));
+                             math::InvAd(math::Exp(w), math::se3(1, 0, 0, 0, 0, 0))));
     mS.setColumn(1, math::Ad(mT_ChildBodyToJoint,
-                             math::InvAd(math::Exp(math::se3(w, math::Vec3(0.0, 0.0, 0.0))), math::se3(0, 1, 0, 0, 0, 0))));
+                             math::InvAd(math::Exp(w), math::se3(0, 1, 0, 0, 0, 0))));
     mS.setColumn(2, math::Ad(mT_ChildBodyToJoint,
-                             math::InvAd(math::Exp(math::se3(w, math::Vec3(0.0, 0.0, 0.0))), math::se3(0, 0, 1, 0, 0, 0))));
+                             math::InvAd(math::Exp(w), math::se3(0, 0, 1, 0, 0, 0))));
 
     // V = S * dq
     mV = mS * get_dq();

@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/21/2013
+ * Date: 06/02/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,59 +35,31 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "math/LieGroup.h"
-#include "kinematics/TranslationalJoint.h"
+#include <limits>
+
+#include "kinematics/GenCoord.h"
 
 namespace dart {
 namespace kinematics {
 
-TranslationalJoint::TranslationalJoint()
-    : Joint()
-{
-    mName.assign("Translational joint");
-    mJointType = TRANSLATIONAL;
-    mDofs.push_back(&mCoordinate[0]);
-    mDofs.push_back(&mCoordinate[1]);
-    mDofs.push_back(&mCoordinate[2]);
-    mS.setSize(3);
-    mdS.setSize(3);
-}
-
-TranslationalJoint::~TranslationalJoint()
+GenCoordinates::GenCoordinates()
+    : mName("Generalized Coordinate")
 {
 }
 
-void TranslationalJoint::_updateTransformation()
+GenCoordinates::~GenCoordinates()
 {
-    // T
-    math::Vec3 v(mCoordinate[0].get_q(),
-            mCoordinate[1].get_q(),
-            mCoordinate[2].get_q());
-
-    mT = mT_ParentBodyToJoint
-         * math::Exp(math::se3(math::Axis(0.0, 0.0, 0.0), v))
-         * math::Inv(mT_ChildBodyToJoint);
 }
 
-void TranslationalJoint::_updateVelocity()
+void GenCoordinates::backupInitState()
 {
-    // S
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 1, 0, 0)));
-    mS.setColumn(1, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 0, 1, 0)));
-    mS.setColumn(2, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 0, 0, 1)));
-
-    // V = S * dq
-    mV = mS * get_dq();
 }
 
-void TranslationalJoint::_updateAcceleration()
+void GenCoordinates::restoreInitState()
 {
-    // dS = 0
-    mdS.setZero();
-
-    // dV = dS * dq + S * ddq
-    mdV = mS * get_ddq();
 }
+
+
 
 } // namespace kinematics
 } // namespace dart

@@ -35,6 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "math/LieGroup.h"
 #include "kinematics/RevoluteJoint.h"
 
 namespace dart {

@@ -162,7 +162,7 @@ static void getAttribute(tinyxml2::XMLElement* element,
     }
 }
 
-simulation::World* readDARTFile(const string& _filename)
+simulation::World* readDARTFile(const std::string& _filename)
 {
     //--------------------------------------------------------------------------
     // Load xml and create Document
@@ -607,22 +607,22 @@ kinematics::TranslationalJoint*readTranslationalJoint(
     return newTranslationalJoint;
 }
 
-string toString(bool _v)
+std::string toString(bool _v)
 {
     return boost::lexical_cast<std::string>(_v);
 }
 
-string toString(int _v)
+std::string toString(int _v)
 {
     return boost::lexical_cast<std::string>(_v);
 }
 
-string toString(unsigned int _v)
+std::string toString(unsigned int _v)
 {
     return boost::lexical_cast<std::string>(_v);
 }
 
-string toString(float _v)
+std::string toString(float _v)
 {
     if (std::isfinite(_v))
         return boost::lexical_cast<std::string>(_v);
@@ -638,7 +638,7 @@ std::string toString(double _v)
         return std::string("0");
 }
 
-string toString(char _v)
+std::string toString(char _v)
 {
     return boost::lexical_cast<std::string>(_v);
 }
@@ -657,9 +657,14 @@ std::string toString(const Eigen::Vector3d& _v)
     return boost::lexical_cast<std::string>(rowVector3d);
 }
 
-string toString(const math::so3& _v)
+std::string toString(const math::so3& _v)
 {
-    return boost::lexical_cast<std::string>(_v);
+    std::ostringstream ostr;
+    ostr.precision(6);
+
+    ostr << _v[0] << " " << _v[1] << " " << _v[2];
+
+    return ostr.str();
 }
 
 //std::string toString(const math::SO3& _v)
@@ -669,52 +674,50 @@ string toString(const math::so3& _v)
 
 std::string toString(const math::SE3& _v)
 {
-    dterr << "Not implemented.\n";
-    return boost::lexical_cast<std::string>(_v);
-
-    std::string ret;
-
-    return ret;
-
-
     std::ostringstream ostr;
-    std::string str;
-    int nVal = 0;
-    ostr << nVal ;
-    str = ostr.str();
+    ostr.precision(6);
+
+    math::Vec3 XYZ = math::iEulerXYZ(_v);
+    math::Vec3 position = _v.getPosition();
+
+    ostr << XYZ[0] << " " << XYZ[1] << " " << XYZ[2];
+    ostr << " ";
+    ostr << position[0] << " " << position[1] << " " << position[2];
+
+    return ostr.str();
 }
 
-bool toBool(const string& _str)
+bool toBool(const std::string& _str)
 {
     return boost::lexical_cast<bool>(_str);
 }
 
-int toInt(const string& _str)
+int toInt(const std::string& _str)
 {
     return boost::lexical_cast<int>(_str);
 }
 
-unsigned int toUInt(const string& _str)
+unsigned int toUInt(const std::string& _str)
 {
     return boost::lexical_cast<unsigned int>(_str);
 }
 
-float toFloat(const string& _str)
+float toFloat(const std::string& _str)
 {
     return boost::lexical_cast<float>(_str);
 }
 
-double toDouble(const string& _str)
+double toDouble(const std::string& _str)
 {
     return boost::lexical_cast<double>(_str);
 }
 
-char toChar(const string& _str)
+char toChar(const std::string& _str)
 {
     return boost::lexical_cast<char>(_str);
 }
 
-Eigen::Vector2d toVector2d(const string& _str)
+Eigen::Vector2d toVector2d(const std::string& _str)
 {
     Eigen::Vector2d ret;
 
@@ -748,7 +751,7 @@ Eigen::Vector2d toVector2d(const string& _str)
     return ret;
 }
 
-Eigen::Vector3d toVector3d(const string& _str)
+Eigen::Vector3d toVector3d(const std::string& _str)
 {
     Eigen::Vector3d ret;
 
@@ -784,7 +787,7 @@ Eigen::Vector3d toVector3d(const string& _str)
     return ret;
 }
 
-math::so3 toso3(const string& _str)
+math::so3 toso3(const std::string& _str)
 {
     math::so3 ret;
 
@@ -821,7 +824,7 @@ math::so3 toso3(const string& _str)
 }
 
 
-//math::SO3 toSO3(const string& _str)
+//math::SO3 toSO3(const std::string& _str)
 //{
 //    math::SO3 ret;
 //    Eigen::Vector3d EulerXYZ;
@@ -861,7 +864,7 @@ math::so3 toso3(const string& _str)
 //}
 
 
-math::SE3 toSE3(const string& _str)
+math::SE3 toSE3(const std::string& _str)
 {
     std::vector<double> elements;
     std::vector<std::string> pieces;
@@ -892,7 +895,7 @@ math::SE3 toSE3(const string& _str)
                           math::Vec3(elements[3], elements[4], elements[5]));
 }
 
-std::string getValueString(tinyxml2::XMLElement* _parentElement, const string& _name)
+std::string getValueString(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -902,7 +905,7 @@ std::string getValueString(tinyxml2::XMLElement* _parentElement, const string& _
     return str;
 }
 
-bool getValueBool(tinyxml2::XMLElement* _parentElement, const string& _name)
+bool getValueBool(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -912,7 +915,7 @@ bool getValueBool(tinyxml2::XMLElement* _parentElement, const string& _name)
     return toBool(str);
 }
 
-int getValueInt(tinyxml2::XMLElement* _parentElement, const string& _name)
+int getValueInt(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -922,7 +925,7 @@ int getValueInt(tinyxml2::XMLElement* _parentElement, const string& _name)
     return toInt(str);
 }
 
-unsigned int getValueUInt(tinyxml2::XMLElement* _parentElement, const string& _name)
+unsigned int getValueUInt(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -932,7 +935,7 @@ unsigned int getValueUInt(tinyxml2::XMLElement* _parentElement, const string& _n
     return toUInt(str);
 }
 
-float getValueFloat(tinyxml2::XMLElement* _parentElement, const string& _name)
+float getValueFloat(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -942,7 +945,7 @@ float getValueFloat(tinyxml2::XMLElement* _parentElement, const string& _name)
     return toFloat(str);
 }
 
-double getValueDouble(tinyxml2::XMLElement* _parentElement, const string& _name)
+double getValueDouble(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -952,7 +955,7 @@ double getValueDouble(tinyxml2::XMLElement* _parentElement, const string& _name)
     return toDouble(str);
 }
 
-char getValueChar(tinyxml2::XMLElement* _parentElement, const string& _name)
+char getValueChar(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -962,7 +965,7 @@ char getValueChar(tinyxml2::XMLElement* _parentElement, const string& _name)
     return toChar(str);
 }
 
-Eigen::Vector2d getValueVector2d(tinyxml2::XMLElement* _parentElement, const string& _name)
+Eigen::Vector2d getValueVector2d(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -972,7 +975,7 @@ Eigen::Vector2d getValueVector2d(tinyxml2::XMLElement* _parentElement, const str
     return toVector2d(str);
 }
 
-Eigen::Vector3d getValueVector3d(tinyxml2::XMLElement* _parentElement, const string& _name)
+Eigen::Vector3d getValueVector3d(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -982,7 +985,7 @@ Eigen::Vector3d getValueVector3d(tinyxml2::XMLElement* _parentElement, const str
     return toVector3d(str);
 }
 
-math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const string& _name)
+math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -1002,7 +1005,7 @@ math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const string& _name)
 //    return toSO3(str);
 //}
 
-math::SE3 getValueSE3(tinyxml2::XMLElement* _parentElement, const string& _name)
+math::SE3 getValueSE3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -1012,7 +1015,7 @@ math::SE3 getValueSE3(tinyxml2::XMLElement* _parentElement, const string& _name)
     return toSE3(str);
 }
 
-bool hasElement(tinyxml2::XMLElement* _parentElement, const string& _name)
+bool hasElement(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -1021,7 +1024,7 @@ bool hasElement(tinyxml2::XMLElement* _parentElement, const string& _name)
 }
 
 tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement,
-                                 const string& _name)
+                                 const std::string& _name)
 {
     assert(!_name.empty());
 

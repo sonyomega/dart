@@ -53,7 +53,7 @@ using namespace dynamics;
 using namespace simulation;
 
 /******************************************************************************/
-TEST(SIMULATION, PARSER_DATA_STRUCTUER)
+TEST(PARSER, PARSER_DATA_STRUCTUER)
 {
     bool v1 = true;
     int v2 = -3;
@@ -104,9 +104,9 @@ TEST(SIMULATION, PARSER_DATA_STRUCTUER)
     EXPECT_EQ(valSE3, v11);
 }
 
-TEST(SIMULATION, PARSER_DART_EMPTY)
+TEST(PARSER, PARSER_DART_EMPTY)
 {
-    World* world = readDARTFile(DART_DATA_PATH"/dart/empty.dart");
+    World* world = readDARTFile(DART_DATA_PATH"dart/test/empty.dart");
 
     EXPECT_TRUE(world != NULL);
     EXPECT_EQ(world->getTimeStep(), 0.001);
@@ -122,20 +122,20 @@ TEST(SIMULATION, PARSER_DART_EMPTY)
     delete world;
 }
 
-TEST(SIMULATION, PARSER_DART_SINGLE_PENDULUM)
+TEST(PARSER, PARSER_DART_SINGLE_PENDULUM)
 {
-    World* world = readDARTFile(DART_DATA_PATH"/dart/single_pendulum.dart");
+    World* world = readDARTFile(DART_DATA_PATH"dart/test/single_pendulum.dart");
 
     EXPECT_TRUE(world != NULL);
     EXPECT_EQ(world->getTimeStep(), 0.001);
     EXPECT_EQ(world->getGravity()(0), 0);
-    EXPECT_EQ(world->getGravity()(1), 0);
-    EXPECT_EQ(world->getGravity()(2), -9.81);
+    EXPECT_EQ(world->getGravity()(1), -9.81);
+    EXPECT_EQ(world->getGravity()(2), 0);
     EXPECT_EQ(world->getNumSkeletons(), 1);
 
     SkeletonDynamics* skel1 = world->getSkeleton("skeleton 1");
 
-    EXPECT_EQ(skel1->getNumNodes(), 2);
+    EXPECT_EQ(skel1->getNumNodes(), 1);
     EXPECT_EQ(skel1->getNumJoints(), 1);
 
     world->step();

@@ -4,8 +4,12 @@
 #include <vector>
 #include <cassert>
 #include <iostream>
+#include <cmath>
 #include <cfloat>
 #include <Eigen/Dense>
+
+
+#include "utils/UtilsCode.h"
 
 #define LIE_EPS		 1E-6
 #define SCALAR_0	 0.0
@@ -33,7 +37,7 @@
 #define M_DEGREE	 57.2957795130823208768		// = pi / 180
 #define SCALAR_MAX	 DBL_MAX
 
-using namespace std;
+//using namespace std;
 
 namespace dart {
 namespace math {
@@ -58,6 +62,7 @@ class AInertia;
 //   9. check if Inertia * se3
 //  10. not use [] operator for SE3, Inertia
 //  11. random setter
+//  12. split LieGroups into multiple files
 
 //------------------------------------------------------------------------------
 
@@ -360,19 +365,19 @@ dse3 dad(const se3& V, const dse3& F);
 //------------------------------------------------------------------------------
 
 /// @brief standard output operator
-ostream& operator<<(ostream& os, const Vec3& );
+std::ostream& operator<<(std::ostream& os, const Vec3& );
 
 /// @brief standard output operator
-ostream& operator<<(ostream& os, const Axis& );
+std::ostream& operator<<(std::ostream& os, const Axis& );
 
 /// @brief standard output operator
-ostream& operator<<(ostream& , const se3& );
+std::ostream& operator<<(std::ostream& , const se3& );
 
 /// @brief standard output operator
-ostream &operator<<(ostream& , const dse3& );
+std::ostream &operator<<(std::ostream& , const dse3& );
 
 /// @brief standard output operator
-ostream& operator<<(ostream& , const SE3& );
+std::ostream& operator<<(std::ostream& , const SE3& );
 
 //==============================================================================
 // Vec3
@@ -700,6 +705,12 @@ public:
 
     /// @brief
     Eigen::Matrix<double,6,1> getEigenVector() const;
+
+    /// @brief
+    void setEigenMatrix(const Eigen::Matrix4d& mat);
+
+    /// @brief
+    Eigen::Matrix4d getEigenMatrix() const;
 
     //--------------------------------------------------------------------------
     // Friend functions
@@ -1029,7 +1040,7 @@ public:
 
     /// @brief multiplication operator@n
     /// Ta *= Tb is a fast version of Ta = Ta * Tb
-    const SE3& operator *= (const SE3& );
+    const SE3& operator*=(const SE3& );
 
     /// @brief multiplication operator@n
     /// Ta /= Tb is a fast version of Ta = Ta * Inv(Tb)
@@ -1088,7 +1099,7 @@ public:
     friend class se3;
     friend class dse3;
 
-    friend ostream& operator<<(ostream& os, const SE3& T);
+    friend std::ostream& operator<<(std::ostream& os, const SE3& T);
     friend SE3 Inv(const SE3& T);
     friend SE3 Exp(const se3& );
     friend se3 Log(const SE3& );
@@ -1448,6 +1459,8 @@ protected:
 private:
 
 };
+
+#include "math/LieGroup.inl"
 
 } // namespace math
 } // namespace dart

@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/21/2013
+ * Date: 06/02/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,59 +35,64 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "math/LieGroup.h"
-#include "kinematics/TranslationalJoint.h"
+#ifndef DART_KINEMATICS_GEN_COORD_H
+#define DART_KINEMATICS_GEN_COORD_H
+
+#include <cassert>
+#include <string>
+
+#include "utils/Deprecated.h"
 
 namespace dart {
 namespace kinematics {
 
-TranslationalJoint::TranslationalJoint()
-    : Joint()
+class Joint;
+class Transformation;
+
+
+// TODO: Change name (Dof --> GeneralizedCoordinate).
+// A degrees of freedom is just a number of generalized coordinates.
+//
+// http://en.wikipedia.org/wiki/Degree_of_freedom:
+//   In many scientific fields, the degrees of freedom of a system is the number
+//   of parameters of the system that may vary independently. For example, the
+//   position of a figure in the plane has three degrees of freedom: its
+//   orientation and the two coordinates of any fixed point of the figure.
+/// @brief Generalized coordinate.
+/// A set of generalized coordiante describes the configuration of a system.
+class GenCoordinates
 {
-    mName.assign("Translational joint");
-    mJointType = TRANSLATIONAL;
-    mDofs.push_back(&mCoordinate[0]);
-    mDofs.push_back(&mCoordinate[1]);
-    mDofs.push_back(&mCoordinate[2]);
-    mS.setSize(3);
-    mdS.setSize(3);
-}
+public:
+    /// @brief
+    GenCoordinates();
 
-TranslationalJoint::~TranslationalJoint()
-{
-}
+    /// @brief
+    virtual ~GenCoordinates();
 
-void TranslationalJoint::_updateTransformation()
-{
-    // T
-    math::Vec3 v(mCoordinate[0].get_q(),
-            mCoordinate[1].get_q(),
-            mCoordinate[2].get_q());
+public:
+    /// @brief
+    void init();
 
-    mT = mT_ParentBodyToJoint
-         * math::Exp(math::se3(math::Axis(0.0, 0.0, 0.0), v))
-         * math::Inv(mT_ChildBodyToJoint);
-}
+    /// @brief
+    void setName(const std::string& _name) { mName = _name; }
 
-void TranslationalJoint::_updateVelocity()
-{
-    // S
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 1, 0, 0)));
-    mS.setColumn(1, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 0, 1, 0)));
-    mS.setColumn(2, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 0, 0, 1)));
+    /// @brief
+    const std::string& getName() const { return mName; }
 
-    // V = S * dq
-    mV = mS * get_dq();
-}
+    /// @brief
+    void backupInitState();
 
-void TranslationalJoint::_updateAcceleration()
-{
-    // dS = 0
-    mdS.setZero();
+    /// @brief
+    void restoreInitState();
 
-    // dV = dS * dq + S * ddq
-    mdV = mS * get_ddq();
-}
+protected:
+    /// @brief
+    std::string mName;
+
+};
 
 } // namespace kinematics
 } // namespace dart
+
+#endif // #ifndef DART_KINEMATICS_GEN_COORD_H
+
