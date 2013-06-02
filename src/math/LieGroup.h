@@ -78,11 +78,21 @@ double Norm(const Vec3& p);
 /// @brief get a magnitude of v.
 double Norm(const Axis& v);
 
+/// @brief get a magnitude of S.
+double Norm(const se3& S);
+
+/// @brief get a magnitude of F.
+double Norm(const dse3& F);
+
 /// @brief get a normalized vector from p.
 Vec3 Normalize(const Vec3& p);
 
 /// @brief get a normalized vector from p.
 Axis Normalize(const Axis& p);
+
+/// @brief Compute geometric distance on SE(3) manifold.
+/// Norm(Log(Inv(T1) * T2)).
+double Distance(const SE3& T1, const SE3& T2);
 
 //------------------------------------------------------------------------------
 
@@ -106,21 +116,29 @@ SE3 EulerXYZ(const Vec3& angle, const Vec3& position);
 
 /// @brief get a transformation matrix given by the Euler ZYX angle,
 /// where the positional part is set to be zero.
+/// singularity : x[1] = -+ 0.5*PI
 /// @sa SE3::iEulerZYX
 SE3 EulerZYX(const Vec3& angle);
 
 /// @brief get a transformation matrix given by the Euler ZYX angle and
 /// position.
+/// singularity : x[1] = -+ 0.5*PI
 SE3 EulerZYX(const Vec3& angle, const Vec3& position);
 
 /// @brief Get a transformation matrix given by the Euler ZYZ angle,
 /// where the positional part is set to be zero.
+/// singularity : x[1] = 0, PI
 /// @sa SE3::iEulerZYZ
 SE3 EulerZYZ(const Vec3& angle);
 
 /// @brief get a transformation matrix given by the Euler ZYZ angle and
 /// position.
+/// singularity : x[1] = 0, PI
 SE3 EulerZYZ(const Vec3& angle, const Vec3& position);
+
+/// @brief get the Euler ZYX angle from T
+////// @sa Vec3::EulerXYZ
+Vec3 iEulerXYZ(const SE3& T);
 
 /// @brief get the Euler ZYX angle from T
 /// @sa Vec3::EulerZYX
@@ -128,7 +146,11 @@ Vec3 iEulerZYX(const SE3& T);
 
 /// @brief get the Euler ZYZ angle from T
 /// @sa Vec3::EulerZYZ
-Vec3 iEulerZYZ(const SE3& );
+Vec3 iEulerZYZ(const SE3& T);
+
+/// @brief get the Euler ZYZ angle from T
+/// @sa Vec3::EulerZXY
+Vec3 iEulerZXY(const SE3 &T);
 
 //------------------------------------------------------------------------------
 
@@ -805,6 +827,113 @@ private:
     double _m[6];
 };
 
+
+/// @class SO3
+/// @brief Special Orientation group
+/// | R[0]  R[3]  R[6] |
+///	| R[1]  R[4]  R[7] |
+///	| R[2]  R[5]  R[8] |
+class SO3
+{
+public:
+    //--------------------------------------------------------------------------
+    // Constructors and destructor
+    //--------------------------------------------------------------------------
+    /// @brief default constructor.
+    SO3();
+
+    /// @brief copy constructor.
+    SO3(const SO3& v);
+
+    /// @brief
+    explicit SO3(double R0, double R1, double R2,	//Rx
+                 double R3, double R4, double R5,	//Ry
+                 double R6, double R7, double R8);	//Rz
+
+    /// @brief
+    explicit SO3(const Vec3 & Rx, const Vec3 & Ry, const Vec3 & Rz);
+
+    /// @brief default destructor.
+    ~SO3();
+
+    //--------------------------------------------------------------------------
+    // Operators
+    //--------------------------------------------------------------------------
+    /// @brief Casting operator.
+    SO3* operator&() { return this; }
+
+    /// @brief Const Casting operator.
+    const SO3* operator&() const { return this; }
+
+    /// @brief access to the i-th element, where it is assumed as an array.
+    /// in a matrix form, it looks like
+    /// | R[0]	R[3]	R[6] |
+    /// | R[1]	R[4]	R[7] |
+    /// | R[2]	R[5]	R[8] |
+    /// ,where the left 3X3 matrix is the rotation matrix.
+    const double	&operator [] (int i) const;
+    double			&operator [] (int);
+
+    /// @brief substitution operator.
+    const SO3& operator = (const SO3 &);
+
+    /// @brief multiplication operator\n
+    /// T_this *= T is a fast version of T_this = T_this * T
+    const SO3 & operator *= (const SO3 & R);
+
+    /// @brief multiplication operator\n
+    /// T_this /= T is a fast version of T_this =  T_this * Inv(T)
+    const SO3 & operator /= (const SO3 & T);
+
+    /// @brief multiplication operator\n
+    /// T_this \%= T is a fast version of T_this= Inv(T_this) * T
+    const SO3 & operator %= (const SO3 & T);
+
+    /// @brief multiplication operator */
+    SO3 operator * (const SO3 & T) const;
+
+    /// @brief multiplication operator, T_this / T = T_this * Inv(T) */
+    SO3 operator / (const SO3 & T) const;
+
+    /// @brief multiplication operator, T_this \% T = Inv(T_this) * T */
+    SO3 operator % (const SO3 & T) const;
+
+    /// @brief
+    Vec3 operator * (const Vec3& q) const;
+
+    /// @brief
+    Vec3 operator % (const Vec3& q) const;
+
+    //--------------------------------------------------------------------------
+    // Setters and getters
+    //--------------------------------------------------------------------------
+    /// @brief Set values.
+    void setValues(double, double, double,	// Rx
+                   double, double, double,	// Ry
+                   double, double, double);	// Rz
+
+    /// @brief set itself to be identity.
+    void setIdentity(void);
+
+    /// @brief get x-axis. */
+    Vec3 getRx(void) const;
+
+    /// @brief get y-axis. */
+    Vec3 getRy(void) const;
+
+    /// @brief get z-axis. */
+    Vec3 getRz(void) const;
+
+    /// @brief Exponential mapping */
+    const SO3& setExp(const Vec3 &);
+
+    /// @brief Exponential mapping for unit length axis. */
+    const SO3& setExp(const Vec3 &, double);
+
+private:
+    double _R[9];
+};
+
 /// @class SE3
 /// @brief Special Euclidean group
 ///
@@ -965,8 +1094,10 @@ public:
     friend se3 Log(const SE3& );
     friend Axis LogR(const SE3& T);
     friend se3 Linearize(const SE3& T);
+    friend Vec3 iEulerXYZ(const SE3 &T);
+    friend Vec3 iEulerZXY(const SE3& T);
     friend Vec3 iEulerZYX(const SE3& T);
-    friend Vec3 iEulerZYZ(const SE3& );
+    friend Vec3 iEulerZYZ(const SE3& T);
     friend SE3 Normalize(const SE3& );
     friend Vec3 Rotate(const SE3& T, const Vec3& v);
     friend Vec3 InvRotate(const SE3& T, const Vec3& v);

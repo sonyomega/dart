@@ -101,12 +101,10 @@ TEST(MATH, SE3)
         SE3 ExpLogExpS = Exp(S);
         se3 ExpLogLogExpS = Log(ExpS);
 
-        for (int j = 0; j < 3; ++j)
+        for (int j = 0; j < 4; ++j)
         {
-//            for (int k = 0; k < 3; ++k)
-//                EXPECT_NEAR(ExpS.getOrientation()(j,k), ExpLogExpS.getOrientation()(j,k), MATH_EPS);
-
-//            EXPECT_NEAR(ExpS.getPosition()(j), ExpLogExpS.getPosition()(j), MATH_EPS);
+            for (int k = 0; k < 4; ++k)
+                EXPECT_NEAR(ExpS(j,k), ExpLogExpS(j,k), MATH_EPS);
         }
 
         for (int j = 0; j < 6; ++j)

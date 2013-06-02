@@ -221,11 +221,18 @@ Vec3 InvAd(const SE3& T, const Vec3& v)
                 T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2]);
 }
 
+Vec3 iEulerXYZ(const SE3& T)
+{
+    return Vec3(atan2(-T._T[7], T._T[8]),
+                atan2( T._T[6], sqrt(T._T[7] * T._T[7] + T._T[8] * T._T[8])),
+                atan2(-T._T[3], T._T[0]));
+}
+
 Vec3 iEulerZYX(const SE3& T)
 {
-    return Vec3(atan2(T._T[1], T._T[0]),
+    return Vec3(atan2( T._T[1], T._T[0]),
                 atan2(-T._T[2], sqrt(T._T[0] * T._T[0] + T._T[1] * T._T[1])),
-                atan2(T._T[5], T._T[8]));
+                atan2( T._T[5], T._T[8]));
 }
 
 Vec3 iEulerZYZ(const SE3& T)
@@ -233,6 +240,13 @@ Vec3 iEulerZYZ(const SE3& T)
     return Vec3(atan2(T._T[7], T._T[6]),
                 atan2(sqrt(T._T[2] * T._T[2] + T._T[5] * T._T[5]), T._T[8]),
                 atan2(T._T[5], -T._T[2]));
+}
+
+Vec3 iEulerZXY(const SE3& T)
+{
+    return Vec3(atan2(-T._T[3], T._T[4]),
+                atan2( T._T[5], sqrt(T._T[3]*T._T[3]+T._T[4]*T._T[4])),
+                atan2(-T._T[2], T._T[8]));
 }
 
 Vec3 ad(const Vec3& s1, const se3& s2)
@@ -924,6 +938,291 @@ double SquareSum(const dse3& t)
 {
     return (t[0] * t[0] + t[1] * t[1] + t[2] * t[2] + t[3] * t[3] + t[4] * t[4] + t[5] * t[5]);
 }
+
+//==============================================================================
+//
+//==============================================================================
+SO3::SO3()
+{
+    _R[0] = _R[4] = _R[8] = 1.0;
+    _R[1] = _R[2] = _R[3] = _R[5] = _R[6] = _R[7] = 0.0;
+}
+
+SO3::~SO3()
+{
+}
+
+SO3::SO3(const SO3& R)
+{
+    _R[0] = R._R[0];
+    _R[1] = R._R[1];
+    _R[2] = R._R[2];
+    _R[3] = R._R[3];
+    _R[4] = R._R[4];
+    _R[5] = R._R[5];
+    _R[6] = R._R[6];
+    _R[7] = R._R[7];
+    _R[8] = R._R[8];
+}
+
+const SO3 & SO3::operator = (const SO3 &T)
+{
+    //if(this != &T)
+    {
+        _R[ 0] = T._R[ 0];
+        _R[ 1] = T._R[ 1];
+        _R[ 2] = T._R[ 2];
+        _R[ 3] = T._R[ 3];
+        _R[ 4] = T._R[ 4];
+        _R[ 5] = T._R[ 5];
+        _R[ 6] = T._R[ 6];
+        _R[ 7] = T._R[ 7];
+        _R[ 8] = T._R[ 8];
+    }
+    return (*this);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+SO3::SO3(double R0, double R1, double R2,
+         double R3, double R4, double R5,
+         double R6, double R7, double R8 )
+{
+    _R[ 0] = R0;
+    _R[ 1] = R1;
+    _R[ 2] = R2;
+    _R[ 3] = R3;
+    _R[ 4] = R4;
+    _R[ 5] = R5;
+    _R[ 6] = R6;
+    _R[ 7] = R7;
+    _R[ 8] = R8;
+}
+
+SO3::SO3(const Vec3 &Rx, const Vec3 &Ry, const Vec3 &Rz)
+{
+    _R[ 0] = Rx[0];
+    _R[ 1] = Rx[1];
+    _R[ 2] = Rx[2];
+    _R[ 3] = Ry[0];
+    _R[ 4] = Ry[1];
+    _R[ 5] = Ry[2];
+    _R[ 6] = Rz[0];
+    _R[ 7] = Rz[1];
+    _R[ 8] = Rz[2];
+}
+
+void SO3::setValues(double Rx1, double Rx2, double Rx3,	// Rx
+                    double Ry1, double Ry2, double Ry3,	// Ry
+                    double Rz1, double Rz2, double Rz3)	// Rz
+{
+    _R[ 0] = Rx1;
+    _R[ 1] = Rx2;
+    _R[ 2] = Rx3;
+    _R[ 3] = Ry1;
+    _R[ 4] = Ry2;
+    _R[ 5] = Ry3;
+    _R[ 6] = Rz1;
+    _R[ 7] = Rz2;
+    _R[ 8] = Rz3;
+}
+
+void SO3::setIdentity()
+{
+    _R[0] = _R[4] = _R[8] = 1.0;
+    _R[1] = _R[2] = _R[3] = _R[5] = _R[6] = _R[7] = 0.0;
+}
+
+Vec3 SO3::getRx(void) const
+{
+    return Vec3(_R[0], _R[1], _R[2]);
+}
+
+Vec3 SO3::getRy(void) const
+{
+    return Vec3(_R[3], _R[4], _R[5]);
+}
+
+Vec3 SO3::getRz(void) const
+{
+    return Vec3(_R[6], _R[7], _R[8]);
+}
+
+const SO3& SO3::setExp(const Vec3 &S)
+{
+    double s2[] = { S[0] * S[0], S[1] * S[1], S[2] * S[2] }, theta = sqrt(s2[0] + s2[1] + s2[2]), st_t, ct_t;
+
+    if ( theta < LIE_EPS )
+    {
+        st_t = 1.0 - theta * theta / (double)6.0;
+        ct_t = 0.5 - theta * theta / (double)24.0;
+    } else
+    {
+        st_t = sin(theta) / theta;
+        ct_t = (1.0 - cos(theta)) / theta / theta;
+    }
+
+    _R[0] = 1.0 - ct_t * (s2[1] + s2[2]);
+    _R[1] = ct_t * S[0] * S[1] + st_t * S[2];
+    _R[2] = ct_t * S[0] * S[2] - st_t * S[1];
+    _R[3] = ct_t * S[0] * S[1] - st_t * S[2];
+    _R[4] = 1.0 - ct_t * (s2[0] + s2[2]);
+    _R[5] = ct_t * S[1] * S[2] + st_t * S[0];
+    _R[6] = ct_t * S[0] * S[2] + st_t * S[1];
+    _R[7] = ct_t * S[1] * S[2] - st_t * S[0];
+    _R[8] = 1.0 - ct_t * (s2[0] + s2[1]);
+
+    return (*this);
+}
+
+const SO3& SO3::setExp(const Vec3 & S, double theta)
+{
+    double s2[] = { S[0] * S[0], S[1] * S[1], S[2] * S[2] };
+
+    if ( fabs(s2[0] + s2[1] + s2[2] - 1.0) > LIE_EPS )
+    {
+        return setExp(theta * S);
+    }
+
+    double st = sin(theta),
+           vt = 1.0 - cos(theta),
+           sts[] = { st * S[0], st * S[1], st * S[2] };
+
+    _R[0] = 1.0 + vt * (s2[0] - 1.0);
+    _R[1] = vt * S[0] * S[1] + sts[2];
+    _R[2] = vt * S[0] * S[2] - sts[1];
+    _R[3] = vt * S[0] * S[1] - sts[2];
+    _R[4] = 1.0 + vt * (s2[1] - 1.0);
+    _R[5] = vt * S[1] * S[2] + sts[0];
+    _R[6] = vt * S[0] * S[2] + sts[1];
+    _R[7] = vt * S[1] * S[2] - sts[0];
+    _R[8] = 1.0 + vt * (s2[2] - 1.0);
+
+    return (*this);
+}
+
+const double & SO3::operator [] (int i) const
+{
+    return _R[i];
+}
+
+double & SO3::operator [] (int i)
+{
+    return _R[i];
+}
+
+
+const SO3 & SO3::operator *= (const SO3 & R)
+{
+    double x0, x1, x2;
+    x0 = _R[0] * R[0] + _R[3] * R[1] + _R[6] * R[2];
+    x1 = _R[0] * R[3] + _R[3] * R[4] + _R[6] * R[5];
+    x2 = _R[0] * R[6] + _R[3] * R[7] + _R[6] * R[8];
+    _R[0] = x0;	_R[3] = x1;	_R[6] = x2;
+    x0 = _R[1] * R[0] + _R[4] * R[1] + _R[7] * R[2];
+    x1 = _R[1] * R[3] + _R[4] * R[4] + _R[7] * R[5];
+    x2 = _R[1] * R[6] + _R[4] * R[7] + _R[7] * R[8];
+    _R[1] = x0;	_R[4] =x1;	_R[7] = x2;
+    x0 = _R[2] * R[0] + _R[5] * R[1] + _R[8] * R[2];
+    x1 = _R[2] * R[3] + _R[5] * R[4] + _R[8] * R[5];
+    x2 = _R[2] * R[6] + _R[5] * R[7] + _R[8] * R[8];
+    _R[2] = x0; _R[5] = x1; _R[8] = x2;
+    return  *this;
+}
+
+const SO3 & SO3::operator /= (const SO3 & R)
+{
+    double x0, x1, x2;
+    x0 = _R[0] * R[0] + _R[3] * R[3] + _R[6] * R[6];
+    x1 = _R[0] * R[1] + _R[3] * R[4] + _R[6] * R[7];
+    x2 = _R[0] * R[2] + _R[3] * R[5] + _R[6] * R[8];
+    _R[0] = x0;	_R[3] = x1;	_R[6] = x2;
+    x0 = _R[1] * R[0] + _R[4] * R[3] + _R[7] * R[6];
+    x1 = _R[1] * R[1] + _R[4] * R[4] + _R[7] * R[7];
+    x2 = _R[1] * R[2] + _R[4] * R[5] + _R[7] * R[8];
+    _R[1] = x0;	_R[4] =x1;	_R[7] = x2;
+    x0 = _R[2] * R[0] + _R[5] * R[3] + _R[8] * R[6];
+    x1 = _R[2] * R[1] + _R[5] * R[4] + _R[8] * R[7];
+    x2 = _R[2] * R[2] + _R[5] * R[5] + _R[8] * R[8];
+    _R[2] = x0; _R[5] = x1; _R[8] = x2;
+
+    return *this;
+}
+
+const SO3 & SO3::operator %= (const SO3 & R)
+{
+    double tmp[9] = { _R[0], _R[1], _R[2],
+                      _R[3], _R[4], _R[5],
+                      _R[6], _R[7], _R[8] };
+
+    _R[0] = tmp[0] * R[0] + tmp[1] * R[1] + tmp[2] * R[2];
+    _R[1] = tmp[3] * R[0] + tmp[4] * R[1] + tmp[5] * R[2];
+    _R[2] = tmp[6] * R[0] + tmp[7] * R[1] + tmp[8] * R[2];
+
+    _R[3] = tmp[0] * R[3] + tmp[1] * R[4] + tmp[2] * R[5];
+    _R[4] = tmp[3] * R[3] + tmp[4] * R[4] + tmp[5] * R[5];
+    _R[5] = tmp[6] * R[3] + tmp[7] * R[4] + tmp[8] * R[5];
+
+    _R[6] = tmp[0] * R[6] + tmp[1] * R[7] + tmp[2] * R[8];
+    _R[7] = tmp[3] * R[6] + tmp[4] * R[7] + tmp[5] * R[8];
+    _R[8] = tmp[6] * R[6] + tmp[7] * R[7] + tmp[8] * R[8];
+
+    return *this;
+}
+
+SO3 SO3::operator * (const SO3 & R) const
+{
+    return SO3(	_R[0] * R[0] + _R[3] * R[1] + _R[6] * R[2],
+                _R[1] * R[0] + _R[4] * R[1] + _R[7] * R[2],
+                _R[2] * R[0] + _R[5] * R[1] + _R[8] * R[2],
+                _R[0] * R[3] + _R[3] * R[4] + _R[6] * R[5],
+                _R[1] * R[3] + _R[4] * R[4] + _R[7] * R[5],
+                _R[2] * R[3] + _R[5] * R[4] + _R[8] * R[5],
+                _R[0] * R[6] + _R[3] * R[7] + _R[6] * R[8],
+                _R[1] * R[6] + _R[4] * R[7] + _R[7] * R[8],
+                _R[2] * R[6] + _R[5] * R[7] + _R[8] * R[8] );
+}
+
+SO3 SO3::operator / (const SO3 &R) const
+{
+    return SO3(	_R[0] * R[0] + _R[3] * R[3] + _R[6] * R[6],
+                _R[1] * R[0] + _R[4] * R[3] + _R[7] * R[6],
+                _R[2] * R[0] + _R[5] * R[3] + _R[8] * R[6],
+                _R[0] * R[1] + _R[3] * R[4] + _R[6] * R[7],
+                _R[1] * R[1] + _R[4] * R[4] + _R[7] * R[7],
+                _R[2] * R[1] + _R[5] * R[4] + _R[8] * R[7],
+                _R[0] * R[2] + _R[3] * R[5] + _R[6] * R[8],
+                _R[1] * R[2] + _R[4] * R[5] + _R[7] * R[8],
+                _R[2] * R[2] + _R[5] * R[5] + _R[8] * R[8] );
+}
+
+SO3 SO3::operator % (const SO3 &R) const
+{
+    return SO3(	_R[0] * R[0] + _R[1] * R[1] + _R[2] * R[2],
+                _R[3] * R[0] + _R[4] * R[1] + _R[5] * R[2],
+                _R[6] * R[0] + _R[7] * R[1] + _R[8] * R[2],
+                _R[0] * R[3] + _R[1] * R[4] + _R[2] * R[5],
+                _R[3] * R[3] + _R[4] * R[4] + _R[5] * R[5],
+                _R[6] * R[3] + _R[7] * R[4] + _R[8] * R[5],
+                _R[0] * R[6] + _R[1] * R[7] + _R[2] * R[8],
+                _R[3] * R[6] + _R[4] * R[7] + _R[5] * R[8],
+                _R[6] * R[6] + _R[7] * R[7] + _R[8] * R[8] );
+}
+
+Vec3 SO3::operator * (const Vec3 & q) const
+{
+    return Vec3(_R[0] * q[0] + _R[3] * q[1] + _R[6] * q[2],
+                _R[1] * q[0] + _R[4] * q[1] + _R[7] * q[2],
+                _R[2] * q[0] + _R[5] * q[1] + _R[8] * q[2] );
+}
+
+Vec3 SO3::operator % (const Vec3 & q) const
+{
+    return Vec3(_R[0] * q[0] + _R[1] * q[1] + _R[2] * q[2],
+                _R[3] * q[0] + _R[4] * q[1] + _R[5] * q[2],
+                _R[6] * q[0] + _R[7] * q[1] + _R[8] * q[2] );
+}
+
 
 //==============================================================================
 //
@@ -2816,6 +3115,34 @@ double Inner(const dse3& F, const Axis& w)
 {
     return (F._m[0] * w._v[0] + F._m[1] * w._v[1] + F._m[2] * w._v[2]);
 }
+
+double Distance(const SE3& T1, const SE3& T2)
+{
+    return Norm(Log(Inv(T1)*T2));
+}
+
+double Norm(const se3& S)
+{
+    return sqrt(S[0] * S[0]
+            + S[1] * S[1]
+            + S[2] * S[2]
+            + S[3] * S[3]
+            + S[4] * S[4]
+            + S[5] * S[5]);
+}
+
+double Norm(const dse3& F)
+{
+    return sqrt(F[0] * F[0]
+            + F[1] * F[1]
+            + F[2] * F[2]
+            + F[3] * F[3]
+            + F[4] * F[4]
+            + F[5] * F[5]);
+}
+
+
+
 
 } // namespace math
 } // namespace dart
