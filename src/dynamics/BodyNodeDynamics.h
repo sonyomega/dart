@@ -42,7 +42,6 @@
 #include <Eigen/Dense>
 
 #include "kinematics/BodyNode.h"
-#include "dynamics/Inertia.h"
 
 namespace dart {
 namespace dynamics {
@@ -77,7 +76,7 @@ public:
                             double _Ixy, double _Ixz, double _Iyz);
 
     /// @brief
-    const Inertia& getInertia() const { return mI; }
+    const math::Inertia& getInertia() const { return mI; }
 
     //void setLocalInertia(const Eigen::Matrix3d& _inertia) { mI = _inertia; }
     //Eigen::Matrix3d getLocalInertia() const { return mI; }
@@ -88,14 +87,14 @@ public:
     //Eigen::Matrix4d getMassTensor();
 
     /// @brief
-    DEPRECATED Eigen::Vector3d getLocalCOM() const { return getCenterOfMass(); }
-    void setCenterOfMass(const Eigen::Vector3d& _com)
-    { mI.setCenterOfMass(_com); }
-
-    /// @brief
     DEPRECATED void setLocalCOM(const Eigen::Vector3d& _off)
     { setCenterOfMass(_off); }
-    Eigen::Vector3d getCenterOfMass() const { return mI.getCenterOfMass(); }
+    void setCenterOfMass(const Eigen::Vector3d& _com)
+    { mI.setOffset(math::Vec3(_com(0), _com(1), _com(2))); }
+
+    /// @brief
+    DEPRECATED Eigen::Vector3d getLocalCOM() const { return getCenterOfMass(); }
+    Eigen::Vector3d getCenterOfMass() const { return mI.getOffset().getEigenVector(); }
 
     //DEPRECATED Eigen::Vector3d getWorldCOM() { return evalWorldPos(mCOMLocal); }
 
@@ -188,7 +187,7 @@ protected:
     bool mGravityMode;
 
     /// @brief Generalized inertia.
-    dynamics::Inertia mI;
+    math::Inertia mI;
 
     //--------------------------------------------------------------------------
     //

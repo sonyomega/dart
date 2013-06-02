@@ -46,7 +46,7 @@ namespace dynamics {
 
 BodyNodeDynamics::BodyNodeDynamics()
     : mGravityMode(true),
-      mI(dynamics::Inertia()),
+      mI(math::Inertia()),
       mF(math::dse3())
 {
 }
@@ -64,8 +64,8 @@ void BodyNodeDynamics::setLocalInertia(double _Ixx, double _Iyy, double _Izz,
 void BodyNodeDynamics::setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
                                           double _Ixy, double _Ixz, double _Iyz)
 {
-    mI.setPrincipals(_Ixx, _Iyy, _Izz);
-    mI.setProducts(_Ixy, _Ixz, _Iyz);
+    mI.setAngularMomentDiag(_Ixx, _Iyy, _Izz);
+    mI.setAngularMomentOffDiag(_Ixy, _Ixz, _Iyz);
 }
 
 void BodyNodeDynamics::setExternalForceLocal(const math::dse3& _FextLocal)
@@ -113,7 +113,7 @@ math::dse3 BodyNodeDynamics::getExternalForceGlobal() const
 
 void BodyNodeDynamics::_updateBodyForce(const Eigen::Vector3d& _gravity)
 {
-    mFgravity = mI * math::InvAd(mW, math::se3(_gravity));
+    mFgravity = mI * math::InvAd(mW, math::Vec3(_gravity));
 
     mF = mI * mdV;                // Inertial force
     mF -= mFext;                  // External force

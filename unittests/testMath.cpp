@@ -39,6 +39,7 @@
 #include <gtest/gtest.h>
 #include "TestHelpers.h"
 
+#include "math/UtilsMath.h"
 #include "kinematics/RevoluteJoint.h"
 #include "dynamics/BodyNodeDynamics.h"
 #include "dynamics/SkeletonDynamics.h"
@@ -50,16 +51,88 @@ using namespace kinematics;
 using namespace dynamics;
 using namespace simulation;
 
-/******************************************************************************/
-TEST(MATH, SO3)
-{
+#define MATH_TOL 0.01
+#define MATH_EPS 0.000001
 
-}
+/******************************************************************************/
+//TEST(MATH, SO3)
+//{
+//    // Exponential and Logarithm mapping
+//    for (int i = 0; i < 100; ++i)
+//    {
+//        double min = -100;
+//        double max = 100;
+
+//        // Log(Exp(w)) = w
+//        so3 w(random(min,max), random(min,max), random(min,max));
+//        SO3 Expw = Exp(w);
+//        so3 LogExpw = Log(Expw);
+//        SO3 ExpLogExpw = Exp(LogExpw);
+//        so3 LogExpLogExpw = Log(ExpLogExpw);
+
+//        for (int j = 0; j < 3; ++j)
+//        {
+//            for (int k = 0; k < 3; ++k)
+//            {
+//                EXPECT_NEAR(Expw(j,k), ExpLogExpw(j,k), MATH_EPS);
+//            }
+//        }
+
+//        for (int j = 0; j < 3; ++j)
+//            EXPECT_NEAR(LogExpLogExpw[j], LogExpw[j], MATH_EPS);
+
+//    }
+//}
 
 /******************************************************************************/
 TEST(MATH, SE3)
 {
+    // Exponential and Logarithm mapping
+    for (int i = 0; i < 100; ++i)
+    {
+        double min = -100;
+        double max = 100;
 
+        // Log(Exp(S)) = S
+        se3 S(random(min,max), random(min,max), random(min,max),
+              random(min,max), random(min,max), random(min,max));
+        SE3 ExpS = Exp(S);
+        se3 LogExpS = Log(ExpS);
+        SE3 ExpLogExpS = Exp(S);
+        se3 ExpLogLogExpS = Log(ExpS);
+
+        for (int j = 0; j < 3; ++j)
+        {
+//            for (int k = 0; k < 3; ++k)
+//                EXPECT_NEAR(ExpS.getOrientation()(j,k), ExpLogExpS.getOrientation()(j,k), MATH_EPS);
+
+//            EXPECT_NEAR(ExpS.getPosition()(j), ExpLogExpS.getPosition()(j), MATH_EPS);
+        }
+
+        for (int j = 0; j < 6; ++j)
+            EXPECT_NEAR(LogExpS[j], ExpLogLogExpS[j], MATH_EPS);
+    }
+
+//    // Exp(Log(T)) = T
+
+//    // Ad(T,V) == T * V * invT
+//    se3 V(random(-1,1), random(-1,1), random(-1,1),
+//          random(-1,1), random(-1,1), random(-1,1));
+//    se3 t(random(-1,1), random(-1,1), random(-1,1),
+//          random(-1,1), random(-1,1), random(-1,1));
+//    SE3 T(t);
+
+//    se3 AdTV = Ad(T,V);
+//    Matrix4d AdTVmat_eig = AdTV.getMatrix();
+
+//    Matrix4d Teig = T.getMatrix();
+//    Matrix4d Veig = V.getMatrix();
+//    Matrix4d invTeig = T.getInverse().getMatrix();
+//    Matrix4d TVinvT = Teig * Veig * invTeig;
+
+//    //EXPECT_EQ(AdTVmat_eig, TVinvT);
+
+//    EXPECT_EQ(Ad(T,Ad(T.getInverse(),V)), V);
 }
 
 /******************************************************************************/

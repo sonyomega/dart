@@ -74,8 +74,7 @@ Runge-Kutta and fourth-order Runge Kutta.
 #define DART_KINEMATICS_BODYNODE_H
 
 #include "utils/Deprecated.h"
-#include "math/SE3.h"
-#include "math/Jacobian.h"
+#include "math/LieGroup.h"
 
 namespace dart {
 namespace renderer { class RenderInterface; }
@@ -153,22 +152,23 @@ public:
 
     /// @brief Transformation from the local coordinates of this body node to
     /// the world coordinates.
-    DEPRECATED const Eigen::Matrix4d& getWorldTransform() const
-    { return mW.getMatrix(); }
+//    DEPRECATED Eigen::Matrix4d getWorldTransform() const
+//    { return mW.getMatrix(); }
     const math::SE3& getWorldTransformation() const { return mW; }
 
     /// @brief Transformation from the world coordinates to the local
     /// coordinates of this body node.
-    DEPRECATED Eigen::Matrix4d getWorldInvTransform() const
-    { return mW.getInverse().getMatrix(); }
+//    DEPRECATED Eigen::Matrix4d getWorldInvTransform() const
+//    { return mW.getInverse().getMatrix(); }
+    math::SE3 getWorldInvTransformation() const { return math::Inv(mW); }
 
     /// @brief
     //const math::Jacobian& getJacobianBody() const { return mJacobianBody; }
 
     /// @brief
     ///
-    math::Jacobian getJacobianWorld() const
-    { return mJacobianBody.getAdjointed(math::SE3(mW.getOrientation())); }
+//    math::Jacobian getJacobianWorld() const
+//    { return mJacobianBody.getAdjointed(math::SE3(mW.getOrientation())); }
 
     /// @brief
     const math::se3& getBodyVelocity() const { return mV; }

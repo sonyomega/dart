@@ -475,7 +475,7 @@ namespace dart {
         MatrixXd ConstraintDynamics::getJacobian(kinematics::BodyNode* node, const Vector3d& p) {
             int nDofs = node->getSkel()->getNumDofs();
             MatrixXd Jt = MatrixXd::Zero(nDofs, 3);
-            Vector3d invP = xformHom(node->getWorldInvTransform(), p);
+            Vector3d invP = xformHom(node->getWorldInvTransformation().getEigenMatrix(), p);
 
             //==================================================================
             // TODO: JS COMMENTED

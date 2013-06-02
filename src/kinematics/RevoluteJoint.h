@@ -62,7 +62,7 @@ public:
     // Kinematical Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setAxis(const math::so3& _axis) { mAxis = _axis; }
+    void setAxis(const math::so3& _axis) { assert(math::Norm(_axis) == 1); mAxis = _axis; }
 
     /// @brief
     const math::so3& getAxis() const { return mAxis; }

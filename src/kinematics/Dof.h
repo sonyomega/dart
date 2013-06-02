@@ -39,6 +39,7 @@
 #ifndef DART_KINEMATICS_DOF_H
 #define DART_KINEMATICS_DOF_H
 
+#include <cassert>
 #include <string>
 
 #include "utils/Deprecated.h"
@@ -128,10 +129,10 @@ public:
     double get_init_q() const { return init_q; }   ///< Initial value of q
     double get_init_dq() const { return init_dq; } ///< Initial value of dq
 
-    void set_q(double _q) { q = _q; }
-    void set_dq(double _dq) { dq = _dq; }
-    void set_ddq(double _ddq) { ddq = _ddq; }
-    void set_tau(double _tau) { tau = _tau; }
+    void set_q(double _q) { assert(_q == _q); q = _q; }
+    void set_dq(double _dq) { assert(_dq == _dq); dq = _dq; }
+    void set_ddq(double _ddq) { assert(_ddq == _ddq); ddq = _ddq; }
+    void set_tau(double _tau) { assert(_tau == _tau); tau = _tau; }
 
     void set_qMin(double _qMin) { qMin = _qMin; }
     void set_dqMin(double _dqMin) { dqMin = _dqMin; }

@@ -39,6 +39,7 @@
 #include <gtest/gtest.h>
 #include "TestHelpers.h"
 
+#include "math/LieGroup.h"
 #include "kinematics/RevoluteJoint.h"
 #include "dynamics/BodyNodeDynamics.h"
 #include "dynamics/SkeletonDynamics.h"

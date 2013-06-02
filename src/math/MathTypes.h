@@ -35,12 +35,22 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_MATH_H
-#define DART_MATH_H
+#ifndef DART_MATH_MATH_TYPES_H
+#define DART_MATH_MATH_TYPES_H
 
-#include "math/Inertia.h"
-#include "math/Jacobian.h"
-#include "math/SE3.h"
-#include "math/SO3.h"
+#include <Eigen/Dense>
 
-#endif
+#define LIEGROUP_EPS 10e-9
+#define LIEGROUP_PI				(3.1415926535897932384626433832795)	//< $\pi$
+#define LIEGROUP_PI_SQRT2		(2.22144146907918312351)	//< $\frac {pi}{\sqrt{2}}$
+#define LIEGROUP_PI_SQR			(9.86960440108935861883)	//< $\pi^2$
+
+namespace dart {
+namespace math {
+
+typedef Eigen::Matrix<double, 6, 1> Vector6d;
+
+} // namespace math
+} // namespace dart
+
+#endif // DART_MATH_MATH_TYPES_H

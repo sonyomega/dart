@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/06/2013
+ * Date: 05/29/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,98 +35,77 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_MATH_LIE_GROUPS_H
-#define DART_MATH_LIE_GROUPS_H
+#ifndef DART_KINEMATICS_FREE_JOINT_H
+#define DART_KINEMATICS_FREE_JOINT_H
 
 #include <Eigen/Dense>
-#include "math/UtilsMath.h"
-#include "math/SE3.h"
 
-// TODO: Let's use noalias().
-// TODO: Not using Eigen?
+#include "kinematics/Dof.h"
+#include "kinematics/Joint.h"
+
 namespace dart {
-namespace math {
+namespace kinematics {
 
-//==============================================================================
-class Jacobian
+class FreeJoint : public Joint
 {
 public:
-    // Aligned allocator for Eigen member variable.
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
     /// @brief
-    Jacobian();
-    
-    /// @brief
-    explicit Jacobian(unsigned int _size);
+    FreeJoint();
 
     /// @brief
-    explicit Jacobian(const Eigen::MatrixXd& _J);
+    virtual ~FreeJoint();
+
+    //--------------------------------------------------------------------------
+    // Kinematical Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    void setAxis(const math::so3& _axis) { mAxis = _axis; }
 
     /// @brief
-    virtual ~Jacobian();
-    
-public:
-    /// @brief
-    se3 operator*(const Eigen::VectorXd& _qdot);
+    const math::so3& getAxis() const { return mAxis; }
 
-    /// @brief
-    /// @return Generalized forces.
-    Eigen::VectorXd getInnerProduct(const dse3& _F) const;
+    //--------------------------------------------------------------------------
+    // Structueral Properties
+    //--------------------------------------------------------------------------
 
-public:
-    /// @brief
-    void setSize(int _size) { mJ.resize(_size); }
-    
-    /// @brief
-    unsigned int getSize() const { return mJ.size(); }
-    
-    /// @brief
-    void setMatrix(const Eigen::MatrixXd& _J);
-    
-    /// @brief
-    Eigen::MatrixXd getMatrix() const;
-    
-    /// @brief
-    void setZero();
-
-    /// @brief
-    void setColumn(int _idx, const se3& _J) { mJ[_idx] = _J; }
-    
-    /// @brief
-    se3 getColumn(int _idx);
-
-    /// @brief
-    Jacobian getColumns(int _idx, int _size);
-    
-    /// @brief
-    void setLinear(int _idx, Eigen::Vector3d& _Jv) { mJ[_idx].setLinear(_Jv); }
-    
-    /// @brief
-    Eigen::Vector3d getLinear(int _idx) const { return mJ[_idx].getLinear(); }
-    
-    /// @brief
-    void setAngular(int _idx, so3& _Jw) { mJ[_idx].setAngular(_Jw); }
-    
-    /// @brief
-    so3 getAngular(int _idx) const { return mJ[_idx].getAngular(); }
-    
-    /// @brief
-    // TODO: NOT IMPLEMENTED
-    Jacobian getAdjointed(const SE3& _T) const;
-
-    /// @brief
-    // TODO: NOT IMPLEMENTED
-    Jacobian getAdjointedInv(const SE3& _Tinv) const;
+    //--------------------------------------------------------------------------
+    // Recursive Kinematics Algorithms
+    //--------------------------------------------------------------------------
 
 protected:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    // Document inherited.
+    virtual void _updateTransformation();
+
+    // Document inherited.
+    virtual void _updateVelocity();
+
+    // Document inherited.
+    virtual void _updateAcceleration();
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
     /// @brief
-    std::vector<se3> mJ;
-    
+    Coordinate mCoordinate[6];
+
+    /// @brief Rotational axis.
+    math::so3 mAxis;
+
 private:
+
+public:
+    //
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
-} // namespace math
+} // namespace kinematics
 } // namespace dart
 
-#endif // DART_MATH_LIE_GROUPS_H
+#endif // #ifndef DART_KINEMATICS_REVOLUTE_JOINT_H
+

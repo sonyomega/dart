@@ -67,7 +67,7 @@ void SkeletonDynamics::initDynamics()
     mCvec = VectorXd::Zero(getDOF());
     mG = VectorXd::Zero(getDOF());
     mCg = VectorXd::Zero(getDOF());
-    mFint = VectorXd::Zero(getDOF());
+    set_tau(VectorXd::Zero(getDOF()));
     mFext = VectorXd::Zero(getNumDofs());
 }
 
@@ -119,8 +119,8 @@ void SkeletonDynamics::computeForwardDynamicsID(
     mMInv = mM.inverse();
     //mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
 
-    Eigen::VectorXd new_ddq = mMInv * (tau_old - b);
-    set_ddq(new_ddq);
+//    Eigen::VectorXd new_ddq = mMInv * (tau_old - b);
+//    set_ddq(new_ddq);
 }
 
 void SkeletonDynamics::computeForwardDynamicsFS(

@@ -10,7 +10,9 @@ int main(int argc, char* argv[])
             = dart::simulation::readDARTFile(
                   //DART_DATA_PATH"/dart/single_pendulum.dart");
                   //DART_DATA_PATH"/dart/double_pendulum.dart");
-                  DART_DATA_PATH"/dart/boxes.dart");
+                  //DART_DATA_PATH"/dart/boxes.dart");
+                  DART_DATA_PATH"/dart/ball_joints.dart");
+                  //DART_DATA_PATH"/dart/translational_joints.dart");
     assert(myWorld != NULL);
 
     // create a window and link it to the world

@@ -2,8 +2,7 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>,
- *            Jeongseok Lee <jslee02@gmail.com>
+ * Author(s): Jeongseok Lee <jslee02@gmail.com>
  * Date: 05/21/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
@@ -36,89 +35,57 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "renderer/RenderInterface.h"
-#include "kinematics/BodyNode.h"
-#include "kinematics/Joint.h"
+#include "kinematics/TranslationalJoint.h"
 
 namespace dart {
 namespace kinematics {
 
-Joint::Joint()
-    : mName("Unknown joint"),
-      mJointType(UNKNOWN),
-      mParentBody(NULL),
-      mChildBody(NULL),
-      mT_ParentBodyToJoint(math::SE3()),
-      mT_ChildBodyToJoint(math::SE3()),
-      mT(math::SE3()),
-      mV(math::se3()),
-      mS(math::Jacobian()),
-      mdV(math::se3()),
-      mdS(math::Jacobian())
+TranslationalJoint::TranslationalJoint()
+    : Joint()
+{
+    mName.assign("Translational joint");
+    mJointType = TRANSLATIONAL;
+    mDofs.push_back(&mCoordinate[0]);
+    mDofs.push_back(&mCoordinate[1]);
+    mDofs.push_back(&mCoordinate[2]);
+    mS.setSize(3);
+    mdS.setSize(3);
+}
+
+TranslationalJoint::~TranslationalJoint()
 {
 }
 
-Joint::~Joint()
+void TranslationalJoint::_updateTransformation()
 {
+    // T
+    math::Vec3 v(mCoordinate[0].get_q(),
+            mCoordinate[1].get_q(),
+            mCoordinate[2].get_q());
+
+    mT = mT_ParentBodyToJoint
+         * math::Exp(math::se3(math::Axis(0.0, 0.0, 0.0), v))
+         * math::Inv(mT_ChildBodyToJoint);
 }
 
-void Joint::setParentBody(BodyNode* _body)
+void TranslationalJoint::_updateVelocity()
 {
-    mParentBody = _body;
+    // S
+    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 1, 0, 0)));
+    mS.setColumn(1, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 0, 1, 0)));
+    mS.setColumn(2, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 0, 0, 1)));
 
-    // TODO: Use builder
-    if (mParentBody != NULL)
-    {
-        mParentBody->addChildJoint(this);
-
-        if (mChildBody != NULL)
-        {
-            mChildBody->setParentBody(mParentBody);
-            mParentBody->addChildBody(mChildBody);
-        }
-    }
+    // V = S * dq
+    mV = mS * get_dq();
 }
 
-void Joint::setChildBody(BodyNode* _body)
+void TranslationalJoint::_updateAcceleration()
 {
-    mChildBody = _body;
+    // dS = 0
+    mdS.setZero();
 
-    // TODO: Use builder
-    if (mChildBody != NULL)
-    {
-        mChildBody->setParentJoint(this);
-
-        if (mParentBody != NULL)
-        {
-            mParentBody->addChildBody(mChildBody);
-            mChildBody->setParentBody(mParentBody);
-        }
-    }
-}
-
-void Joint::setLocalTransformFromParentBody(const math::SE3& _T)
-{
-    mT_ParentBodyToJoint = _T;
-}
-
-void Joint::setLocalTransformFromChildBody(const math::SE3& _T)
-{
-    mT_ChildBodyToJoint = _T;
-}
-
-void Joint::updateKinematics(bool _firstDerivative,
-                                  bool _secondDerivative)
-{
-    _updateTransformation();
-    _updateVelocity();
-    _updateAcceleration();
-}
-
-void Joint::applyGLTransform(renderer::RenderInterface* _ri)
-{
-    Eigen::Affine3d affine;
-    affine.matrix() = mT.getEigenMatrix();
-    _ri->transform(affine);
+    // dV = dS * dq + S * ddq
+    mdV = mS * get_ddq();
 }
 
 } // namespace kinematics

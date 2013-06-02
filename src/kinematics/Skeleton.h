@@ -42,8 +42,8 @@
 #include <vector>
 #include <Eigen/Dense>
 
+#include "math/LieGroup.h"
 #include "utils/Deprecated.h"
-#include "math/Jacobian.h"
 #include "kinematics/System.h"
 
 namespace dart {

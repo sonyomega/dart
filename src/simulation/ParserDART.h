@@ -44,14 +44,15 @@
 // http://www.grinninglizard.com/tinyxml2/index.html
 #include <tinyxml2.h>
 
-#include "math/SO3.h"
-#include "math/SE3.h"
+#include "math/LieGroup.h"
 
 namespace dart {
 
 namespace kinematics {
 class Joint;
 class RevoluteJoint;
+class BallJoint;
+class TranslationalJoint;
 }
 
 namespace dynamics {
@@ -73,22 +74,6 @@ class ElementEnumerator;
 #define VSK_OK 0
 #define VSK_ERROR 1
 
-enum ValueType
-{
-    UNKNOWN,
-    BOOL,
-    INT,
-    UINT,
-    FLOAT,
-    DOUBLE,
-    CHAR,
-    VECTOR2,
-    VECTOR3,
-    so3,
-    SO3,
-    SE3
-};
-
 std::string toString(bool _v);
 std::string toString(int _v);
 std::string toString(unsigned int _v);
@@ -98,7 +83,7 @@ std::string toString(char _v);
 std::string toString(const Eigen::Vector2d& _v);
 std::string toString(const Eigen::Vector3d& _v);
 std::string toString(const math::so3& _v);
-std::string toString(const math::SO3& _v);
+//std::string toString(const math::SO3& _v);
 std::string toString(const math::SE3& _v);
 
 bool            toBool(const std::string& _str);
@@ -110,7 +95,7 @@ char            toChar(const std::string& _str);
 Eigen::Vector2d toVector2d(const std::string& _str);
 Eigen::Vector3d toVector3d(const std::string& _str);
 math::so3       toso3(const std::string& _str);
-math::SO3       toSO3(const std::string& _str);
+//math::SO3       toSO3(const std::string& _str);
 math::SE3       toSE3(const std::string& _str);
 
 std::string getValueString(tinyxml2::XMLElement* _parentElement,
@@ -143,8 +128,8 @@ Eigen::Vector3d getValueVector3d(tinyxml2::XMLElement* _parentElement,
 math::so3 getValueso3(tinyxml2::XMLElement* _parentElement,
                       const std::string& _name);
 
-math::SO3 getValueSO3(tinyxml2::XMLElement* _parentElement,
-                      const std::string& _name);
+//math::SO3 getValueSO3(tinyxml2::XMLElement* _parentElement,
+//                      const std::string& _name);
 
 math::SE3 getValueSE3(tinyxml2::XMLElement* _parentElement,
                       const std::string& _name);
@@ -176,7 +161,15 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
                              dynamics::SkeletonDynamics* _skeleton);
 
 /// @brief
-kinematics::RevoluteJoint* readRevoluteJoint(tinyxml2::XMLElement* _revoluteJointElement,
+kinematics::RevoluteJoint* readRevoluteJoint(
+        tinyxml2::XMLElement* _revoluteJointElement,
+        dynamics::SkeletonDynamics* _skeleton);
+
+kinematics::BallJoint* readBallJoint(
+        tinyxml2::XMLElement* _ballJointElement,
+        dynamics::SkeletonDynamics* _skeleton);
+
+kinematics::TranslationalJoint* readTranslationalJoint(tinyxml2::XMLElement* _translationalJointElement,
         dynamics::SkeletonDynamics* _skeleton);
 
 //------------------------------------------------------------------------------

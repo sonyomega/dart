@@ -271,7 +271,7 @@ inline Vector3d crossOperator(const MatrixXd & m) {
 /// @param[in] _precision the precision
 /// @return the value for the specified precision
 template<typename T>
-inline T precision(const T &_a, const unsigned int &_precision)
+inline T precision(const T& _a, const unsigned int& _precision)
 {
   return boost::math::round(_a * pow(10, _precision)) / pow(10, _precision);
 }

@@ -35,15 +35,17 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "math/SO3.h"
 #include "kinematics/RevoluteJoint.h"
 
 namespace dart {
+
+using namespace math;
+
 namespace kinematics {
 
 RevoluteJoint::RevoluteJoint()
     : Joint(),
-      mAxis(math::so3())
+      mAxis(math::so3(1.0, 0.0, 0.0))
 {
     mName.assign("Revolute joint");
     mJointType = REVOLUTE;
@@ -60,17 +62,17 @@ void RevoluteJoint::_updateTransformation()
 {
     // T
     mT = mT_ParentBodyToJoint
-         * math::SE3(mAxis * mCoordinate.get_q())
-         * mT_ChildBodyToJoint.getInverse();
+         * Exp(se3(mAxis * mCoordinate.get_q(), Vec3(0.0, 0.0, 0.0)))
+         * Inv(mT_ChildBodyToJoint);
 }
 
 void RevoluteJoint::_updateVelocity()
 {
     // S
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(mAxis)));
+    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(mAxis, Vec3(0.0, 0.0, 0.0))));
 
     // V = S * dq
-    mV = mS * get_q();
+    mV = mS * get_dq();
     //mV.setAngular(mAxis * mCoordinate.get_q());
 }
 

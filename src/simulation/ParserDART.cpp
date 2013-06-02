@@ -44,12 +44,17 @@
 
 // Local Files
 #include "utils/UtilsCode.h"
+
 #include "kinematics/ShapeBox.h"
 #include "kinematics/ShapeCylinder.h"
 #include "kinematics/ShapeEllipsoid.h"
 #include "kinematics/RevoluteJoint.h"
+#include "kinematics/TranslationalJoint.h"
+#include "kinematics/BallJoint.h"
+
 #include "dynamics/BodyNodeDynamics.h"
 #include "dynamics/SkeletonDynamics.h"
+
 #include "simulation/World.h"
 #include "simulation/ParserDART.h"
 
@@ -405,7 +410,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
         {
             math::SE3 W = getValueSE3(vizElement, "transformation");
             Eigen::Affine3d AF;
-            AF.matrix() = W.getMatrix();
+            AF.matrix() = W.getEigenMatrix();
             shape->setTransform(AF);
         }
 
@@ -461,7 +466,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
         {
             math::SE3 W = getValueSE3(colElement, "transformation");
             Eigen::Affine3d AF;
-            AF.matrix() = W.getMatrix();
+            AF.matrix() = W.getEigenMatrix();
             shape->setTransform(AF);
         }
     }
@@ -483,8 +488,10 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     assert(!type.empty());
     if (type == std::string("revolute"))
         newJoint = readRevoluteJoint(_jointElement, _skeleton);
-//    if (type ==std::string("prismatic"))
-//        ...
+    if (type ==std::string("ball"))
+        newJoint = readBallJoint(_jointElement, _skeleton);
+    if (type ==std::string("translational"))
+        newJoint = readTranslationalJoint(_jointElement, _skeleton);
     assert(newJoint != NULL);
 
     //--------------------------------------------------------------------------
@@ -532,20 +539,21 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     // transformation
     tinyxml2::XMLElement* transformationElement = NULL;
     transformationElement = _jointElement->FirstChildElement("transformation");
+    math::SE3 parentWorld;
+    math::SE3 childToJoint;
+    math::SE3 childWorld = childBody->getWorldTransformation();
+    if (parentBody)
+         parentWorld = parentBody->getWorldTransformation();
     if (transformationElement != NULL)
     {
         std::string strTransformation = transformationElement->GetText();
-        math::SE3 parentWorld;
-        if (parentBody)
-             parentWorld = parentBody->getWorldTransformation();
-        math::SE3 childWorld = childBody->getWorldTransformation();
-        math::SE3 childToJoint = toSE3(strTransformation);
-        math::SE3 parentToJoint = parentWorld.getInverse()
-                                  * childWorld
-                                  * childToJoint;
-        newJoint->setLocalTransformFromChildBody(childToJoint);
-        newJoint->setLocalTransformFromParentBody(parentToJoint);
+        childToJoint = toSE3(strTransformation);
     }
+    math::SE3 parentToJoint = math::Inv(parentWorld)
+                              * childWorld
+                              * childToJoint;
+    newJoint->setLocalTransformFromChildBody(childToJoint);
+    newJoint->setLocalTransformFromParentBody(parentToJoint);
 
     return newJoint;
 }
@@ -569,8 +577,34 @@ kinematics::RevoluteJoint*readRevoluteJoint(
     std::string strXYZ = xyzElement->GetText();
     math::so3 axis = toso3(strXYZ);
     newRevoluteJoint->setAxis(axis);
-;
+
     return newRevoluteJoint;
+}
+
+
+kinematics::BallJoint*readBallJoint(
+        tinyxml2::XMLElement* _ballJointElement,
+        dynamics::SkeletonDynamics* _skeleton)
+{
+    assert(_ballJointElement != NULL);
+    assert(_skeleton != NULL);
+
+    kinematics::BallJoint* newBallJoint = new kinematics::BallJoint;
+
+    return newBallJoint;
+}
+
+kinematics::TranslationalJoint*readTranslationalJoint(
+        tinyxml2::XMLElement* _translationalJointElement,
+        dynamics::SkeletonDynamics* _skeleton)
+{
+    assert(_translationalJointElement != NULL);
+    assert(_skeleton != NULL);
+
+    kinematics::TranslationalJoint* newTranslationalJoint
+            = new kinematics::TranslationalJoint;
+
+    return newTranslationalJoint;
 }
 
 string toString(bool _v)
@@ -628,14 +662,26 @@ string toString(const math::so3& _v)
     return boost::lexical_cast<std::string>(_v);
 }
 
-std::string toString(const math::SO3& _v)
-{
-    return boost::lexical_cast<std::string>(_v);
-}
+//std::string toString(const math::SO3& _v)
+//{
+//    return boost::lexical_cast<std::string>(_v);
+//}
 
 std::string toString(const math::SE3& _v)
 {
+    dterr << "Not implemented.\n";
     return boost::lexical_cast<std::string>(_v);
+
+    std::string ret;
+
+    return ret;
+
+
+    std::ostringstream ostr;
+    std::string str;
+    int nVal = 0;
+    ostr << nVal ;
+    str = ostr.str();
 }
 
 bool toBool(const string& _str)
@@ -767,59 +813,56 @@ math::so3 toso3(const string& _str)
         }
     }
 
-    ret(0) = elements[0];
-    ret(1) = elements[1];
-    ret(2) = elements[2];
+    ret[0] = elements[0];
+    ret[1] = elements[1];
+    ret[2] = elements[2];
 
     return ret;
 }
 
 
-math::SO3 toSO3(const string& _str)
-{
-    math::SO3 ret;
-    Eigen::Vector3d EulerXYZ;
+//math::SO3 toSO3(const string& _str)
+//{
+//    math::SO3 ret;
+//    Eigen::Vector3d EulerXYZ;
 
-    std::vector<double> elements;
-    std::vector<std::string> pieces;
-    boost::split(pieces, _str, boost::is_any_of(" "));
-    assert(pieces.size() == 3);
+//    std::vector<double> elements;
+//    std::vector<std::string> pieces;
+//    boost::split(pieces, _str, boost::is_any_of(" "));
+//    assert(pieces.size() == 3);
 
-    for (int i = 0; i < pieces.size(); ++i)
-    {
-        if (pieces[i] != "")
-        {
-            try
-            {
-                elements.push_back(boost::lexical_cast<double>(pieces[i].c_str()));
-            }
-            catch(boost::bad_lexical_cast& e)
-            {
-                std::cerr << "value ["
-                          << pieces[i]
-                          << "] is not a valid double for EulerXYZ["
-                          << i
-                          << "]"
-                          << std::endl;
-            }
-        }
-    }
+//    for (int i = 0; i < pieces.size(); ++i)
+//    {
+//        if (pieces[i] != "")
+//        {
+//            try
+//            {
+//                elements.push_back(boost::lexical_cast<double>(pieces[i].c_str()));
+//            }
+//            catch(boost::bad_lexical_cast& e)
+//            {
+//                std::cerr << "value ["
+//                          << pieces[i]
+//                          << "] is not a valid double for EulerXYZ["
+//                          << i
+//                          << "]"
+//                          << std::endl;
+//            }
+//        }
+//    }
 
-    EulerXYZ(0) = elements[0];
-    EulerXYZ(1) = elements[1];
-    EulerXYZ(2) = elements[2];
+//    EulerXYZ(0) = elements[0];
+//    EulerXYZ(1) = elements[1];
+//    EulerXYZ(2) = elements[2];
 
-    ret.setEulerXYZ(EulerXYZ);
+//    ret.setEulerXYZ(EulerXYZ);
 
-    return ret;
-}
+//    return ret;
+//}
 
 
 math::SE3 toSE3(const string& _str)
 {
-    math::SE3 ret;
-    Eigen::Vector3d EulerXYZ;
-
     std::vector<double> elements;
     std::vector<std::string> pieces;
     boost::split(pieces, _str, boost::is_any_of(" "));
@@ -845,10 +888,8 @@ math::SE3 toSE3(const string& _str)
         }
     }
 
-    ret.setValues(elements[0], elements[1], elements[2],
-                  elements[3], elements[4], elements[5]);
-
-    return ret;
+    return math::EulerXYZ(math::Vec3(elements[0], elements[1], elements[2]),
+                          math::Vec3(elements[3], elements[4], elements[5]));
 }
 
 std::string getValueString(tinyxml2::XMLElement* _parentElement, const string& _name)
@@ -951,15 +992,15 @@ math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const string& _name)
     return toso3(str);
 }
 
-math::SO3 getValueSO3(tinyxml2::XMLElement* _parentElement, const string& _name)
-{
-    assert(_parentElement != NULL);
-    assert(!_name.empty());
+//math::SO3 getValueSO3(tinyxml2::XMLElement* _parentElement, const string& _name)
+//{
+//    assert(_parentElement != NULL);
+//    assert(!_name.empty());
 
-    std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
+//    std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
 
-    return toSO3(str);
-}
+//    return toSO3(str);
+//}
 
 math::SE3 getValueSE3(tinyxml2::XMLElement* _parentElement, const string& _name)
 {
@@ -986,6 +1027,7 @@ tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement,
 
     return _parentElement->FirstChildElement(_name.c_str());
 }
+
 
 
 

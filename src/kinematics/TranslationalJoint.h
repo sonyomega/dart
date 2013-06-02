@@ -2,8 +2,7 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>,
- *            Jeongseok Lee <jslee02@gmail.com>
+ * Author(s): Jeongseok Lee <jslee02@gmail.com>
  * Date: 05/21/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
@@ -36,90 +35,70 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "renderer/RenderInterface.h"
-#include "kinematics/BodyNode.h"
+#ifndef DART_KINEMATICS_TRANSLATIONAL_JOINT_H
+#define DART_KINEMATICS_TRANSLATIONAL_JOINT_H
+
+#include <Eigen/Dense>
+
+#include "kinematics/Dof.h"
 #include "kinematics/Joint.h"
 
 namespace dart {
 namespace kinematics {
 
-Joint::Joint()
-    : mName("Unknown joint"),
-      mJointType(UNKNOWN),
-      mParentBody(NULL),
-      mChildBody(NULL),
-      mT_ParentBodyToJoint(math::SE3()),
-      mT_ChildBodyToJoint(math::SE3()),
-      mT(math::SE3()),
-      mV(math::se3()),
-      mS(math::Jacobian()),
-      mdV(math::se3()),
-      mdS(math::Jacobian())
+class TranslationalJoint : public Joint
 {
-}
+public:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    TranslationalJoint();
 
-Joint::~Joint()
-{
-}
+    /// @brief
+    virtual ~TranslationalJoint();
 
-void Joint::setParentBody(BodyNode* _body)
-{
-    mParentBody = _body;
+    //--------------------------------------------------------------------------
+    // Kinematical Properties
+    //--------------------------------------------------------------------------
 
-    // TODO: Use builder
-    if (mParentBody != NULL)
-    {
-        mParentBody->addChildJoint(this);
 
-        if (mChildBody != NULL)
-        {
-            mChildBody->setParentBody(mParentBody);
-            mParentBody->addChildBody(mChildBody);
-        }
-    }
-}
+    //--------------------------------------------------------------------------
+    // Structueral Properties
+    //--------------------------------------------------------------------------
 
-void Joint::setChildBody(BodyNode* _body)
-{
-    mChildBody = _body;
+    //--------------------------------------------------------------------------
+    // Recursive Kinematics Algorithms
+    //--------------------------------------------------------------------------
 
-    // TODO: Use builder
-    if (mChildBody != NULL)
-    {
-        mChildBody->setParentJoint(this);
+protected:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    // Document inherited.
+    virtual void _updateTransformation();
 
-        if (mParentBody != NULL)
-        {
-            mParentBody->addChildBody(mChildBody);
-            mChildBody->setParentBody(mParentBody);
-        }
-    }
-}
+    // Document inherited.
+    virtual void _updateVelocity();
 
-void Joint::setLocalTransformFromParentBody(const math::SE3& _T)
-{
-    mT_ParentBodyToJoint = _T;
-}
+    // Document inherited.
+    virtual void _updateAcceleration();
 
-void Joint::setLocalTransformFromChildBody(const math::SE3& _T)
-{
-    mT_ChildBodyToJoint = _T;
-}
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    Coordinate mCoordinate[3];
 
-void Joint::updateKinematics(bool _firstDerivative,
-                                  bool _secondDerivative)
-{
-    _updateTransformation();
-    _updateVelocity();
-    _updateAcceleration();
-}
+private:
 
-void Joint::applyGLTransform(renderer::RenderInterface* _ri)
-{
-    Eigen::Affine3d affine;
-    affine.matrix() = mT.getEigenMatrix();
-    _ri->transform(affine);
-}
+public:
+    //
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
 
 } // namespace kinematics
 } // namespace dart
+
+#endif // #ifndef DART_KINEMATICS_BALL_JOINT_H
+

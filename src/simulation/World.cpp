@@ -92,8 +92,8 @@ void World::setState(const Eigen::VectorXd& _newState)
         int start = mIndices[i] * 2;
         int size = getSkeleton(i)->getNumDofs();
 
-        VectorXd q = _newState.segment(start, size);
-        VectorXd dq = _newState.segment(start + size, size);
+        Eigen::VectorXd q = _newState.segment(start, size);
+        Eigen::VectorXd dq = _newState.segment(start + size, size);
 
         getSkeleton(i)->set_q(q);
         getSkeleton(i)->set_dq(dq);

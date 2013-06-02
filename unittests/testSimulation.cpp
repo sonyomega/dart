@@ -64,7 +64,7 @@ TEST(SIMULATION, PARSER_DATA_STRUCTUER)
     Eigen::Vector2d v7 = Eigen::Vector2d::Ones();
     Eigen::Vector3d v8 = Eigen::Vector3d::Ones();
     math::so3 v9;
-    math::SO3 v10;
+    //math::SO3 v10;
     math::SE3 v11;
 
     std::string str1 = toString(v1);
@@ -76,7 +76,7 @@ TEST(SIMULATION, PARSER_DATA_STRUCTUER)
     std::string str7 = toString(v7);
     std::string str8 = toString(v8);
     std::string str9 = toString(v9);
-    std::string str10 = toString(v10);
+    //std::string str10 = toString(v10);
     std::string str11 = toString(v11);
 
     bool b = toBool(str1);
@@ -88,7 +88,7 @@ TEST(SIMULATION, PARSER_DATA_STRUCTUER)
     Eigen::Vector2d vec2 = toVector2d(str7);
     Eigen::Vector3d vec3 = toVector3d(str8);
     math::so3 valso3 = toso3(str9);
-    math::SO3 valSO3 = toSO3(str10);
+    //math::SO3 valSO3 = toSO3(str10);
     math::SE3 valSE3 = toSE3(str11);
 
     EXPECT_EQ(b, v1);
@@ -100,7 +100,7 @@ TEST(SIMULATION, PARSER_DATA_STRUCTUER)
     EXPECT_EQ(vec2, v7);
     EXPECT_EQ(vec3, v8);
     EXPECT_EQ(valso3, v9);
-    EXPECT_EQ(valSO3, v10);
+    //EXPECT_EQ(valSO3, v10);
     EXPECT_EQ(valSE3, v11);
 }
 

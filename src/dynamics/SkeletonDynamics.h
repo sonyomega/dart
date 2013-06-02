@@ -100,7 +100,7 @@ public:
     Eigen::VectorXd getGravityVector() const { return mG; }
     Eigen::VectorXd getCombinedVector() const { return mCg; }
     Eigen::VectorXd getExternalForces() const { return mFext; }
-    Eigen::VectorXd getInternalForces() const { return mFint; }
+    Eigen::VectorXd getInternalForces() const { return get_tau(); }
 
     //--------------------------------------------------------------------------
     // Recursive Dynamics Algorithms
@@ -119,15 +119,15 @@ public:
 
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamicsID(const Eigen::Vector3d& _gravity,
-                                   bool _equationsOfMotion = true);
+                                  bool _equationsOfMotion = true);
 
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamicsFS(const Eigen::Vector3d& _gravity,
-                                   bool _equationsOfMotion = true);
+                                  bool _equationsOfMotion = true);
 
     /// @brief (q, dq, ddq_v, tau_u) --> (tau_v, ddq_u)
     void computeHybridDynamicsFS(const Eigen::Vector3d& _gravity,
-                                  bool _equationsOfMotion = true);
+                                 bool _equationsOfMotion = true);
 
     /// @brief (q, dq) --> M, C, G
     void computeEquationsOfMotionID(const Eigen::Vector3d& _gravity);
@@ -165,7 +165,7 @@ protected:
     Eigen::VectorXd mG;    ///< Gravity vector for the skeleton; computed in nonrecursive dynamics only
     Eigen::VectorXd mCg;   ///< combined coriolis and gravity term == mC*qdot + g
     Eigen::VectorXd mFext; ///< external forces vector for the skeleton
-    Eigen::VectorXd mFint; ///< internal forces vector for the skeleton; computed by an external controller
+    //Eigen::VectorXd mFint; ///< internal forces vector for the skeleton; computed by an external controller
 
     /// @brief
     //std::vector<BodyNodeDynamics*> mDynamicsBodies;

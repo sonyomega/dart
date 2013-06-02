@@ -39,8 +39,7 @@
 #ifndef DART_KINEMATICS_JOINT_H
 #define DART_KINEMATICS_JOINT_H
 
-#include "math/SE3.h"
-#include "math/Jacobian.h"
+#include "math/LieGroup.h"
 #include "kinematics/System.h"
 
 namespace dart {
@@ -75,7 +74,7 @@ public:
         UNIVERSAL,
         PLANAR,        // 2 dof
         TRANSLATIONAL,
-        SPHERICAL,     // 3 dof
+        BALL,     // 3 dof
         FREE           // 6 dof
     };
 
@@ -158,7 +157,7 @@ public:
                           bool _secondDerivative = true);
 
 
-    void updateGlobalKinematics();
+    //void updateGlobalKinematics();
 
     //--------------------------------------------------------------------------
     //
