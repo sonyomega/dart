@@ -41,11 +41,11 @@
 #include <fcl/shape/geometric_shapes.h>
 #include <fcl/BVH/BVH_model.h>
 
-#include "kinematics/BodyNode.h"
-#include "kinematics/Shape.h"
-#include "kinematics/ShapeMesh.h"
-#include "kinematics/ShapeCylinder.h"
-#include "kinematics/BodyNode.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/Shape.h"
+#include "dynamics/ShapeMesh.h"
+#include "dynamics/ShapeCylinder.h"
+#include "dynamics/BodyNode.h"
 
 #include "renderer/LoadOpengl.h"
 
@@ -56,22 +56,22 @@
 namespace dart {
 namespace collision {
 
-FCLMESHCollisionNode::FCLMESHCollisionNode(kinematics::BodyNode* _bodyNode)
+FCLMESHCollisionNode::FCLMESHCollisionNode(dynamics::BodyNode* _bodyNode)
     : CollisionNode(_bodyNode),
       mMesh(NULL)
 {
-    kinematics::Shape *shape = _bodyNode->getCollisionShape();
+    dynamics::Shape *shape = _bodyNode->getCollisionShape();
 
     switch (shape->getShapeType()) {
-        case kinematics::Shape::P_ELLIPSOID:
+        case dynamics::Shape::P_ELLIPSOID:
             mMesh = createEllipsoid<fcl::OBBRSS>(shape->getDim()[0], shape->getDim()[1], shape->getDim()[2]);
             break;
-        case kinematics::Shape::P_BOX:
+        case dynamics::Shape::P_BOX:
             mMesh = createCube<fcl::OBBRSS>(shape->getDim()[0], shape->getDim()[1], shape->getDim()[2]);
             break;
-        case kinematics::Shape::P_CYLINDER:
+        case dynamics::Shape::P_CYLINDER:
         {
-            kinematics::ShapeCylinder *cylinder = dynamic_cast<kinematics::ShapeCylinder *>(shape);
+            dynamics::ShapeCylinder *cylinder = dynamic_cast<dynamics::ShapeCylinder *>(shape);
             if(cylinder) {
                 double radius = cylinder->getRadius();
                 double height = cylinder->getHeight();
@@ -79,9 +79,9 @@ FCLMESHCollisionNode::FCLMESHCollisionNode(kinematics::BodyNode* _bodyNode)
             }
             break;
         }
-        case kinematics::Shape::P_MESH:
+        case dynamics::Shape::P_MESH:
         {
-            kinematics::ShapeMesh *shapeMesh = dynamic_cast<kinematics::ShapeMesh *>(shape);
+            dynamics::ShapeMesh *shapeMesh = dynamic_cast<dynamics::ShapeMesh *>(shape);
             if(shapeMesh) {
                 mMesh = createMesh<fcl::OBBRSS>(shape->getDim()[0], shape->getDim()[1], shape->getDim()[2], shapeMesh->getMesh());
             }
@@ -210,9 +210,9 @@ int FCLMESHCollisionNode::checkCollision(
     ////////////////////////////////////////////////////////////////////////
     // TODO: SPECIAL TEST CODE FOR GAZEBO SUPPORT BRANCH !!!
     ////////////////////////////////////////////////////////////////////////
-    kinematics::Shape* collShape = mBodyNode->getCollisionShape();
+    dynamics::Shape* collShape = mBodyNode->getCollisionShape();
     if (!_contactPoints->empty()
-            && collShape->getShapeType() == kinematics::Shape::P_ELLIPSOID)
+            && collShape->getShapeType() == dynamics::Shape::P_ELLIPSOID)
     {
         //            ContactPoint everageContactPoint;
         //            unsigned int numContactPoint = _contactPoints->size();

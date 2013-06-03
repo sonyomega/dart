@@ -48,7 +48,7 @@
 #include "collision/fcl_mesh/tri_tri_intersection_test.h"
 
 namespace dart {
-namespace kinematics { class BodyNode; }
+namespace dynamics { class BodyNode; }
 namespace collision {
 
 /// @brief
@@ -57,7 +57,7 @@ class FCLMESHCollisionNode : public CollisionNode
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    FCLMESHCollisionNode(kinematics::BodyNode* _bodyNode);
+    FCLMESHCollisionNode(dynamics::BodyNode* _bodyNode);
     virtual ~FCLMESHCollisionNode();
 
     fcl::BVHModel<fcl::OBBRSS>* mMesh;

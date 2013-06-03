@@ -44,19 +44,16 @@
 
 // Local Files
 #include "utils/UtilsCode.h"
-
-#include "kinematics/ShapeBox.h"
-#include "kinematics/ShapeCylinder.h"
-#include "kinematics/ShapeEllipsoid.h"
-#include "kinematics/WeldJoint.h"
-#include "kinematics/RevoluteJoint.h"
-#include "kinematics/TranslationalJoint.h"
-#include "kinematics/BallJoint.h"
-#include "kinematics/FreeJoint.h"
-
-#include "dynamics/BodyNodeDynamics.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/ShapeBox.h"
+#include "dynamics/ShapeCylinder.h"
+#include "dynamics/ShapeEllipsoid.h"
+#include "dynamics/WeldJoint.h"
+#include "dynamics/RevoluteJoint.h"
+#include "dynamics/TranslationalJoint.h"
+#include "dynamics/BallJoint.h"
+#include "dynamics/FreeJoint.h"
 #include "dynamics/SkeletonDynamics.h"
-
 #include "simulation/World.h"
 #include "simulation/ParserDART.h"
 
@@ -275,7 +272,7 @@ dynamics::SkeletonDynamics* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
     ElementEnumerator bodies(_skeletonElement, "body");
     while (bodies.next())
     {
-        dynamics::BodyNodeDynamics* newBody
+        dynamics::BodyNode* newBody
                 = readBody(bodies.get(), newSkeleton);
 
         newSkeleton->addBody(newBody, false);
@@ -286,7 +283,7 @@ dynamics::SkeletonDynamics* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
     ElementEnumerator joints(_skeletonElement, "joint");
     while (joints.next())
     {
-        kinematics::Joint* newJoint
+        dynamics::Joint* newJoint
                 = readJoint(joints.get(), newSkeleton);
 
         newSkeleton->addJoint(newJoint);
@@ -295,13 +292,13 @@ dynamics::SkeletonDynamics* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
     return newSkeleton;
 }
 
-dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
+dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
                                      dynamics::SkeletonDynamics* _skeleton)
 {
     assert(_bodyElement != NULL);
     assert(_skeleton != NULL);
 
-    dynamics::BodyNodeDynamics* newBody = new dynamics::BodyNodeDynamics;
+    dynamics::BodyNode* newBody = new dynamics::BodyNode;
 
     // Name attribute
     std::string name = getAttribute(_bodyElement, "name");
@@ -368,7 +365,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
         tinyxml2::XMLElement* vizElement
                 = getElement(_bodyElement, "visualization_shape");
 
-        kinematics::Shape* shape = NULL;
+        dynamics::Shape* shape = NULL;
 
         // type
         assert(hasElement(vizElement, "geometry"));
@@ -381,7 +378,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
 
             Eigen::Vector3d size = getValueVector3d(boxElement, "size");
 
-            shape = new kinematics::ShapeBox(size);
+            shape = new dynamics::ShapeBox(size);
         }
         else if (hasElement(geometryElement, "ellipsoid"))
         {
@@ -389,7 +386,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
 
             Eigen::Vector3d size = getValueVector3d(ellipsoidElement, "size");
 
-            shape = new kinematics::ShapeBox(size);
+            shape = new dynamics::ShapeBox(size);
         }
         else if (hasElement(geometryElement, "cylinder"))
         {
@@ -398,7 +395,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
             double radius = getValueDouble(cylinderElement, "radius");
             double height = getValueDouble(cylinderElement, "height");
 
-            shape = new kinematics::ShapeCylinder(radius, height);
+            shape = new dynamics::ShapeCylinder(radius, height);
         }
         else
         {
@@ -424,7 +421,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
         tinyxml2::XMLElement* colElement
                 = getElement(_bodyElement, "collision_shape");
 
-        kinematics::Shape* shape = NULL;
+        dynamics::Shape* shape = NULL;
 
         // type
         assert(hasElement(colElement, "geometry"));
@@ -437,7 +434,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
 
             Eigen::Vector3d size = getValueVector3d(boxElement, "size");
 
-            shape = new kinematics::ShapeBox(size);
+            shape = new dynamics::ShapeBox(size);
         }
         else if (hasElement(geometryElement, "ellipsoid"))
         {
@@ -445,7 +442,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
 
             Eigen::Vector3d size = getValueVector3d(ellipsoidElement, "size");
 
-            shape = new kinematics::ShapeBox(size);
+            shape = new dynamics::ShapeBox(size);
         }
         else if (hasElement(geometryElement, "cylinder"))
         {
@@ -454,7 +451,7 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
             double radius = getValueDouble(cylinderElement, "radius");
             double height = getValueDouble(cylinderElement, "height");
 
-            shape = new kinematics::ShapeCylinder(radius, height);
+            shape = new dynamics::ShapeCylinder(radius, height);
         }
         else
         {
@@ -476,13 +473,13 @@ dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
     return newBody;
 }
 
-kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
+dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
                             dynamics::SkeletonDynamics* _skeleton)
 {
     assert(_jointElement != NULL);
     assert(_skeleton != NULL);
 
-    kinematics::Joint* newJoint = NULL;
+    dynamics::Joint* newJoint = NULL;
 
     //--------------------------------------------------------------------------
     // Type attribute
@@ -511,7 +508,7 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     parentElement = _jointElement->FirstChildElement("parent");
     assert(parentElement != NULL);
     std::string strParent = parentElement->GetText();
-    kinematics::BodyNode* parentBody = NULL;
+    dynamics::BodyNode* parentBody = NULL;
 
     if (strParent == std::string("world"))
     {
@@ -540,7 +537,7 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     childElement = _jointElement->FirstChildElement("child");
     assert(childElement != NULL);
     std::string strChild = childElement->GetText();
-    kinematics::BodyNode* childBody = _skeleton->findBody(strChild);
+    dynamics::BodyNode* childBody = _skeleton->findBody(strChild);
     assert(childBody != NULL);
     newJoint->setChildBody(childBody);
 
@@ -567,27 +564,27 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     return newJoint;
 }
 
-kinematics::WeldJoint*readWeldJoint(
+dynamics::WeldJoint*readWeldJoint(
         tinyxml2::XMLElement* _weldJointElement,
         dynamics::SkeletonDynamics* _skeleton)
 {
     assert(_weldJointElement != NULL);
     assert(_skeleton != NULL);
 
-    kinematics::WeldJoint* newWeldJoint
-            = new kinematics::WeldJoint;
+    dynamics::WeldJoint* newWeldJoint
+            = new dynamics::WeldJoint;
 
     return newWeldJoint;
 }
 
-kinematics::RevoluteJoint*readRevoluteJoint(
+dynamics::RevoluteJoint*readRevoluteJoint(
         tinyxml2::XMLElement* _revoluteJointElement,
         dynamics::SkeletonDynamics* _skeleton)
 {
     assert(_revoluteJointElement != NULL);
     assert(_skeleton != NULL);
 
-    kinematics::RevoluteJoint* newRevoluteJoint = new kinematics::RevoluteJoint;
+    dynamics::RevoluteJoint* newRevoluteJoint = new dynamics::RevoluteJoint;
 
     //--------------------------------------------------------------------------
     // axis
@@ -604,40 +601,40 @@ kinematics::RevoluteJoint*readRevoluteJoint(
 }
 
 
-kinematics::BallJoint*readBallJoint(
+dynamics::BallJoint*readBallJoint(
         tinyxml2::XMLElement* _ballJointElement,
         dynamics::SkeletonDynamics* _skeleton)
 {
     assert(_ballJointElement != NULL);
     assert(_skeleton != NULL);
 
-    kinematics::BallJoint* newBallJoint = new kinematics::BallJoint;
+    dynamics::BallJoint* newBallJoint = new dynamics::BallJoint;
 
     return newBallJoint;
 }
 
-kinematics::TranslationalJoint*readTranslationalJoint(
+dynamics::TranslationalJoint*readTranslationalJoint(
         tinyxml2::XMLElement* _translationalJointElement,
         dynamics::SkeletonDynamics* _skeleton)
 {
     assert(_translationalJointElement != NULL);
     assert(_skeleton != NULL);
 
-    kinematics::TranslationalJoint* newTranslationalJoint
-            = new kinematics::TranslationalJoint;
+    dynamics::TranslationalJoint* newTranslationalJoint
+            = new dynamics::TranslationalJoint;
 
     return newTranslationalJoint;
 }
 
-kinematics::FreeJoint*readFreeJoint(
+dynamics::FreeJoint*readFreeJoint(
         tinyxml2::XMLElement* _freeJointElement,
         dynamics::SkeletonDynamics* _skeleton)
 {
     assert(_freeJointElement != NULL);
     assert(_skeleton != NULL);
 
-    kinematics::FreeJoint* newFreeJoint
-            = new kinematics::FreeJoint;
+    dynamics::FreeJoint* newFreeJoint
+            = new dynamics::FreeJoint;
 
     return newFreeJoint;
 }

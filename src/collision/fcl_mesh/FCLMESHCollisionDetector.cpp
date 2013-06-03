@@ -5,7 +5,7 @@
 #include "renderer/LoadOpengl.h"
 #include "math/UtilsMath.h"
 
-#include "kinematics/BodyNode.h"
+#include "dynamics/BodyNode.h"
 
 #include "collision/CollisionNode.h"
 #include "collision/fcl_mesh/CollisionShapes.h"
@@ -22,7 +22,7 @@ FCLMESHCollisionDetector::~FCLMESHCollisionDetector() {
 }
 
 void FCLMESHCollisionDetector::addCollisionSkeletonNode(
-        kinematics::BodyNode *_bd, bool _bRecursive)
+        dynamics::BodyNode *_bd, bool _bRecursive)
 {
     if (_bRecursive == false || _bd->getNumChildJoints() == 0)
     {
@@ -51,7 +51,7 @@ void FCLMESHCollisionDetector::addCollisionSkeletonNode(
 }
 
 CollisionNode*FCLMESHCollisionDetector::createCollisionNode(
-        kinematics::BodyNode* _bodyNode)
+        dynamics::BodyNode* _bodyNode)
 {
     CollisionNode* collisionNode = NULL;
 
@@ -115,7 +115,7 @@ void FCLMESHCollisionDetector::draw() {
         static_cast<FCLMESHCollisionNode*>(mCollisionNodes[i])->drawCollisionSkeletonNode();
 }
 
-void FCLMESHCollisionDetector::activatePair(const kinematics::BodyNode* node1, const kinematics::BodyNode* node2) {
+void FCLMESHCollisionDetector::activatePair(const dynamics::BodyNode* node1, const dynamics::BodyNode* node2) {
     int nodeId1 = getCollisionSkeletonNode(node1)->getBodyNodeID();
     int nodeId2 = getCollisionSkeletonNode(node2)->getBodyNodeID();
     if(nodeId1 < nodeId2) {
@@ -124,7 +124,7 @@ void FCLMESHCollisionDetector::activatePair(const kinematics::BodyNode* node1, c
     mActiveMatrix[nodeId1][nodeId2] = true;
 }
 
-void FCLMESHCollisionDetector::deactivatePair(const kinematics::BodyNode* node1, const kinematics::BodyNode* node2) {
+void FCLMESHCollisionDetector::deactivatePair(const dynamics::BodyNode* node1, const dynamics::BodyNode* node2) {
     int nodeId1 = getCollisionSkeletonNode(node1)->getBodyNodeID();
     int nodeId2 = getCollisionSkeletonNode(node2)->getBodyNodeID();
     if(nodeId1 < nodeId2) {

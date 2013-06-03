@@ -45,7 +45,7 @@
 #include "collision/CollisionNode.h"
 
 namespace dart {
-namespace kinematics { class BodyNode; }
+namespace dynamics { class BodyNode; }
 namespace collision {
 
 /// @brief
@@ -53,7 +53,7 @@ class FCLCollisionNode : public CollisionNode
 {
 public:
     /// @brief
-    FCLCollisionNode(kinematics::BodyNode* _bodyNode);
+    FCLCollisionNode(dynamics::BodyNode* _bodyNode);
 
     /// @brief
     virtual ~FCLCollisionNode();

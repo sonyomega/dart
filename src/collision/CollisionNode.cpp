@@ -40,7 +40,7 @@
 namespace dart {
 namespace collision {
 
-CollisionNode::CollisionNode(kinematics::BodyNode* _bodyNode)
+CollisionNode::CollisionNode(dynamics::BodyNode* _bodyNode)
     : mBodyNode(_bodyNode) {
 }
 

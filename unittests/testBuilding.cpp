@@ -40,14 +40,13 @@
 #include "TestHelpers.h"
 
 #include "math/LieGroup.h"
-#include "kinematics/RevoluteJoint.h"
-#include "dynamics/BodyNodeDynamics.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/RevoluteJoint.h"
 #include "dynamics/SkeletonDynamics.h"
 #include "simulation/World.h"
 
 using namespace dart;
 using namespace math;
-using namespace kinematics;
 using namespace dynamics;
 using namespace simulation;
 
@@ -58,9 +57,9 @@ TEST(BUILDING, BASIC)
 	//
 	//--------------------------------------------------------------------------
 	// Bodies
-	BodyNodeDynamics body1;
-	BodyNodeDynamics body2;
-	BodyNodeDynamics body3;
+	BodyNode body1;
+	BodyNode body2;
+	BodyNode body3;
 
 	// Joints
 	RevoluteJoint joint1;

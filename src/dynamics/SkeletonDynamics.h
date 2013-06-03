@@ -41,15 +41,15 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "kinematics/Skeleton.h"
+#include "dynamics/Skeleton.h"
 
 namespace dart {
 namespace dynamics {
 
-class BodyNodeDynamics;
+class BodyNode;
 
 /// @brief
-class SkeletonDynamics : public kinematics::Skeleton
+class SkeletonDynamics : public dynamics::Skeleton
 {
 public:
     //--------------------------------------------------------------------------
@@ -64,8 +64,8 @@ public:
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
-    BodyNodeDynamics* createBodyNode() const;
-    BodyNodeDynamics* getBody(int i) const;
+    BodyNode* createBodyNode() const;
+    BodyNode* getBody(int i) const;
 
     //--------------------------------------------------------------------------
     // Dynamical Properties

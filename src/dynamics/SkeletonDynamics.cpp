@@ -36,17 +36,16 @@
  */
 
 #include "math/UtilsMath.h"
-#include "kinematics/Joint.h"
-#include "kinematics/BodyNode.h"
-#include "kinematics/Dof.h"
+#include "dynamics/Joint.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/Dof.h"
 #include "dynamics/SkeletonDynamics.h"
-#include "dynamics/BodyNodeDynamics.h"
 
 namespace dart {
 namespace dynamics {
 
 SkeletonDynamics::SkeletonDynamics()
-    : kinematics::Skeleton(),
+    : dynamics::Skeleton(),
       mTotalMass(0.0)
 {
 }
@@ -55,14 +54,14 @@ SkeletonDynamics::~SkeletonDynamics()
 {
 }
 
-BodyNodeDynamics*SkeletonDynamics::createBodyNode() const
+BodyNode*SkeletonDynamics::createBodyNode() const
 {
-    return new BodyNodeDynamics();
+    return new BodyNode();
 }
 
-BodyNodeDynamics*SkeletonDynamics::getBody(int i) const
+BodyNode*SkeletonDynamics::getBody(int i) const
 {
-    return dynamic_cast<BodyNodeDynamics*>(kinematics::Skeleton::getBody(i));
+    return dynamic_cast<BodyNode*>(dynamics::Skeleton::getBody(i));
 }
 
 void SkeletonDynamics::initDynamics()
@@ -159,7 +158,7 @@ void SkeletonDynamics::computeEquationsOfMotionRecursive(
 void SkeletonDynamics::_inverseDynamicsFwdRecursion()
 {
     // Forward recursion
-    for (std::vector<kinematics::BodyNode*>::iterator itrBody = mBodies.begin();
+    for (std::vector<dynamics::BodyNode*>::iterator itrBody = mBodies.begin();
          itrBody != mBodies.end();
          ++itrBody)
     {
@@ -172,12 +171,12 @@ void SkeletonDynamics::_inverseDynamicsFwdRecursion()
 void SkeletonDynamics::_inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity)
 {
     // Backward recursion
-    for (std::vector<kinematics::BodyNode*>::reverse_iterator ritrBody = mBodies.rbegin();
+    for (std::vector<dynamics::BodyNode*>::reverse_iterator ritrBody = mBodies.rbegin();
          ritrBody != mBodies.rend();
          ++ritrBody)
     {
-        dynamics::BodyNodeDynamics* body
-                = dynamic_cast<dynamics::BodyNodeDynamics*>(*ritrBody);
+        dynamics::BodyNode* body
+                = dynamic_cast<dynamics::BodyNode*>(*ritrBody);
 
         body->_updateBodyForce(_gravity);
         body->_updateGeneralizedForce();

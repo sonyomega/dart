@@ -43,7 +43,7 @@
 #include "collision/CollisionNode.h"
 
 namespace dart {
-namespace kinematics { class BodyNode; }
+namespace dynamics { class BodyNode; }
 namespace collision {
 
 class CollisionNode;
@@ -91,12 +91,12 @@ public:
 
 public:
     /// @brief
-    virtual void addCollisionSkeletonNode(kinematics::BodyNode *_bd,
+    virtual void addCollisionSkeletonNode(dynamics::BodyNode *_bd,
                                           bool _bRecursive = false);
 
     /// @brief
     virtual CollisionNode* createCollisionNode(
-            kinematics::BodyNode* _bodyNode) = 0;
+            dynamics::BodyNode* _bodyNode) = 0;
 
     /// @brief
     virtual bool checkCollision(bool _checkAllCollisions,

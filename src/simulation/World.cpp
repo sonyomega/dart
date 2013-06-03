@@ -42,10 +42,10 @@
 
 #include <iostream>
 
-#include "kinematics/Dof.h"
-#include "dynamics/ConstraintDynamics.h"
-#include "dynamics/SkeletonDynamics.h"
 #include "integration/EulerIntegrator.h"
+#include "dynamics/Dof.h"
+#include "dynamics/SkeletonDynamics.h"
+#include "constraint/ConstraintDynamics.h"
 #include "simulation/World.h"
 
 namespace dart {
@@ -58,7 +58,7 @@ World::World()
       mTimeStep(0.001),
       mFrame(0),
       mIntegrator(new integration::EulerIntegrator()),
-      mCollisionHandle(new dynamics::ConstraintDynamics(mSkeletons, mTimeStep))
+      mCollisionHandle(new constraint::ConstraintDynamics(mSkeletons, mTimeStep))
 {
     mIndices.push_back(0);
 }

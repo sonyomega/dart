@@ -42,7 +42,7 @@
 #include <fcl/collision.h>
 
 namespace dart {
-namespace kinematics { class BodyNode; }
+namespace dynamics { class BodyNode; }
 namespace collision {
 
 class CollisionNode;
@@ -68,17 +68,17 @@ struct CollisionNodePair {
 class CollisionNode {
 public: // constructors and destructor
     /// @brief Default constructor
-    CollisionNode(kinematics::BodyNode* _bodyNode);
+    CollisionNode(dynamics::BodyNode* _bodyNode);
 
     /// @brief Default destructor
     virtual ~CollisionNode();
 
 public: // setters and getters
     /// @brief
-    void setBodyNode(kinematics::BodyNode* _bodyNode) { mBodyNode = _bodyNode; }
+    void setBodyNode(dynamics::BodyNode* _bodyNode) { mBodyNode = _bodyNode; }
 
     /// @brief
-    kinematics::BodyNode* getBodyNode() const { return mBodyNode; }
+    dynamics::BodyNode* getBodyNode() const { return mBodyNode; }
 
     /// @brief
     void setBodyNodeID(int _id) { mBodyNodeID = _id; }
@@ -88,7 +88,7 @@ public: // setters and getters
 
 protected:
     /// @brief
-    kinematics::BodyNode* mBodyNode;
+    dynamics::BodyNode* mBodyNode;
 
     /// @brief
     int mBodyNodeID;

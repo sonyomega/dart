@@ -34,12 +34,12 @@
 
 #include <iostream>
 #include <gtest/gtest.h>
-//#include "kinematics/FileInfoSkel.hpp"
-//#include "kinematics/Skeleton.h"
-//#include "kinematics/BodyNode.h"
-//#include "kinematics/FileInfoDof.h"
-//#include "kinematics/FileInfoC3D.h"
-//#include "kinematics/TrfmRotateExpmap.h"
+//#include "dynamics/FileInfoSkel.hpp"
+//#include "dynamics/Skeleton.h"
+//#include "dynamics/BodyNode.h"
+//#include "dynamics/FileInfoDof.h"
+//#include "dynamics/FileInfoC3D.h"
+//#include "dynamics/TrfmRotateExpmap.h"
 //#include "utils/Paths.h"
 //#include "math/UtilsMath.h"
 
@@ -49,7 +49,7 @@
 //TEST(KINEMATICS, VSK_LOADER) {
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
   
 //    FileInfoSkel<Skeleton> modelFile;
 //    modelFile.loadFile(DART_DATA_PATH"skel/Yuting.vsk");
@@ -66,7 +66,7 @@
 //TEST(KINEMATICS, C3D_LOADER) {
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
   
 //    FileInfoC3D c3dFile;
 //    bool result = c3dFile.loadFile(DART_DATA_PATH"c3d/squat.c3d");
@@ -80,7 +80,7 @@
 //TEST(KINEMATICS, TRANS_AND_DERIV) {
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
   
 //    FileInfoSkel<Skeleton> modelFile;
 //    bool loadModelResult = modelFile.loadFile(DART_DATA_PATH"skel/SehoonVSK3.vsk");

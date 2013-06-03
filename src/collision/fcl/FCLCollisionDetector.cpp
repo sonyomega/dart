@@ -35,9 +35,9 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "kinematics/Shape.h"
-#include "kinematics/BodyNode.h"
-#include "kinematics/Skeleton.h"
+#include "dynamics/Shape.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/Skeleton.h"
 
 #include "collision/fcl/FCLCollisionNode.h"
 #include "collision/fcl/FCLCollisionDetector.h"
@@ -53,7 +53,7 @@ FCLCollisionDetector::FCLCollisionDetector()
 FCLCollisionDetector::~FCLCollisionDetector() {
 }
 
-CollisionNode* FCLCollisionDetector::createCollisionNode(kinematics::BodyNode* _bodyNode) {
+CollisionNode* FCLCollisionDetector::createCollisionNode(dynamics::BodyNode* _bodyNode) {
     CollisionNode* collisionNode = NULL;
 
     collisionNode = new FCLCollisionNode(_bodyNode);

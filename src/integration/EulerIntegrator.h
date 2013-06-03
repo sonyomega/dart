@@ -58,7 +58,7 @@ public:
     virtual void integrate(IntegrableSystem* system, double dt) const;
 
     // Documentation inherited.
-//    virtual void integrate(kinematics::System* _system, double _dt) const;
+//    virtual void integrate(dynamics::System* _system, double _dt) const;
 };
 
 } // namespace integration

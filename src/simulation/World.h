@@ -58,6 +58,9 @@ class Integrator;
 
 namespace dynamics {
 class SkeletonDynamics;
+}
+
+namespace constraint {
 class ConstraintDynamics;
 }
 
@@ -165,7 +168,7 @@ public:
     // Collision
     //--------------------------------------------------------------------------
     /// @brief Get the collision handler.
-    dynamics::ConstraintDynamics* getCollisionHandle() const
+    constraint::ConstraintDynamics* getCollisionHandle() const
     { return mCollisionHandle; }
 
 protected:
@@ -204,7 +207,7 @@ protected:
     integration::Integrator* mIntegrator;
 
     /// @brief The collision handler.
-    dynamics::ConstraintDynamics* mCollisionHandle;
+    constraint::ConstraintDynamics* mCollisionHandle;
 
 private:
 };

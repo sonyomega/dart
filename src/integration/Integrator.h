@@ -40,10 +40,10 @@
 
 #include <vector>
 #include <Eigen/Dense>
-#include "kinematics/System.h"
+#include "dynamics/System.h"
 
 namespace dart {
-namespace kinematics { class System; }
+namespace dynamics { class System; }
 namespace integration {
 
 /// @brief Any class that uses an integrator should implement this interface.
@@ -93,7 +93,7 @@ public:
     virtual void integrate(IntegrableSystem* system, double dt) const = 0;
 
     /// @brief
-//    virtual void integrate(kinematics::System* _system, double _dt) const = 0;
+//    virtual void integrate(dynamics::System* _system, double _dt) const = 0;
 };
 
 } // namespace integration

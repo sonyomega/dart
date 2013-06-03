@@ -66,7 +66,7 @@ void RK4Integrator::integrate(IntegrableSystem* system, double dt) const {
 }
 
 // TODO (kasiu): Slow. Needs to be optimized.
-//void RK4Integrator::integrate(kinematics::System* _system, double _dt) const
+//void RK4Integrator::integrate(dynamics::System* _system, double _dt) const
 //{
 //    // calculates the four weighted deltas
 //    VectorXd deriv = _system->evalDeriv();

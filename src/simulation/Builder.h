@@ -39,7 +39,7 @@
 #define DART_KINEMATICS_BUILDER_H
 
 namespace dart {
-namespace kinematics { class Joint; } // namespace kinematics
+namespace dynamics { class Joint; } // namespace dynamics
 namespace simulation {
 
 class World;
@@ -55,7 +55,7 @@ public:
     virtual ~Builder();
 
 public:
-    bool detachJoint(kinematics::Joint* _joint);
+    bool detachJoint(dynamics::Joint* _joint);
 
 protected:
     World* mWorld;

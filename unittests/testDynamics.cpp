@@ -37,9 +37,9 @@
 #include <gtest/gtest.h>
 //#include "dynamics/BodyNodeDynamics.h"
 //#include "dynamics/SkeletonDynamics.h"
-//#include "kinematics/FileInfoSkel.hpp"
-//#include "kinematics/FileInfoDof.h"
-//#include "kinematics/BodyNode.h"
+//#include "dynamics/FileInfoSkel.hpp"
+//#include "dynamics/FileInfoDof.h"
+//#include "dynamics/BodyNode.h"
 //#include "utils/Paths.h"
 //#include "math/UtilsRotation.h"
 //#include "math/UtilsMath.h"
@@ -51,7 +51,7 @@
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
 //    using namespace dynamics;
 
 //    // load skeleton
@@ -78,7 +78,7 @@
 //	using namespace std;
 //	using namespace Eigen;
 //	using namespace dart;
-//	using namespace kinematics;
+//	using namespace dynamics;
 //	using namespace dynamics;
 
 //	// load skeleton
@@ -103,7 +103,7 @@
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
 //    using namespace dynamics;
 
 //    ((BodyNodeDynamics*)skelDyn->getNode(7))->addExtForce(Vector3d(0.1,0.2,0.3), Vector3d(30,40,50), true, false );
@@ -117,7 +117,7 @@
 //	using namespace std;
 //	using namespace Eigen;
 //	using namespace dart;
-//	using namespace kinematics;
+//	using namespace dynamics;
 //	using namespace dynamics;
 
 //	((BodyNodeDynamics*)skelDyn->getNode(2))->addExtForce(skelDyn->getNode(2)->getLocalCOM(), Vector3d(0,19.6,0), true, false );
@@ -128,7 +128,7 @@
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
 //    using namespace dynamics;
 
 //    const double TOLERANCE_EXACT = 1.0e-10;
@@ -186,7 +186,7 @@
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
 //    using namespace dynamics;
     
 //    Vector3d gravity(0.0, -9.81, 0.0);
@@ -241,7 +241,7 @@
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
 //    using namespace dynamics;
 
 //    const double TOLERANCE_EXACT = 1.0e-10;
@@ -265,7 +265,7 @@
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
 //    using namespace dynamics;
     
 //    const double TOLERANCE_EXACT = 1.0e-10;
@@ -295,7 +295,7 @@
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
 //    using namespace dynamics;
 
 //    const double TOLERANCE_EXACT = 1.0e-10;
@@ -325,7 +325,7 @@
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
-//    using namespace kinematics;
+//    using namespace dynamics;
 //    using namespace dynamics;
 
 //    const double TOLERANCE_EXACT = 1.0e-10;
@@ -358,7 +358,7 @@
 //	using namespace std;
 //	using namespace Eigen;
 //	using namespace dart;
-//	using namespace kinematics;
+//	using namespace dynamics;
 //    using namespace math;
 //	using namespace dynamics;
 

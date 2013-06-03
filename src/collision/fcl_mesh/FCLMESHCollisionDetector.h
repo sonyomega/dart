@@ -48,7 +48,7 @@
 namespace fcl { class CollisionResult; }
 
 namespace dart {
-namespace kinematics { class BodyNode; }
+namespace dynamics { class BodyNode; }
 namespace collision {
 
 class FCLMESHCollisionNode;
@@ -56,8 +56,8 @@ class FCLMESHCollisionNode;
 //class FCLContact : public Contact
 //{
 //public:
-//    kinematics::BodyNode *bd1;
-//    kinematics::BodyNode *bd2;
+//    dynamics::BodyNode *bd1;
+//    dynamics::BodyNode *bd2;
 //    CollisionSkeletonNode *collisionSkeletonNode1;
 //    CollisionSkeletonNode *collisionSkeletonNode2;
 //    int triID1;
@@ -79,9 +79,9 @@ public:
     virtual ~FCLMESHCollisionDetector();
 
     // Documentation inherited
-    virtual void addCollisionSkeletonNode(kinematics::BodyNode *_bd, bool _bRecursive = false);
+    virtual void addCollisionSkeletonNode(dynamics::BodyNode *_bd, bool _bRecursive = false);
 
-    virtual CollisionNode* createCollisionNode(kinematics::BodyNode* _bodyNode);
+    virtual CollisionNode* createCollisionNode(dynamics::BodyNode* _bodyNode);
 
     /// @brief
     inline void clearAllCollisionSkeletonNode() {mCollisionNodes.clear();}
@@ -96,7 +96,7 @@ public:
     void draw();
 
     /// @brief
-    FCLMESHCollisionNode* getCollisionSkeletonNode(const kinematics::BodyNode *_bodyNode)
+    FCLMESHCollisionNode* getCollisionSkeletonNode(const dynamics::BodyNode *_bodyNode)
     {
         if(mBodyCollisionMap.find(_bodyNode)!=mBodyCollisionMap.end())
             return mBodyCollisionMap[_bodyNode];
@@ -105,17 +105,17 @@ public:
     }
 
     /// @brief
-    void activatePair(const kinematics::BodyNode* node1, const kinematics::BodyNode* node2);
+    void activatePair(const dynamics::BodyNode* node1, const dynamics::BodyNode* node2);
 
     /// @brief
-    void deactivatePair(const kinematics::BodyNode* node1, const kinematics::BodyNode* node2);
+    void deactivatePair(const dynamics::BodyNode* node1, const dynamics::BodyNode* node2);
 
 public:
     /// @brief
     int mNumTriIntersection;
 
     /// @brief
-    std::map<const kinematics::BodyNode*, FCLMESHCollisionNode*> mBodyCollisionMap;
+    std::map<const dynamics::BodyNode*, FCLMESHCollisionNode*> mBodyCollisionMap;
 
     /// @brief
     std::vector<std::vector<bool> > mActiveMatrix;

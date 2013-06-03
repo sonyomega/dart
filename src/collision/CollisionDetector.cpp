@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "kinematics/BodyNode.h"
-#include "kinematics/Skeleton.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/Skeleton.h"
 
 #include "collision/CollisionNode.h"
 #include "collision/CollisionDetector.h"
@@ -53,7 +53,7 @@ CollisionDetector::~CollisionDetector() {
             delete mCollisionNodes[i];
 }
 
-void CollisionDetector::addCollisionSkeletonNode(kinematics::BodyNode* _bodyNode,
+void CollisionDetector::addCollisionSkeletonNode(dynamics::BodyNode* _bodyNode,
                                                  bool _bRecursive) {
     if (_bRecursive == false || _bodyNode->getNumChildJoints() == 0) {
         CollisionNode* collNode = createCollisionNode(_bodyNode);

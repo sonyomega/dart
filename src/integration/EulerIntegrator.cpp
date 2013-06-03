@@ -35,7 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "kinematics/System.h"
+#include "dynamics/System.h"
 #include "integration/EulerIntegrator.h"
 
 using namespace Eigen;
@@ -69,7 +69,7 @@ void EulerIntegrator::integrate(IntegrableSystem* system, double dt) const
 //    system->setState(newState);
 }
 
-//void EulerIntegrator::integrate(kinematics::System* _system, double _dt) const
+//void EulerIntegrator::integrate(dynamics::System* _system, double _dt) const
 //{
 //    //--------------------------------------------------------------------------
 //    // Explicit Euler Method

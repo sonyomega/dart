@@ -48,7 +48,7 @@
 
 namespace dart {
 
-namespace kinematics {
+namespace dynamics {
 class WeldJoint;
 class Joint;
 class RevoluteJoint;
@@ -58,7 +58,7 @@ class FreeJoint;
 }
 
 namespace dynamics {
-class BodyNodeDynamics;
+class BodyNode;
 class SkeletonDynamics;
 }
 
@@ -155,31 +155,31 @@ dynamics::SkeletonDynamics* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
                                          World* _world);
 
 /// @brief
-dynamics::BodyNodeDynamics* readBody(tinyxml2::XMLElement* _bodyElement,
+dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
                                      dynamics::SkeletonDynamics* _skeleton);
 
 /// @brief
-kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
+dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
                              dynamics::SkeletonDynamics* _skeleton);
 
 /// @brief
-kinematics::RevoluteJoint* readRevoluteJoint(
+dynamics::RevoluteJoint* readRevoluteJoint(
         tinyxml2::XMLElement* _revoluteJointElement,
         dynamics::SkeletonDynamics* _skeleton);
 
-kinematics::BallJoint* readBallJoint(
+dynamics::BallJoint* readBallJoint(
         tinyxml2::XMLElement* _ballJointElement,
         dynamics::SkeletonDynamics* _skeleton);
 
-kinematics::TranslationalJoint* readTranslationalJoint(
+dynamics::TranslationalJoint* readTranslationalJoint(
         tinyxml2::XMLElement* _translationalJointElement,
         dynamics::SkeletonDynamics* _skeleton);
 
-kinematics::FreeJoint* readFreeJoint(
+dynamics::FreeJoint* readFreeJoint(
         tinyxml2::XMLElement* _freeJointElement,
         dynamics::SkeletonDynamics* _skeleton);
 
-dart::kinematics::WeldJoint* readWeldJoint(
+dart::dynamics::WeldJoint* readWeldJoint(
         tinyxml2::XMLElement* _weldJointElement,
         dynamics::SkeletonDynamics* _skeleton);
 

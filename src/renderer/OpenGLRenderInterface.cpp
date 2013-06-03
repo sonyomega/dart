@@ -35,16 +35,16 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "OpenGLRenderInterface.h"
-#include "renderer/LoadOpengl.h"
 #include <iostream>
 #include <assimp/cimport.h>
 
-#include <kinematics/Skeleton.h>
-#include <kinematics/BodyNode.h>
-#include <kinematics/Shape.h>
-#include <kinematics/ShapeCylinder.h>
-#include <kinematics/ShapeMesh.h>
+#include "dynamics/Skeleton.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/Shape.h"
+#include "dynamics/ShapeCylinder.h"
+#include "dynamics/ShapeMesh.h"
+#include "renderer/LoadOpengl.h"
+#include "renderer/OpenGLRenderInterface.h"
 
 using namespace std;
 using namespace Eigen;
@@ -396,7 +396,7 @@ void OpenGLRenderInterface::drawList(GLuint index) {
     glCallList(index);
 }
 
-void OpenGLRenderInterface::compileList(kinematics::Skeleton *_skel) {
+void OpenGLRenderInterface::compileList(dynamics::Skeleton *_skel) {
     if(_skel == 0)
         return;
 
@@ -405,7 +405,7 @@ void OpenGLRenderInterface::compileList(kinematics::Skeleton *_skel) {
     }
 }
 
-void OpenGLRenderInterface::compileList(kinematics::BodyNode *_node) {
+void OpenGLRenderInterface::compileList(dynamics::BodyNode *_node) {
     if(_node == 0)
         return;
 
@@ -414,23 +414,23 @@ void OpenGLRenderInterface::compileList(kinematics::BodyNode *_node) {
 }
 
 //FIXME: Use polymorphism instead of switch statements
-void OpenGLRenderInterface::compileList(kinematics::Shape *_shape) {
+void OpenGLRenderInterface::compileList(dynamics::Shape *_shape) {
     if(_shape == 0)
         return;
 
     switch(_shape->getShapeType()) {
-        case kinematics::Shape::P_UNDEFINED:
+        case dynamics::Shape::P_UNDEFINED:
             break;
-        case kinematics::Shape::P_BOX:
+        case dynamics::Shape::P_BOX:
             break;
-        case kinematics::Shape::P_CYLINDER:
+        case dynamics::Shape::P_CYLINDER:
             break;
-        case kinematics::Shape::P_ELLIPSOID:
+        case dynamics::Shape::P_ELLIPSOID:
             break;
-        case kinematics::Shape::P_MESH:
+        case dynamics::Shape::P_MESH:
             //FIXME: Separate these calls once BodyNode is refactored to contain
             // both a col Shape and vis Shape.
-            kinematics::ShapeMesh* shapeMesh = dynamic_cast<kinematics::ShapeMesh*>(_shape);
+            dynamics::ShapeMesh* shapeMesh = dynamic_cast<dynamics::ShapeMesh*>(_shape);
 
             if(shapeMesh == 0)
                 return;
@@ -455,7 +455,7 @@ GLuint OpenGLRenderInterface::compileList(const aiScene *_mesh) {
     return index;
 }
 
-void OpenGLRenderInterface::draw(kinematics::Skeleton *_skel, bool _vizCol, bool _colMesh) {
+void OpenGLRenderInterface::draw(dynamics::Skeleton *_skel, bool _vizCol, bool _colMesh) {
     if(_skel == 0)
         return;
 
@@ -464,7 +464,7 @@ void OpenGLRenderInterface::draw(kinematics::Skeleton *_skel, bool _vizCol, bool
     }
 }
 
-void OpenGLRenderInterface::draw(kinematics::BodyNode *_node, bool _vizCol, bool _colMesh) {
+void OpenGLRenderInterface::draw(dynamics::BodyNode *_node, bool _vizCol, bool _colMesh) {
     if(_node == 0)
         return;
 
@@ -482,7 +482,7 @@ void OpenGLRenderInterface::draw(kinematics::BodyNode *_node, bool _vizCol, bool
     glPushMatrix();
     glMultMatrixd(pose.data());
 
-    kinematics::Shape *shape = _colMesh ? _node->getCollisionShape() : _node->getVisualizationShape();
+    dynamics::Shape *shape = _colMesh ? _node->getCollisionShape() : _node->getVisualizationShape();
     draw(shape, _colMesh);
 
     glColor3f(1.0f,1.0f,1.0f);
@@ -492,7 +492,7 @@ void OpenGLRenderInterface::draw(kinematics::BodyNode *_node, bool _vizCol, bool
 }
 
 //FIXME: Refactor this to use polymorphism.
-void OpenGLRenderInterface::draw(kinematics::Shape *_shape, bool _colMesh) {
+void OpenGLRenderInterface::draw(dynamics::Shape *_shape, bool _colMesh) {
     if(_shape == 0)
         return;
 
@@ -509,24 +509,24 @@ void OpenGLRenderInterface::draw(kinematics::Shape *_shape, bool _colMesh) {
     glMultMatrixd(pose.data());
 
     switch(_shape->getShapeType()) {
-        case kinematics::Shape::P_UNDEFINED:
+        case dynamics::Shape::P_UNDEFINED:
             break;
-        case kinematics::Shape::P_BOX:
+        case dynamics::Shape::P_BOX:
             //FIXME: We are not in a glut instance
             drawCube(_shape->getDim());
             break;
-        case kinematics::Shape::P_CYLINDER:
+        case dynamics::Shape::P_CYLINDER:
             //FIXME: We are not in a glut instance
-            drawCylinder( ((kinematics::ShapeCylinder*)_shape)->getRadius(), ((kinematics::ShapeCylinder*)_shape)->getHeight() );
+            drawCylinder( ((dynamics::ShapeCylinder*)_shape)->getRadius(), ((dynamics::ShapeCylinder*)_shape)->getHeight() );
             break;
-        case kinematics::Shape::P_ELLIPSOID:
+        case dynamics::Shape::P_ELLIPSOID:
             //FIXME: We are not in a glut instance
             drawEllipsoid(_shape->getDim());
             break;
-        case kinematics::Shape::P_MESH:
+        case dynamics::Shape::P_MESH:
             glDisable(GL_COLOR_MATERIAL); // Use mesh colors to draw
 
-            kinematics::ShapeMesh* shapeMesh = dynamic_cast<kinematics::ShapeMesh*>(_shape);
+            dynamics::ShapeMesh* shapeMesh = dynamic_cast<dynamics::ShapeMesh*>(_shape);
 
             if(!shapeMesh)
                 break;

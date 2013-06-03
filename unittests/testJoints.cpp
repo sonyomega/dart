@@ -42,17 +42,15 @@
 #include "utils/UtilsCode.h"
 #include "math/LieGroup.h"
 #include "math/UtilsMath.h"
-#include "kinematics/BallJoint.h"
-#include "kinematics/RevoluteJoint.h"
-#include "kinematics/FreeJoint.h"
-#include "kinematics/TranslationalJoint.h"
-#include "dynamics/BodyNodeDynamics.h"
+#include "dynamics/BallJoint.h"
+#include "dynamics/RevoluteJoint.h"
+#include "dynamics/FreeJoint.h"
+#include "dynamics/TranslationalJoint.h"
 #include "dynamics/SkeletonDynamics.h"
 #include "simulation/World.h"
 
 using namespace dart;
 using namespace math;
-using namespace kinematics;
 using namespace dynamics;
 using namespace simulation;
 

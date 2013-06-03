@@ -42,15 +42,13 @@
 #include "utils/Timer.h"
 #include "math/LieGroup.h"
 #include "math/UtilsMath.h"
-#include "kinematics/RevoluteJoint.h"
-#include "dynamics/BodyNodeDynamics.h"
+#include "dynamics/RevoluteJoint.h"
 #include "dynamics/SkeletonDynamics.h"
 #include "simulation/World.h"
 
 using namespace dart;
 using namespace utils;
 using namespace math;
-using namespace kinematics;
 using namespace dynamics;
 using namespace simulation;
 

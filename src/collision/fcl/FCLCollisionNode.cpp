@@ -38,34 +38,34 @@
 #include <assimp/scene.h>
 #include <fcl/shape/geometric_shapes.h>
 
-#include "kinematics/BodyNode.h"
-#include "kinematics/ShapeEllipsoid.h"
-#include "kinematics/ShapeCylinder.h"
-#include "kinematics/ShapeMesh.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/ShapeEllipsoid.h"
+#include "dynamics/ShapeCylinder.h"
+#include "dynamics/ShapeMesh.h"
 
 #include "collision/fcl/FCLCollisionNode.h"
 
 namespace dart {
 namespace collision {
 
-FCLCollisionNode::FCLCollisionNode(kinematics::BodyNode* _bodyNode)
+FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
     : CollisionNode(_bodyNode)
 {
-    kinematics::Shape* shape = _bodyNode->getCollisionShape();
+    dynamics::Shape* shape = _bodyNode->getCollisionShape();
 
     switch (shape->getShapeType())
     {
-        case kinematics::Shape::P_BOX:
+        case dynamics::Shape::P_BOX:
         {
             mCollisionGeometry = new fcl::Box(shape->getDim()[0],
                                               shape->getDim()[1],
                                               shape->getDim()[2]);
             break;
         }
-        case kinematics::Shape::P_ELLIPSOID:
+        case dynamics::Shape::P_ELLIPSOID:
         {
-            kinematics::ShapeEllipsoid* ellipsoid
-                    = dynamic_cast<kinematics::ShapeEllipsoid*>(shape);
+            dynamics::ShapeEllipsoid* ellipsoid
+                    = dynamic_cast<dynamics::ShapeEllipsoid*>(shape);
 
             if (ellipsoid->isSphere())
                 mCollisionGeometry = new fcl::Sphere(ellipsoid->getDim()[0] * 0.5);
@@ -75,18 +75,18 @@ FCLCollisionNode::FCLCollisionNode(kinematics::BodyNode* _bodyNode)
                                                                   ellipsoid->getDim()[2]);
             break;
         }
-        case kinematics::Shape::P_CYLINDER:
+        case dynamics::Shape::P_CYLINDER:
         {
-            kinematics::ShapeCylinder* cylinder
-                    = dynamic_cast<kinematics::ShapeCylinder*>(shape);
+            dynamics::ShapeCylinder* cylinder
+                    = dynamic_cast<dynamics::ShapeCylinder*>(shape);
             mCollisionGeometry = new fcl::Cylinder(cylinder->getRadius(),
                                                    cylinder->getHeight());
             break;
         }
-        case kinematics::Shape::P_MESH:
+        case dynamics::Shape::P_MESH:
         {
-            kinematics::ShapeMesh *shapeMesh
-                    = dynamic_cast<kinematics::ShapeMesh *>(shape);
+            dynamics::ShapeMesh *shapeMesh
+                    = dynamic_cast<dynamics::ShapeMesh *>(shape);
 
             if(shapeMesh)
                 mCollisionGeometry = createMesh<fcl::OBBRSS>(shape->getDim()[0],

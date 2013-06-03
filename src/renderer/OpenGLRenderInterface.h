@@ -47,7 +47,7 @@ using namespace std;
 
 namespace dart {
 
-namespace kinematics {
+namespace dynamics {
 class Skeleton;
 class BodyNode;
 class Shape;
@@ -91,14 +91,14 @@ public:
     virtual void transform(const Eigen::Affine3d& _transform); //glMultMatrix
     virtual void scale(const Eigen::Vector3d& _scale); //glScale
 
-    void compileList(kinematics::Skeleton *_skel);
-    void compileList(kinematics::BodyNode *_node);
-    void compileList(kinematics::Shape *_shape);
+    void compileList(dynamics::Skeleton *_skel);
+    void compileList(dynamics::BodyNode *_node);
+    void compileList(dynamics::Shape *_shape);
     GLuint compileList(const aiScene *_mesh);
 
-    virtual void draw(kinematics::Skeleton *_skel, bool _vizCol = false, bool _colMesh = false);
-    virtual void draw(kinematics::BodyNode *_node, bool _vizCol = false, bool _colMesh = false);
-    virtual void draw(kinematics::Shape *_shape, bool _colMesh = false);
+    virtual void draw(dynamics::Skeleton *_skel, bool _vizCol = false, bool _colMesh = false);
+    virtual void draw(dynamics::BodyNode *_node, bool _vizCol = false, bool _colMesh = false);
+    virtual void draw(dynamics::Shape *_shape, bool _colMesh = false);
 
     virtual void drawEllipsoid(const Eigen::Vector3d& _size);
     virtual void drawCube(const Eigen::Vector3d& _size);

@@ -59,7 +59,7 @@ public:
     virtual ~FCLCollisionDetector();
 
     // Documentation inherited
-    virtual CollisionNode* createCollisionNode(kinematics::BodyNode* _bodyNode);
+    virtual CollisionNode* createCollisionNode(dynamics::BodyNode* _bodyNode);
 
     // Documentation inherited
     virtual bool checkCollision(bool _checkAllCollisions,
