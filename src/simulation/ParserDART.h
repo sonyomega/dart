@@ -49,6 +49,7 @@
 namespace dart {
 
 namespace kinematics {
+class WeldJoint;
 class Joint;
 class RevoluteJoint;
 class BallJoint;
@@ -176,6 +177,10 @@ kinematics::TranslationalJoint* readTranslationalJoint(
 
 kinematics::FreeJoint* readFreeJoint(
         tinyxml2::XMLElement* _freeJointElement,
+        dynamics::SkeletonDynamics* _skeleton);
+
+dart::kinematics::WeldJoint* readWeldJoint(
+        tinyxml2::XMLElement* _weldJointElement,
         dynamics::SkeletonDynamics* _skeleton);
 
 //------------------------------------------------------------------------------

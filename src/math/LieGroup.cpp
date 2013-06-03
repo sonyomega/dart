@@ -59,8 +59,8 @@ std::ostream& operator<<(std::ostream& os, const dse3& t)
     os << "[ ";
     for ( int i = 0; i < 6; i++ )
     {
-        if ( t[i] >= SCALAR_0 ) os << " " << std::setw(6) << t[i] << " ";
-        else os << std::setw(7) << t[i] << " ";
+        if ( t._m[i] >= SCALAR_0 ) os << " " << std::setw(6) << t._m[i] << " ";
+        else os << std::setw(7) << t._m[i] << " ";
     }
     os << "];" << std::endl;
     os.setf(flags);

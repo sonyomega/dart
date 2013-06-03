@@ -92,7 +92,7 @@ protected:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    Coordinate mCoordinate;
+    Dof mCoordinate;
 
     /// @brief Rotational axis.
     math::so3 mAxis;

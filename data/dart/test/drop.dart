@@ -5,10 +5,36 @@
             <time_step>0.001</time_step>
             <gravity>0 -9.81 0</gravity>
         </physics>
-        <skeleton name="skeleton 1">
-            <body name="link 1">
+        <skeleton name="grount skeleton">
+            <body name="ground">
+                <transformation>0 0 0 0 -0.5 0</transformation>
+                <visualization_shape>
+                    <transformation>0 0 0 0 0 0</transformation>
+                    <geometry>
+                        <box>
+                            <size>2.0 0.01 2.0</size>
+                        </box>
+                    </geometry>
+                </visualization_shape>
+                <collision_shape>
+                    <transformation>0 0 0 0 0 0</transformation>
+                    <geometry>
+                        <box>
+                            <size>2.0 0.01 2.0</size>
+                        </box>
+                    </geometry>
+                </collision_shape>                                
+            </body>
+            <joint type="weld" name="joint 1">
+                <parent>world</parent>
+                <child>ground</child>
+            </joint>
+        </skeleton>	
+        
+        <skeleton name="box skeleton">
+            <body name="box">
                 <gravity>1</gravity>
-                <transformation>1 2 3 0.1 0 0</transformation>
+                <transformation>1 2 3 0 0.5 0</transformation>
                 <inertia>
                     <mass>5</mass>
                     <offset>0 0 0</offset>
@@ -38,11 +64,12 @@
                     </geometry>
                 </collision_shape>                                
             </body>
+            
             <joint type="free" name="joint 1">
                 <parent>world</parent>
-                <child>link 1</child>
-                <transformation>0 0 0 0 0 0</transformation>
+                <child>box</child>
             </joint>
         </skeleton>	
+        
     </world>
 </dart>

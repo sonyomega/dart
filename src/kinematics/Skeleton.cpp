@@ -120,13 +120,26 @@ void Skeleton::initKinematics()
 	//--------------------------------------------------------------------------
 	mDofs.clear();
 
+    // calculate mass
+    // init the dependsOnDof stucture for each bodylink
+    for(int i = 0; i < getNumNodes(); i++)
+    {
+        mBodies[i]->setSkel(this);
+        // mNodes[i]->setDependDofMap(getNumDofs());
+        mBodies[i]->setDependDofList();
+        //mBodies.at(i)->init();
+    }
+
+//    for(int i = 0; i < getNumNodes(); i++)
+//        mBodies.at(i)->updateTransformation();
+
 	for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
 		 itrJoint != mJoints.end();
 		 ++itrJoint)
 	{
-        const std::vector<Coordinate*>& dofs = (*itrJoint)->getDofs();
+        const std::vector<Dof*>& dofs = (*itrJoint)->getDofs();
 
-        for (std::vector<Coordinate*>::const_iterator itrDof = dofs.begin();
+        for (std::vector<Dof*>::const_iterator itrDof = dofs.begin();
 			 itrDof != dofs.end();
 			 ++itrDof)
 		{

@@ -54,7 +54,7 @@ BodyNode::BodyNode()
       mColShape(NULL),
       mColliding(true),
       mSkeleton(NULL),
-      mJointParent(NULL),
+      mParentJoint(NULL),
       mJointsChild(std::vector<Joint*>(0)),
       mParentBody(NULL),
       mChildBodies(std::vector<BodyNode*>(0)),
@@ -104,6 +104,46 @@ BodyNode*BodyNode::getChildBody(int _idx) const
     return mChildBodies[_idx];
 }
 
+void BodyNode::setDependDofList()
+{
+    mDependentDofs.clear();
+    if (mParentBody != NULL)
+    {
+        mDependentDofs.insert(mDependentDofs.end(),
+                              mParentBody->mDependentDofs.begin(),
+                              mParentBody->mDependentDofs.end());
+    }
+
+    for (int i = 0; i < getNumLocalDofs(); i++)
+    {
+        int dofID = getDof(i)->getSkelIndex();
+        mDependentDofs.push_back(dofID);
+    }
+
+#if _DEBUG
+    for (int i = 0; i < (int)mDependentDofs.size() - 1; i++)
+    {
+        int now = mDependentDofs[i];
+        int next = mDependentDofs[i + 1];
+        if (now > next)
+        {
+            cerr << "Array not sorted!!!" << endl;
+            exit(0);
+        }
+    }
+#endif
+}
+
+int BodyNode::getNumLocalDofs() const
+{
+    return mParentJoint->getNumDofs();
+}
+
+Dof* BodyNode::getDof(int _idx) const
+{
+    return mParentJoint->getDof(_idx);
+}
+
 void BodyNode::updateForwardKinematics(bool _firstDerivative, bool _secondDerivative)
 {
     _updateTransformation();
@@ -126,7 +166,7 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
     _ri->pushMatrix();
 
     // render the self geometry
-    mJointParent->applyGLTransform(_ri);
+    mParentJoint->applyGLTransform(_ri);
 
     if (mVizShape != NULL)
     {
@@ -148,9 +188,9 @@ void BodyNode::_updateTransformation()
 {
     if (mParentBody)
         mW = mParentBody->getWorldTransformation()
-             * mJointParent->getLocalTransformation();
+             * mParentJoint->getLocalTransformation();
     else
-        mW = mJointParent->getLocalTransformation();
+        mW = mParentJoint->getLocalTransformation();
 }
 
 void BodyNode::_updateVelocity(bool _updateJacobian)
@@ -158,13 +198,13 @@ void BodyNode::_updateVelocity(bool _updateJacobian)
     // V(i) = Ad(T(i, i-1), V(i-1)) + S * dq
     if (mParentBody)
     {
-        mV.setInvAd(mJointParent->getLocalTransformation(),
+        mV.setInvAd(mParentJoint->getLocalTransformation(),
                     mParentBody->getBodyVelocity());
-        mV += mJointParent->getLocalVelocity();
+        mV += mParentJoint->getLocalVelocity();
     }
     else
     {
-        mV = mJointParent->getLocalVelocity();
+        mV = mParentJoint->getLocalVelocity();
     }
 
     // TODO:
@@ -177,15 +217,15 @@ void BodyNode::_updateAcceleration(bool _updateJacobianDeriv)
     //         + dS * dq + S * ddq
     if (mParentBody)
     {
-        mdV.setInvAd(mJointParent->getLocalTransformation(),
+        mdV.setInvAd(mParentJoint->getLocalTransformation(),
                     mParentBody->getBodyAcceleration());
-        mdV += math::ad(mV, mJointParent->getLocalVelocity());
-        mdV += mJointParent->getLocalAcceleration();
+        mdV += math::ad(mV, mParentJoint->getLocalVelocity());
+        mdV += mParentJoint->getLocalAcceleration();
     }
     else
     {
-        mdV = math::ad(mV, mJointParent->getLocalVelocity())
-              + mJointParent->getLocalAcceleration();
+        mdV = math::ad(mV, mParentJoint->getLocalVelocity())
+              + mParentJoint->getLocalAcceleration();
     }
 
     //

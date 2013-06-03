@@ -127,26 +127,23 @@ namespace dart {
             int nSkels = mSkels.size();
             int nNodes = _newSkel->getNumNodes();
 
-            for (int j = 0; j < nNodes; j++)
-                {
-                    kinematics::BodyNode* node = _newSkel->getNode(j);
-                    // TODO: (test)
-                    if (node->getCollisionShape() == NULL)
-                        continue;
-                    mCollisionChecker->addCollisionSkeletonNode(node);
-                    mBodyIndexToSkelIndex.push_back(nSkels-1);
-                }
+            for (int j = 0; j < nNodes; j++) {
+                kinematics::BodyNode* node = _newSkel->getNode(j);
+                if (node->getCollisionShape() == NULL)
+                    continue;
+                mCollisionChecker->addCollisionSkeletonNode(node);
+                mBodyIndexToSkelIndex.push_back(nSkels-1);
+            }
 
             // Add all body nodes into mCollisionChecker
             int rows = mMInv.rows();
             int cols = mMInv.cols();
 
-            if (!_newSkel->getImmobileState())
-                {
-                    // Immobile objets have mass of infinity
-                    rows += _newSkel->getMassMatrix().rows();
-                    cols += _newSkel->getMassMatrix().cols();
-                }
+            if (!_newSkel->getImmobileState()) {
+                // Immobile objets have mass of infinity
+                rows += _newSkel->getMassMatrix().rows();
+                cols += _newSkel->getMassMatrix().cols();
+            }
 
             Eigen::VectorXd newConstrForce;
             if (!_newSkel->getImmobileState())
@@ -484,8 +481,6 @@ namespace dart {
 //                int i = node->getDependentDof(dofIndex);
 //                Jt.row(i) = xformHom(node->getDerivWorldTransform(dofIndex), invP);
 //            }
-            dterr << "NOT IMPLEMENTED.\n";
-            //==================================================================
 
             return Jt;
         }

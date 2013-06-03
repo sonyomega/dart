@@ -65,6 +65,7 @@ public:
     //
     //--------------------------------------------------------------------------
     BodyNodeDynamics* createBodyNode() const;
+    BodyNodeDynamics* getBody(int i) const;
 
     //--------------------------------------------------------------------------
     // Dynamical Properties

@@ -471,6 +471,7 @@ public:
     // Friend functions
     //--------------------------------------------------------------------------
     friend class se3;
+    friend class dse3;
     friend class SE3;
 
     friend Vec3 operator*(double d, const Vec3& v);
@@ -585,6 +586,7 @@ public:
     //
     //--------------------------------------------------------------------------
     friend class se3;
+    friend class dse3;
 
     friend double operator*(const dse3& t, const Axis& s);
     friend double Norm(const Axis& v);
@@ -731,6 +733,7 @@ public:
     //--------------------------------------------------------------------------
     // Friend functions
     //--------------------------------------------------------------------------
+    friend class dse3;
     friend class SE3;
 
     friend double operator*(const dse3& t, const se3& s);
@@ -743,6 +746,9 @@ public:
     friend se3 setInvAd(const SE3& T, const se3& V);
     friend Vec3 MinusLinearAd(const Vec3& p, const se3& V);
     friend se3 setad(const se3& X, const se3& Y);
+    friend se3 Ad(const SE3& T, const se3& s);
+    friend se3 InvAd(const SE3& T, const se3& s);
+    friend se3 ad(const se3& s1, const se3& s2);
     friend Vec3 ad(const Vec3& s1, const se3& s2);
     friend dse3 dad(const se3& V, const dse3& F);
     friend double Inner(const se3& V, const dse3& F);
@@ -750,6 +756,7 @@ public:
     friend double SquareSum(const se3& S);
     friend se3 Rotate(const SE3& T, const se3& S);
     friend se3 InvRotate(const SE3& T, const se3& S);
+
 private:
     double _w[6];
 };
@@ -825,8 +832,8 @@ public:
     dse3 operator*(double) const;
 
     /// @brief access to the idx th element.
-    double& operator[](int idx);
-    const double& operator[](int) const;
+//    double& operator[](int idx);
+//    const double& operator[](int) const;
 
     //--------------------------------------------------------------------------
     // Setters and getters
@@ -840,18 +847,23 @@ public:
     //--------------------------------------------------------------------------
     // Friend functions
     //--------------------------------------------------------------------------
+    friend class AInertia;
+
     friend dse3 operator*(double, const dse3& );
     friend double operator*(const dse3& t, const se3& s);
     friend double operator*(const dse3& t, const Axis& s);
     friend double operator*(const dse3& F, const Vec3& V);
+    friend std::ostream& operator<<(std::ostream& os, const dse3& t);
     friend dse3 dAd(const SE3& T, const dse3& F);
     friend dse3 InvdAd(const SE3& T, const dse3& F);
+    friend dse3 dad(const se3& s, const dse3& t);
     friend double SquareSum(const dse3& );
-
     friend double Inner(const se3& V, const dse3& F);
     friend double Inner(const dse3& F, const se3& V);
     friend double Inner(const dse3& F, const Axis& w);
     friend double Inner(const dse3& F, const Vec3& v);
+    friend double Norm(const dse3& f);
+    friend AInertia KroneckerProduct(const dse3& x, const dse3& y);
 
 private:
     double _m[6];
@@ -1032,8 +1044,8 @@ public:
     /// | T[2]	T[5]	T[8]	T[11] |
     /// ,where the left 3X3 matrix is the rotation matrix and the right 3 vector
     /// is the position.
-    const double& operator[](int i) const;
-    double& operator[](int i);
+//    const double& operator[](int i) const;
+//    double& operator[](int i);
 
     /// @brief substitution operator
     const SE3& operator=(const SE3& T);
@@ -1117,6 +1129,8 @@ public:
     //--------------------------------------------------------------------------
     friend class se3;
     friend class dse3;
+    friend class Inertia;
+    friend class AInertia;
 
     friend std::ostream& operator<<(std::ostream& os, const SE3& T);
     friend SE3 Inv(const SE3& T);
@@ -1130,9 +1144,20 @@ public:
     friend Vec3 iEulerZYZ(const SE3& T);
     friend SE3 Normalize(const SE3& );
     friend Vec3 Rotate(const SE3& T, const Vec3& v);
+    friend se3 Rotate(const SE3& T, const se3& v);
+    friend Axis Rotate(const SE3& T, const Axis& v);
     friend Vec3 InvRotate(const SE3& T, const Vec3& v);
+    friend se3 InvRotate(const SE3& T, const se3& v);
+    friend Axis InvRotate(const SE3& T, const Axis& v);
+    friend se3 Ad(const SE3& T, const se3& s);
+    friend se3 Ad(const SE3& T, const Axis& s);
+    friend se3 Ad(const SE3& T, const Vec3& v);
+    friend se3 InvAd(const SE3& T, const se3& s);
     friend Vec3 InvAd(const SE3& T, const Vec3& v);
     friend Axis InvAd(const SE3& T, const Axis& v);
+    friend dse3 dAd(const SE3& T, const dse3& t);
+    friend dse3 dAd(const SE3& T, const Vec3& f);
+    friend dse3 InvdAd(const SE3& T, const dse3& t);
 
 private:
     double _T[12];

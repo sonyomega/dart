@@ -48,6 +48,7 @@
 #include "kinematics/ShapeBox.h"
 #include "kinematics/ShapeCylinder.h"
 #include "kinematics/ShapeEllipsoid.h"
+#include "kinematics/WeldJoint.h"
 #include "kinematics/RevoluteJoint.h"
 #include "kinematics/TranslationalJoint.h"
 #include "kinematics/BallJoint.h"
@@ -487,6 +488,8 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     // Type attribute
     std::string type = getAttribute(_jointElement, "type");
     assert(!type.empty());
+    if (type ==std::string("weld"))
+        newJoint = readWeldJoint(_jointElement, _skeleton);
     if (type == std::string("revolute"))
         newJoint = readRevoluteJoint(_jointElement, _skeleton);
     if (type ==std::string("ball"))
@@ -562,6 +565,19 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     newJoint->setLocalTransformFromParentBody(parentToJoint);
 
     return newJoint;
+}
+
+kinematics::WeldJoint*readWeldJoint(
+        tinyxml2::XMLElement* _weldJointElement,
+        dynamics::SkeletonDynamics* _skeleton)
+{
+    assert(_weldJointElement != NULL);
+    assert(_skeleton != NULL);
+
+    kinematics::WeldJoint* newWeldJoint
+            = new kinematics::WeldJoint;
+
+    return newWeldJoint;
 }
 
 kinematics::RevoluteJoint*readRevoluteJoint(
@@ -1049,16 +1065,6 @@ tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement,
 
     return _parentElement->FirstChildElement(_name.c_str());
 }
-
-
-
-
-
-
-
-
-
-
 
 } // namespace simulation
 } // namespace dart

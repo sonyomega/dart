@@ -80,6 +80,7 @@ namespace dart {
 namespace renderer { class RenderInterface; }
 namespace kinematics {
 
+class Dof;
 class Skeleton;
 class Joint;
 class Shape;
@@ -180,14 +181,18 @@ public:
     // Structueral Properties
     //--------------------------------------------------------------------------
     /// @brief
+    DEPRECATED void setSkel(Skeleton* _skel) { mSkeleton = _skel; }
+    void setSkeleton(Skeleton* _skel) { mSkeleton = _skel; }
+
+    /// @brief
     DEPRECATED Skeleton* getSkel() const { return mSkeleton; }
     Skeleton* getSkeleton() const { return mSkeleton; }
 
     /// @brief
-    void setParentJoint(Joint* _joint) { mJointParent = _joint; }
+    void setParentJoint(Joint* _joint) { mParentJoint = _joint; }
 
     /// @brief
-    Joint* getParentJoint() const { return mJointParent; }
+    Joint* getParentJoint() const { return mParentJoint; }
 
     /// @brief
     void addChildJoint(Joint* _joint);
@@ -216,6 +221,23 @@ public:
 
     /// @brief
     const std::vector<BodyNode*>& getChildBodies() const { return mChildBodies; }
+
+    // TODO: Check
+    void setDependDofList();
+
+    // TODO: Check
+    int getNumLocalDofs() const;
+
+    // TODO: Check
+    Dof* getDof(int _idx) const;
+
+    // TODO: Check
+    /// @brief The number of the dofs by which this node is affected.
+    int getNumDependentDofs() const { return mDependentDofs.size(); }
+
+    // TODO: Check
+    /// @brief Return an dof index from the array index (< getNumDependentDofs).
+    int getDependentDof(int _arrayIndex) { return mDependentDofs[_arrayIndex]; }
 
     //--------------------------------------------------------------------------
     // Recursive Kinematics Algorithms
@@ -288,7 +310,7 @@ protected:
     /// @brief
     // TODO: rename
     //Joint* mParentJoint;
-    Joint* mJointParent;
+    Joint* mParentJoint;
 
     /// @brief
     // TODO: rename
@@ -300,6 +322,9 @@ protected:
 
     /// @brief
     std::vector<BodyNode*> mChildBodies;
+
+    /// @brief A list of dependent dof indices
+    std::vector<int> mDependentDofs;
 
     //--------------------------------------------------------------------------
     // Variable Properties

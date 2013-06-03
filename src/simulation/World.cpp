@@ -114,7 +114,7 @@ Eigen::VectorXd World::evalDeriv()
     _computeForwardDynamics();
 
     // compute contact forces
-//    mCollisionHandle->computeConstraintForces();
+    mCollisionHandle->computeConstraintForces();
 
     // compute derivatives for integration
     Eigen::VectorXd deriv = Eigen::VectorXd::Zero(mIndices.back() * 2);
@@ -129,9 +129,9 @@ Eigen::VectorXd World::evalDeriv()
 
         Eigen::VectorXd qddot = mSkeletons[i]->getInvMassMatrix()
                                 * (-mSkeletons[i]->getCombinedVector()
-//                                   + mSkeletons[i]->getExternalForces()
-//                                   + mSkeletons[i]->getInternalForces()
-//                                   + mCollisionHandle->getTotalConstraintForce(i)
+                                   + mSkeletons[i]->getExternalForces()
+                                   + mSkeletons[i]->getInternalForces()
+                                   + mCollisionHandle->getTotalConstraintForce(i)
                                    );
 
         // set velocities

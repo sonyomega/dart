@@ -48,14 +48,14 @@ System::~System()
 {
 }
 
-Coordinate* System::getDof(int _idx) const
+Dof* System::getDof(int _idx) const
 {
     assert(0 <= _idx && _idx < getNumDofs());
 
     return mDofs[_idx];
 }
 
-Coordinate* System::getDof(const std::string& _name) const
+Dof* System::getDof(const std::string& _name) const
 {
     int size = getNumDofs();
 

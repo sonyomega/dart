@@ -88,7 +88,7 @@ protected:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    Coordinate mCoordinate[3];
+    Dof mCoordinate[3];
 
 private:
 

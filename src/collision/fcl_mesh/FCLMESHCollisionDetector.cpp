@@ -21,8 +21,8 @@ namespace collision {
 FCLMESHCollisionDetector::~FCLMESHCollisionDetector() {
 }
 
-void FCLMESHCollisionDetector::addCollisionSkeletonNode(kinematics::BodyNode *_bd,
-                                                    bool _bRecursive)
+void FCLMESHCollisionDetector::addCollisionSkeletonNode(
+        kinematics::BodyNode *_bd, bool _bRecursive)
 {
     if (_bRecursive == false || _bd->getNumChildJoints() == 0)
     {
@@ -35,13 +35,10 @@ void FCLMESHCollisionDetector::addCollisionSkeletonNode(kinematics::BodyNode *_b
         for(unsigned int i = 0; i < mCollisionNodes.size() - 1; i++)
         {
             //if(mCollisionSkeletonNodeList[i]->mBodyNode->getParentNode() == _bd || _bd->getParentNode() == mCollisionSkeletonNodeList[i]->mBodyNode) {
-            if(mCollisionNodes[i]->getBodyNode()->getSkel() == _bd->getSkel()) {
+            if(mCollisionNodes[i]->getBodyNode()->getSkel() == _bd->getSkel())
                 mActiveMatrix.back()[i] = false;
-            }
             else
-            {
                 mActiveMatrix.back()[i] = true;
-            }
         }
     }
     else
@@ -53,7 +50,8 @@ void FCLMESHCollisionDetector::addCollisionSkeletonNode(kinematics::BodyNode *_b
     }
 }
 
-CollisionNode*FCLMESHCollisionDetector::createCollisionNode(kinematics::BodyNode* _bodyNode)
+CollisionNode*FCLMESHCollisionDetector::createCollisionNode(
+        kinematics::BodyNode* _bodyNode)
 {
     CollisionNode* collisionNode = NULL;
 
@@ -86,9 +84,8 @@ bool FCLMESHCollisionDetector::checkCollision(bool _checkAllCollisions,
             FCLMESHCollisionNode2 = static_cast<FCLMESHCollisionNode*>(mCollisionNodes[j]);
 
             if (!mActiveMatrix[j][i])
-            {
                 continue;
-            }
+
             const int numTriIntersection
                     = FCLMESHCollisionNode1->checkCollision(
                           FCLMESHCollisionNode2,

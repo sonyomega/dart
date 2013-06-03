@@ -61,13 +61,13 @@ public:
     int getDOF() const { return mDofs.size(); }
 
     /// @brief
-    const std::vector<Coordinate*>& getDofs() const { return mDofs; }
+    const std::vector<Dof*>& getDofs() const { return mDofs; }
 
     /// @brief
-    Coordinate* getDof(int _idx) const;
+    Dof* getDof(int _idx) const;
 
     /// @brief
-    Coordinate* getDof(const std::string& _name) const;
+    Dof* getDof(const std::string& _name) const;
 
     /// @brief Backup current state as initial state.
     void backupInitState();
@@ -133,7 +133,7 @@ public:
 
 protected:
     /// @brief Pointers to Dofs.
-    std::vector<Coordinate*> mDofs;
+    std::vector<Dof*> mDofs;
 
 private:
 

@@ -44,7 +44,7 @@
 namespace dart {
 namespace kinematics {
 
-Coordinate::Coordinate()
+Dof::Dof()
     : q(0.0),
       dq(0.0),
       ddq(0.0),
@@ -69,11 +69,11 @@ Coordinate::Coordinate()
 {
 }
 
-Coordinate::~Coordinate()
+Dof::~Dof()
 {
 }
 
-void Coordinate::init()
+void Dof::init()
 {
     mName.assign("dof");
 
@@ -88,13 +88,13 @@ void Coordinate::init()
     //    mJoint = NULL;	// remains null if const dof
 }
 
-void Coordinate::backupInitState()
+void Dof::backupInitState()
 {
     init_q = q;
     init_dq = dq;
 }
 
-void Coordinate::restoreInitState()
+void Dof::restoreInitState()
 {
     q = init_q;
     dq = init_dq;

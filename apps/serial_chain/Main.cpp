@@ -1,5 +1,7 @@
 #include "utils/Paths.h"
+#include "math/UtilsMath.h"
 #include "simulation/ParserDART.h"
+#include "dynamics/SkeletonDynamics.h"
 #include "MyWindow.h"
 
 int main(int argc, char* argv[])
@@ -8,15 +10,14 @@ int main(int argc, char* argv[])
     // create and initialize the world
     dart::simulation::World *myWorld
             = dart::simulation::readDARTFile(
-                  //DART_DATA_PATH"/dart/single_pendulum.dart");
-                  //DART_DATA_PATH"/dart/double_pendulum.dart");
-                  //DART_DATA_PATH"/dart/boxes.dart");
-                  //DART_DATA_PATH"/dart/ball_joints.dart");
-                  //DART_DATA_PATH"/dart/translational_joints.dart");
-                  //DART_DATA_PATH"/dart/test/free_joints.dart");
-                  //DART_DATA_PATH"/dart/test/serial_chain.dart");
-                  DART_DATA_PATH"/dart/test/drop.dart");
+                  DART_DATA_PATH"/dart/test/serial_chain.dart");
     assert(myWorld != NULL);
+
+    int nDof = myWorld->getSkeleton(0)->getDOF();
+    Eigen::VectorXd initPose(nDof);
+    for (int i = 0; i < nDof; i++)
+        initPose[i] = dart::math::random(-0.5, 0.5);
+    myWorld->getSkeleton(0)->setPose(initPose);
 
     // create a window and link it to the world
     MyWindow window;

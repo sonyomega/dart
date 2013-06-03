@@ -19,6 +19,7 @@ foreach(APPDIR
 	#closedLoop
 	#drawRRT
 	#spheres
+	serial_chain
 	)
     add_subdirectory(${APPDIR})
     if(WIN32)

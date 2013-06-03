@@ -111,7 +111,7 @@ public:
 
     /// @brief
     // TODO: rename
-    //int getNumBodies() const { return mBodies.size(); }
+    int getNumBodies() const { return mBodies.size(); }
     int getNumNodes() const { return mBodies.size(); }
 
     /// @brief
@@ -119,7 +119,7 @@ public:
 
     /// @brief
     // TODO: rename
-    //BodyNode* getBody(int _idx) const { return mBodies[_idx]; }
+    BodyNode* getBody(int _idx) const { return mBodies[_idx]; }
     BodyNode* getNode(int _idx) const { return mBodies[_idx]; }
 
     /// @brief

@@ -136,13 +136,13 @@ void BodyNodeDynamics::_updateBodyForce(const Eigen::Vector3d& _gravity)
 
 void BodyNodeDynamics::_updateGeneralizedForce()
 {
-    assert(mJointParent != NULL);
+    assert(mParentJoint != NULL);
 
-    const math::Jacobian& J = mJointParent->getLocalJacobian();
+    const math::Jacobian& J = mParentJoint->getLocalJacobian();
 
-    assert(J.getSize() == mJointParent->getNumDofs());
+    assert(J.getSize() == mParentJoint->getNumDofs());
 
-    mJointParent->set_tau(J.getInnerProduct(mF));
+    mParentJoint->set_tau(J.getInnerProduct(mF));
 }
 
 void BodyNodeDynamics::_updateDampingForce()

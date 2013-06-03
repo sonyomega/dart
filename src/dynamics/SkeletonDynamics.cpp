@@ -60,6 +60,11 @@ BodyNodeDynamics*SkeletonDynamics::createBodyNode() const
     return new BodyNodeDynamics();
 }
 
+BodyNodeDynamics*SkeletonDynamics::getBody(int i) const
+{
+    return dynamic_cast<BodyNodeDynamics*>(kinematics::Skeleton::getBody(i));
+}
+
 void SkeletonDynamics::initDynamics()
 {
     mM = MatrixXd::Zero(getDOF(), getDOF());
@@ -69,6 +74,14 @@ void SkeletonDynamics::initDynamics()
     mCg = VectorXd::Zero(getDOF());
     set_tau(VectorXd::Zero(getDOF()));
     mFext = VectorXd::Zero(getNumDofs());
+
+    // calculate mass
+    // init the dependsOnDof stucture for each bodylink
+    mTotalMass = 0.0;
+    for(int i = 0; i < getNumNodes(); i++)
+    {
+        mTotalMass += getBody(i)->getMass();
+    }
 }
 
 void SkeletonDynamics::computeInverseDynamics(const Eigen::Vector3d& _gravity)

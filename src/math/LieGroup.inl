@@ -617,7 +617,7 @@ inline double operator*(const dse3& t, const Axis& s)
 */
 inline se3 Log(const SE3& T)
 {
-    double theta = std::acos(std::max(std::min(SCALAR_1_2 * (T[0] + T[4] + T[8] - SCALAR_1), SCALAR_1), -SCALAR_1));
+    double theta = std::acos(std::max(std::min(SCALAR_1_2 * (T._T[0] + T._T[4] + T._T[8] - SCALAR_1), SCALAR_1), -SCALAR_1));
     double alpha;
     double beta;
     double gamma;
@@ -631,17 +631,17 @@ inline se3 Log(const SE3& T)
         double phi = M_PI - theta;
         double delta = SCALAR_1_2 + SCALAR_1_8 * phi * phi;
 
-        double w[] = {	T[5] > T[7] ? theta * sqrt(SCALAR_1 + (T[0] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T[0] - SCALAR_1) * delta),
-                        T[6] > T[2] ? theta * sqrt(SCALAR_1 + (T[4] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T[4] - SCALAR_1) * delta),
-                        T[1] > T[3] ? theta * sqrt(SCALAR_1 + (T[8] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T[8] - SCALAR_1) * delta) };
+        double w[] = {	T._T[5] > T._T[7] ? theta * sqrt(SCALAR_1 + (T._T[0] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T._T[0] - SCALAR_1) * delta),
+                        T._T[6] > T._T[2] ? theta * sqrt(SCALAR_1 + (T._T[4] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T._T[4] - SCALAR_1) * delta),
+                        T._T[1] > T._T[3] ? theta * sqrt(SCALAR_1 + (T._T[8] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T._T[8] - SCALAR_1) * delta) };
 
         beta = SCALAR_1_4 * theta * (M_PI - theta);
-        gamma = (w[0] * T[9] + w[1] * T[10] + w[2] * T[11]) * (c1 -  c2 * phi + c3 * phi * phi);
+        gamma = (w[0] * T._T[9] + w[1] * T._T[10] + w[2] * T._T[11]) * (c1 -  c2 * phi + c3 * phi * phi);
 
         return se3(	w[0], w[1], w[2],
-                    beta * T[ 9] - SCALAR_1_2 * (w[1] * T[11] - w[2] * T[10]) + gamma * w[0],
-                    beta * T[10] - SCALAR_1_2 * (w[2] * T[ 9] - w[0] * T[11]) + gamma * w[1],
-                    beta * T[11] - SCALAR_1_2 * (w[0] * T[10] - w[1] * T[ 9]) + gamma * w[2]);
+                    beta * T._T[ 9] - SCALAR_1_2 * (w[1] * T._T[11] - w[2] * T._T[10]) + gamma * w[0],
+                    beta * T._T[10] - SCALAR_1_2 * (w[2] * T._T[ 9] - w[0] * T._T[11]) + gamma * w[1],
+                    beta * T._T[11] - SCALAR_1_2 * (w[0] * T._T[10] - w[1] * T._T[ 9]) + gamma * w[2]);
     } else
     {
         if ( theta > LIE_EPS )
@@ -656,27 +656,27 @@ inline se3 Log(const SE3& T)
             gamma = SCALAR_1_12 + SCALAR_1_720 * theta * theta;
         }
 
-        double w[] = { alpha * (T[5] - T[7]), alpha * (T[6] - T[2]), alpha * (T[1] - T[3]) };
-        gamma *= w[0] * T[9] + w[1] * T[10] + w[2] * T[11];
+        double w[] = { alpha * (T._T[5] - T._T[7]), alpha * (T._T[6] - T._T[2]), alpha * (T._T[1] - T._T[3]) };
+        gamma *= w[0] * T._T[9] + w[1] * T._T[10] + w[2] * T._T[11];
 
         return se3(	w[0], w[1], w[2],
-                    beta * T[ 9] + SCALAR_1_2 * (w[2] * T[10] - w[1] * T[11]) + gamma * w[0],
-                    beta * T[10] + SCALAR_1_2 * (w[0] * T[11] - w[2] * T[ 9]) + gamma * w[1],
-                    beta * T[11] + SCALAR_1_2 * (w[1] * T[ 9] - w[0] * T[10]) + gamma * w[2]);
+                    beta * T._T[ 9] + SCALAR_1_2 * (w[2] * T._T[10] - w[1] * T._T[11]) + gamma * w[0],
+                    beta * T._T[10] + SCALAR_1_2 * (w[0] * T._T[11] - w[2] * T._T[ 9]) + gamma * w[1],
+                    beta * T._T[11] + SCALAR_1_2 * (w[1] * T._T[ 9] - w[0] * T._T[10]) + gamma * w[2]);
     }
 }
 
 inline Axis LogR(const SE3& T)
 {
-    double theta = std::acos(std::max(std::min(SCALAR_1_2 * (T[0] + T[4] + T[8] - SCALAR_1), SCALAR_1), -SCALAR_1)), alpha;
+    double theta = std::acos(std::max(std::min(SCALAR_1_2 * (T._T[0] + T._T[4] + T._T[8] - SCALAR_1), SCALAR_1), -SCALAR_1)), alpha;
 
     if ( theta > M_PI - LIE_EPS )
     {
         double delta = SCALAR_1_2 + SCALAR_1_8 * (M_PI - theta) * (M_PI - theta);
 
-        return Axis(T[5] > T[7] ? theta * sqrt(SCALAR_1 + (T[0] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T[0] - SCALAR_1) * delta),
-                    T[6] > T[2] ? theta * sqrt(SCALAR_1 + (T[4] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T[4] - SCALAR_1) * delta),
-                    T[1] > T[3] ? theta * sqrt(SCALAR_1 + (T[8] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T[8] - SCALAR_1) * delta));
+        return Axis(T._T[5] > T._T[7] ? theta * sqrt(SCALAR_1 + (T._T[0] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T._T[0] - SCALAR_1) * delta),
+                    T._T[6] > T._T[2] ? theta * sqrt(SCALAR_1 + (T._T[4] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T._T[4] - SCALAR_1) * delta),
+                    T._T[1] > T._T[3] ? theta * sqrt(SCALAR_1 + (T._T[8] - SCALAR_1) * delta) : -theta * sqrt(SCALAR_1 + (T._T[8] - SCALAR_1) * delta));
     } else
     {
         if ( theta > LIE_EPS )
@@ -684,88 +684,89 @@ inline Axis LogR(const SE3& T)
         else
             alpha = SCALAR_1_2 + SCALAR_1_12 * theta * theta;
 
-        return Axis(alpha * (T[5] - T[7]), alpha * (T[6] - T[2]), alpha * (T[1] - T[3]));
+        return Axis(alpha * (T._T[5] - T._T[7]), alpha * (T._T[6] - T._T[2]), alpha * (T._T[1] - T._T[3]));
     }
 }
 
 // re = T * s * Inv(T)
 inline se3 Ad(const SE3& T, const se3& s)
 {
-    double tmp[3] = {	T[0] * s[0] + T[3] * s[1] + T[6] * s[2],
-                        T[1] * s[0] + T[4] * s[1] + T[7] * s[2],
-                        T[2] * s[0] + T[5] * s[1] + T[8] * s[2] };
+    double tmp[3] = {	T._T[0] * s._w[0] + T._T[3] * s._w[1] + T._T[6] * s._w[2],
+                        T._T[1] * s._w[0] + T._T[4] * s._w[1] + T._T[7] * s._w[2],
+                        T._T[2] * s._w[0] + T._T[5] * s._w[1] + T._T[8] * s._w[2] };
     return se3(	tmp[0], tmp[1], tmp[2],
-                T[10] * tmp[2] - T[11] * tmp[1] + T[0] * s[3] + T[3] * s[4] + T[6] * s[5],
-                T[11] * tmp[0] - T[9] * tmp[2] + T[1] * s[3] + T[4] * s[4] + T[7] * s[5],
-                T[9] * tmp[1] - T[10] * tmp[0] + T[2] * s[3] + T[5] * s[4] + T[8] * s[5]);
+                T._T[10] * tmp[2] - T._T[11] * tmp[1] + T._T[0] * s._w[3] + T._T[3] * s._w[4] + T._T[6] * s._w[5],
+                T._T[11] * tmp[0] - T._T[9]  * tmp[2] + T._T[1] * s._w[3] + T._T[4] * s._w[4] + T._T[7] * s._w[5],
+                T._T[9]  * tmp[1] - T._T[10] * tmp[0] + T._T[2] * s._w[3] + T._T[5] * s._w[4] + T._T[8] * s._w[5]);
 }
 
 inline se3 Ad(const SE3& T, const Axis& s)
 {
-    double tmp[3] = {	T[0] * s[0] + T[3] * s[1] + T[6] * s[2],
-                        T[1] * s[0] + T[4] * s[1] + T[7] * s[2],
-                        T[2] * s[0] + T[5] * s[1] + T[8] * s[2] };
+    double tmp[3] = {	T._T[0] * s[0] + T._T[3] * s[1] + T._T[6] * s[2],
+                        T._T[1] * s[0] + T._T[4] * s[1] + T._T[7] * s[2],
+                        T._T[2] * s[0] + T._T[5] * s[1] + T._T[8] * s[2] };
     return se3(	tmp[0], tmp[1], tmp[2],
-                T[10] * tmp[2] - T[11] * tmp[1],
-                T[11] * tmp[0] - T[9] * tmp[2],
-                T[9] * tmp[1] - T[10] * tmp[0]);
+                T._T[10] * tmp[2] - T._T[11] * tmp[1],
+                T._T[11] * tmp[0] - T._T[9] * tmp[2],
+                T._T[9] * tmp[1] - T._T[10] * tmp[0]);
 }
 
 inline se3 Ad(const SE3& T, const Vec3& v)
 {
     return se3(	SCALAR_0, SCALAR_0, SCALAR_0,
-                T[0] * v[0] + T[3] * v[1] + T[6] * v[2],
-                T[1] * v[0] + T[4] * v[1] + T[7] * v[2],
-                T[2] * v[0] + T[5] * v[1] + T[8] * v[2]);
+                T._T[0] * v[0] + T._T[3] * v[1] + T._T[6] * v[2],
+                T._T[1] * v[0] + T._T[4] * v[1] + T._T[7] * v[2],
+                T._T[2] * v[0] + T._T[5] * v[1] + T._T[8] * v[2]);
 }
 
 // re = Inv(T) * s * T
 inline se3 InvAd(const SE3& T, const se3& s)
 {
-    double tmp[3] = {	s[3] + s[1] * T[11] - s[2] * T[10],
-                        s[4] + s[2] * T[9] - s[0] * T[11],
-                        s[5] + s[0] * T[10] - s[1] * T[9] };
-    return se3(	T[0] * s[0] + T[1] * s[1] + T[2] * s[2],
-                T[3] * s[0] + T[4] * s[1] + T[5] * s[2],
-                T[6] * s[0] + T[7] * s[1] + T[8] * s[2],
-                T[0] * tmp[0] + T[1] * tmp[1] + T[2] * tmp[2],
-                T[3] * tmp[0] + T[4] * tmp[1] + T[5] * tmp[2],
-                T[6] * tmp[0] + T[7] * tmp[1] + T[8] * tmp[2]);
+    double tmp[3] = {	s._w[3] + s._w[1] * T._T[11] - s._w[2] * T._T[10],
+                        s._w[4] + s._w[2] * T._T[9]  - s._w[0] * T._T[11],
+                        s._w[5] + s._w[0] * T._T[10] - s._w[1] * T._T[9] };
+    return se3(	T._T[0] * s._w[0] + T._T[1] * s._w[1] + T._T[2] * s._w[2],
+                T._T[3] * s._w[0] + T._T[4] * s._w[1] + T._T[5] * s._w[2],
+                T._T[6] * s._w[0] + T._T[7] * s._w[1] + T._T[8] * s._w[2],
+                T._T[0] * tmp[0] + T._T[1] * tmp[1] + T._T[2] * tmp[2],
+                T._T[3] * tmp[0] + T._T[4] * tmp[1] + T._T[5] * tmp[2],
+                T._T[6] * tmp[0] + T._T[7] * tmp[1] + T._T[8] * tmp[2]);
 }
 
 inline se3 ad(const se3& s1, const se3& s2)
 {
-    return se3(	s1[1] * s2[2] - s1[2] * s2[1],
-                s1[2] * s2[0] - s1[0] * s2[2],
-                s1[0] * s2[1] - s1[1] * s2[0],
-                s1[1] * s2[5] - s1[2] * s2[4] - s2[1] * s1[5] + s2[2] * s1[4],
-                s1[2] * s2[3] - s1[0] * s2[5] - s2[2] * s1[3] + s2[0] * s1[5],
-                s1[0] * s2[4] - s1[1] * s2[3] - s2[0] * s1[4] + s2[1] * s1[3]);
+    return se3(	s1._w[1] * s2._w[2] - s1._w[2] * s2._w[1],
+                s1._w[2] * s2._w[0] - s1._w[0] * s2._w[2],
+                s1._w[0] * s2._w[1] - s1._w[1] * s2._w[0],
+                s1._w[1] * s2._w[5] - s1._w[2] * s2._w[4] - s2._w[1] * s1._w[5] + s2._w[2] * s1._w[4],
+                s1._w[2] * s2._w[3] - s1._w[0] * s2._w[5] - s2._w[2] * s1._w[3] + s2._w[0] * s1._w[5],
+                s1._w[0] * s2._w[4] - s1._w[1] * s2._w[3] - s2._w[0] * s1._w[4] + s2._w[1] * s1._w[3]);
 }
 
 inline double SquareSum(const se3& s)
 {
-    return (s[0] * s[0] + s[1] * s[1] + s[2] * s[2] + s[3] * s[3] + s[4] * s[4] + s[5] * s[5]);
+    return (s._w[0] * s._w[0] + s._w[1] * s._w[1] + s._w[2] * s._w[2]
+          + s._w[3] * s._w[3] + s._w[4] * s._w[4] + s._w[5] * s._w[5]);
 }
 
 inline se3 Rotate(const SE3& T, const se3& v)
 {
-    return se3(	T[0] * v[0] + T[3] * v[1] + T[6] * v[2],
-                T[1] * v[0] + T[4] * v[1] + T[7] * v[2],
-                T[2] * v[0] + T[5] * v[1] + T[8] * v[2],
-                T[0] * v[3] + T[3] * v[4] + T[6] * v[5],
-                T[1] * v[3] + T[4] * v[4] + T[7] * v[5],
-                T[2] * v[3] + T[5] * v[4] + T[8] * v[5]);
+    return se3(	T._T[0] * v[0] + T._T[3] * v[1] + T._T[6] * v[2],
+                T._T[1] * v[0] + T._T[4] * v[1] + T._T[7] * v[2],
+                T._T[2] * v[0] + T._T[5] * v[1] + T._T[8] * v[2],
+                T._T[0] * v[3] + T._T[3] * v[4] + T._T[6] * v[5],
+                T._T[1] * v[3] + T._T[4] * v[4] + T._T[7] * v[5],
+                T._T[2] * v[3] + T._T[5] * v[4] + T._T[8] * v[5]);
 }
 
 inline se3 InvRotate(const SE3& T, const se3& v)
 {
-    return se3(	T[0] * v[0] + T[1] * v[1] + T[2] * v[2],
-                T[3] * v[0] + T[4] * v[1] + T[5] * v[2],
-                T[6] * v[0] + T[7] * v[1] + T[8] * v[2],
-                T[0] * v[3] + T[1] * v[4] + T[2] * v[5],
-                T[3] * v[3] + T[4] * v[4] + T[5] * v[5],
-                T[6] * v[3] + T[7] * v[4] + T[8] * v[5]);
+    return se3(	T._T[0] * v[0] + T._T[1] * v[1] + T._T[2] * v[2],
+                T._T[3] * v[0] + T._T[4] * v[1] + T._T[5] * v[2],
+                T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2],
+                T._T[0] * v[3] + T._T[1] * v[4] + T._T[2] * v[5],
+                T._T[3] * v[3] + T._T[4] * v[4] + T._T[5] * v[5],
+                T._T[6] * v[3] + T._T[7] * v[4] + T._T[8] * v[5]);
 }
 
 //==============================================================================
@@ -793,22 +794,22 @@ inline dse3::dse3(double m0, double m1, double m2, double m3, double m4, double 
 
 inline dse3::dse3(const Axis& m, const Vec3& f)
 {
-    _m[0] = m[0];
-    _m[1] = m[1];
-    _m[2] = m[2];
-    _m[3] = f[0];
-    _m[4] = f[1];
-    _m[5] = f[2];
+    _m[0] = m._v[0];
+    _m[1] = m._v[1];
+    _m[2] = m._v[2];
+    _m[3] = f._v[0];
+    _m[4] = f._v[1];
+    _m[5] = f._v[2];
 }
 
 inline dse3::dse3(double mass, const se3& dV)
 {
-    _m[0] = mass * dV[0];
-    _m[1] = mass * dV[1];
-    _m[2] = mass * dV[2];
-    _m[3] = mass * dV[3];
-    _m[4] = mass * dV[4];
-    _m[5] = mass * dV[5];
+    _m[0] = mass * dV._w[0];
+    _m[1] = mass * dV._w[1];
+    _m[2] = mass * dV._w[2];
+    _m[3] = mass * dV._w[3];
+    _m[4] = mass * dV._w[4];
+    _m[5] = mass * dV._w[5];
 }
 
 inline const dse3& dse3::operator+(void) const
@@ -823,12 +824,12 @@ inline dse3 dse3::operator-(void) const
 
 inline const dse3& dse3::operator = (const dse3& t)
 {
-    _m[0] = t[0];
-    _m[1] = t[1];
-    _m[2] = t[2];
-    _m[3] = t[3];
-    _m[4] = t[4];
-    _m[5] = t[5];
+    _m[0] = t._m[0];
+    _m[1] = t._m[1];
+    _m[2] = t._m[2];
+    _m[3] = t._m[3];
+    _m[4] = t._m[4];
+    _m[5] = t._m[5];
     return *this;
 }
 
@@ -858,12 +859,12 @@ inline const dse3& dse3::operator = (double d)
 
 inline const dse3& dse3::operator += (const dse3& t)
 {
-    _m[0] += t[0];
-    _m[1] += t[1];
-    _m[2] += t[2];
-    _m[3] += t[3];
-    _m[4] += t[4];
-    _m[5] += t[5];
+    _m[0] += t._m[0];
+    _m[1] += t._m[1];
+    _m[2] += t._m[2];
+    _m[3] += t._m[3];
+    _m[4] += t._m[4];
+    _m[5] += t._m[5];
     return *this;
 }
 
@@ -877,12 +878,12 @@ inline const dse3& dse3::operator += (const Axis& t)
 
 inline const dse3& dse3::operator-= (const dse3& t)
 {
-    _m[0] -= t[0];
-    _m[1] -= t[1];
-    _m[2] -= t[2];
-    _m[3] -= t[3];
-    _m[4] -= t[4];
-    _m[5] -= t[5];
+    _m[0] -= t._m[0];
+    _m[1] -= t._m[1];
+    _m[2] -= t._m[2];
+    _m[3] -= t._m[3];
+    _m[4] -= t._m[4];
+    _m[5] -= t._m[5];
     return *this;
 }
 
@@ -899,12 +900,14 @@ inline const dse3& dse3::operator *= (double d)
 
 inline dse3 dse3::operator+(const dse3& t) const
 {
-    return dse3(_m[0] + t[0], _m[1] + t[1], _m[2] + t[2], _m[3] + t[3], _m[4] + t[4], _m[5] + t[5]);
+    return dse3(_m[0] + t._m[0], _m[1] + t._m[1], _m[2] + t._m[2],
+                _m[3] + t._m[3], _m[4] + t._m[4], _m[5] + t._m[5]);
 }
 
 inline dse3 dse3::operator-(const dse3& t) const
 {
-    return dse3(_m[0] - t[0], _m[1] - t[1], _m[2] - t[2], _m[3] - t[3], _m[4] - t[4], _m[5] - t[5]);
+    return dse3(_m[0] - t._m[0], _m[1] - t._m[1], _m[2] - t._m[2],
+                _m[3] - t._m[3], _m[4] - t._m[4], _m[5] - t._m[5]);
 }
 
 inline dse3 dse3::operator*(double d) const
@@ -912,47 +915,47 @@ inline dse3 dse3::operator*(double d) const
     return dse3(d * _m[0], d * _m[1], d * _m[2], d * _m[3], d * _m[4], d * _m[5]);
 }
 
-inline double& dse3::operator[](int i)
-{
-    return _m[i];
-}
+//inline double& dse3::operator[](int i)
+//{
+//    return _m[i];
+//}
 
-inline const double& dse3::operator[](int i) const
-{
-    return _m[i];
-}
+//inline const double& dse3::operator[](int i) const
+//{
+//    return _m[i];
+//}
 
 inline dse3 dad(const se3& s, const dse3& t)
 {
-    return dse3(t[1] * s[2] - t[2] * s[1] + t[4] * s[5] - t[5] * s[4],
-                t[2] * s[0] - t[0] * s[2] + t[5] * s[3] - t[3] * s[5],
-                t[0] * s[1] - t[1] * s[0] + t[3] * s[4] - t[4] * s[3],
-                t[4] * s[2] - t[5] * s[1],
-                t[5] * s[0] - t[3] * s[2],
-                t[3] * s[1] - t[4] * s[0]);
+    return dse3(t._m[1] * s[2] - t._m[2] * s[1] + t._m[4] * s[5] - t._m[5] * s[4],
+                t._m[2] * s[0] - t._m[0] * s[2] + t._m[5] * s[3] - t._m[3] * s[5],
+                t._m[0] * s[1] - t._m[1] * s[0] + t._m[3] * s[4] - t._m[4] * s[3],
+                t._m[4] * s[2] - t._m[5] * s[1],
+                t._m[5] * s[0] - t._m[3] * s[2],
+                t._m[3] * s[1] - t._m[4] * s[0]);
 }
 
 inline void dse3::dad(const se3& s, const dse3& t)
 {
-    _m[0] =	t[1] * s[2] - t[2] * s[1] + t[4] * s[5] - t[5] * s[4];
-    _m[1] =	t[2] * s[0] - t[0] * s[2] + t[5] * s[3] - t[3] * s[5];
-    _m[2] =	t[0] * s[1] - t[1] * s[0] + t[3] * s[4] - t[4] * s[3];
-    _m[3] =	t[4] * s[2] - t[5] * s[1];
-    _m[4] =	t[5] * s[0] - t[3] * s[2];
-    _m[5] =	t[3] * s[1] - t[4] * s[0];
+    _m[0] =	t._m[1] * s[2] - t._m[2] * s[1] + t._m[4] * s[5] - t._m[5] * s[4];
+    _m[1] =	t._m[2] * s[0] - t._m[0] * s[2] + t._m[5] * s[3] - t._m[3] * s[5];
+    _m[2] =	t._m[0] * s[1] - t._m[1] * s[0] + t._m[3] * s[4] - t._m[4] * s[3];
+    _m[3] =	t._m[4] * s[2] - t._m[5] * s[1];
+    _m[4] =	t._m[5] * s[0] - t._m[3] * s[2];
+    _m[5] =	t._m[3] * s[1] - t._m[4] * s[0];
 }
 
 inline void dse3::dAd(const SE3& T, const dse3& t)
 {
-    double tmp[3] = {	t[0] - T[10] * t[5] + T[11] * t[4],
-                        t[1] - T[11] * t[3] + T[9] * t[5],
-                        t[2] - T[9] * t[4] + T[10] * t[3] };
-    _m[0] = T[0] * tmp[0] + T[1] * tmp[1] + T[2] * tmp[2];
-    _m[1] = T[3] * tmp[0] + T[4] * tmp[1] + T[5] * tmp[2];
-    _m[2] = T[6] * tmp[0] + T[7] * tmp[1] + T[8] * tmp[2];
-    _m[3] = T[0] * t[3] + T[1] * t[4] + T[2] * t[5];
-    _m[4] = T[3] * t[3] + T[4] * t[4] + T[5] * t[5];
-    _m[5] = T[6] * t[3] + T[7] * t[4] + T[8] * t[5];
+    double tmp[3] = {	t._m[0] - T._T[10] * t._m[5] + T._T[11] * t._m[4],
+                        t._m[1] - T._T[11] * t._m[3] + T._T[ 9] * t._m[5],
+                        t._m[2] - T._T[ 9] * t._m[4] + T._T[10] * t._m[3] };
+    _m[0] = T._T[0] * tmp[0] + T._T[1] * tmp[1] + T._T[2] * tmp[2];
+    _m[1] = T._T[3] * tmp[0] + T._T[4] * tmp[1] + T._T[5] * tmp[2];
+    _m[2] = T._T[6] * tmp[0] + T._T[7] * tmp[1] + T._T[8] * tmp[2];
+    _m[3] = T._T[0] * t._m[3] + T._T[1] * t._m[4] + T._T[2] * t._m[5];
+    _m[4] = T._T[3] * t._m[3] + T._T[4] * t._m[4] + T._T[5] * t._m[5];
+    _m[5] = T._T[6] * t._m[3] + T._T[7] * t._m[4] + T._T[8] * t._m[5];
 }
 
 //==============================================================================
@@ -960,43 +963,43 @@ inline void dse3::dAd(const SE3& T, const dse3& t)
 //==============================================================================
 inline dse3 operator*(double d, const dse3& t)
 {
-    return dse3(d * t[0], d * t[1], d * t[2], d * t[3], d * t[4], d * t[5]);
+    return dse3(d * t._m[0], d * t._m[1], d * t._m[2], d * t._m[3], d * t._m[4], d * t._m[5]);
 }
 
 inline dse3 dAd(const SE3& T, const dse3& t)
 {
-    double tmp[3] = {	t[0] - T[10] * t[5] + T[11] * t[4],
-                        t[1] - T[11] * t[3] + T[9] * t[5],
-                        t[2] - T[9] * t[4] + T[10] * t[3] };
-    return dse3(T[0] * tmp[0] + T[1] * tmp[1] + T[2] * tmp[2],
-                T[3] * tmp[0] + T[4] * tmp[1] + T[5] * tmp[2],
-                T[6] * tmp[0] + T[7] * tmp[1] + T[8] * tmp[2],
-                T[0] * t[3] + T[1] * t[4] + T[2] * t[5],
-                T[3] * t[3] + T[4] * t[4] + T[5] * t[5],
-                T[6] * t[3] + T[7] * t[4] + T[8] * t[5]);
+    double tmp[3] = {	t._m[0] - T._T[10] * t._m[5] + T._T[11] * t._m[4],
+                        t._m[1] - T._T[11] * t._m[3] + T._T[ 9] * t._m[5],
+                        t._m[2] - T._T[ 9] * t._m[4] + T._T[10] * t._m[3] };
+    return dse3(T._T[0] * tmp[0] + T._T[1] * tmp[1] + T._T[2] * tmp[2],
+                T._T[3] * tmp[0] + T._T[4] * tmp[1] + T._T[5] * tmp[2],
+                T._T[6] * tmp[0] + T._T[7] * tmp[1] + T._T[8] * tmp[2],
+                T._T[0] * t._m[3] + T._T[1] * t._m[4] + T._T[2] * t._m[5],
+                T._T[3] * t._m[3] + T._T[4] * t._m[4] + T._T[5] * t._m[5],
+                T._T[6] * t._m[3] + T._T[7] * t._m[4] + T._T[8] * t._m[5]);
 }
 
-inline dse3 dAd(const SE3& T, const Vec3& f)
+inline dse3 dAd(const SE3& T, const Vec3& v)
 {
-    double tmp[3] = {	- T[10] * f[2] + T[11] * f[1],
-                        - T[11] * f[0] + T[9] * f[2],
-                        - T[9] * f[1] + T[10] * f[0] };
-    return dse3(T[0] * tmp[0] + T[1] * tmp[1] + T[2] * tmp[2],
-                T[3] * tmp[0] + T[4] * tmp[1] + T[5] * tmp[2],
-                T[6] * tmp[0] + T[7] * tmp[1] + T[8] * tmp[2],
-                T[0] * f[0] + T[1] * f[1] + T[2] * f[2],
-                T[3] * f[0] + T[4] * f[1] + T[5] * f[2],
-                T[6] * f[0] + T[7] * f[1] + T[8] * f[2]);
+    double tmp[3] = {	- T._T[10] * v[2] + T._T[11] * v[1],
+                        - T._T[11] * v[0] + T._T[ 9] * v[2],
+                        - T._T[ 9] * v[1] + T._T[10] * v[0] };
+    return dse3(T._T[0] * tmp[0] + T._T[1] * tmp[1] + T._T[2] * tmp[2],
+                T._T[3] * tmp[0] + T._T[4] * tmp[1] + T._T[5] * tmp[2],
+                T._T[6] * tmp[0] + T._T[7] * tmp[1] + T._T[8] * tmp[2],
+                T._T[0] * v[0] + T._T[1] * v[1] + T._T[2] * v[2],
+                T._T[3] * v[0] + T._T[4] * v[1] + T._T[5] * v[2],
+                T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2]);
 }
 
 inline dse3 InvdAd(const SE3& T, const dse3& t)
 {
-    double tmp[3] = {	T[0] * t[3] + T[3] * t[4] + T[6] * t[5],
-                        T[1] * t[3] + T[4] * t[4] + T[7] * t[5],
-                        T[2] * t[3] + T[5] * t[4] + T[8] * t[5] };
-    return dse3(T[10] * tmp[2] - T[11] * tmp[1] + T[0] * t[0] + T[3] * t[1] + T[6] * t[2],
-                T[11] * tmp[0] - T[9] * tmp[2] + T[1] * t[0] + T[4] * t[1] + T[7] * t[2],
-                T[9] * tmp[1] - T[10] * tmp[0] + T[2] * t[0] + T[5] * t[1] + T[8] * t[2],
+    double tmp[3] = {	T._T[0] * t._m[3] + T._T[3] * t._m[4] + T._T[6] * t._m[5],
+                        T._T[1] * t._m[3] + T._T[4] * t._m[4] + T._T[7] * t._m[5],
+                        T._T[2] * t._m[3] + T._T[5] * t._m[4] + T._T[8] * t._m[5] };
+    return dse3(T._T[10] * tmp[2] - T._T[11] * tmp[1] + T._T[0] * t._m[0] + T._T[3] * t._m[1] + T._T[6] * t._m[2],
+                T._T[11] * tmp[0] - T._T[ 9] * tmp[2] + T._T[1] * t._m[0] + T._T[4] * t._m[1] + T._T[7] * t._m[2],
+                T._T[ 9] * tmp[1] - T._T[10] * tmp[0] + T._T[2] * t._m[0] + T._T[5] * t._m[1] + T._T[8] * t._m[2],
                 tmp[0], tmp[1], tmp[2]);
 }
 
@@ -1012,7 +1015,8 @@ inline dse3 InvdAd(const Vec3& p, const Vec3& f)
 
 inline double SquareSum(const dse3& t)
 {
-    return (t[0] * t[0] + t[1] * t[1] + t[2] * t[2] + t[3] * t[3] + t[4] * t[4] + t[5] * t[5]);
+    return (t._m[0] * t._m[0] + t._m[1] * t._m[1] + t._m[2] * t._m[2]
+          + t._m[3] * t._m[3] + t._m[4] * t._m[4] + t._m[5] * t._m[5]);
 }
 
 //==============================================================================
@@ -1422,15 +1426,15 @@ inline double SE3::operator()(int i, int j) const
     return _T[i + (3 * j)];
 }
 
-inline const double& SE3::operator[](int i) const
-{
-    return _T[i];
-}
+//inline const double& SE3::operator[](int i) const
+//{
+//    return _T[i];
+//}
 
-inline double& SE3::operator[](int i)
-{
-    return _T[i];
-}
+//inline double& SE3::operator[](int i)
+//{
+//    return _T[i];
+//}
 
 inline const SE3& SE3::operator=(const SE3& T)
 {
@@ -1470,42 +1474,42 @@ inline SE3 SE3::operator*(const SE3& T) const
                 _T[0] * T._T[6] + _T[3] * T._T[7] + _T[6] * T._T[8],
                 _T[1] * T._T[6] + _T[4] * T._T[7] + _T[7] * T._T[8],
                 _T[2] * T._T[6] + _T[5] * T._T[7] + _T[8] * T._T[8],
-                _T[9] + _T[0] * T._T[9] + _T[3] * T._T[10] + _T[6] * T._T[11],
+                _T[ 9] + _T[0] * T._T[9] + _T[3] * T._T[10] + _T[6] * T._T[11],
                 _T[10] + _T[1] * T._T[9] + _T[4] * T._T[10] + _T[7] * T._T[11],
                 _T[11] + _T[2] * T._T[9] + _T[5] * T._T[10] + _T[8] * T._T[11] );
 }
 
 inline SE3 SE3::operator / (const SE3& T) const
 {
-    double tmp[] = {_T[0] * T[0] + _T[3] * T[3] + _T[6] * T[6],
-                    _T[1] * T[0] + _T[4] * T[3] + _T[7] * T[6],
-                    _T[2] * T[0] + _T[5] * T[3] + _T[8] * T[6],
-                    _T[0] * T[1] + _T[3] * T[4] + _T[6] * T[7],
-                    _T[1] * T[1] + _T[4] * T[4] + _T[7] * T[7],
-                    _T[2] * T[1] + _T[5] * T[4] + _T[8] * T[7],
-                    _T[0] * T[2] + _T[3] * T[5] + _T[6] * T[8],
-                    _T[1] * T[2] + _T[4] * T[5] + _T[7] * T[8],
-                    _T[2] * T[2] + _T[5] * T[5] + _T[8] * T[8] };
+    double tmp[] = {_T[0] * T._T[0] + _T[3] * T._T[3] + _T[6] * T._T[6],
+                    _T[1] * T._T[0] + _T[4] * T._T[3] + _T[7] * T._T[6],
+                    _T[2] * T._T[0] + _T[5] * T._T[3] + _T[8] * T._T[6],
+                    _T[0] * T._T[1] + _T[3] * T._T[4] + _T[6] * T._T[7],
+                    _T[1] * T._T[1] + _T[4] * T._T[4] + _T[7] * T._T[7],
+                    _T[2] * T._T[1] + _T[5] * T._T[4] + _T[8] * T._T[7],
+                    _T[0] * T._T[2] + _T[3] * T._T[5] + _T[6] * T._T[8],
+                    _T[1] * T._T[2] + _T[4] * T._T[5] + _T[7] * T._T[8],
+                    _T[2] * T._T[2] + _T[5] * T._T[5] + _T[8] * T._T[8] };
     return SE3(	tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6], tmp[7], tmp[8],
-                _T[9] - tmp[0] * T[9] - tmp[3] * T[10] - tmp[6] * T[11],
-                _T[10] - tmp[1] * T[9] - tmp[4] * T[10] - tmp[7] * T[11],
-                _T[11] - tmp[2] * T[9] - tmp[5] * T[10] - tmp[8] * T[11] );
+                _T[ 9] - tmp[0] * T._T[9] - tmp[3] * T._T[10] - tmp[6] * T._T[11],
+                _T[10] - tmp[1] * T._T[9] - tmp[4] * T._T[10] - tmp[7] * T._T[11],
+                _T[11] - tmp[2] * T._T[9] - tmp[5] * T._T[10] - tmp[8] * T._T[11] );
 }
 
 inline SE3 SE3::operator % (const SE3& T) const
 {
-    return SE3(	_T[0] * T[0] + _T[1] * T[1] + _T[2] * T[2],
-                _T[3] * T[0] + _T[4] * T[1] + _T[5] * T[2],
-                _T[6] * T[0] + _T[7] * T[1] + _T[8] * T[2],
-                _T[0] * T[3] + _T[1] * T[4] + _T[2] * T[5],
-                _T[3] * T[3] + _T[4] * T[4] + _T[5] * T[5],
-                _T[6] * T[3] + _T[7] * T[4] + _T[8] * T[5],
-                _T[0] * T[6] + _T[1] * T[7] + _T[2] * T[8],
-                _T[3] * T[6] + _T[4] * T[7] + _T[5] * T[8],
-                _T[6] * T[6] + _T[7] * T[7] + _T[8] * T[8],
-                _T[0] * (T[9] - _T[9]) + _T[1] * (T[10] - _T[10]) + _T[2] * (T[11] - _T[11]),
-                _T[3] * (T[9] - _T[9]) + _T[4] * (T[10] - _T[10]) + _T[5] * (T[11] - _T[11]),
-                _T[6] * (T[9] - _T[9]) + _T[7] * (T[10] - _T[10]) + _T[8] * (T[11] - _T[11]) );
+    return SE3(	_T[0] * T._T[0] + _T[1] * T._T[1] + _T[2] * T._T[2],
+                _T[3] * T._T[0] + _T[4] * T._T[1] + _T[5] * T._T[2],
+                _T[6] * T._T[0] + _T[7] * T._T[1] + _T[8] * T._T[2],
+                _T[0] * T._T[3] + _T[1] * T._T[4] + _T[2] * T._T[5],
+                _T[3] * T._T[3] + _T[4] * T._T[4] + _T[5] * T._T[5],
+                _T[6] * T._T[3] + _T[7] * T._T[4] + _T[8] * T._T[5],
+                _T[0] * T._T[6] + _T[1] * T._T[7] + _T[2] * T._T[8],
+                _T[3] * T._T[6] + _T[4] * T._T[7] + _T[5] * T._T[8],
+                _T[6] * T._T[6] + _T[7] * T._T[7] + _T[8] * T._T[8],
+                _T[0] * (T._T[9] - _T[9]) + _T[1] * (T._T[10] - _T[10]) + _T[2] * (T._T[11] - _T[11]),
+                _T[3] * (T._T[9] - _T[9]) + _T[4] * (T._T[10] - _T[10]) + _T[5] * (T._T[11] - _T[11]),
+                _T[6] * (T._T[9] - _T[9]) + _T[7] * (T._T[10] - _T[10]) + _T[8] * (T._T[11] - _T[11]) );
 }
 
 inline Vec3 SE3::operator % (const Vec3& p) const
@@ -1553,36 +1557,39 @@ inline const SE3& SE3::operator*=(const SE3& T)
 
 inline const SE3& SE3::operator /= (const SE3& T)
 {
-    double tmp[] = {_T[0] * T[0] + _T[3] * T[3] + _T[6] * T[6],
-                    _T[1] * T[0] + _T[4] * T[3] + _T[7] * T[6],
-                    _T[2] * T[0] + _T[5] * T[3] + _T[8] * T[6],
-                    _T[0] * T[1] + _T[3] * T[4] + _T[6] * T[7],
-                    _T[1] * T[1] + _T[4] * T[4] + _T[7] * T[7],
-                    _T[2] * T[1] + _T[5] * T[4] + _T[8] * T[7],
-                    _T[0] * T[2] + _T[3] * T[5] + _T[6] * T[8],
-                    _T[1] * T[2] + _T[4] * T[5] + _T[7] * T[8],
-                    _T[2] * T[2] + _T[5] * T[5] + _T[8] * T[8] };
+    double tmp[] = {_T[0] * T._T[0] + _T[3] * T._T[3] + _T[6] * T._T[6],
+                    _T[1] * T._T[0] + _T[4] * T._T[3] + _T[7] * T._T[6],
+                    _T[2] * T._T[0] + _T[5] * T._T[3] + _T[8] * T._T[6],
+                    _T[0] * T._T[1] + _T[3] * T._T[4] + _T[6] * T._T[7],
+                    _T[1] * T._T[1] + _T[4] * T._T[4] + _T[7] * T._T[7],
+                    _T[2] * T._T[1] + _T[5] * T._T[4] + _T[8] * T._T[7],
+                    _T[0] * T._T[2] + _T[3] * T._T[5] + _T[6] * T._T[8],
+                    _T[1] * T._T[2] + _T[4] * T._T[5] + _T[7] * T._T[8],
+                    _T[2] * T._T[2] + _T[5] * T._T[5] + _T[8] * T._T[8] };
     _T[0] = tmp[0]; _T[1] = tmp[1]; _T[2] = tmp[2];
     _T[3] = tmp[3]; _T[4] = tmp[4]; _T[5] = tmp[5];
     _T[6] = tmp[6]; _T[7] = tmp[7]; _T[8] = tmp[8],
-    _T[9] -= tmp[0] * T[9] + tmp[3] * T[10] + tmp[6] * T[11];
-    _T[10] -= tmp[1] * T[9] + tmp[4] * T[10] + tmp[7] * T[11];
-    _T[11] -= tmp[2] * T[9] + tmp[5] * T[10] + tmp[8] * T[11];
+    _T[ 9] -= tmp[0] * T._T[9] + tmp[3] * T._T[10] + tmp[6] * T._T[11];
+    _T[10] -= tmp[1] * T._T[9] + tmp[4] * T._T[10] + tmp[7] * T._T[11];
+    _T[11] -= tmp[2] * T._T[9] + tmp[5] * T._T[10] + tmp[8] * T._T[11];
     return *this;
 }
 
 inline const SE3& SE3::operator %= (const SE3& T)
 {
-    double tmp[12] = { _T[0], _T[1], _T[2], _T[3], _T[4], _T[5], _T[6], _T[7], _T[8], T[9] - _T[9], T[10] - _T[10], T[11] - _T[11] };
-    _T[0] = tmp[0] * T[0] + tmp[1] * T[1] + tmp[2] * T[2];
-    _T[1] = tmp[3] * T[0] + tmp[4] * T[1] + tmp[5] * T[2];
-    _T[2] = tmp[6] * T[0] + tmp[7] * T[1] + tmp[8] * T[2];
-    _T[3] = tmp[0] * T[3] + tmp[1] * T[4] + tmp[2] * T[5];
-    _T[4] = tmp[3] * T[3] + tmp[4] * T[4] + tmp[5] * T[5];
-    _T[5] = tmp[6] * T[3] + tmp[7] * T[4] + tmp[8] * T[5];
-    _T[6] = tmp[0] * T[6] + tmp[1] * T[7] + tmp[2] * T[8];
-    _T[7] = tmp[3] * T[6] + tmp[4] * T[7] + tmp[5] * T[8];
-    _T[8] = tmp[6] * T[6] + tmp[7] * T[7] + tmp[8] * T[8];
+    double tmp[12] = { _T[0], _T[1], _T[2],
+                       _T[3], _T[4], _T[5],
+                       _T[6], _T[7], _T[8],
+                       T._T[9] - _T[9], T._T[10] - _T[10], T._T[11] - _T[11] };
+    _T[0] = tmp[0] * T._T[0] + tmp[1] * T._T[1] + tmp[2] * T._T[2];
+    _T[1] = tmp[3] * T._T[0] + tmp[4] * T._T[1] + tmp[5] * T._T[2];
+    _T[2] = tmp[6] * T._T[0] + tmp[7] * T._T[1] + tmp[8] * T._T[2];
+    _T[3] = tmp[0] * T._T[3] + tmp[1] * T._T[4] + tmp[2] * T._T[5];
+    _T[4] = tmp[3] * T._T[3] + tmp[4] * T._T[4] + tmp[5] * T._T[5];
+    _T[5] = tmp[6] * T._T[3] + tmp[7] * T._T[4] + tmp[8] * T._T[5];
+    _T[6] = tmp[0] * T._T[6] + tmp[1] * T._T[7] + tmp[2] * T._T[8];
+    _T[7] = tmp[3] * T._T[6] + tmp[4] * T._T[7] + tmp[5] * T._T[8];
+    _T[8] = tmp[6] * T._T[6] + tmp[7] * T._T[7] + tmp[8] * T._T[8];
     _T[9] = tmp[0] * tmp[9] + tmp[1] * tmp[10] + tmp[2] * tmp[11];
     _T[10] = tmp[3] * tmp[9] + tmp[4] * tmp[10] + tmp[5] * tmp[11];
     _T[11] = tmp[6] * tmp[9] + tmp[7] * tmp[10] + tmp[8] * tmp[11];
@@ -1611,32 +1618,32 @@ inline void SE3::setIdentity(void)
 
 inline void SE3::setOrientationPosition(const SE3& T, const Vec3& p)
 {
-    _T[0] = T[0];
-    _T[1] = T[1];
-    _T[2] = T[2];
-    _T[3] = T[3];
-    _T[4] = T[4];
-    _T[5] = T[5];
-    _T[6] = T[6];
-    _T[7] = T[7];
-    _T[8] = T[8];
-    _T[9] = p[0];
-    _T[10] = p[1];
-    _T[11] = p[2];
+    _T[0] = T._T[0];
+    _T[1] = T._T[1];
+    _T[2] = T._T[2];
+    _T[3] = T._T[3];
+    _T[4] = T._T[4];
+    _T[5] = T._T[5];
+    _T[6] = T._T[6];
+    _T[7] = T._T[7];
+    _T[8] = T._T[8];
+    _T[9] = p._v[0];
+    _T[10] = p._v[1];
+    _T[11] = p._v[2];
 }
 
 inline void SE3::setOrientation(const SE3& T)
 {
-    _T[0] = T[0];
-    _T[1] = T[1];
-    _T[2] = T[2];
-    _T[3] = T[3];
-    _T[4] = T[4];
-    _T[5] = T[5];
-    _T[6] = T[6];
-    _T[7] = T[7];
-    _T[8] = T[8];
-    _T[9] = T[9];
+    _T[0] = T._T[0];
+    _T[1] = T._T[1];
+    _T[2] = T._T[2];
+    _T[3] = T._T[3];
+    _T[4] = T._T[4];
+    _T[5] = T._T[5];
+    _T[6] = T._T[6];
+    _T[7] = T._T[7];
+    _T[8] = T._T[8];
+    _T[9] = T._T[9];
 }
 
 inline void SE3::setPosition(const Vec3& Pos)
@@ -1894,7 +1901,10 @@ inline SE3 RotZ(double t)
 // invskew(T - I)
 inline se3 Linearize(const SE3& T)
 {
-    return se3(SCALAR_1_2 * (T[5] - T[7]), SCALAR_1_2 * (T[6] - T[2]), SCALAR_1_2 * (T[1] - T[3]), T[9], T[10], T[11]);
+    return se3(SCALAR_1_2 * (T._T[5] - T._T[7]),
+               SCALAR_1_2 * (T._T[6] - T._T[2]),
+               SCALAR_1_2 * (T._T[1] - T._T[3]),
+               T._T[9], T._T[10], T._T[11]);
 }
 
 inline SE3 Normalize(const SE3& T)
@@ -1978,31 +1988,31 @@ inline Inertia::~Inertia()
 
 inline Inertia Inertia::Transform(const SE3& T) const
 {
-    double j0 = _I[0] + _I[9] * T[11] * T[11] + _I[9] * T[10] * T[10] - SCALAR_2 * _I[8] * T[11] - SCALAR_2 * _I[7] * T[10];
-    double j1 = _I[1] + _I[9] * T[11] * T[11] + _I[9] * T[9] * T[9] - SCALAR_2 * _I[8] * T[11] - SCALAR_2 * _I[6] * T[9];
-    double j2 = _I[2] + _I[9] * T[10] * T[10] + _I[9] * T[9] * T[9] - SCALAR_2 * _I[7] * T[10] - SCALAR_2 * _I[6] * T[9];
-    double j3 = _I[3] + T[10] * _I[6] + T[9] * _I[7] - _I[9] * T[10] * T[9];
-    double j4 = _I[4] + T[11] * _I[6] + T[9] * _I[8] - _I[9] * T[11] * T[9];
-    double j5 = _I[5] + T[11] * _I[7] + T[10] * _I[8] - _I[9] * T[11] * T[10];
-    double t0 = T[0] * j0 + T[1] * j3 + T[2] * j4;
-    double t1 = T[3] * j0 + T[4] * j3 + T[5] * j4;
-    double t2 = T[6] * j0 + T[7] * j3 + T[8] * j4;
-    double t3 = T[0] * j3 + T[1] * j1 + T[2] * j5;
-    double t4 = T[3] * j3 + T[4] * j1 + T[5] * j5;
-    double t5 = T[6] * j3 + T[7] * j1 + T[8] * j5;
-    double t6 = T[0] * j4 + T[1] * j5 + T[2] * j2;
-    double t7 = T[3] * j4 + T[4] * j5 + T[5] * j2;
-    double t8 = T[6] * j4 + T[7] * j5 + T[8] * j2;
+    double j0 = _I[0] + _I[9] * T._T[11] * T._T[11] + _I[9] * T._T[10] * T._T[10] - SCALAR_2 * _I[8] * T._T[11] - SCALAR_2 * _I[7] * T._T[10];
+    double j1 = _I[1] + _I[9] * T._T[11] * T._T[11] + _I[9] * T._T[ 9] * T._T[ 9] - SCALAR_2 * _I[8] * T._T[11] - SCALAR_2 * _I[6] * T._T[ 9];
+    double j2 = _I[2] + _I[9] * T._T[10] * T._T[10] + _I[9] * T._T[ 9] * T._T[ 9] - SCALAR_2 * _I[7] * T._T[10] - SCALAR_2 * _I[6] * T._T[ 9];
+    double j3 = _I[3] + T._T[10] * _I[6] + T._T[ 9] * _I[7] - _I[9] * T._T[10] * T._T[ 9];
+    double j4 = _I[4] + T._T[11] * _I[6] + T._T[ 9] * _I[8] - _I[9] * T._T[11] * T._T[ 9];
+    double j5 = _I[5] + T._T[11] * _I[7] + T._T[10] * _I[8] - _I[9] * T._T[11] * T._T[10];
+    double t0 = T._T[0] * j0 + T._T[1] * j3 + T._T[2] * j4;
+    double t1 = T._T[3] * j0 + T._T[4] * j3 + T._T[5] * j4;
+    double t2 = T._T[6] * j0 + T._T[7] * j3 + T._T[8] * j4;
+    double t3 = T._T[0] * j3 + T._T[1] * j1 + T._T[2] * j5;
+    double t4 = T._T[3] * j3 + T._T[4] * j1 + T._T[5] * j5;
+    double t5 = T._T[6] * j3 + T._T[7] * j1 + T._T[8] * j5;
+    double t6 = T._T[0] * j4 + T._T[1] * j5 + T._T[2] * j2;
+    double t7 = T._T[3] * j4 + T._T[4] * j5 + T._T[5] * j2;
+    double t8 = T._T[6] * j4 + T._T[7] * j5 + T._T[8] * j2;
 
-    return Inertia(	t0 * T[0] + t3 * T[1] + t6 * T[2],
-                    t1 * T[3] + t4 * T[4] + t7 * T[5],
-                    t2 * T[6] + t5 * T[7] + t8 * T[8],
-                    t1 * T[0] + t4 * T[1] + t7 * T[2],
-                    t2 * T[0] + t5 * T[1] + t8 * T[2],
-                    t2 * T[3] + t5 * T[4] + t8 * T[5],
-                    T[0] * (_I[6] - _I[9] * T[9]) + T[1] * (_I[7] - _I[9] * T[10]) + T[2] * (_I[8] - _I[9] * T[11]),
-                    T[3] * (_I[6] - _I[9] * T[9]) + T[4] * (_I[7] - _I[9] * T[10]) + T[5] * (_I[8] - _I[9] * T[11]),
-                    T[6] * (_I[6] - _I[9] * T[9]) + T[7] * (_I[7] - _I[9] * T[10]) + T[8] * (_I[8] - _I[9] * T[11]),
+    return Inertia(	t0 * T._T[0] + t3 * T._T[1] + t6 * T._T[2],
+                    t1 * T._T[3] + t4 * T._T[4] + t7 * T._T[5],
+                    t2 * T._T[6] + t5 * T._T[7] + t8 * T._T[8],
+                    t1 * T._T[0] + t4 * T._T[1] + t7 * T._T[2],
+                    t2 * T._T[0] + t5 * T._T[1] + t8 * T._T[2],
+                    t2 * T._T[3] + t5 * T._T[4] + t8 * T._T[5],
+                    T._T[0] * (_I[6] - _I[9] * T._T[9]) + T._T[1] * (_I[7] - _I[9] * T._T[10]) + T._T[2] * (_I[8] - _I[9] * T._T[11]),
+                    T._T[3] * (_I[6] - _I[9] * T._T[9]) + T._T[4] * (_I[7] - _I[9] * T._T[10]) + T._T[5] * (_I[8] - _I[9] * T._T[11]),
+                    T._T[6] * (_I[6] - _I[9] * T._T[9]) + T._T[7] * (_I[7] - _I[9] * T._T[10]) + T._T[8] * (_I[8] - _I[9] * T._T[11]),
             _I[9]);
 }
 
@@ -2407,202 +2417,202 @@ inline void AInertia::ToArray(TYPE M[]) const
 
 inline AInertia AInertia::Transform(const SE3& T) const
 {
-    double d0 = _J[3] + T[11] * _J[16] - T[10] * _J[17];
-    double d1 = _J[8] - T[11] * _J[15] + T[9] * _J[17];
-    double d2 = _J[12] + T[10] * _J[15] - T[9] * _J[16];
-    double d3 = _J[4] + T[11] * _J[18] - T[10] * _J[19];
-    double d4 = _J[9] - T[11] * _J[16] + T[9] * _J[19];
-    double d5 = _J[13] + T[10] * _J[16] - T[9] * _J[18];
-    double d6 = _J[5] + T[11] * _J[19] - T[10] * _J[20];
-    double d7 = _J[10] - T[11] * _J[17] + T[9] * _J[20];
-    double d8 = _J[14] + T[10] * _J[17] - T[9] * _J[19];
-    double e0 = _J[0] + T[11] * _J[4] - T[10] * _J[5] + d3 * T[11] - d6 * T[10];
-    double e3 = _J[1] + T[11] * _J[9] - T[10] * _J[10] - d0 * T[11] + d6 * T[9];
-    double e4 = _J[6] - T[11] * _J[8] + T[9] * _J[10] - d1 * T[11] + d7 * T[9];
-    double e6 = _J[2] + T[11] * _J[13] - T[10] * _J[14] + d0 * T[10] - d3 * T[9];
-    double e7 = _J[7] - T[11] * _J[12] + T[9] * _J[14] + d1 * T[10] - d4 * T[9];
-    double e8 = _J[11] + T[10] * _J[12] - T[9] * _J[13] + d2 * T[10] - d5 * T[9];
-    double f0 = T[0] * e0 + T[1] * e3 + T[2] * e6;
-    double f1 = T[0] * e3 + T[1] * e4 + T[2] * e7;
-    double f2 = T[0] * e6 + T[1] * e7 + T[2] * e8;
-    double f3 = T[0] * d0 + T[1] * d1 + T[2] * d2;
-    double f4 = T[0] * d3 + T[1] * d4 + T[2] * d5;
-    double f5 = T[0] * d6 + T[1] * d7 + T[2] * d8;
-    double f6 = T[3] * e0 + T[4] * e3 + T[5] * e6;
-    double f7 = T[3] * e3 + T[4] * e4 + T[5] * e7;
-    double f8 = T[3] * e6 + T[4] * e7 + T[5] * e8;
-    double g0 = T[3] * d0 + T[4] * d1 + T[5] * d2;
-    double g1 = T[3] * d3 + T[4] * d4 + T[5] * d5;
-    double g2 = T[3] * d6 + T[4] * d7 + T[5] * d8;
-    double g3 = T[6] * d0 + T[7] * d1 + T[8] * d2;
-    double g4 = T[6] * d3 + T[7] * d4 + T[8] * d5;
-    double g5 = T[6] * d6 + T[7] * d7 + T[8] * d8;
-    double h0 = T[0] * _J[15] + T[1] * _J[16] + T[2] * _J[17];
-    double h1 = T[0] * _J[16] + T[1] * _J[18] + T[2] * _J[19];
-    double h2 = T[0] * _J[17] + T[1] * _J[19] + T[2] * _J[20];
-    double h3 = T[3] * _J[15] + T[4] * _J[16] + T[5] * _J[17];
-    double h4 = T[3] * _J[16] + T[4] * _J[18] + T[5] * _J[19];
-    double h5 = T[3] * _J[17] + T[4] * _J[19] + T[5] * _J[20];
+    double d0 = _J[ 3] + T._T[11] * _J[16] - T._T[10] * _J[17];
+    double d1 = _J[ 8] - T._T[11] * _J[15] + T._T[ 9] * _J[17];
+    double d2 = _J[12] + T._T[10] * _J[15] - T._T[ 9] * _J[16];
+    double d3 = _J[ 4] + T._T[11] * _J[18] - T._T[10] * _J[19];
+    double d4 = _J[ 9] - T._T[11] * _J[16] + T._T[ 9] * _J[19];
+    double d5 = _J[13] + T._T[10] * _J[16] - T._T[ 9] * _J[18];
+    double d6 = _J[ 5] + T._T[11] * _J[19] - T._T[10] * _J[20];
+    double d7 = _J[10] - T._T[11] * _J[17] + T._T[ 9] * _J[20];
+    double d8 = _J[14] + T._T[10] * _J[17] - T._T[ 9] * _J[19];
+    double e0 = _J[ 0] + T._T[11] * _J[ 4] - T._T[10] * _J[ 5] + d3 * T._T[11] - d6 * T._T[10];
+    double e3 = _J[ 1] + T._T[11] * _J[ 9] - T._T[10] * _J[10] - d0 * T._T[11] + d6 * T._T[ 9];
+    double e4 = _J[ 6] - T._T[11] * _J[ 8] + T._T[ 9] * _J[10] - d1 * T._T[11] + d7 * T._T[ 9];
+    double e6 = _J[ 2] + T._T[11] * _J[13] - T._T[10] * _J[14] + d0 * T._T[10] - d3 * T._T[ 9];
+    double e7 = _J[ 7] - T._T[11] * _J[12] + T._T[ 9] * _J[14] + d1 * T._T[10] - d4 * T._T[ 9];
+    double e8 = _J[11] + T._T[10] * _J[12] - T._T[ 9] * _J[13] + d2 * T._T[10] - d5 * T._T[ 9];
+    double f0 = T._T[0] * e0 + T._T[1] * e3 + T._T[2] * e6;
+    double f1 = T._T[0] * e3 + T._T[1] * e4 + T._T[2] * e7;
+    double f2 = T._T[0] * e6 + T._T[1] * e7 + T._T[2] * e8;
+    double f3 = T._T[0] * d0 + T._T[1] * d1 + T._T[2] * d2;
+    double f4 = T._T[0] * d3 + T._T[1] * d4 + T._T[2] * d5;
+    double f5 = T._T[0] * d6 + T._T[1] * d7 + T._T[2] * d8;
+    double f6 = T._T[3] * e0 + T._T[4] * e3 + T._T[5] * e6;
+    double f7 = T._T[3] * e3 + T._T[4] * e4 + T._T[5] * e7;
+    double f8 = T._T[3] * e6 + T._T[4] * e7 + T._T[5] * e8;
+    double g0 = T._T[3] * d0 + T._T[4] * d1 + T._T[5] * d2;
+    double g1 = T._T[3] * d3 + T._T[4] * d4 + T._T[5] * d5;
+    double g2 = T._T[3] * d6 + T._T[4] * d7 + T._T[5] * d8;
+    double g3 = T._T[6] * d0 + T._T[7] * d1 + T._T[8] * d2;
+    double g4 = T._T[6] * d3 + T._T[7] * d4 + T._T[8] * d5;
+    double g5 = T._T[6] * d6 + T._T[7] * d7 + T._T[8] * d8;
+    double h0 = T._T[0] * _J[15] + T._T[1] * _J[16] + T._T[2] * _J[17];
+    double h1 = T._T[0] * _J[16] + T._T[1] * _J[18] + T._T[2] * _J[19];
+    double h2 = T._T[0] * _J[17] + T._T[1] * _J[19] + T._T[2] * _J[20];
+    double h3 = T._T[3] * _J[15] + T._T[4] * _J[16] + T._T[5] * _J[17];
+    double h4 = T._T[3] * _J[16] + T._T[4] * _J[18] + T._T[5] * _J[19];
+    double h5 = T._T[3] * _J[17] + T._T[4] * _J[19] + T._T[5] * _J[20];
 
-    return AInertia(f0 * T[0] + f1 * T[1] + f2 * T[2],
-                    f0 * T[3] + f1 * T[4] + f2 * T[5],
-                    f0 * T[6] + f1 * T[7] + f2 * T[8],
-                    f3 * T[0] + f4 * T[1] + f5 * T[2],
-                    f3 * T[3] + f4 * T[4] + f5 * T[5],
-                    f3 * T[6] + f4 * T[7] + f5 * T[8],
-                    f6 * T[3] + f7 * T[4] + f8 * T[5],
-                    f6 * T[6] + f7 * T[7] + f8 * T[8],
-                    g0 * T[0] + g1 * T[1] + g2 * T[2],
-                    g0 * T[3] + g1 * T[4] + g2 * T[5],
-                    g0 * T[6] + g1 * T[7] + g2 * T[8],
-                    (T[6] * e0 + T[7] * e3 + T[8] * e6) * T[6] + (T[6] * e3 + T[7] * e4 + T[8] * e7) * T[7] + (T[6] * e6 + T[7] * e7 + T[8] * e8) * T[8],
-                    g3 * T[0] + g4 * T[1] + g5 * T[2],
-                    g3 * T[3] + g4 * T[4] + g5 * T[5],
-                    g3 * T[6] + g4 * T[7] + g5 * T[8],
-                    h0 * T[0] + h1 * T[1] + h2 * T[2],
-                    h0 * T[3] + h1 * T[4] + h2 * T[5],
-                    h0 * T[6] + h1 * T[7] + h2 * T[8],
-                    h3 * T[3] + h4 * T[4] + h5 * T[5],
-                    h3 * T[6] + h4 * T[7] + h5 * T[8],
-                    (T[6] * _J[15] + T[7] * _J[16] + T[8] * _J[17]) * T[6] + (T[6] * _J[16] + T[7] * _J[18] + T[8] * _J[19]) * T[7] + (T[6] * _J[17] + T[7] * _J[19] + T[8] * _J[20]) * T[8]);
+    return AInertia(f0 * T._T[0] + f1 * T._T[1] + f2 * T._T[2],
+                    f0 * T._T[3] + f1 * T._T[4] + f2 * T._T[5],
+                    f0 * T._T[6] + f1 * T._T[7] + f2 * T._T[8],
+                    f3 * T._T[0] + f4 * T._T[1] + f5 * T._T[2],
+                    f3 * T._T[3] + f4 * T._T[4] + f5 * T._T[5],
+                    f3 * T._T[6] + f4 * T._T[7] + f5 * T._T[8],
+                    f6 * T._T[3] + f7 * T._T[4] + f8 * T._T[5],
+                    f6 * T._T[6] + f7 * T._T[7] + f8 * T._T[8],
+                    g0 * T._T[0] + g1 * T._T[1] + g2 * T._T[2],
+                    g0 * T._T[3] + g1 * T._T[4] + g2 * T._T[5],
+                    g0 * T._T[6] + g1 * T._T[7] + g2 * T._T[8],
+                    (T._T[6] * e0 + T._T[7] * e3 + T._T[8] * e6) * T._T[6] + (T._T[6] * e3 + T._T[7] * e4 + T._T[8] * e7) * T._T[7] + (T._T[6] * e6 + T._T[7] * e7 + T._T[8] * e8) * T._T[8],
+                    g3 * T._T[0] + g4 * T._T[1] + g5 * T._T[2],
+                    g3 * T._T[3] + g4 * T._T[4] + g5 * T._T[5],
+                    g3 * T._T[6] + g4 * T._T[7] + g5 * T._T[8],
+                    h0 * T._T[0] + h1 * T._T[1] + h2 * T._T[2],
+                    h0 * T._T[3] + h1 * T._T[4] + h2 * T._T[5],
+                    h0 * T._T[6] + h1 * T._T[7] + h2 * T._T[8],
+                    h3 * T._T[3] + h4 * T._T[4] + h5 * T._T[5],
+                    h3 * T._T[6] + h4 * T._T[7] + h5 * T._T[8],
+                    (T._T[6] * _J[15] + T._T[7] * _J[16] + T._T[8] * _J[17]) * T._T[6] + (T._T[6] * _J[16] + T._T[7] * _J[18] + T._T[8] * _J[19]) * T._T[7] + (T._T[6] * _J[17] + T._T[7] * _J[19] + T._T[8] * _J[20]) * T._T[8]);
 }
 
 inline void AInertia::AddTransform(const AInertia& J, const SE3& T)
 {
-    double d0 = J[3] + T[11] * J[16] - T[10] * J[17];
-    double d1 = J[8] - T[11] * J[15] + T[9] * J[17];
-    double d2 = J[12] + T[10] * J[15] - T[9] * J[16];
-    double d3 = J[4] + T[11] * J[18] - T[10] * J[19];
-    double d4 = J[9] - T[11] * J[16] + T[9] * J[19];
-    double d5 = J[13] + T[10] * J[16] - T[9] * J[18];
-    double d6 = J[5] + T[11] * J[19] - T[10] * J[20];
-    double d7 = J[10] - T[11] * J[17] + T[9] * J[20];
-    double d8 = J[14] + T[10] * J[17] - T[9] * J[19];
-    double e0 = J[0] + T[11] * J[4] - T[10] * J[5] + d3 * T[11] - d6 * T[10];
-    double e3 = J[1] + T[11] * J[9] - T[10] * J[10] - d0 * T[11] + d6 * T[9];
-    double e4 = J[6] - T[11] * J[8] + T[9] * J[10] - d1 * T[11] + d7 * T[9];
-    double e6 = J[2] + T[11] * J[13] - T[10] * J[14] + d0 * T[10] - d3 * T[9];
-    double e7 = J[7] - T[11] * J[12] + T[9] * J[14] + d1 * T[10] - d4 * T[9];
-    double e8 = J[11] + T[10] * J[12] - T[9] * J[13] + d2 * T[10] - d5 * T[9];
-    double f0 = T[0] * e0 + T[1] * e3 + T[2] * e6;
-    double f1 = T[0] * e3 + T[1] * e4 + T[2] * e7;
-    double f2 = T[0] * e6 + T[1] * e7 + T[2] * e8;
-    double f3 = T[0] * d0 + T[1] * d1 + T[2] * d2;
-    double f4 = T[0] * d3 + T[1] * d4 + T[2] * d5;
-    double f5 = T[0] * d6 + T[1] * d7 + T[2] * d8;
-    double f6 = T[3] * e0 + T[4] * e3 + T[5] * e6;
-    double f7 = T[3] * e3 + T[4] * e4 + T[5] * e7;
-    double f8 = T[3] * e6 + T[4] * e7 + T[5] * e8;
-    double g0 = T[3] * d0 + T[4] * d1 + T[5] * d2;
-    double g1 = T[3] * d3 + T[4] * d4 + T[5] * d5;
-    double g2 = T[3] * d6 + T[4] * d7 + T[5] * d8;
-    double g3 = T[6] * d0 + T[7] * d1 + T[8] * d2;
-    double g4 = T[6] * d3 + T[7] * d4 + T[8] * d5;
-    double g5 = T[6] * d6 + T[7] * d7 + T[8] * d8;
-    double h0 = T[0] * J[15] + T[1] * J[16] + T[2] * J[17];
-    double h1 = T[0] * J[16] + T[1] * J[18] + T[2] * J[19];
-    double h2 = T[0] * J[17] + T[1] * J[19] + T[2] * J[20];
-    double h3 = T[3] * J[15] + T[4] * J[16] + T[5] * J[17];
-    double h4 = T[3] * J[16] + T[4] * J[18] + T[5] * J[19];
-    double h5 = T[3] * J[17] + T[4] * J[19] + T[5] * J[20];
+    double d0 = J[3] + T._T[11] * J[16] - T._T[10] * J[17];
+    double d1 = J[8] - T._T[11] * J[15] + T._T[9] * J[17];
+    double d2 = J[12] + T._T[10] * J[15] - T._T[9] * J[16];
+    double d3 = J[4] + T._T[11] * J[18] - T._T[10] * J[19];
+    double d4 = J[9] - T._T[11] * J[16] + T._T[9] * J[19];
+    double d5 = J[13] + T._T[10] * J[16] - T._T[9] * J[18];
+    double d6 = J[5] + T._T[11] * J[19] - T._T[10] * J[20];
+    double d7 = J[10] - T._T[11] * J[17] + T._T[9] * J[20];
+    double d8 = J[14] + T._T[10] * J[17] - T._T[9] * J[19];
+    double e0 = J[0] + T._T[11] * J[4] - T._T[10] * J[5] + d3 * T._T[11] - d6 * T._T[10];
+    double e3 = J[1] + T._T[11] * J[9] - T._T[10] * J[10] - d0 * T._T[11] + d6 * T._T[9];
+    double e4 = J[6] - T._T[11] * J[8] + T._T[9] * J[10] - d1 * T._T[11] + d7 * T._T[9];
+    double e6 = J[2] + T._T[11] * J[13] - T._T[10] * J[14] + d0 * T._T[10] - d3 * T._T[9];
+    double e7 = J[7] - T._T[11] * J[12] + T._T[9] * J[14] + d1 * T._T[10] - d4 * T._T[9];
+    double e8 = J[11] + T._T[10] * J[12] - T._T[9] * J[13] + d2 * T._T[10] - d5 * T._T[9];
+    double f0 = T._T[0] * e0 + T._T[1] * e3 + T._T[2] * e6;
+    double f1 = T._T[0] * e3 + T._T[1] * e4 + T._T[2] * e7;
+    double f2 = T._T[0] * e6 + T._T[1] * e7 + T._T[2] * e8;
+    double f3 = T._T[0] * d0 + T._T[1] * d1 + T._T[2] * d2;
+    double f4 = T._T[0] * d3 + T._T[1] * d4 + T._T[2] * d5;
+    double f5 = T._T[0] * d6 + T._T[1] * d7 + T._T[2] * d8;
+    double f6 = T._T[3] * e0 + T._T[4] * e3 + T._T[5] * e6;
+    double f7 = T._T[3] * e3 + T._T[4] * e4 + T._T[5] * e7;
+    double f8 = T._T[3] * e6 + T._T[4] * e7 + T._T[5] * e8;
+    double g0 = T._T[3] * d0 + T._T[4] * d1 + T._T[5] * d2;
+    double g1 = T._T[3] * d3 + T._T[4] * d4 + T._T[5] * d5;
+    double g2 = T._T[3] * d6 + T._T[4] * d7 + T._T[5] * d8;
+    double g3 = T._T[6] * d0 + T._T[7] * d1 + T._T[8] * d2;
+    double g4 = T._T[6] * d3 + T._T[7] * d4 + T._T[8] * d5;
+    double g5 = T._T[6] * d6 + T._T[7] * d7 + T._T[8] * d8;
+    double h0 = T._T[0] * J[15] + T._T[1] * J[16] + T._T[2] * J[17];
+    double h1 = T._T[0] * J[16] + T._T[1] * J[18] + T._T[2] * J[19];
+    double h2 = T._T[0] * J[17] + T._T[1] * J[19] + T._T[2] * J[20];
+    double h3 = T._T[3] * J[15] + T._T[4] * J[16] + T._T[5] * J[17];
+    double h4 = T._T[3] * J[16] + T._T[4] * J[18] + T._T[5] * J[19];
+    double h5 = T._T[3] * J[17] + T._T[4] * J[19] + T._T[5] * J[20];
 
-    _J[0] += f0 * T[0] + f1 * T[1] + f2 * T[2];
-    _J[1] += f0 * T[3] + f1 * T[4] + f2 * T[5];
-    _J[2] += f0 * T[6] + f1 * T[7] + f2 * T[8];
-    _J[3] += f3 * T[0] + f4 * T[1] + f5 * T[2];
-    _J[4] += f3 * T[3] + f4 * T[4] + f5 * T[5];
-    _J[5] += f3 * T[6] + f4 * T[7] + f5 * T[8];
-    _J[6] += f6 * T[3] + f7 * T[4] + f8 * T[5];
-    _J[7] += f6 * T[6] + f7 * T[7] + f8 * T[8];
-    _J[8] += g0 * T[0] + g1 * T[1] + g2 * T[2];
-    _J[9] += g0 * T[3] + g1 * T[4] + g2 * T[5];
-    _J[10] += g0 * T[6] + g1 * T[7] + g2 * T[8];
-    _J[11] += (T[6] * e0 + T[7] * e3 + T[8] * e6) * T[6] + (T[6] * e3 + T[7] * e4 + T[8] * e7) * T[7] + (T[6] * e6 + T[7] * e7 + T[8] * e8) * T[8];
-    _J[12] += g3 * T[0] + g4 * T[1] + g5 * T[2];
-    _J[13] += g3 * T[3] + g4 * T[4] + g5 * T[5];
-    _J[14] += g3 * T[6] + g4 * T[7] + g5 * T[8];
-    _J[15] += h0 * T[0] + (T[0] * J[16] + T[1] * J[18] + T[2] * J[19]) * T[1] + (T[0] * J[17] + T[1] * J[19] + T[2] * J[20]) * T[2];
-    _J[16] += h0 * T[3] + (T[0] * J[16] + T[1] * J[18] + T[2] * J[19]) * T[4] + (T[0] * J[17] + T[1] * J[19] + T[2] * J[20]) * T[5];
-    _J[17] += h0 * T[6] + (T[0] * J[16] + T[1] * J[18] + T[2] * J[19]) * T[7] + (T[0] * J[17] + T[1] * J[19] + T[2] * J[20]) * T[8];
-    _J[18] += h3 * T[3] + (T[3] * J[16] + T[4] * J[18] + T[5] * J[19]) * T[4] + (T[3] * J[17] + T[4] * J[19] + T[5] * J[20]) * T[5];
-    _J[19] += h3 * T[6] + (T[3] * J[16] + T[4] * J[18] + T[5] * J[19]) * T[7] + (T[3] * J[17] + T[4] * J[19] + T[5] * J[20]) * T[8];
-    _J[20] += (T[6] * J[15] + T[7] * J[16] + T[8] * J[17]) * T[6] + (T[6] * J[16] + T[7] * J[18] + T[8] * J[19]) * T[7] + (T[6] * J[17] + T[7] * J[19] + T[8] * J[20]) * T[8];
+    _J[0] += f0 * T._T[0] + f1 * T._T[1] + f2 * T._T[2];
+    _J[1] += f0 * T._T[3] + f1 * T._T[4] + f2 * T._T[5];
+    _J[2] += f0 * T._T[6] + f1 * T._T[7] + f2 * T._T[8];
+    _J[3] += f3 * T._T[0] + f4 * T._T[1] + f5 * T._T[2];
+    _J[4] += f3 * T._T[3] + f4 * T._T[4] + f5 * T._T[5];
+    _J[5] += f3 * T._T[6] + f4 * T._T[7] + f5 * T._T[8];
+    _J[6] += f6 * T._T[3] + f7 * T._T[4] + f8 * T._T[5];
+    _J[7] += f6 * T._T[6] + f7 * T._T[7] + f8 * T._T[8];
+    _J[8] += g0 * T._T[0] + g1 * T._T[1] + g2 * T._T[2];
+    _J[9] += g0 * T._T[3] + g1 * T._T[4] + g2 * T._T[5];
+    _J[10] += g0 * T._T[6] + g1 * T._T[7] + g2 * T._T[8];
+    _J[11] += (T._T[6] * e0 + T._T[7] * e3 + T._T[8] * e6) * T._T[6] + (T._T[6] * e3 + T._T[7] * e4 + T._T[8] * e7) * T._T[7] + (T._T[6] * e6 + T._T[7] * e7 + T._T[8] * e8) * T._T[8];
+    _J[12] += g3 * T._T[0] + g4 * T._T[1] + g5 * T._T[2];
+    _J[13] += g3 * T._T[3] + g4 * T._T[4] + g5 * T._T[5];
+    _J[14] += g3 * T._T[6] + g4 * T._T[7] + g5 * T._T[8];
+    _J[15] += h0 * T._T[0] + (T._T[0] * J[16] + T._T[1] * J[18] + T._T[2] * J[19]) * T._T[1] + (T._T[0] * J[17] + T._T[1] * J[19] + T._T[2] * J[20]) * T._T[2];
+    _J[16] += h0 * T._T[3] + (T._T[0] * J[16] + T._T[1] * J[18] + T._T[2] * J[19]) * T._T[4] + (T._T[0] * J[17] + T._T[1] * J[19] + T._T[2] * J[20]) * T._T[5];
+    _J[17] += h0 * T._T[6] + (T._T[0] * J[16] + T._T[1] * J[18] + T._T[2] * J[19]) * T._T[7] + (T._T[0] * J[17] + T._T[1] * J[19] + T._T[2] * J[20]) * T._T[8];
+    _J[18] += h3 * T._T[3] + (T._T[3] * J[16] + T._T[4] * J[18] + T._T[5] * J[19]) * T._T[4] + (T._T[3] * J[17] + T._T[4] * J[19] + T._T[5] * J[20]) * T._T[5];
+    _J[19] += h3 * T._T[6] + (T._T[3] * J[16] + T._T[4] * J[18] + T._T[5] * J[19]) * T._T[7] + (T._T[3] * J[17] + T._T[4] * J[19] + T._T[5] * J[20]) * T._T[8];
+    _J[20] += (T._T[6] * J[15] + T._T[7] * J[16] + T._T[8] * J[17]) * T._T[6] + (T._T[6] * J[16] + T._T[7] * J[18] + T._T[8] * J[19]) * T._T[7] + (T._T[6] * J[17] + T._T[7] * J[19] + T._T[8] * J[20]) * T._T[8];
 }
 
 inline se3 AInertia::operator*(const dse3& f) const
 {
-    return se3(	_J[0] * f[0] + _J[1] * f[1] + _J[2] * f[2] + _J[3] * f[3] + _J[4] * f[4] + _J[5] * f[5],
-                _J[1] * f[0] + _J[6] * f[1] + _J[7] * f[2] + _J[8] * f[3] + _J[9] * f[4] + _J[10] * f[5],
-                _J[2] * f[0] + _J[7] * f[1] + _J[11] * f[2] + _J[12] * f[3] + _J[13] * f[4] + _J[14] * f[5],
-                _J[3] * f[0] + _J[8] * f[1] + _J[12] * f[2] + _J[15] * f[3] + _J[16] * f[4] + _J[17] * f[5],
-                _J[4] * f[0] + _J[9] * f[1] + _J[13] * f[2] + _J[16] * f[3] + _J[18] * f[4] + _J[19] * f[5],
-                _J[5] * f[0] + _J[10] * f[1] + _J[14] * f[2] + _J[17] * f[3] + _J[19] * f[4] + _J[20] * f[5]);
+    return se3(	_J[0] * f._m[0] + _J[1] * f._m[1] + _J[2] * f._m[2] + _J[3] * f._m[3] + _J[4] * f._m[4] + _J[5] * f._m[5],
+                _J[1] * f._m[0] + _J[6] * f._m[1] + _J[7] * f._m[2] + _J[8] * f._m[3] + _J[9] * f._m[4] + _J[10] * f._m[5],
+                _J[2] * f._m[0] + _J[7] * f._m[1] + _J[11] * f._m[2] + _J[12] * f._m[3] + _J[13] * f._m[4] + _J[14] * f._m[5],
+                _J[3] * f._m[0] + _J[8] * f._m[1] + _J[12] * f._m[2] + _J[15] * f._m[3] + _J[16] * f._m[4] + _J[17] * f._m[5],
+                _J[4] * f._m[0] + _J[9] * f._m[1] + _J[13] * f._m[2] + _J[16] * f._m[3] + _J[18] * f._m[4] + _J[19] * f._m[5],
+                _J[5] * f._m[0] + _J[10] * f._m[1] + _J[14] * f._m[2] + _J[17] * f._m[3] + _J[19] * f._m[4] + _J[20] * f._m[5]);
 }
 
 // SCALAR_1_2 * ( x * ~y + y * ~x )
 inline AInertia KroneckerProduct(const dse3& x, const dse3& y)
 {
-    double y_m0 = SCALAR_1_2 * y[0];
-    double y_m1 = SCALAR_1_2 * y[1];
-    double y_m2 = SCALAR_1_2 * y[2];
-    double y_m3 = SCALAR_1_2 * y[3];
-    double y_m4 = SCALAR_1_2 * y[4];
-    double y_m5 = SCALAR_1_2 * y[5];
+    double y_m0 = SCALAR_1_2 * y._m[0];
+    double y_m1 = SCALAR_1_2 * y._m[1];
+    double y_m2 = SCALAR_1_2 * y._m[2];
+    double y_m3 = SCALAR_1_2 * y._m[3];
+    double y_m4 = SCALAR_1_2 * y._m[4];
+    double y_m5 = SCALAR_1_2 * y._m[5];
 
-    return AInertia(x[0] * y[0],
-                    x[0] * y_m1 + x[1] * y_m0,
-                    x[0] * y_m2 + x[2] * y_m0,
-                    x[0] * y_m3 + x[3] * y_m0,
-                    x[0] * y_m4 + x[4] * y_m0,
-                    x[0] * y_m5 + x[5] * y_m0,
-                    x[1] * y[1],
-                    x[1] * y_m2 + x[2] * y_m1,
-                    x[1] * y_m3 + x[3] * y_m1,
-                    x[1] * y_m4 + x[4] * y_m1,
-                    x[1] * y_m5 + x[5] * y_m1,
-                    x[2] * y[2],
-                    x[2] * y_m3 + x[3] * y_m2,
-                    x[2] * y_m4 + x[4] * y_m2,
-                    x[2] * y_m5 + x[5] * y_m2,
-                    x[3] * y[3],
-                    x[3] * y_m4 + x[4] * y_m3,
-                    x[3] * y_m5 + x[5] * y_m3,
-                    x[4] * y[4],
-                    x[4] * y_m5 + x[5] * y_m4,
-                    x[5] * y[5]);
+    return AInertia(x._m[0] * y._m[0],
+                    x._m[0] * y_m1 + x._m[1] * y_m0,
+                    x._m[0] * y_m2 + x._m[2] * y_m0,
+                    x._m[0] * y_m3 + x._m[3] * y_m0,
+                    x._m[0] * y_m4 + x._m[4] * y_m0,
+                    x._m[0] * y_m5 + x._m[5] * y_m0,
+                    x._m[1] * y._m[1],
+                    x._m[1] * y_m2 + x._m[2] * y_m1,
+                    x._m[1] * y_m3 + x._m[3] * y_m1,
+                    x._m[1] * y_m4 + x._m[4] * y_m1,
+                    x._m[1] * y_m5 + x._m[5] * y_m1,
+                    x._m[2] * y._m[2],
+                    x._m[2] * y_m3 + x._m[3] * y_m2,
+                    x._m[2] * y_m4 + x._m[4] * y_m2,
+                    x._m[2] * y_m5 + x._m[5] * y_m2,
+                    x._m[3] * y._m[3],
+                    x._m[3] * y_m4 + x._m[4] * y_m3,
+                    x._m[3] * y_m5 + x._m[5] * y_m3,
+                    x._m[4] * y._m[4],
+                    x._m[4] * y_m5 + x._m[5] * y_m4,
+                    x._m[5] * y._m[5]);
 }
 
 // *this -= KroneckerProduct(x, y)
 inline void AInertia::SubtractKroneckerProduct(const dse3& x, const dse3& y)
 {
-    double y_m0 = SCALAR_1_2 * y[0];
-    double y_m1 = SCALAR_1_2 * y[1];
-    double y_m2 = SCALAR_1_2 * y[2];
-    double y_m3 = SCALAR_1_2 * y[3];
-    double y_m4 = SCALAR_1_2 * y[4];
-    double y_m5 = SCALAR_1_2 * y[5];
+    double y_m0 = SCALAR_1_2 * y._m[0];
+    double y_m1 = SCALAR_1_2 * y._m[1];
+    double y_m2 = SCALAR_1_2 * y._m[2];
+    double y_m3 = SCALAR_1_2 * y._m[3];
+    double y_m4 = SCALAR_1_2 * y._m[4];
+    double y_m5 = SCALAR_1_2 * y._m[5];
 
-    _J[0]  -= x[0] * y[0];
-    _J[1]  -= x[0] * y_m1 + x[1] * y_m0;
-    _J[2]  -= x[0] * y_m2 + x[2] * y_m0;
-    _J[3]  -= x[0] * y_m3 + x[3] * y_m0;
-    _J[4]  -= x[0] * y_m4 + x[4] * y_m0;
-    _J[5]  -= x[0] * y_m5 + x[5] * y_m0;
-    _J[6]  -= x[1] * y[1];
-    _J[7]  -= x[1] * y_m2 + x[2] * y_m1;
-    _J[8]  -= x[1] * y_m3 + x[3] * y_m1;
-    _J[9]  -= x[1] * y_m4 + x[4] * y_m1;
-    _J[10] -= x[1] * y_m5 + x[5] * y_m1;
-    _J[11] -= x[2] * y[2];
-    _J[12] -= x[2] * y_m3 + x[3] * y_m2;
-    _J[13] -= x[2] * y_m4 + x[4] * y_m2;
-    _J[14] -= x[2] * y_m5 + x[5] * y_m2;
-    _J[15] -= x[3] * y[3];
-    _J[16] -= x[3] * y_m4 + x[4] * y_m3;
-    _J[17] -= x[3] * y_m5 + x[5] * y_m3;
-    _J[18] -= x[4] * y[4];
-    _J[19] -= x[4] * y_m5 + x[5] * y_m4;
-    _J[20] -= x[5] * y[5];
+    _J[0]  -= x._m[0] * y._m[0];
+    _J[1]  -= x._m[0] * y_m1 + x._m[1] * y_m0;
+    _J[2]  -= x._m[0] * y_m2 + x._m[2] * y_m0;
+    _J[3]  -= x._m[0] * y_m3 + x._m[3] * y_m0;
+    _J[4]  -= x._m[0] * y_m4 + x._m[4] * y_m0;
+    _J[5]  -= x._m[0] * y_m5 + x._m[5] * y_m0;
+    _J[6]  -= x._m[1] * y._m[1];
+    _J[7]  -= x._m[1] * y_m2 + x._m[2] * y_m1;
+    _J[8]  -= x._m[1] * y_m3 + x._m[3] * y_m1;
+    _J[9]  -= x._m[1] * y_m4 + x._m[4] * y_m1;
+    _J[10] -= x._m[1] * y_m5 + x._m[5] * y_m1;
+    _J[11] -= x._m[2] * y._m[2];
+    _J[12] -= x._m[2] * y_m3 + x._m[3] * y_m2;
+    _J[13] -= x._m[2] * y_m4 + x._m[4] * y_m2;
+    _J[14] -= x._m[2] * y_m5 + x._m[5] * y_m2;
+    _J[15] -= x._m[3] * y._m[3];
+    _J[16] -= x._m[3] * y_m4 + x._m[4] * y_m3;
+    _J[17] -= x._m[3] * y_m5 + x._m[5] * y_m3;
+    _J[18] -= x._m[4] * y._m[4];
+    _J[19] -= x._m[4] * y_m5 + x._m[5] * y_m4;
+    _J[20] -= x._m[5] * y._m[5];
 }
 
 inline se3 AInertia::operator % (const dse3& b) const
@@ -2626,15 +2636,15 @@ inline se3 AInertia::operator % (const dse3& b) const
     double t20 = a02 * _J[3] + a12 * _J[8] + a22 * _J[12];
     double t21 = a02 * _J[4] + a12 * _J[9] + a22 * _J[13];
     double t22 = a02 * _J[5] + a12 * _J[10] + a22 * _J[14];
-    double r0 = a00 * b[0] + a01 * b[1] + a02 * b[2];
-    double r1 = a01 * b[0] + a11 * b[1] + a12 * b[2];
-    double r2 = a02 * b[0] + a12 * b[1] + a22 * b[2];
+    double r0 = a00 * b._m[0] + a01 * b._m[1] + a02 * b._m[2];
+    double r1 = a01 * b._m[0] + a11 * b._m[1] + a12 * b._m[2];
+    double r2 = a02 * b._m[0] + a12 * b._m[1] + a22 * b._m[2];
     a00 = r0;
     a01 = r1;
     a02 = r2;
-    double x0 = b[3] - _J[3] * r0 - _J[8] * r1 - _J[12] * r2;
-    double x1 = b[4] - _J[4] * r0 - _J[9] * r1 - _J[13] * r2;
-    double x2 = b[5] - _J[5] * r0 - _J[10] * r1 - _J[14] * r2;
+    double x0 = b._m[3] - _J[3] * r0 - _J[8] * r1 - _J[12] * r2;
+    double x1 = b._m[4] - _J[4] * r0 - _J[9] * r1 - _J[13] * r2;
+    double x2 = b._m[5] - _J[5] * r0 - _J[10] * r1 - _J[14] * r2;
     double c00 = _J[15] - _J[3] * t00 - _J[8] * t10 - _J[12] * t20;
     double c01 = _J[16] - _J[3] * t01 - _J[8] * t11 - _J[12] * t21;
     double c11 = _J[18] - _J[4] * t01 - _J[9] * t11 - _J[13] * t21;
@@ -2861,16 +2871,16 @@ inline Axis Reparameterize(const Axis& s)
 
 inline Axis Rotate(const SE3& T, const Axis& v)
 {
-    return Axis(T[0] * v[0] + T[3] * v[1] + T[6] * v[2],
-                T[1] * v[0] + T[4] * v[1] + T[7] * v[2],
-                T[2] * v[0] + T[5] * v[1] + T[8] * v[2]);
+    return Axis(T._T[0] * v[0] + T._T[3] * v[1] + T._T[6] * v[2],
+                T._T[1] * v[0] + T._T[4] * v[1] + T._T[7] * v[2],
+                T._T[2] * v[0] + T._T[5] * v[1] + T._T[8] * v[2]);
 }
 
 inline Axis InvRotate(const SE3& T, const Axis& v)
 {
-    return Axis(T[0] * v[0] + T[1] * v[1] + T[2] * v[2],
-                T[3] * v[0] + T[4] * v[1] + T[5] * v[2],
-                T[6] * v[0] + T[7] * v[1] + T[8] * v[2]);
+    return Axis(T._T[0] * v[0] + T._T[1] * v[1] + T._T[2] * v[2],
+                T._T[3] * v[0] + T._T[4] * v[1] + T._T[5] * v[2],
+                T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2]);
 }
 
 inline Axis operator*(double d, const Axis& v)
@@ -3114,10 +3124,10 @@ inline Eigen::VectorXd Jacobian::getInnerProduct(const dse3& _F) const
     return ret;
 }
 
-inline double Inner(const se3& V, const dse3& F)
+inline double Inner(const se3& V, const dse3& f)
 {
-    return (F[0] * V[0] + F[1] * V[1] + F[2] * V[2]
-            + F[3] * V[3] + F[4] * V[4] + F[5] * V[5]);
+    return (f._m[0] * V[0] + f._m[1] * V[1] + f._m[2] * V[2]
+            + f._m[3] * V[3] + f._m[4] * V[4] + f._m[5] * V[5]);
 }
 
 inline double Inner(const dse3& F, const se3& V)
@@ -3126,9 +3136,9 @@ inline double Inner(const dse3& F, const se3& V)
             + F._m[3] * V._w[3] + F._m[4] * V._w[4] + F._m[5] * V._w[5]);
 }
 
-inline double Inner(const dse3& F, const Vec3& v)
+inline double Inner(const dse3& f, const Vec3& v)
 {
-    return (F[3] * v[0] + F[4] * v[1] + F[5] * v[2]);
+    return (f._m[3] * v[0] + f._m[4] * v[1] + f._m[5] * v[2]);
 }
 
 inline double Inner(const dse3& F, const Axis& w)
@@ -3151,14 +3161,14 @@ inline double Norm(const se3& S)
             + S[5] * S[5]);
 }
 
-inline double Norm(const dse3& F)
+inline double Norm(const dse3& f)
 {
-    return sqrt(F[0] * F[0]
-            + F[1] * F[1]
-            + F[2] * F[2]
-            + F[3] * F[3]
-            + F[4] * F[4]
-            + F[5] * F[5]);
+    return sqrt(f._m[0] * f._m[0]
+            + f._m[1] * f._m[1]
+            + f._m[2] * f._m[2]
+            + f._m[3] * f._m[3]
+            + f._m[4] * f._m[4]
+            + f._m[5] * f._m[5]);
 }
 
 
