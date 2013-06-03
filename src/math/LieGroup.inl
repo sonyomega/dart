@@ -427,15 +427,15 @@ inline se3 se3::operator*(double d) const
                d * _w[3], d * _w[4], d * _w[5]);
 }
 
-inline double& se3::operator[](int i)
-{
-    return _w[i];
-}
+//inline double& se3::operator[](int i)
+//{
+//    return _w[i];
+//}
 
-inline const double& se3::operator[](int i) const
-{
-    return _w[i];
-}
+//inline const double& se3::operator[](int i) const
+//{
+//    return _w[i];
+//}
 
 inline void se3::setZero()
 {
@@ -478,9 +478,9 @@ inline void se3::setAd(const SE3& T, const se3& s)
 // re = Inv(T) * s * T
 inline void se3::setInvAd(const SE3& T, const se3& s)
 {
-    double _tmp[3] = {	s[3] + s._w[1] * T._T[11] - s._w[2] * T._T[10],
-                        s[4] + s._w[2] * T._T[9]  - s._w[0] * T._T[11],
-                        s[5] + s._w[0] * T._T[10] - s._w[1] * T._T[9] };
+    double _tmp[3] = {	s._w[3] + s._w[1] * T._T[11] - s._w[2] * T._T[10],
+                        s._w[4] + s._w[2] * T._T[9]  - s._w[0] * T._T[11],
+                        s._w[5] + s._w[0] * T._T[10] - s._w[1] * T._T[9] };
     _w[0] = T._T[0] * s._w[0] + T._T[1] * s._w[1] + T._T[2] * s._w[2];
     _w[1] = T._T[3] * s._w[0] + T._T[4] * s._w[1] + T._T[5] * s._w[2];
     _w[2] = T._T[6] * s._w[0] + T._T[7] * s._w[1] + T._T[8] * s._w[2];
@@ -749,24 +749,24 @@ inline double SquareSum(const se3& s)
           + s._w[3] * s._w[3] + s._w[4] * s._w[4] + s._w[5] * s._w[5]);
 }
 
-inline se3 Rotate(const SE3& T, const se3& v)
+inline se3 Rotate(const SE3& T, const se3& s)
 {
-    return se3(	T._T[0] * v[0] + T._T[3] * v[1] + T._T[6] * v[2],
-                T._T[1] * v[0] + T._T[4] * v[1] + T._T[7] * v[2],
-                T._T[2] * v[0] + T._T[5] * v[1] + T._T[8] * v[2],
-                T._T[0] * v[3] + T._T[3] * v[4] + T._T[6] * v[5],
-                T._T[1] * v[3] + T._T[4] * v[4] + T._T[7] * v[5],
-                T._T[2] * v[3] + T._T[5] * v[4] + T._T[8] * v[5]);
+    return se3(	T._T[0] * s._w[0] + T._T[3] * s._w[1] + T._T[6] * s._w[2],
+                T._T[1] * s._w[0] + T._T[4] * s._w[1] + T._T[7] * s._w[2],
+                T._T[2] * s._w[0] + T._T[5] * s._w[1] + T._T[8] * s._w[2],
+                T._T[0] * s._w[3] + T._T[3] * s._w[4] + T._T[6] * s._w[5],
+                T._T[1] * s._w[3] + T._T[4] * s._w[4] + T._T[7] * s._w[5],
+                T._T[2] * s._w[3] + T._T[5] * s._w[4] + T._T[8] * s._w[5]);
 }
 
-inline se3 InvRotate(const SE3& T, const se3& v)
+inline se3 InvRotate(const SE3& T, const se3& s)
 {
-    return se3(	T._T[0] * v[0] + T._T[1] * v[1] + T._T[2] * v[2],
-                T._T[3] * v[0] + T._T[4] * v[1] + T._T[5] * v[2],
-                T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2],
-                T._T[0] * v[3] + T._T[1] * v[4] + T._T[2] * v[5],
-                T._T[3] * v[3] + T._T[4] * v[4] + T._T[5] * v[5],
-                T._T[6] * v[3] + T._T[7] * v[4] + T._T[8] * v[5]);
+    return se3(	T._T[0] * s._w[0] + T._T[1] * s._w[1] + T._T[2] * s._w[2],
+                T._T[3] * s._w[0] + T._T[4] * s._w[1] + T._T[5] * s._w[2],
+                T._T[6] * s._w[0] + T._T[7] * s._w[1] + T._T[8] * s._w[2],
+                T._T[0] * s._w[3] + T._T[1] * s._w[4] + T._T[2] * s._w[5],
+                T._T[3] * s._w[3] + T._T[4] * s._w[4] + T._T[5] * s._w[5],
+                T._T[6] * s._w[3] + T._T[7] * s._w[4] + T._T[8] * s._w[5]);
 }
 
 //==============================================================================
@@ -927,22 +927,22 @@ inline dse3 dse3::operator*(double d) const
 
 inline dse3 dad(const se3& s, const dse3& t)
 {
-    return dse3(t._m[1] * s[2] - t._m[2] * s[1] + t._m[4] * s[5] - t._m[5] * s[4],
-                t._m[2] * s[0] - t._m[0] * s[2] + t._m[5] * s[3] - t._m[3] * s[5],
-                t._m[0] * s[1] - t._m[1] * s[0] + t._m[3] * s[4] - t._m[4] * s[3],
-                t._m[4] * s[2] - t._m[5] * s[1],
-                t._m[5] * s[0] - t._m[3] * s[2],
-                t._m[3] * s[1] - t._m[4] * s[0]);
+    return dse3(t._m[1] * s._w[2] - t._m[2] * s._w[1] + t._m[4] * s._w[5] - t._m[5] * s._w[4],
+                t._m[2] * s._w[0] - t._m[0] * s._w[2] + t._m[5] * s._w[3] - t._m[3] * s._w[5],
+                t._m[0] * s._w[1] - t._m[1] * s._w[0] + t._m[3] * s._w[4] - t._m[4] * s._w[3],
+                t._m[4] * s._w[2] - t._m[5] * s._w[1],
+                t._m[5] * s._w[0] - t._m[3] * s._w[2],
+                t._m[3] * s._w[1] - t._m[4] * s._w[0]);
 }
 
 inline void dse3::dad(const se3& s, const dse3& t)
 {
-    _m[0] =	t._m[1] * s[2] - t._m[2] * s[1] + t._m[4] * s[5] - t._m[5] * s[4];
-    _m[1] =	t._m[2] * s[0] - t._m[0] * s[2] + t._m[5] * s[3] - t._m[3] * s[5];
-    _m[2] =	t._m[0] * s[1] - t._m[1] * s[0] + t._m[3] * s[4] - t._m[4] * s[3];
-    _m[3] =	t._m[4] * s[2] - t._m[5] * s[1];
-    _m[4] =	t._m[5] * s[0] - t._m[3] * s[2];
-    _m[5] =	t._m[3] * s[1] - t._m[4] * s[0];
+    _m[0] =	t._m[1] * s._w[2] - t._m[2] * s._w[1] + t._m[4] * s._w[5] - t._m[5] * s._w[4];
+    _m[1] =	t._m[2] * s._w[0] - t._m[0] * s._w[2] + t._m[5] * s._w[3] - t._m[3] * s._w[5];
+    _m[2] =	t._m[0] * s._w[1] - t._m[1] * s._w[0] + t._m[3] * s._w[4] - t._m[4] * s._w[3];
+    _m[3] =	t._m[4] * s._w[2] - t._m[5] * s._w[1];
+    _m[4] =	t._m[5] * s._w[0] - t._m[3] * s._w[2];
+    _m[5] =	t._m[3] * s._w[1] - t._m[4] * s._w[0];
 }
 
 inline void dse3::dAd(const SE3& T, const dse3& t)
@@ -1787,10 +1787,10 @@ inline SE3 EulerZYZ(const Vec3& angle, const Vec3& pos)
 // R = Exp(w)
 // p = sin(t) / t * v + (t - sin(t)) / t^3 * <w, v> * w + (1 - cos(t)) / t^2 * (w X v)
 // , when S = (w, v), t = |w|
-inline SE3 Exp(const se3& S)
+inline SE3 Exp(const se3& s)
 {
-    double s2[] = { S[0] * S[0], S[1] * S[1], S[2] * S[2] };
-    double s3[] = { S[0] * S[1], S[1] * S[2], S[2] * S[0] };
+    double s2[] = { s._w[0] * s._w[0], s._w[1] * s._w[1], s._w[2] * s._w[2] };
+    double s3[] = { s._w[0] * s._w[1], s._w[1] * s._w[2], s._w[2] * s._w[0] };
     double theta = sqrt(s2[0] + s2[1] + s2[2]), cos_t = cos(theta), alpha, beta, gamma;
 
     if ( theta > LIE_EPS )
@@ -1798,30 +1798,30 @@ inline SE3 Exp(const se3& S)
         double sin_t = sin(theta);
         alpha = sin_t / theta;
         beta = (SCALAR_1 - cos_t) / theta / theta;
-        gamma = (S[0] * S[3] + S[1] * S[4] + S[2] * S[5]) * (theta - sin_t) / theta / theta / theta;
+        gamma = (s._w[0] * s._w[3] + s._w[1] * s._w[4] + s._w[2] * s._w[5]) * (theta - sin_t) / theta / theta / theta;
     }
     else
     {
         alpha = SCALAR_1 - SCALAR_1_6 * theta * theta;
         beta = SCALAR_1_2 - SCALAR_1_24 * theta * theta;
-        gamma = (S[0] * S[3] + S[1] * S[4] + S[2] * S[5]) * SCALAR_1_6 - SCALAR_1_120 * theta * theta;
+        gamma = (s._w[0] * s._w[3] + s._w[1] * s._w[4] + s._w[2] * s._w[5]) * SCALAR_1_6 - SCALAR_1_120 * theta * theta;
     }
 
     return SE3(beta * s2[0] + cos_t,
-               beta * s3[0] + alpha * S[2],
-               beta * s3[2] - alpha * S[1],
+               beta * s3[0] + alpha * s._w[2],
+               beta * s3[2] - alpha * s._w[1],
 
-               beta * s3[0] - alpha * S[2],
+               beta * s3[0] - alpha * s._w[2],
                beta * s2[1] + cos_t,
-               beta * s3[1] + alpha * S[0],
+               beta * s3[1] + alpha * s._w[0],
 
-               beta * s3[2] + alpha * S[1],
-               beta * s3[1] - alpha * S[0],
+               beta * s3[2] + alpha * s._w[1],
+               beta * s3[1] - alpha * s._w[0],
                beta * s2[2] + cos_t,
 
-               alpha * S[3] + beta * (S[1] * S[5] - S[2] * S[4]) + gamma * S[0],
-               alpha * S[4] + beta * (S[2] * S[3] - S[0] * S[5]) + gamma * S[1],
-               alpha * S[5] + beta * (S[0] * S[4] - S[1] * S[3]) + gamma * S[2]);
+               alpha * s._w[3] + beta * (s._w[1] * s._w[5] - s._w[2] * s._w[4]) + gamma * s._w[0],
+               alpha * s._w[4] + beta * (s._w[2] * s._w[3] - s._w[0] * s._w[5]) + gamma * s._w[1],
+               alpha * s._w[5] + beta * (s._w[0] * s._w[4] - s._w[1] * s._w[3]) + gamma * s._w[2]);
 }
 
 // I + sin(t) / t * [S] + (1 - cos(t)) / t^2 * [S]^2, where t = |S|
@@ -2022,23 +2022,23 @@ inline dse3 Inertia::operator*(const se3& s) const
     // F = m * (v - r X w)
 
     // r X w
-    double rw0 =_I[7] * s[2] - _I[8] * s[1];
-    double rw1 =_I[8] * s[0] - _I[6] * s[2];
-    double rw2 =_I[6] * s[1] - _I[7] * s[0];
+    double rw0 =_I[7] * s._w[2] - _I[8] * s._w[1];
+    double rw1 =_I[8] * s._w[0] - _I[6] * s._w[2];
+    double rw2 =_I[6] * s._w[1] - _I[7] * s._w[0];
 
     // r X v - r X (r x w)
-    double R0 = (_I[7] * s[5] - _I[8] * s[4]) - (_I[7] * rw2 - _I[8] * rw1);
-    double R1 = (_I[8] * s[3] - _I[6] * s[5]) - (_I[8] * rw0 - _I[6] * rw2);
-    double R2 = (_I[6] * s[4] - _I[7] * s[3]) - (_I[6] * rw1 - _I[7] * rw0);
+    double R0 = (_I[7] * s._w[5] - _I[8] * s._w[4]) - (_I[7] * rw2 - _I[8] * rw1);
+    double R1 = (_I[8] * s._w[3] - _I[6] * s._w[5]) - (_I[8] * rw0 - _I[6] * rw2);
+    double R2 = (_I[6] * s._w[4] - _I[7] * s._w[3]) - (_I[6] * rw1 - _I[7] * rw0);
 
     // M = I * w + m * R
     // F = m * (v - rw)
-    return dse3(_I[0] * s[0] + _I[3] * s[1] + _I[4] * s[2] + _I[9] * R0, // M[0]
-                _I[3] * s[0] + _I[1] * s[1] + _I[5] * s[2] + _I[9] * R1, // M[1]
-                _I[4] * s[0] + _I[5] * s[1] + _I[2] * s[2] + _I[9] * R2, // M[2]
-                _I[9] * (s[3] - rw0),									 // F[0]
-                _I[9] * (s[4] - rw1),									 // F[1]
-                _I[9] * (s[5] - rw2));									 // F[2]
+    return dse3(_I[0] * s._w[0] + _I[3] * s._w[1] + _I[4] * s._w[2] + _I[9] * R0, // M[0]
+                _I[3] * s._w[0] + _I[1] * s._w[1] + _I[5] * s._w[2] + _I[9] * R1, // M[1]
+                _I[4] * s._w[0] + _I[5] * s._w[1] + _I[2] * s._w[2] + _I[9] * R2, // M[2]
+                _I[9] * (s._w[3] - rw0),									 // F[0]
+                _I[9] * (s._w[4] - rw1),									 // F[1]
+                _I[9] * (s._w[5] - rw2));									 // F[2]
 }
 
 inline dse3 Inertia::operator*(const Axis& s) const
@@ -2322,12 +2322,12 @@ inline AInertia AInertia::operator-(void) const
 
 inline dse3 AInertia::operator*(const se3& a) const
 {
-    return dse3(_J[0] * a[0] + _J[1] * a[1] + _J[2] * a[2] + _J[3] * a[3] + _J[4] * a[4] + _J[5] * a[5],
-                _J[1] * a[0] + _J[6] * a[1] + _J[7] * a[2] + _J[8] * a[3] + _J[9] * a[4] + _J[10] * a[5],
-                _J[2] * a[0] + _J[7] * a[1] + _J[11] * a[2] + _J[12] * a[3] + _J[13] * a[4] + _J[14] * a[5],
-                _J[3] * a[0] + _J[8] * a[1] + _J[12] * a[2] + _J[15] * a[3] + _J[16] * a[4] + _J[17] * a[5],
-                _J[4] * a[0] + _J[9] * a[1] + _J[13] * a[2] + _J[16] * a[3] + _J[18] * a[4] + _J[19] * a[5],
-                _J[5] * a[0] + _J[10] * a[1] + _J[14] * a[2] + _J[17] * a[3] + _J[19] * a[4] + _J[20] * a[5]);
+    return dse3(_J[0] * a._w[0] + _J[1] * a._w[1] + _J[2] * a._w[2] + _J[3] * a._w[3] + _J[4] * a._w[4] + _J[5] * a._w[5],
+                _J[1] * a._w[0] + _J[6] * a._w[1] + _J[7] * a._w[2] + _J[8] * a._w[3] + _J[9] * a._w[4] + _J[10] * a._w[5],
+                _J[2] * a._w[0] + _J[7] * a._w[1] + _J[11] * a._w[2] + _J[12] * a._w[3] + _J[13] * a._w[4] + _J[14] * a._w[5],
+                _J[3] * a._w[0] + _J[8] * a._w[1] + _J[12] * a._w[2] + _J[15] * a._w[3] + _J[16] * a._w[4] + _J[17] * a._w[5],
+                _J[4] * a._w[0] + _J[9] * a._w[1] + _J[13] * a._w[2] + _J[16] * a._w[3] + _J[18] * a._w[4] + _J[19] * a._w[5],
+                _J[5] * a._w[0] + _J[10] * a._w[1] + _J[14] * a._w[2] + _J[17] * a._w[3] + _J[19] * a._w[4] + _J[20] * a._w[5]);
 }
 
 inline dse3 AInertia::operator*(const Vec3& a) const
@@ -2794,9 +2794,9 @@ inline const Axis& Axis::operator = (const Axis& v)
 
 inline const Axis& Axis::operator = (const se3& v)
 {
-    _v[0] = v[0];
-    _v[1] = v[1];
-    _v[2] = v[2];
+    _v[0] = v._w[0];
+    _v[1] = v._w[1];
+    _v[2] = v._w[2];
     return *this;
 }
 
@@ -2944,9 +2944,9 @@ inline Axis InvAd(const SE3& T, const Axis& v)
 
 inline Axis ad(const Axis& s1, const se3& s2)
 {
-    return Axis(s2[2] * s1[1] - s2[1] * s1[2],
-                s2[0] * s1[2] - s2[2] * s1[0],
-                s2[1] * s1[0] - s2[0] * s1[1]);
+    return Axis(s2._w[2] * s1[1] - s2._w[1] * s1[2],
+                s2._w[0] * s1[2] - s2._w[2] * s1[0],
+                s2._w[1] * s1[0] - s2._w[0] * s1[1]);
 }
 
 inline Axis ad(const Axis& s1, const Axis& s2)
@@ -3126,8 +3126,8 @@ inline Eigen::VectorXd Jacobian::getInnerProduct(const dse3& _F) const
 
 inline double Inner(const se3& V, const dse3& f)
 {
-    return (f._m[0] * V[0] + f._m[1] * V[1] + f._m[2] * V[2]
-            + f._m[3] * V[3] + f._m[4] * V[4] + f._m[5] * V[5]);
+    return (f._m[0] * V._w[0] + f._m[1] * V._w[1] + f._m[2] * V._w[2]
+            + f._m[3] * V._w[3] + f._m[4] * V._w[4] + f._m[5] * V._w[5]);
 }
 
 inline double Inner(const dse3& F, const se3& V)
@@ -3151,14 +3151,14 @@ inline double Distance(const SE3& T1, const SE3& T2)
     return Norm(Log(Inv(T1)*T2));
 }
 
-inline double Norm(const se3& S)
+inline double Norm(const se3& s)
 {
-    return sqrt(S[0] * S[0]
-            + S[1] * S[1]
-            + S[2] * S[2]
-            + S[3] * S[3]
-            + S[4] * S[4]
-            + S[5] * S[5]);
+    return sqrt(s._w[0] * s._w[0]
+            + s._w[1] * s._w[1]
+            + s._w[2] * s._w[2]
+            + s._w[3] * s._w[3]
+            + s._w[4] * s._w[4]
+            + s._w[5] * s._w[5]);
 }
 
 inline double Norm(const dse3& f)

@@ -694,8 +694,8 @@ public:
     se3 operator*(double) const;
 
     /// @brief access to the idx th element.
-    double& operator[](int idx);
-    const double& operator[](int) const;
+//    double& operator[](int idx);
+//    const double& operator[](int) const;
 
     //--------------------------------------------------------------------------
     // Setters and getters
@@ -733,11 +733,16 @@ public:
     //--------------------------------------------------------------------------
     // Friend functions
     //--------------------------------------------------------------------------
+    friend class Vec3;
+    friend class Axis;
     friend class dse3;
     friend class SE3;
+    friend class Inertia;
+    friend class AInertia;
 
     friend double operator*(const dse3& t, const se3& s);
     friend se3 operator*(double d, const se3& s);
+    friend std::ostream& operator<<(std::ostream& os, const se3& s);
     friend SE3 Exp(const se3& );
     friend SE3 Exp(const Axis& s);
     friend SE3 Exp(const Axis& s, double t);
@@ -750,7 +755,9 @@ public:
     friend se3 InvAd(const SE3& T, const se3& s);
     friend se3 ad(const se3& s1, const se3& s2);
     friend Vec3 ad(const Vec3& s1, const se3& s2);
+    friend Axis ad(const Axis& s1, const se3& s2);
     friend dse3 dad(const se3& V, const dse3& F);
+    friend double Norm(const se3& s);
     friend double Inner(const se3& V, const dse3& F);
     friend double Inner(const dse3& F, const se3& V);
     friend double SquareSum(const se3& S);
