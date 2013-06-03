@@ -43,12 +43,12 @@ inline Vec3 Vec3::operator-(void) const
     return Vec3(-_v[0], -_v[1], -_v[2]);
 }
 
-inline double& Vec3::operator[](int i)
+inline double& Vec3::operator()(int i)
 {
     return _v[i];
 }
 
-inline const double& Vec3::operator[](int i) const
+inline const double& Vec3::operator()(int i) const
 {
     return _v[i];
 }
@@ -724,9 +724,9 @@ inline se3 Ad(const SE3& T, const Axis& s)
 inline se3 Ad(const SE3& T, const Vec3& v)
 {
     return se3(	SCALAR_0, SCALAR_0, SCALAR_0,
-                T._T[0] * v[0] + T._T[3] * v[1] + T._T[6] * v[2],
-                T._T[1] * v[0] + T._T[4] * v[1] + T._T[7] * v[2],
-                T._T[2] * v[0] + T._T[5] * v[1] + T._T[8] * v[2]);
+                T._T[0] * v._v[0] + T._T[3] * v._v[1] + T._T[6] * v._v[2],
+                T._T[1] * v._v[0] + T._T[4] * v._v[1] + T._T[7] * v._v[2],
+                T._T[2] * v._v[0] + T._T[5] * v._v[1] + T._T[8] * v._v[2]);
 }
 
 // re = Inv(T) * s * T
@@ -855,9 +855,9 @@ inline const dse3& dse3::operator = (const Axis& t)
 inline const dse3& dse3::operator = (const Vec3& t)
 {
     _m[0] = _m[1] =  _m[2] = SCALAR_0;
-    _m[3] = t[0];
-    _m[4] = t[1];
-    _m[5] = t[2];
+    _m[3] = t._v[0];
+    _m[4] = t._v[1];
+    _m[5] = t._v[2];
     return *this;
 }
 
@@ -1001,15 +1001,15 @@ inline dse3 dAd(const SE3& T, const dse3& t)
 
 inline dse3 dAd(const SE3& T, const Vec3& v)
 {
-    double tmp[3] = {	- T._T[10] * v[2] + T._T[11] * v[1],
-                        - T._T[11] * v[0] + T._T[ 9] * v[2],
-                        - T._T[ 9] * v[1] + T._T[10] * v[0] };
+    double tmp[3] = {	- T._T[10] * v._v[2] + T._T[11] * v._v[1],
+                        - T._T[11] * v._v[0] + T._T[ 9] * v._v[2],
+                        - T._T[ 9] * v._v[1] + T._T[10] * v._v[0] };
     return dse3(T._T[0] * tmp[0] + T._T[1] * tmp[1] + T._T[2] * tmp[2],
                 T._T[3] * tmp[0] + T._T[4] * tmp[1] + T._T[5] * tmp[2],
                 T._T[6] * tmp[0] + T._T[7] * tmp[1] + T._T[8] * tmp[2],
-                T._T[0] * v[0] + T._T[1] * v[1] + T._T[2] * v[2],
-                T._T[3] * v[0] + T._T[4] * v[1] + T._T[5] * v[2],
-                T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2]);
+                T._T[0] * v._v[0] + T._T[1] * v._v[1] + T._T[2] * v._v[2],
+                T._T[3] * v._v[0] + T._T[4] * v._v[1] + T._T[5] * v._v[2],
+                T._T[6] * v._v[0] + T._T[7] * v._v[1] + T._T[8] * v._v[2]);
 }
 
 inline dse3 InvdAd(const SE3& T, const dse3& t)
@@ -1025,12 +1025,12 @@ inline dse3 InvdAd(const SE3& T, const dse3& t)
 
 inline dse3 InvdAd(const Vec3& p, const Vec3& f)
 {
-    return dse3(p[1] * f[2] - p[2] * f[1],
-                p[2] * f[0] - p[0] * f[2],
-                p[0] * f[1] - p[1] * f[0],
-                f[0],
-                f[1],
-                f[2]);
+    return dse3(p._v[1] * f._v[2] - p._v[2] * f._v[1],
+                p._v[2] * f._v[0] - p._v[0] * f._v[2],
+                p._v[0] * f._v[1] - p._v[1] * f._v[0],
+                f._v[0],
+                f._v[1],
+                f._v[2]);
 }
 
 inline double SquareSum(const dse3& t)
@@ -1101,15 +1101,15 @@ inline SO3::SO3(double R0, double R1, double R2,
 
 inline SO3::SO3(const Vec3 &Rx, const Vec3 &Ry, const Vec3 &Rz)
 {
-    _R[ 0] = Rx[0];
-    _R[ 1] = Rx[1];
-    _R[ 2] = Rx[2];
-    _R[ 3] = Ry[0];
-    _R[ 4] = Ry[1];
-    _R[ 5] = Ry[2];
-    _R[ 6] = Rz[0];
-    _R[ 7] = Rz[1];
-    _R[ 8] = Rz[2];
+    _R[ 0] = Rx._v[0];
+    _R[ 1] = Rx._v[1];
+    _R[ 2] = Rx._v[2];
+    _R[ 3] = Ry._v[0];
+    _R[ 4] = Ry._v[1];
+    _R[ 5] = Ry._v[2];
+    _R[ 6] = Rz._v[0];
+    _R[ 7] = Rz._v[1];
+    _R[ 8] = Rz._v[2];
 }
 
 inline void SO3::setValues(double Rx1, double Rx2, double Rx3,	// Rx
@@ -1150,7 +1150,7 @@ inline Vec3 SO3::getRz(void) const
 
 inline const SO3& SO3::setExp(const Vec3 &S)
 {
-    double s2[] = { S[0] * S[0], S[1] * S[1], S[2] * S[2] }, theta = sqrt(s2[0] + s2[1] + s2[2]), st_t, ct_t;
+    double s2[] = { S._v[0] * S._v[0], S._v[1] * S._v[1], S._v[2] * S._v[2] }, theta = sqrt(s2[0] + s2[1] + s2[2]), st_t, ct_t;
 
     if ( theta < LIE_EPS )
     {
@@ -1163,13 +1163,13 @@ inline const SO3& SO3::setExp(const Vec3 &S)
     }
 
     _R[0] = 1.0 - ct_t * (s2[1] + s2[2]);
-    _R[1] = ct_t * S[0] * S[1] + st_t * S[2];
-    _R[2] = ct_t * S[0] * S[2] - st_t * S[1];
-    _R[3] = ct_t * S[0] * S[1] - st_t * S[2];
+    _R[1] = ct_t * S._v[0] * S._v[1] + st_t * S._v[2];
+    _R[2] = ct_t * S._v[0] * S._v[2] - st_t * S._v[1];
+    _R[3] = ct_t * S._v[0] * S._v[1] - st_t * S._v[2];
     _R[4] = 1.0 - ct_t * (s2[0] + s2[2]);
-    _R[5] = ct_t * S[1] * S[2] + st_t * S[0];
-    _R[6] = ct_t * S[0] * S[2] + st_t * S[1];
-    _R[7] = ct_t * S[1] * S[2] - st_t * S[0];
+    _R[5] = ct_t * S._v[1] * S._v[2] + st_t * S._v[0];
+    _R[6] = ct_t * S._v[0] * S._v[2] + st_t * S._v[1];
+    _R[7] = ct_t * S._v[1] * S._v[2] - st_t * S._v[0];
     _R[8] = 1.0 - ct_t * (s2[0] + s2[1]);
 
     return (*this);
@@ -1177,7 +1177,7 @@ inline const SO3& SO3::setExp(const Vec3 &S)
 
 inline const SO3& SO3::setExp(const Vec3 & S, double theta)
 {
-    double s2[] = { S[0] * S[0], S[1] * S[1], S[2] * S[2] };
+    double s2[] = { S._v[0] * S._v[0], S._v[1] * S._v[1], S._v[2] * S._v[2] };
 
     if ( fabs(s2[0] + s2[1] + s2[2] - 1.0) > LIE_EPS )
     {
@@ -1186,16 +1186,16 @@ inline const SO3& SO3::setExp(const Vec3 & S, double theta)
 
     double st = sin(theta),
            vt = 1.0 - cos(theta),
-           sts[] = { st * S[0], st * S[1], st * S[2] };
+           sts[] = { st * S._v[0], st * S._v[1], st * S._v[2] };
 
     _R[0] = 1.0 + vt * (s2[0] - 1.0);
-    _R[1] = vt * S[0] * S[1] + sts[2];
-    _R[2] = vt * S[0] * S[2] - sts[1];
-    _R[3] = vt * S[0] * S[1] - sts[2];
+    _R[1] = vt * S._v[0] * S._v[1] + sts[2];
+    _R[2] = vt * S._v[0] * S._v[2] - sts[1];
+    _R[3] = vt * S._v[0] * S._v[1] - sts[2];
     _R[4] = 1.0 + vt * (s2[1] - 1.0);
-    _R[5] = vt * S[1] * S[2] + sts[0];
-    _R[6] = vt * S[0] * S[2] + sts[1];
-    _R[7] = vt * S[1] * S[2] - sts[0];
+    _R[5] = vt * S._v[1] * S._v[2] + sts[0];
+    _R[6] = vt * S._v[0] * S._v[2] + sts[1];
+    _R[7] = vt * S._v[1] * S._v[2] - sts[0];
     _R[8] = 1.0 + vt * (s2[2] - 1.0);
 
     return (*this);
@@ -1311,16 +1311,16 @@ inline SO3 SO3::operator % (const SO3 &R) const
 
 inline Vec3 SO3::operator * (const Vec3 & q) const
 {
-    return Vec3(_R[0] * q[0] + _R[3] * q[1] + _R[6] * q[2],
-                _R[1] * q[0] + _R[4] * q[1] + _R[7] * q[2],
-                _R[2] * q[0] + _R[5] * q[1] + _R[8] * q[2] );
+    return Vec3(_R[0] * q._v[0] + _R[3] * q._v[1] + _R[6] * q._v[2],
+                _R[1] * q._v[0] + _R[4] * q._v[1] + _R[7] * q._v[2],
+                _R[2] * q._v[0] + _R[5] * q._v[1] + _R[8] * q._v[2] );
 }
 
 inline Vec3 SO3::operator % (const Vec3 & q) const
 {
-    return Vec3(_R[0] * q[0] + _R[1] * q[1] + _R[2] * q[2],
-                _R[3] * q[0] + _R[4] * q[1] + _R[5] * q[2],
-                _R[6] * q[0] + _R[7] * q[1] + _R[8] * q[2] );
+    return Vec3(_R[0] * q._v[0] + _R[1] * q._v[1] + _R[2] * q._v[2],
+                _R[3] * q._v[0] + _R[4] * q._v[1] + _R[5] * q._v[2],
+                _R[6] * q._v[0] + _R[7] * q._v[1] + _R[8] * q._v[2] );
 }
 
 
@@ -1390,18 +1390,21 @@ inline SE3::SE3(const Vec3& p)
 
 inline SE3::SE3(const Vec3& Rx, const Vec3& Ry, const Vec3& Rz, const Vec3& p)
 {
-    _T[0] = Rx[0];
-    _T[1] = Rx[1];
-    _T[2] = Rx[2];
-    _T[3] = Ry[0];
-    _T[4] = Ry[1];
-    _T[5] = Ry[2];
-    _T[6] = Rz[0];
-    _T[7] = Rz[1];
-    _T[8] = Rz[2];
-    _T[9] = p[0];
-    _T[10] = p[1];
-    _T[11] = p[2];
+    _T[0] = Rx._v[0];
+    _T[1] = Rx._v[1];
+    _T[2] = Rx._v[2];
+
+    _T[3] = Ry._v[0];
+    _T[4] = Ry._v[1];
+    _T[5] = Ry._v[2];
+
+    _T[6] = Rz._v[0];
+    _T[7] = Rz._v[1];
+    _T[8] = Rz._v[2];
+
+    _T[ 9] = p._v[0];
+    _T[10] = p._v[1];
+    _T[11] = p._v[2];
 }
 
 inline SE3::SE3(double p)
@@ -1477,9 +1480,11 @@ inline const SE3& SE3::operator=(const Vec3& p)
 {
     _T[0] = _T[4] = _T[8] = SCALAR_1;
     _T[1] = _T[2] = _T[3] = _T[5] = _T[6] = _T[7] = SCALAR_0;
-    _T[9] = p[0];
-    _T[10] = p[1];
-    _T[11] = p[2];
+
+    _T[ 9] = p._v[0];
+    _T[10] = p._v[1];
+    _T[11] = p._v[2];
+
     return *this;
 }
 
@@ -1534,16 +1539,16 @@ inline SE3 SE3::operator % (const SE3& T) const
 
 inline Vec3 SE3::operator % (const Vec3& p) const
 {
-    return Vec3(_T[0] * (p[0] - _T[9]) + _T[1] * (p[1] - _T[10]) + _T[2] * (p[2] - _T[11]),
-                _T[3] * (p[0] - _T[9]) + _T[4] * (p[1] - _T[10]) + _T[5] * (p[2] - _T[11]),
-                _T[6] * (p[0] - _T[9]) + _T[7] * (p[1] - _T[10]) + _T[8] * (p[2] - _T[11]) );
+    return Vec3(_T[0] * (p._v[0] - _T[9]) + _T[1] * (p._v[1] - _T[10]) + _T[2] * (p._v[2] - _T[11]),
+                _T[3] * (p._v[0] - _T[9]) + _T[4] * (p._v[1] - _T[10]) + _T[5] * (p._v[2] - _T[11]),
+                _T[6] * (p._v[0] - _T[9]) + _T[7] * (p._v[1] - _T[10]) + _T[8] * (p._v[2] - _T[11]) );
 }
 
 inline Vec3 SE3::operator*(const Vec3& p) const
 {
-    return Vec3(_T[9] + _T[0] * p[0] + _T[3] * p[1] + _T[6] * p[2],
-                _T[10] + _T[1] * p[0] + _T[4] * p[1] + _T[7] * p[2],
-                _T[11] + _T[2] * p[0] + _T[5] * p[1] + _T[8] * p[2] );
+    return Vec3(_T[9] + _T[0] * p._v[0] + _T[3] * p._v[1] + _T[6] * p._v[2],
+                _T[10] + _T[1] * p._v[0] + _T[4] * p._v[1] + _T[7] * p._v[2],
+                _T[11] + _T[2] * p._v[0] + _T[5] * p._v[1] + _T[8] * p._v[2] );
 }
 
 inline const SE3& SE3::operator*=(const SE3& T)
@@ -1668,9 +1673,9 @@ inline void SE3::setOrientation(const SE3& T)
 
 inline void SE3::setPosition(const Vec3& Pos)
 {
-    _T[9] = Pos[0];
-    _T[10] = Pos[1];
-    _T[11] = Pos[2];
+    _T[ 9] = Pos._v[0];
+    _T[10] = Pos._v[1];
+    _T[11] = Pos._v[2];
 }
 
 inline Vec3 SE3::getPosition(void) const
@@ -1766,42 +1771,45 @@ inline void SE3::ToQuaternion(double q[4]) const
 //==============================================================================
 inline SE3 EulerZYX(const Vec3& angle)
 {
-    double ca = cos(angle[0]), sa = sin(angle[0]), cb = cos(angle[1]), sb = sin(angle[1]), cg = cos(angle[2]), sg = sin(angle[2]);
+    double ca = cos(angle._v[0]), sa = sin(angle._v[0]), cb = cos(angle._v[1]), sb = sin(angle._v[1]), cg = cos(angle._v[2]), sg = sin(angle._v[2]);
     return SE3(ca * cb, sa * cb, -sb, ca * sb * sg - sa * cg, sa * sb * sg + ca * cg, cb * sg, ca * sb * cg + sa * sg, sa * sb * cg - ca * sg, cb * cg);
 }
 
 inline SE3 EulerZYZ(const Vec3& angle)
 {
-    double ca = cos(angle[0]), sa = sin(angle[0]), cb = cos(angle[1]), sb = sin(angle[1]), cg = cos(angle[2]), sg = sin(angle[2]);
+    double ca = cos(angle._v[0]), sa = sin(angle._v[0]), cb = cos(angle._v[1]), sb = sin(angle._v[1]), cg = cos(angle._v[2]), sg = sin(angle._v[2]);
     return SE3(ca * cb * cg - sa * sg, sa * cb * cg + ca * sg, -sb * cg,	-ca * cb * sg - sa * cg, ca * cg - sa * cb * sg, sb * sg, ca * sb, sa * sb, cb);
 }
 
 inline SE3 EulerXYZ(const Vec3& angle, const Vec3& pos)
 {
-    SE3 T = RotX(angle[0]) * RotY(angle[1]) * RotZ(angle[2]);
+    SE3 T = RotX(angle._v[0]) * RotY(angle._v[1]) * RotZ(angle._v[2]);
     T.setPosition(pos);
     return T;
 }
 
 inline SE3 EulerZYX(const Vec3& angle, const Vec3& pos)
 {
-    double ca = cos(angle[0]);
-    double sa = sin(angle[0]);
-    double cb = cos(angle[1]);
-    double sb = sin(angle[1]);
-    double cg = cos(angle[2]);
-    double sg = sin(angle[2]);
+    double ca = cos(angle._v[0]);
+    double sa = sin(angle._v[0]);
+    double cb = cos(angle._v[1]);
+    double sb = sin(angle._v[1]);
+    double cg = cos(angle._v[2]);
+    double sg = sin(angle._v[2]);
 
     return SE3(ca * cb, sa * cb, -sb,
                ca * sb * sg - sa * cg, sa * sb * sg + ca * cg, cb * sg,
                ca * sb * cg + sa * sg, sa * sb * cg - ca * sg, cb * cg,
-               pos[0], pos[1], pos[2]);
+               pos._v[0], pos._v[1], pos._v[2]);
 }
 
 inline SE3 EulerZYZ(const Vec3& angle, const Vec3& pos)
 {
-    double ca = cos(angle[0]), sa = sin(angle[0]), cb = cos(angle[1]), sb = sin(angle[1]), cg = cos(angle[2]), sg = sin(angle[2]);
-    return SE3(ca * cb * cg - sa * sg, sa * cb * cg + ca * sg, -sb * cg,	-ca * cb * sg - sa * cg, ca * cg - sa * cb * sg, sb * sg, ca * sb, sa * sb, cb, pos[0], pos[1], pos[2]);
+    double ca = cos(angle._v[0]), sa = sin(angle._v[0]), cb = cos(angle._v[1]), sb = sin(angle._v[1]), cg = cos(angle._v[2]), sg = sin(angle._v[2]);
+    return SE3( ca * cb * cg - sa * sg, sa * cb * cg + ca * sg, -sb * cg,
+               -ca * cb * sg - sa * cg, ca * cg - sa * cb * sg,  sb * sg,
+                ca * sb,                sa * sb,                      cb,
+                pos._v[0],                 pos._v[1],                   pos._v[2]);
 }
 
 // R = Exp(w)
@@ -2236,9 +2244,9 @@ inline double Inertia::getIyz() const
 
 inline void Inertia::setOffset(const Vec3& offset)
 {
-    _I[6] = offset[0];
-    _I[7] = offset[1];
-    _I[8] = offset[2];
+    _I[6] = offset._v[0];
+    _I[7] = offset._v[1];
+    _I[8] = offset._v[2];
 }
 
 inline Vec3 Inertia::getOffset() const
@@ -2248,10 +2256,10 @@ inline Vec3 Inertia::getOffset() const
 
 inline Inertia BoxInertia(double density, const Vec3& size)
 {
-    double mass = (double)8.0 * density * size[0] * size[1] * size[2];
-    double ix = mass * (size[1] * size[1] + size[2] * size[2]) / SCALAR_3;
-    double iy = mass * (size[0] * size[0] + size[2] * size[2]) / SCALAR_3;
-    double iz = mass * (size[0] * size[0] + size[1] * size[1]) / SCALAR_3;
+    double mass = (double)8.0 * density * size._v[0] * size._v[1] * size._v[2];
+    double ix = mass * (size._v[1] * size._v[1] + size._v[2] * size._v[2]) / SCALAR_3;
+    double iy = mass * (size._v[0] * size._v[0] + size._v[2] * size._v[2]) / SCALAR_3;
+    double iz = mass * (size._v[0] * size._v[0] + size._v[1] * size._v[1]) / SCALAR_3;
     return Inertia(mass, ix, iy, iz);
 }
 
@@ -2775,9 +2783,9 @@ inline Axis::Axis(double v0, double v1, double v2)
 
 inline Axis::Axis(const Vec3& v)
 {
-    _v[0] = v[0];
-    _v[1] = v[1];
-    _v[2] = v[2];
+    _v[0] = v._v[0];
+    _v[1] = v._v[1];
+    _v[2] = v._v[2];
 }
 
 inline Axis::~Axis()

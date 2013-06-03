@@ -712,9 +712,9 @@ std::string toString(const math::SE3& _v)
     math::Vec3 XYZ = math::iEulerXYZ(_v);
     math::Vec3 position = _v.getPosition();
 
-    ostr << XYZ[0] << " " << XYZ[1] << " " << XYZ[2];
+    ostr << XYZ(0) << " " << XYZ(1) << " " << XYZ(2);
     ostr << " ";
-    ostr << position[0] << " " << position[1] << " " << position[2];
+    ostr << position(0) << " " << position(1) << " " << position(2);
 
     return ostr.str();
 }

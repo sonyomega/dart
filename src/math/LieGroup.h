@@ -423,8 +423,8 @@ public:
     Vec3 operator-() const;
 
     /// @brief access to the idx th element.
-    double& operator[](int idx);
-    const double& operator[](int) const;
+    double& operator()(int idx);
+    const double& operator()(int) const;
 
     /// @brief substitution operator
     const Vec3& operator=(const Vec3& );
@@ -473,11 +473,13 @@ public:
     friend class Axis;
     friend class se3;
     friend class dse3;
+    friend class SO3;
     friend class SE3;
     friend class Inertia;
     friend class AInertia;
 
     friend Vec3 operator*(double d, const Vec3& v);
+    friend std::ostream& operator<<(std::ostream& os, const Vec3& v);
     friend double Norm(const Vec3& p);
     friend Vec3	Normalize(const Vec3& p);
     friend Vec3	Cross(const Vec3& p, const Vec3& a);
@@ -487,6 +489,7 @@ public:
     friend double Inner(const dse3& f, const Vec3& v);
     friend Axis Square(const Axis& p);
     friend double SquareSum(const Vec3& );
+    friend se3 Ad(const SE3& T, const Vec3& v);
     friend dse3 dAd(const SE3& T, const Vec3& F);
     friend dse3 InvdAd(const Vec3& p, const Vec3& F);
     friend Vec3 InvAd(const SE3& T, const Vec3& v);
@@ -501,6 +504,7 @@ public:
     friend Vec3 InvRotate(const SE3& T, const Vec3& q);
     friend Vec3 ad(const Vec3& v, const se3& S);
     friend Vec3 MinusLinearAd(const Vec3& p, const se3& s);
+    friend Inertia BoxInertia(double density, const Vec3& size);
 
 private:
     double _v[3];

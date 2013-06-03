@@ -11,8 +11,8 @@ std::ostream& operator<<(std::ostream& os, const Vec3& v)
     os << "[ ";
     for ( int i = 0; i < 3; i++ )
     {
-        if ( v[i] >= SCALAR_0 ) os << " " << std::setw(6) << v[i] << " ";
-        else os << std::setw(7) << v[i] << " ";
+        if ( v._v[i] >= SCALAR_0 ) os << " " << std::setw(6) << v._v[i] << " ";
+        else os << std::setw(7) << v._v[i] << " ";
     }
     os << "];" << std::endl;
     os.setf(flags);
