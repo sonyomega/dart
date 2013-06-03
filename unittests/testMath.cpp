@@ -173,7 +173,7 @@ TEST(MATH, SE3)
         }
 
         for (int j = 0; j < 6; ++j)
-            EXPECT_NEAR(LogExpS[j], ExpLogLogExpS[j], MATH_EPS);
+            EXPECT_NEAR(LogExpS(j), ExpLogLogExpS(j), MATH_EPS);
     }
 
 

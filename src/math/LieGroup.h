@@ -694,8 +694,10 @@ public:
     se3 operator*(double) const;
 
     /// @brief access to the idx th element.
-//    double& operator[](int idx);
-//    const double& operator[](int) const;
+    //    double& operator[](int idx);
+    //    const double& operator[](int) const;
+    double& operator()(int idx);
+    const double& operator()(int) const;
 
     //--------------------------------------------------------------------------
     // Setters and getters

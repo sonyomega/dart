@@ -101,14 +101,14 @@ void JOINTS::kinematicsTest(Joint* _joint)
     // Test V == J * dq
     se3 Jdq = J * _joint->get_dq();
     for (int i = 0; i < 6; ++i)
-        EXPECT_NEAR(V[i], Jdq[i], JOINT_TOL);
+        EXPECT_NEAR(V(i), Jdq(i), JOINT_TOL);
 
     // Test dV == dJ * dq + J * ddq
     se3 dJdq = dJ * _joint->get_dq();
     se3 Jddq = J * _joint->get_ddq();
     se3 dJdq_Jddq = dJdq + Jddq;
     for (int i = 0; i < 6; ++i)
-        EXPECT_NEAR(dV[i], dJdq_Jddq[i], JOINT_TOL);
+        EXPECT_NEAR(dV(i), dJdq_Jddq(i), JOINT_TOL);
 
     //--------------------------------------------------------------------------
     // Test analytic Jacobian and numerical Jacobian
@@ -148,7 +148,7 @@ void JOINTS::kinematicsTest(Joint* _joint)
 
     for (int i = 0; i < dof; ++i)
         for (int j = 0; j < 6; ++j)
-            EXPECT_NEAR(J[i][j], numericJ[i][j], JOINT_TOL);
+            EXPECT_NEAR(J[i](j), numericJ[i](j), JOINT_TOL);
 }
 
 TEST_F(JOINTS, REVOLUTE_JOINT)

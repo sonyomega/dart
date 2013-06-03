@@ -437,6 +437,16 @@ inline se3 se3::operator*(double d) const
 //    return _w[i];
 //}
 
+inline double& se3::operator()(int i)
+{
+    return _w[i];
+}
+
+inline const double& se3::operator()(int i) const
+{
+    return _w[i];
+}
+
 inline void se3::setZero()
 {
     _w[0] = _w[1] = _w[2] = _w[3] = _w[4] = _w[5] = 0.0;
