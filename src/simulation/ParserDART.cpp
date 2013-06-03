@@ -697,7 +697,7 @@ std::string toString(const math::so3& _v)
     std::ostringstream ostr;
     ostr.precision(6);
 
-    ostr << _v[0] << " " << _v[1] << " " << _v[2];
+    ostr << _v(0) << " " << _v(1) << " " << _v(2);
 
     return ostr.str();
 }
@@ -851,9 +851,9 @@ math::so3 toso3(const std::string& _str)
         }
     }
 
-    ret[0] = elements[0];
-    ret[1] = elements[1];
-    ret[2] = elements[2];
+    ret(0) = elements[0];
+    ret(1) = elements[1];
+    ret(2) = elements[2];
 
     return ret;
 }

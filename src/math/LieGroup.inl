@@ -712,9 +712,9 @@ inline se3 Ad(const SE3& T, const se3& s)
 
 inline se3 Ad(const SE3& T, const Axis& s)
 {
-    double tmp[3] = {	T._T[0] * s[0] + T._T[3] * s[1] + T._T[6] * s[2],
-                        T._T[1] * s[0] + T._T[4] * s[1] + T._T[7] * s[2],
-                        T._T[2] * s[0] + T._T[5] * s[1] + T._T[8] * s[2] };
+    double tmp[3] = {	T._T[0] * s._v[0] + T._T[3] * s._v[1] + T._T[6] * s._v[2],
+                        T._T[1] * s._v[0] + T._T[4] * s._v[1] + T._T[7] * s._v[2],
+                        T._T[2] * s._v[0] + T._T[5] * s._v[1] + T._T[8] * s._v[2] };
     return se3(	tmp[0], tmp[1], tmp[2],
                 T._T[10] * tmp[2] - T._T[11] * tmp[1],
                 T._T[11] * tmp[0] - T._T[9] * tmp[2],
@@ -845,9 +845,9 @@ inline const dse3& dse3::operator = (const dse3& t)
 
 inline const dse3& dse3::operator = (const Axis& t)
 {
-    _m[0] = t[0];
-    _m[1] = t[1];
-    _m[2] = t[2];
+    _m[0] = t._v[0];
+    _m[1] = t._v[1];
+    _m[2] = t._v[2];
     _m[3] = _m[4] = _m[5] = SCALAR_0;
     return *this;
 }
@@ -880,9 +880,9 @@ inline const dse3& dse3::operator += (const dse3& t)
 
 inline const dse3& dse3::operator += (const Axis& t)
 {
-    _m[0] += t[0];
-    _m[1] += t[1];
-    _m[2] += t[2];
+    _m[0] += t._v[0];
+    _m[1] += t._v[1];
+    _m[2] += t._v[2];
     return *this;
 }
 
@@ -934,6 +934,16 @@ inline dse3 dse3::operator*(double d) const
 //{
 //    return _m[i];
 //}
+
+inline double& dse3::operator()(int i)
+{
+    return _m[i];
+}
+
+inline const double& dse3::operator()(int i) const
+{
+    return _m[i];
+}
 
 inline dse3 dad(const se3& s, const dse3& t)
 {
@@ -1837,8 +1847,8 @@ inline SE3 Exp(const se3& s)
 // I + sin(t) / t * [S] + (1 - cos(t)) / t^2 * [S]^2, where t = |S|
 inline SE3 Exp(const Axis& S)
 {
-    double s2[] = { S[0] * S[0], S[1] * S[1], S[2] * S[2] };
-    double s3[] = { S[0] * S[1], S[1] * S[2], S[2] * S[0] };
+    double s2[] = { S._v[0] * S._v[0], S._v[1] * S._v[1], S._v[2] * S._v[2] };
+    double s3[] = { S._v[0] * S._v[1], S._v[1] * S._v[2], S._v[2] * S._v[0] };
     double theta = sqrt(s2[0] + s2[1] + s2[2]);
     double cos_t = cos(theta);
     double alpha = 0.0;
@@ -1855,9 +1865,9 @@ inline SE3 Exp(const Axis& S)
         beta = SCALAR_1_2 - SCALAR_1_24 * theta * theta;
     }
 
-    return SE3( beta * s2[0] + cos_t, beta * s3[0] + alpha * S[2], beta * s3[2] - alpha * S[1],
-                beta * s3[0] - alpha * S[2], beta * s2[1] + cos_t, beta * s3[1] + alpha * S[0],
-                beta * s3[2] + alpha * S[1], beta * s3[1] - alpha * S[0], beta * s2[2] + cos_t);
+    return SE3( beta * s2[0] + cos_t,           beta * s3[0] + alpha * S._v[2], beta * s3[2] - alpha * S._v[1],
+                beta * s3[0] - alpha * S._v[2], beta * s2[1] + cos_t,           beta * s3[1] + alpha * S._v[0],
+                beta * s3[2] + alpha * S._v[1], beta * s3[1] - alpha * S._v[0], beta * s2[2] + cos_t);
 }
 
 inline SE3 Exp(const Vec3& S)
@@ -1868,16 +1878,16 @@ inline SE3 Exp(const Vec3& S)
 // I + sin(t) * [S] + (1 - cos(t)) * [S]^2,, where |S| = 1
 inline SE3 Exp(const Axis& S, double theta)
 {
-    double s2[] = { S[0] * S[0], S[1] * S[1], S[2] * S[2] };
+    double s2[] = { S._v[0] * S._v[0], S._v[1] * S._v[1], S._v[2] * S._v[2] };
 
     if ( abs(s2[0] + s2[1] + s2[2] - SCALAR_1) > LIE_EPS ) return Exp(theta * S);
 
-    double s3[] = { S[0] * S[1], S[1] * S[2], S[2] * S[0] };
+    double s3[] = { S._v[0] * S._v[1], S._v[1] * S._v[2], S._v[2] * S._v[0] };
     double alpha = sin(theta), cos_t = cos(theta), beta = SCALAR_1 - cos_t;
 
-    return SE3( beta * s2[0] + cos_t, beta * s3[0] + alpha * S[2], beta * s3[2] - alpha * S[1],
-                beta * s3[0] - alpha * S[2], beta * s2[1] + cos_t, beta * s3[1] + alpha * S[0],
-                beta * s3[2] + alpha * S[1], beta * s3[1] - alpha * S[0], beta * s2[2] + cos_t);
+    return SE3( beta * s2[0] + cos_t,           beta * s3[0] + alpha * S._v[2], beta * s3[2] - alpha * S._v[1],
+                beta * s3[0] - alpha * S._v[2], beta * s2[1] + cos_t,           beta * s3[1] + alpha * S._v[0],
+                beta * s3[2] + alpha * S._v[1], beta * s3[1] - alpha * S._v[0], beta * s2[2] + cos_t);
 }
 
 inline SE3 Inv(const SE3& T)
@@ -2053,20 +2063,20 @@ inline dse3 Inertia::operator*(const se3& s) const
 
 inline dse3 Inertia::operator*(const Axis& s) const
 {
-    return dse3(_I[0] * s[0] + _I[3] * s[1] + _I[4] * s[2],
-                _I[3] * s[0] + _I[1] * s[1] + _I[5] * s[2],
-                _I[4] * s[0] + _I[5] * s[1] + _I[2] * s[2],
-                s[1] * _I[8] - s[2] * _I[7],
-                s[2] * _I[6] - s[0] * _I[8],
-                s[0] * _I[7] - s[1] * _I[6]);
+    return dse3(_I[0] * s._v[0] + _I[3] * s._v[1] + _I[4] * s._v[2],
+                _I[3] * s._v[0] + _I[1] * s._v[1] + _I[5] * s._v[2],
+                _I[4] * s._v[0] + _I[5] * s._v[1] + _I[2] * s._v[2],
+                s._v[1] * _I[8] - s._v[2] * _I[7],
+                s._v[2] * _I[6] - s._v[0] * _I[8],
+                s._v[0] * _I[7] - s._v[1] * _I[6]);
 }
 
 inline dse3 Inertia::operator*(const Vec3& s) const
 {
-    return dse3(_I[7] * s[2] - _I[8] * s[1],
-                _I[8] * s[0] - _I[6] * s[2],
-                _I[6] * s[1] - _I[7] * s[0],
-                _I[9] * s[0], _I[9] * s[1], _I[9] * s[2]);
+    return dse3(_I[7] * s._v[2] - _I[8] * s._v[1],
+                _I[8] * s._v[0] - _I[6] * s._v[2],
+                _I[6] * s._v[1] - _I[7] * s._v[0],
+                _I[9] * s._v[0], _I[9] * s._v[1], _I[9] * s._v[2]);
 }
 
 inline double& Inertia::operator[](int i)
@@ -2342,22 +2352,22 @@ inline dse3 AInertia::operator*(const se3& a) const
 
 inline dse3 AInertia::operator*(const Vec3& a) const
 {
-    return dse3(_J[3] * a[0] + _J[4] * a[1] + _J[5] * a[2],
-                _J[8] * a[0] + _J[9] * a[1] + _J[10] * a[2],
-                _J[12] * a[0] + _J[13] * a[1] + _J[14] * a[2],
-                _J[15] * a[0] + _J[16] * a[1] + _J[17] * a[2],
-                _J[16] * a[0] + _J[18] * a[1] + _J[19] * a[2],
-                _J[17] * a[0] + _J[19] * a[1] + _J[20] * a[2]);
+    return dse3(_J[3] * a._v[0] + _J[4] * a._v[1] + _J[5] * a._v[2],
+                _J[8] * a._v[0] + _J[9] * a._v[1] + _J[10] * a._v[2],
+                _J[12] * a._v[0] + _J[13] * a._v[1] + _J[14] * a._v[2],
+                _J[15] * a._v[0] + _J[16] * a._v[1] + _J[17] * a._v[2],
+                _J[16] * a._v[0] + _J[18] * a._v[1] + _J[19] * a._v[2],
+                _J[17] * a._v[0] + _J[19] * a._v[1] + _J[20] * a._v[2]);
 }
 
 inline dse3 AInertia::operator*(const Axis& a) const
 {
-    return dse3(_J[0] * a[0] + _J[1] * a[1] + _J[2] * a[2],
-                _J[1] * a[0] + _J[6] * a[1] + _J[7] * a[2],
-                _J[2] * a[0] + _J[7] * a[1] + _J[11] * a[2],
-                _J[3] * a[0] + _J[8] * a[1] + _J[12] * a[2],
-                _J[4] * a[0] + _J[9] * a[1] + _J[13] * a[2],
-                _J[5] * a[0] + _J[10] * a[1] + _J[14] * a[2]);
+    return dse3(_J[0] * a._v[0] + _J[1] * a._v[1] + _J[2] * a._v[2],
+                _J[1] * a._v[0] + _J[6] * a._v[1] + _J[7] * a._v[2],
+                _J[2] * a._v[0] + _J[7] * a._v[1] + _J[11] * a._v[2],
+                _J[3] * a._v[0] + _J[8] * a._v[1] + _J[12] * a._v[2],
+                _J[4] * a._v[0] + _J[9] * a._v[1] + _J[13] * a._v[2],
+                _J[5] * a._v[0] + _J[10] * a._v[1] + _J[14] * a._v[2]);
 }
 
 inline double& AInertia::operator[](int i)
@@ -2784,21 +2794,31 @@ inline Axis Axis::operator-(void) const
     return Axis(-_v[0], -_v[1], -_v[2]);
 }
 
-inline double& Axis::operator[](int i)
+//inline double& Axis::operator[](int i)
+//{
+//    return _v[i];
+//}
+
+//inline const double& Axis::operator[](int i) const
+//{
+//    return _v[i];
+//}
+
+inline double& Axis::operator()(int i)
 {
     return _v[i];
 }
 
-inline const double& Axis::operator[](int i) const
+inline const double& Axis::operator()(int i) const
 {
     return _v[i];
 }
 
 inline const Axis& Axis::operator = (const Axis& v)
 {
-    _v[0] = v[0];
-    _v[1] = v[1];
-    _v[2] = v[2];
+    _v[0] = v._v[0];
+    _v[1] = v._v[1];
+    _v[2] = v._v[2];
     return *this;
 }
 
@@ -2874,28 +2894,28 @@ inline void Axis::Reparameterize(void)
 
 inline Axis Reparameterize(const Axis& s)
 {
-    double theta = sqrt(s[0] * s[0] + s[1] * s[1] + s[2] * s[2]);
+    double theta = sqrt(s._v[0] * s._v[0] + s._v[1] * s._v[1] + s._v[2] * s._v[2]);
     double eta = theta < LIE_EPS ? 1.0 : 1.0 - (double)((int)(theta / M_PI + 1.0) / 2) * M_2PI / theta;
     return eta * s;
 }
 
 inline Axis Rotate(const SE3& T, const Axis& v)
 {
-    return Axis(T._T[0] * v[0] + T._T[3] * v[1] + T._T[6] * v[2],
-                T._T[1] * v[0] + T._T[4] * v[1] + T._T[7] * v[2],
-                T._T[2] * v[0] + T._T[5] * v[1] + T._T[8] * v[2]);
+    return Axis(T._T[0] * v._v[0] + T._T[3] * v._v[1] + T._T[6] * v._v[2],
+                T._T[1] * v._v[0] + T._T[4] * v._v[1] + T._T[7] * v._v[2],
+                T._T[2] * v._v[0] + T._T[5] * v._v[1] + T._T[8] * v._v[2]);
 }
 
 inline Axis InvRotate(const SE3& T, const Axis& v)
 {
-    return Axis(T._T[0] * v[0] + T._T[1] * v[1] + T._T[2] * v[2],
-                T._T[3] * v[0] + T._T[4] * v[1] + T._T[5] * v[2],
-                T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2]);
+    return Axis(T._T[0] * v._v[0] + T._T[1] * v._v[1] + T._T[2] * v._v[2],
+                T._T[3] * v._v[0] + T._T[4] * v._v[1] + T._T[5] * v._v[2],
+                T._T[6] * v._v[0] + T._T[7] * v._v[1] + T._T[8] * v._v[2]);
 }
 
 inline Axis operator*(double d, const Axis& v)
 {
-    return Axis(d * v[0], d * v[1], d * v[2]);
+    return Axis(d * v._v[0], d * v._v[1], d * v._v[2]);
 }
 
 inline double Norm(const Axis& v)
@@ -2905,95 +2925,95 @@ inline double Norm(const Axis& v)
 
 inline Axis Normalize(const Axis& v)
 {
-    double mag = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    double mag = sqrt(v._v[0] * v._v[0] + v._v[1] * v._v[1] + v._v[2] * v._v[2]);
     if ( mag < LIE_EPS )	// make a unit vector in z-direction
         return Axis(SCALAR_0, SCALAR_0, SCALAR_1);
 
     mag = SCALAR_1 / mag;
-    return Axis(mag * v[0], mag * v[1], mag * v[2]);
+    return Axis(mag * v._v[0], mag * v._v[1], mag * v._v[2]);
 }
 
 inline Axis Cross(const Axis& p, const Axis& q)
 {
-    return Axis(p[1] * q[2] - p[2] * q[1],
-                p[2] * q[0] - p[0] * q[2],
-                p[0] * q[1] - p[1] * q[0]);
+    return Axis(p._v[1] * q._v[2] - p._v[2] * q._v[1],
+                p._v[2] * q._v[0] - p._v[0] * q._v[2],
+                p._v[0] * q._v[1] - p._v[1] * q._v[0]);
 }
 
 inline double Inner(const Axis& p, const Axis& q)
 {
-    return (p[0] * q[0] + p[1] * q[1] + p[2] * q[2]);
+    return (p._v[0] * q._v[0] + p._v[1] * q._v[1] + p._v[2] * q._v[2]);
 }
 
 inline double Inner(const Vec3& p, const Axis& q)
 {
-    return (p[0] * q[0] + p[1] * q[1] + p[2] * q[2]);
+    return (p._v[0] * q._v[0] + p._v[1] * q._v[1] + p._v[2] * q._v[2]);
 }
 
 inline double Inner(const Axis& p, const Vec3& q)
 {
-    return (p[0] * q[0] + p[1] * q[1] + p[2] * q[2]);
+    return (p._v[0] * q._v[0] + p._v[1] * q._v[1] + p._v[2] * q._v[2]);
 }
 
 inline double SquareSum(const Axis& p)
 {
-    return (p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
+    return (p._v[0] * p._v[0] + p._v[1] * p._v[1] + p._v[2] * p._v[2]);
 }
 
 inline Axis Square(const Axis& p)
 {
-    return Axis(p[0] * p[0], p[1] * p[1], p[2] * p[2]);
+    return Axis(p._v[0] * p._v[0], p._v[1] * p._v[1], p._v[2] * p._v[2]);
 }
 
 inline Axis InvAd(const SE3& T, const Axis& v)
 {
-    return Axis(T._T[0] * v[0] + T._T[1] * v[1] + T._T[2] * v[2],
-                T._T[3] * v[0] + T._T[4] * v[1] + T._T[5] * v[2],
-                T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2]);
+    return Axis(T._T[0] * v._v[0] + T._T[1] * v._v[1] + T._T[2] * v._v[2],
+                T._T[3] * v._v[0] + T._T[4] * v._v[1] + T._T[5] * v._v[2],
+                T._T[6] * v._v[0] + T._T[7] * v._v[1] + T._T[8] * v._v[2]);
 }
 
 inline Axis ad(const Axis& s1, const se3& s2)
 {
-    return Axis(s2._w[2] * s1[1] - s2._w[1] * s1[2],
-                s2._w[0] * s1[2] - s2._w[2] * s1[0],
-                s2._w[1] * s1[0] - s2._w[0] * s1[1]);
+    return Axis(s2._w[2] * s1._v[1] - s2._w[1] * s1._v[2],
+                s2._w[0] * s1._v[2] - s2._w[2] * s1._v[0],
+                s2._w[1] * s1._v[0] - s2._w[0] * s1._v[1]);
 }
 
 inline Axis ad(const Axis& s1, const Axis& s2)
 {
-    return Axis(s2[2] * s1[1] - s2[1] * s1[2],
-                s2[0] * s1[2] - s2[2] * s1[0],
-                s2[1] * s1[0] - s2[0] * s1[1]);
+    return Axis(s2._v[2] * s1._v[1] - s2._v[1] * s1._v[2],
+                s2._v[0] * s1._v[2] - s2._v[2] * s1._v[0],
+                s2._v[1] * s1._v[0] - s2._v[0] * s1._v[1]);
 }
 
 inline Axis Axis::operator+(const Axis& v) const
 {
-    return Axis(_v[0] + v[0], _v[1] + v[1], _v[2] + v[2]);
+    return Axis(_v[0] + v._v[0], _v[1] + v._v[1], _v[2] + v._v[2]);
 }
 
 inline se3 Axis::operator+(const Vec3& v) const
 {
-    return se3(_v[0], _v[1], _v[2], v[0], v[1], v[2]);
+    return se3(_v[0], _v[1], _v[2], v._v[0], v._v[1], v._v[2]);
 }
 
 inline Axis Axis::operator-(const Axis& v) const
 {
-    return Axis(_v[0] - v[0], _v[1] - v[1], _v[2] - v[2]);
+    return Axis(_v[0] - v._v[0], _v[1] - v._v[1], _v[2] - v._v[2]);
 }
 
 inline const Axis& Axis::operator += (const Axis& v)
 {
-    _v[0] += v[0];
-    _v[1] += v[1];
-    _v[2] += v[2];
+    _v[0] += v._v[0];
+    _v[1] += v._v[1];
+    _v[2] += v._v[2];
     return *this;
 }
 
 inline const Axis& Axis::operator-= (const Axis& v)
 {
-    _v[0] -= v[0];
-    _v[1] -= v[1];
-    _v[2] -= v[2];
+    _v[0] -= v._v[0];
+    _v[1] -= v._v[1];
+    _v[2] -= v._v[2];
     return *this;
 }
 
@@ -3148,7 +3168,7 @@ inline double Inner(const dse3& F, const se3& V)
 
 inline double Inner(const dse3& f, const Vec3& v)
 {
-    return (f._m[3] * v[0] + f._m[4] * v[1] + f._m[5] * v[2]);
+    return (f._m[3] * v._v[0] + f._m[4] * v._v[1] + f._m[5] * v._v[2]);
 }
 
 inline double Inner(const dse3& F, const Axis& w)

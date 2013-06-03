@@ -470,19 +470,28 @@ public:
     //--------------------------------------------------------------------------
     // Friend functions
     //--------------------------------------------------------------------------
+    friend class Axis;
     friend class se3;
     friend class dse3;
     friend class SE3;
+    friend class Inertia;
+    friend class AInertia;
 
     friend Vec3 operator*(double d, const Vec3& v);
     friend double Norm(const Vec3& p);
     friend Vec3	Normalize(const Vec3& p);
     friend Vec3	Cross(const Vec3& p, const Vec3& a);
     friend double Inner(const Vec3& p, const Vec3& a);
+    friend double Inner(const Vec3& p, const Axis& q);
+    friend double Inner(const Axis& p, const Vec3& q);
+    friend double Inner(const dse3& f, const Vec3& v);
+    friend Axis Square(const Axis& p);
     friend double SquareSum(const Vec3& );
     friend dse3 dAd(const SE3& T, const Vec3& F);
     friend dse3 InvdAd(const Vec3& p, const Vec3& F);
     friend Vec3 InvAd(const SE3& T, const Vec3& v);
+    friend Axis ad(const Axis& s1, const se3& s2);
+    friend Axis ad(const Axis& s1, const Axis& s2);
     friend SE3 EulerZYX(const Vec3& angle);
     friend SE3 EulerZYX(const Vec3& angle, const Vec3& position);
     friend SE3 EulerXYZ(const Vec3& angle, const Vec3& position);
@@ -532,8 +541,10 @@ public:
     Axis operator-() const;
 
     /// @brief access to the idx th element.
-    double& operator[](int idx);
-    const double& operator[](int) const;
+    //    double& operator[](int idx);
+    //    const double& operator[](int) const;
+    double& operator()(int idx);
+    const double& operator()(int) const;
 
     /// @brief substitution operator
     const Axis& operator=(const Axis& );
@@ -587,8 +598,12 @@ public:
     //--------------------------------------------------------------------------
     friend class se3;
     friend class dse3;
+    friend class Inertia;
+    friend class AInertia;
 
     friend double operator*(const dse3& t, const Axis& s);
+    friend Axis operator*(double d, const Axis& v);
+    friend std::ostream& operator<<(std::ostream& os, const Axis& v);
     friend double Norm(const Axis& v);
     friend Axis Normalize(const Axis& p);
     friend Axis Reparameterize(const Axis& s);
@@ -597,12 +612,16 @@ public:
     friend double Inner(const Vec3& p, const Axis& a);
     friend double Inner(const Axis& p, const Vec3& a);
     friend double Inner(const dse3& F, const Axis& w);
+    friend Axis Square(const Axis& p);
     friend double SquareSum(const Axis& );
+    friend SE3 Exp(const Axis& S);
+    friend SE3 Exp(const Axis& S, double theta);
     friend Axis Rotate(const SE3& T, const Axis& q);
     friend Axis InvRotate(const SE3& T, const Axis& q);
-    friend Axis ad(const Axis& w, const Axis& v);
     friend se3 Ad(const SE3& T, const Axis& w);
     friend Axis InvAd(const SE3& T, const Axis& w);
+    friend Axis ad(const Axis& w, const Axis& v);
+    friend Axis ad(const Axis& s1, const se3& s2);
 
 private:
     double _v[3];
@@ -841,8 +860,10 @@ public:
     dse3 operator*(double) const;
 
     /// @brief access to the idx th element.
-//    double& operator[](int idx);
-//    const double& operator[](int) const;
+    //double& operator[](int idx);
+    //const double& operator[](int) const;
+    double& operator()(int idx);
+    const double& operator()(int) const;
 
     //--------------------------------------------------------------------------
     // Setters and getters
