@@ -51,6 +51,7 @@
 #include "kinematics/RevoluteJoint.h"
 #include "kinematics/TranslationalJoint.h"
 #include "kinematics/BallJoint.h"
+#include "kinematics/FreeJoint.h"
 
 #include "dynamics/BodyNodeDynamics.h"
 #include "dynamics/SkeletonDynamics.h"
@@ -492,6 +493,8 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
         newJoint = readBallJoint(_jointElement, _skeleton);
     if (type ==std::string("translational"))
         newJoint = readTranslationalJoint(_jointElement, _skeleton);
+    if (type ==std::string("free"))
+        newJoint = readFreeJoint(_jointElement, _skeleton);
     assert(newJoint != NULL);
 
     //--------------------------------------------------------------------------
@@ -514,14 +517,17 @@ kinematics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     else
     {
         parentBody = _skeleton->findBody(strParent);
-        dterr << "Can't find the parent body, "
+        if (parentBody == NULL)
+        {
+            dterr << "Can't find the parent body, "
               << strParent
               << ", of the joint, "
               << newJoint->getName()
               << ", in the skeleton, "
               << _skeleton->getName()
               << ". " << std::endl;
-        assert(parentBody != NULL);
+            assert(parentBody != NULL);
+        }
         newJoint->setParentBody(parentBody);
     }
 
@@ -605,6 +611,19 @@ kinematics::TranslationalJoint*readTranslationalJoint(
             = new kinematics::TranslationalJoint;
 
     return newTranslationalJoint;
+}
+
+kinematics::FreeJoint*readFreeJoint(
+        tinyxml2::XMLElement* _freeJointElement,
+        dynamics::SkeletonDynamics* _skeleton)
+{
+    assert(_freeJointElement != NULL);
+    assert(_skeleton != NULL);
+
+    kinematics::FreeJoint* newFreeJoint
+            = new kinematics::FreeJoint;
+
+    return newFreeJoint;
 }
 
 std::string toString(bool _v)
@@ -1030,6 +1049,8 @@ tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement,
 
     return _parentElement->FirstChildElement(_name.c_str());
 }
+
+
 
 
 

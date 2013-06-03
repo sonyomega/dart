@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/21/2013
+ * Date: 05/29/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,55 +35,56 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "math/UtilsMath.h"
 #include "math/LieGroup.h"
-#include "kinematics/RevoluteJoint.h"
+#include "kinematics/WeldJoint.h"
 
 namespace dart {
-
-using namespace math;
-
 namespace kinematics {
 
-RevoluteJoint::RevoluteJoint()
-    : Joint(),
-      mAxis(math::so3(1.0, 0.0, 0.0))
+#define FJOINT_EPS 1e-6
+
+WeldJoint::WeldJoint()
+    : Joint()
 {
-    mName.assign("Revolute joint");
-    mJointType = REVOLUTE;
-    mDofs.push_back(&mCoordinate);
-    mS.setSize(1);
-    mdS.setSize(1);
+    mName.assign("Weld joint");
+    mJointType = WELD;
+    mS.setSize(0);
+    mdS.setSize(0);
 }
 
-RevoluteJoint::~RevoluteJoint()
+WeldJoint::~WeldJoint()
 {
 }
 
-void RevoluteJoint::_updateTransformation()
+void WeldJoint::_updateTransformation()
 {
     // T
-    mT = mT_ParentBodyToJoint
-         * Exp(se3(mAxis * mCoordinate.get_q(), Vec3(0.0, 0.0, 0.0)))
-         * Inv(mT_ChildBodyToJoint);
+    mT = mT_ParentBodyToJoint / mT_ChildBodyToJoint;
 }
 
-void RevoluteJoint::_updateVelocity()
+void WeldJoint::_updateVelocity()
 {
+    // TODO: NEED TO CHECK !!
+    //       NOT FINISHED.
+
     // S
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(mAxis)));
+    mS;
 
-    // V = S * dq
-    mV = mS * get_dq();
-    //mV.setAngular(mAxis * mCoordinate.get_q());
+    // V = 0
+    mV;
 }
 
-void RevoluteJoint::_updateAcceleration()
+void WeldJoint::_updateAcceleration()
 {
-    // dS = 0
-    mdS.setZero();
+    // TODO: NEED TO CHECK !!
+    //       NOT FINISHED.
 
-    // dV = dS * dq + S * ddq
-    mdV = mS * get_ddq();
+    // dS
+    mdS;
+
+    // dV = 0
+    mdV;
 }
 
 } // namespace kinematics

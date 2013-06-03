@@ -61,11 +61,6 @@ public:
     //--------------------------------------------------------------------------
     // Kinematical Properties
     //--------------------------------------------------------------------------
-    /// @brief
-    void setAxis(const math::so3& _axis) { mAxis = _axis; }
-
-    /// @brief
-    const math::so3& getAxis() const { return mAxis; }
 
     //--------------------------------------------------------------------------
     // Structueral Properties
@@ -93,9 +88,6 @@ protected:
     //--------------------------------------------------------------------------
     /// @brief
     Coordinate mCoordinate[6];
-
-    /// @brief Rotational axis.
-    math::so3 mAxis;
 
 private:
 

@@ -143,6 +143,27 @@ TEST(PARSER, PARSER_DART_SINGLE_PENDULUM)
     delete world;
 }
 
+TEST(PARSER, PARSER_DART_SERIAL_CAHIN)
+{
+    World* world = readDARTFile(DART_DATA_PATH"dart/test/serial_chain.dart");
+
+    EXPECT_TRUE(world != NULL);
+    EXPECT_EQ(world->getTimeStep(), 0.001);
+    EXPECT_EQ(world->getGravity()(0), 0);
+    EXPECT_EQ(world->getGravity()(1), -9.81);
+    EXPECT_EQ(world->getGravity()(2), 0);
+    EXPECT_EQ(world->getNumSkeletons(), 1);
+
+    SkeletonDynamics* skel1 = world->getSkeleton("skeleton 1");
+
+    EXPECT_EQ(skel1->getNumNodes(), 10);
+    EXPECT_EQ(skel1->getNumJoints(), 10);
+
+    world->step();
+
+    delete world;
+}
+
 /******************************************************************************/
 int main(int argc, char* argv[])
 {

@@ -67,189 +67,192 @@ class AInertia;
 //------------------------------------------------------------------------------
 
 /// @brief double multiplication
-Axis operator*(double c, const Axis& p);
+inline Axis operator*(double c, const Axis& p);
 
 /// @brief double multiplicaiton operator
-se3 operator*(double c, const se3& V);
+inline se3 operator*(double c, const se3& V);
 
 /// @brief double multiplication operator
-dse3 operator*(double c, const dse3& F);
+inline dse3 operator*(double c, const dse3& F);
 
 //------------------------------------------------------------------------------
 
 /// @brief get a magnitude of p.
-double Norm(const Vec3& p);
+inline double Norm(const Vec3& p);
 
 /// @brief get a magnitude of v.
-double Norm(const Axis& v);
+inline double Norm(const Axis& v);
 
 /// @brief get a magnitude of S.
-double Norm(const se3& S);
+inline double Norm(const se3& S);
 
 /// @brief get a magnitude of F.
-double Norm(const dse3& F);
+inline double Norm(const dse3& F);
 
 /// @brief get a normalized vector from p.
-Vec3 Normalize(const Vec3& p);
+inline Vec3 Normalize(const Vec3& p);
 
 /// @brief get a normalized vector from p.
-Axis Normalize(const Axis& p);
+inline Axis Normalize(const Axis& p);
 
 /// @brief Compute geometric distance on SE(3) manifold.
 /// Norm(Log(Inv(T1) * T2)).
-double Distance(const SE3& T1, const SE3& T2);
+inline double Distance(const SE3& T1, const SE3& T2);
 
 //------------------------------------------------------------------------------
 
 /// @brief get a squared sum of all the elements in p.
-double SquareSum(const Vec3& );
+inline double SquareSum(const Vec3& );
 
 /// @brief get a squared sum of all the elements in p.
-double SquareSum(const Axis& );
+inline double SquareSum(const Axis& );
 
 /// @brief get squared sum of all the elements
-double SquareSum(const se3& S);
+inline double SquareSum(const se3& S);
 
 /// @brief get a squared sum of all the elements in p.
-double SquareSum(const dse3& );
+inline double SquareSum(const dse3& );
 
 //------------------------------------------------------------------------------
 
 /// @brief get a transformation matrix given by the Euler XYZ angle and
 /// position.
-SE3 EulerXYZ(const Vec3& angle, const Vec3& position);
+inline SE3 EulerXYZ(const Vec3& angle, const Vec3& position);
 
 /// @brief get a transformation matrix given by the Euler ZYX angle,
 /// where the positional part is set to be zero.
 /// singularity : x[1] = -+ 0.5*PI
 /// @sa SE3::iEulerZYX
-SE3 EulerZYX(const Vec3& angle);
+inline SE3 EulerZYX(const Vec3& angle);
 
 /// @brief get a transformation matrix given by the Euler ZYX angle and
 /// position.
 /// singularity : x[1] = -+ 0.5*PI
-SE3 EulerZYX(const Vec3& angle, const Vec3& position);
+inline SE3 EulerZYX(const Vec3& angle, const Vec3& position);
 
 /// @brief Get a transformation matrix given by the Euler ZYZ angle,
 /// where the positional part is set to be zero.
 /// singularity : x[1] = 0, PI
 /// @sa SE3::iEulerZYZ
-SE3 EulerZYZ(const Vec3& angle);
+inline SE3 EulerZYZ(const Vec3& angle);
 
 /// @brief get a transformation matrix given by the Euler ZYZ angle and
 /// position.
 /// singularity : x[1] = 0, PI
-SE3 EulerZYZ(const Vec3& angle, const Vec3& position);
+inline SE3 EulerZYZ(const Vec3& angle, const Vec3& position);
 
 /// @brief get the Euler ZYX angle from T
 ////// @sa Vec3::EulerXYZ
-Vec3 iEulerXYZ(const SE3& T);
+inline Vec3 iEulerXYZ(const SE3& T);
 
 /// @brief get the Euler ZYX angle from T
 /// @sa Vec3::EulerZYX
-Vec3 iEulerZYX(const SE3& T);
+inline Vec3 iEulerZYX(const SE3& T);
 
 /// @brief get the Euler ZYZ angle from T
 /// @sa Vec3::EulerZYZ
-Vec3 iEulerZYZ(const SE3& T);
+inline Vec3 iEulerZYZ(const SE3& T);
 
 /// @brief get the Euler ZYZ angle from T
 /// @sa Vec3::EulerZXY
-Vec3 iEulerZXY(const SE3 &T);
+inline Vec3 iEulerZXY(const SE3 &T);
 
 //------------------------------------------------------------------------------
 
 /// @brief rotate q by T.
 /// @return @f$R q@f$, where @f$T=(R,p)@f$.
-Vec3 Rotate(const SE3& T, const Vec3& q);
+inline Vec3 Rotate(const SE3& T, const Vec3& q);
 
 /// @brief rotate q by Inv(T).
-Vec3 InvRotate(const SE3& T, const Vec3& q);
+inline Vec3 InvRotate(const SE3& T, const Vec3& q);
 
 /// @brief fast version of se3(Rotate(T, Vec3(S[0], S[1], S[2])), Rotate(T, Vec3(S[3], S[4], S[5])))
-se3 Rotate(const SE3& T, const se3& S);
+inline se3 Rotate(const SE3& T, const se3& S);
 
 /// @brief fast version of se3(Rotate(Inv(T), Vec3(S[0], S[1], S[2])), Rotate(Inv(T), Vec3(S[3], S[4], S[5])))
-se3 InvRotate(const SE3& T, const se3& S);
+inline se3 InvRotate(const SE3& T, const se3& S);
 
 //------------------------------------------------------------------------------
 
 /// @brief reparameterize such as ||s'|| < M_PI and Exp(s) == Epx(s')
-Axis Reparameterize(const Axis& s);
+inline Axis Reparameterize(const Axis& s);
 
 //------------------------------------------------------------------------------
 
 /// @brief get a cross product of p and q.
-Vec3 Cross(const Vec3& p, const Vec3& a);
+inline Vec3 Cross(const Vec3& p, const Vec3& a);
 
 /// @brief get a cross product of p and q.
-Axis Cross(const Axis& p, const Axis& a);
+inline Axis Cross(const Axis& p, const Axis& a);
 
 //------------------------------------------------------------------------------
 
 /// @brief get an inner product of p and q.
-double Inner(const Vec3& p, const Vec3& a);
+inline double Inner(const Vec3& p, const Vec3& a);
 
 /// @brief get an inner product of p and q.
-double Inner(const Axis& p, const Axis& a);
+inline double Inner(const Axis& p, const Axis& a);
 
 /// @brief get an inner product of p and q.
-double Inner(const Vec3& p, const Axis& a);
+inline double Inner(const Vec3& p, const Axis& a);
 
 /// @brief get an inner product of p and q.
-double Inner(const Axis& p, const Vec3& a);
+inline double Inner(const Axis& p, const Vec3& a);
 
 /// @brief inner product
 /// @note @f$ @langle F, V@rangle = @langle V, F@rangle = @langle m,
 /// w@rangle + @langle f, v@rangle @f$ ,where @f$F=(m,f)@in se(3)^*,@quad
 /// V=(w,v)@in se(3)@f$.
-double Inner(const se3& V, const dse3& F);
+inline double Inner(const se3& V, const dse3& F);
 
 /// @brief inner product
-double Inner(const dse3& F, const se3& V);
+inline double Inner(const dse3& F, const se3& V);
 
 /// @brief fast version of Inner(F, se3(w, 0))
-double Inner(const dse3& F, const Axis& w);
+inline double Inner(const dse3& F, const Axis& w);
 
 /// @brief fast version of Inner(F, se3(0, v))
-double Inner(const dse3& F, const Vec3& v);
+inline double Inner(const dse3& F, const Vec3& v);
 
 //------------------------------------------------------------------------------
 
 /// @brief Exponential mapping
-SE3 Exp(const se3& );
+inline SE3 Exp(const se3& );
 
 /// @brief fast version of Exp(se3(s, 0))
-SE3 Exp(const Axis& s);
+inline SE3 Exp(const Axis& s);
+
+/// @brief fast version of Exp(se3(0, v))
+inline SE3 Exp(const Vec3& v);
 
 /// @brief fast version of Exp(t * s), when |s| = 1
-SE3 Exp(const Axis& s, double t);
+inline SE3 Exp(const Axis& s, double t);
 
 /// @brief Log mapping
-se3 Log(const SE3& );
+inline se3 Log(const SE3& );
 
 /// @brief Log mapping of rotation part only
 /// @note When @f$|LogR(T)| = @pi@f$, Exp(LogR(T) = Exp(-LogR(T)).
 /// The implementation returns only the positive one.
-Axis LogR(const SE3& T);
+inline Axis LogR(const SE3& T);
 
 //------------------------------------------------------------------------------
 
 /// @brief get inversion of T
 /// @note @f$T^{-1} = (R^T, -R^T p), where T=(R,p)@in SE(3)@f$.
-SE3 Inv(const SE3& T);
+inline SE3 Inv(const SE3& T);
 
 //------------------------------------------------------------------------------
 
 /// @brief get rotation matrix rotated along x-axis by theta angle.
 /// @note theta is represented in radian.
-SE3 RotX(double);
+inline SE3 RotX(double);
 
 /// @brief get rotation matrix rotated along y-axis by theta angle.
-SE3 RotY(double);
+inline SE3 RotY(double);
 
 /// @brief get rotation matrix rotated along z-axis by theta angle.
-SE3 RotZ(double);
+inline SE3 RotZ(double);
 
 //------------------------------------------------------------------------------
 
@@ -257,7 +260,7 @@ SE3 RotZ(double);
 /// @note If T is near to an identity, Linearize(T) ~= Log(T).
 /// Since it is cheaper than Log, it is recommended to use Linearize
 /// rather than Log near identity.
-se3 Linearize(const SE3& T);
+inline se3 Linearize(const SE3& T);
 
 //------------------------------------------------------------------------------
 /// @brief Rectify the rotation part so as that it satifies the orthogonality
@@ -266,7 +269,7 @@ se3 Linearize(const SE3& T);
 /// It is one step of @f$R_{i_1}=1/2(R_i + R_i^{-T})@f$.
 /// Hence by calling this function iterativley, you can make the rotation part
 /// closer to SO(3).
-SE3 Normalize(const SE3& );
+inline SE3 Normalize(const SE3& );
 
 //------------------------------------------------------------------------------
 
@@ -274,93 +277,93 @@ SE3 Normalize(const SE3& );
 /// @note The first element of q[] is a real part and the last three are
 /// imaginary parts. Make sure that q[] is unit quaternion, that is,
 /// @f$@sum_i q_i^2 = 1@f$.
-SE3 Quaternion2SE3(const double q[4]);
+inline SE3 Quaternion2SE3(const double q[4]);
 
 //------------------------------------------------------------------------------
 
 /// @brief get inverse of J.
-AInertia Inv(const Inertia& J);
+inline AInertia Inv(const Inertia& J);
 
 //------------------------------------------------------------------------------
 
 /// @brief get an inertia of box shaped geometry.
 /// @param d desity of the geometry
 /// @param sz size of the box
-Inertia BoxInertia(double d, const Vec3& sz);
+inline Inertia BoxInertia(double d, const Vec3& sz);
 
 /// @brief get an inertia of sphere shaped geometry.
 /// @param d desity of the geometry
 /// @param r radius of the sphere
-Inertia SphereInertia(double d, double r);
+inline Inertia SphereInertia(double d, double r);
 
 /// @brief get an inertia of cylindrical geometry.
 /// @param d desity of the geometry
 /// @param r radius of the cylinder
 /// @param h height of the cylinder
-Inertia CylinderInertia(double d, double r, double h);
+inline Inertia CylinderInertia(double d, double r, double h);
 
 /// @brief get an inertia of torus geometry.
 /// @param d desity of the geometry
 /// @param r1 ring radius of the torus
 /// @param r2 tube radius of the torus
-Inertia TorusInertia(double d, double r1, double r2);
+inline Inertia TorusInertia(double d, double r1, double r2);
 
 /// @brief The Kronecker product
-AInertia KroneckerProduct(const dse3& , const dse3& );
+inline AInertia KroneckerProduct(const dse3& , const dse3& );
 
 //------------------------------------------------------------------------------
 
 /// @brief adjoint mapping
 /// @note @f$Ad_TV = ( Rw@,, ~p @times Rw + Rv)@f$,
 /// where @f$T=(R,p)@in SE(3), @quad V=(w,v)@in se(3) @f$.
-se3 Ad(const SE3& T, const se3& V);
+inline se3 Ad(const SE3& T, const se3& V);
 
 /// @brief fast version of Ad(T, se3(w, Vec3(0))
-se3 Ad(const SE3& T, const Axis& w);
+inline se3 Ad(const SE3& T, const Axis& w);
 
 /// @brief fast version of Ad(T, se3(Axis(0), v)
-se3 Ad(const SE3& T, const Vec3& v);
+inline se3 Ad(const SE3& T, const Vec3& v);
 
 /// @brief fast version of Ad(Inv(T), V)
-se3 InvAd(const SE3& T, const se3& V);
+inline se3 InvAd(const SE3& T, const se3& V);
 
 /// @brief fast version of Ad(Inv(T), se3(Vec3(0), v))
-Vec3 InvAd(const SE3& T, const Vec3& v);
+inline Vec3 InvAd(const SE3& T, const Vec3& v);
 
 /// @brief fast version of Ad(Inv(T), se3(w, Vec3(0)))
-Axis InvAd(const SE3& T, const Axis& w);
+inline Axis InvAd(const SE3& T, const Axis& w);
 
 /// @brief get a linear part of Ad(SE3(-p), V).
-Vec3 MinusLinearAd(const Vec3& p, const se3& V);
+inline Vec3 MinusLinearAd(const Vec3& p, const se3& V);
 
 /// @brief dual adjoint mapping
 /// @note @f$Ad^{@,*}_TF = ( R^T (m - p@times f)@,,~ R^T f)@f$, where @f$T=(R,p)@in SE(3), F=(m,f)@in se(3)^*@f$.
-dse3 dAd(const SE3& T, const dse3& F);
+inline dse3 dAd(const SE3& T, const dse3& F);
 
 /// @brief fast version of Ad(Inv(T), dse3(Vec3(0), F))
-dse3 dAd(const SE3& T, const Vec3& F);
+inline dse3 dAd(const SE3& T, const Vec3& F);
 
 /// @brief fast version of dAd(Inv(T), F)
-dse3 InvdAd(const SE3& T, const dse3& F);
+inline dse3 InvdAd(const SE3& T, const dse3& F);
 
 /// @brief fast version of dAd(Inv(SE3(p)), dse3(Vec3(0), F))
-dse3 InvdAd(const Vec3& p, const Vec3& F);
+inline dse3 InvdAd(const Vec3& p, const Vec3& F);
 
 /// @brief adjoint mapping
 /// @note @f$ad_X Y = ( w_X @times w_Y@,,~w_X @times v_Y - w_Y @times v_X),@f$,
 /// where @f$X=(w_X,v_X)@in se(3), @quad Y=(w_Y,v_Y)@in se(3) @f$.
-se3 ad(const se3& X, const se3& Y);
+inline se3 ad(const se3& X, const se3& Y);
 
 /// @brief fast version of ad(se3(Vec3(0), v), S)
-Vec3 ad(const Vec3& v, const se3& S);
+inline Vec3 ad(const Vec3& v, const se3& S);
 
 /// @brief fast version of ad(se3(w, 0), se3(v, 0))	-> check
-Axis ad(const Axis& w, const Axis& v);
+inline Axis ad(const Axis& w, const Axis& v);
 
 /// @brief dual adjoint mapping
 /// @note @f$ad^{@,*}_V F = (m @times w + f @times v@,,~ f @times w),@f$
 /// , where @f$F=(m,f)@in se^{@,*}(3), @quad V=(w,v)@in se(3) @f$.
-dse3 dad(const se3& V, const dse3& F);
+inline dse3 dad(const se3& V, const dse3& F);
 
 //------------------------------------------------------------------------------
 
@@ -467,8 +470,10 @@ public:
     //--------------------------------------------------------------------------
     // Friend functions
     //--------------------------------------------------------------------------
+    friend class se3;
     friend class SE3;
 
+    friend Vec3 operator*(double d, const Vec3& v);
     friend double Norm(const Vec3& p);
     friend Vec3	Normalize(const Vec3& p);
     friend Vec3	Cross(const Vec3& p, const Vec3& a);
@@ -485,6 +490,7 @@ public:
     friend Vec3 Rotate(const SE3& T, const Vec3& q);
     friend Vec3 InvRotate(const SE3& T, const Vec3& q);
     friend Vec3 ad(const Vec3& v, const se3& S);
+    friend Vec3 MinusLinearAd(const Vec3& p, const se3& s);
 
 private:
     double _v[3];
@@ -578,6 +584,9 @@ public:
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
+    friend class se3;
+
+    friend double operator*(const dse3& t, const Axis& s);
     friend double Norm(const Axis& v);
     friend Axis Normalize(const Axis& p);
     friend Axis Reparameterize(const Axis& s);
@@ -623,6 +632,13 @@ public:
 
     /// @brief constructor : (w[0], w[1], w[2], v[0], v[1], v[2])
     explicit se3(const Axis& w, const Vec3& v);
+
+    /// @brief constructor : (w[0], w[1], w[2], 0.0, 0.0, 0.0)
+    explicit se3(const Axis& w);
+
+    /// @brief constructor : (0.0, 0.0, 0.0, v[0], v[1], v[2])
+    explicit se3(const Vec3& v);
+
 
     //--------------------------------------------------------------------------
     // Operators
@@ -717,6 +733,8 @@ public:
     //--------------------------------------------------------------------------
     friend class SE3;
 
+    friend double operator*(const dse3& t, const se3& s);
+    friend se3 operator*(double d, const se3& s);
     friend SE3 Exp(const se3& );
     friend SE3 Exp(const Axis& s);
     friend SE3 Exp(const Axis& s, double t);
@@ -725,13 +743,13 @@ public:
     friend se3 setInvAd(const SE3& T, const se3& V);
     friend Vec3 MinusLinearAd(const Vec3& p, const se3& V);
     friend se3 setad(const se3& X, const se3& Y);
+    friend Vec3 ad(const Vec3& s1, const se3& s2);
     friend dse3 dad(const se3& V, const dse3& F);
     friend double Inner(const se3& V, const dse3& F);
     friend double Inner(const dse3& F, const se3& V);
     friend double SquareSum(const se3& S);
     friend se3 Rotate(const SE3& T, const se3& S);
     friend se3 InvRotate(const SE3& T, const se3& S);
-
 private:
     double _w[6];
 };
@@ -823,7 +841,8 @@ public:
     // Friend functions
     //--------------------------------------------------------------------------
     friend dse3 operator*(double, const dse3& );
-    friend double operator*(const dse3& F, const Axis& V);
+    friend double operator*(const dse3& t, const se3& s);
+    friend double operator*(const dse3& t, const Axis& s);
     friend double operator*(const dse3& F, const Vec3& V);
     friend dse3 dAd(const SE3& T, const dse3& F);
     friend dse3 InvdAd(const SE3& T, const dse3& F);

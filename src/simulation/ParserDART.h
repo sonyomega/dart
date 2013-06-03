@@ -53,6 +53,7 @@ class Joint;
 class RevoluteJoint;
 class BallJoint;
 class TranslationalJoint;
+class FreeJoint;
 }
 
 namespace dynamics {
@@ -169,7 +170,12 @@ kinematics::BallJoint* readBallJoint(
         tinyxml2::XMLElement* _ballJointElement,
         dynamics::SkeletonDynamics* _skeleton);
 
-kinematics::TranslationalJoint* readTranslationalJoint(tinyxml2::XMLElement* _translationalJointElement,
+kinematics::TranslationalJoint* readTranslationalJoint(
+        tinyxml2::XMLElement* _translationalJointElement,
+        dynamics::SkeletonDynamics* _skeleton);
+
+kinematics::FreeJoint* readFreeJoint(
+        tinyxml2::XMLElement* _freeJointElement,
         dynamics::SkeletonDynamics* _skeleton);
 
 //------------------------------------------------------------------------------

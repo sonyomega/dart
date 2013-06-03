@@ -14,8 +14,8 @@
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
                         <ixx>1</ixx>
-                        <iyy>2</iyy>
-                        <izz>3</izz>
+                        <iyy>1</iyy>
+                        <izz>1</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -38,10 +38,10 @@
                     </geometry>
                 </collision_shape>                                
             </body>
-            <joint type="ball" name="joint 1">
+            <joint type="free" name="joint 1">
                 <parent>world</parent>
                 <child>link 1</child>
-                <transformation>0 0 0 -0.1 0 0</transformation>
+                <transformation>0 0 0 0 0 0</transformation>
             </joint>
         </skeleton>	
     </world>

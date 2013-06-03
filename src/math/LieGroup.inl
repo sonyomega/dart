@@ -55,9 +55,9 @@ inline const double& Vec3::operator[](int i) const
 
 inline const Vec3& Vec3::operator = (const Vec3& v)
 {
-    _v[0] = v[0];
-    _v[1] = v[1];
-    _v[2] = v[2];
+    _v[0] = v._v[0];
+    _v[1] = v._v[1];
+    _v[2] = v._v[2];
     return *this;
 }
 
@@ -69,17 +69,17 @@ inline const Vec3& Vec3::operator = (double d)
 
 inline const Vec3& Vec3::operator += (const Vec3& v)
 {
-    _v[0] += v[0];
-    _v[1] += v[1];
-    _v[2] += v[2];
+    _v[0] += v._v[0];
+    _v[1] += v._v[1];
+    _v[2] += v._v[2];
     return *this;
 }
 
 inline const Vec3& Vec3::operator-= (const Vec3& v)
 {
-    _v[0] -= v[0];
-    _v[1] -= v[1];
-    _v[2] -= v[2];
+    _v[0] -= v._v[0];
+    _v[1] -= v._v[1];
+    _v[2] -= v._v[2];
     return *this;
 }
 
@@ -113,12 +113,12 @@ inline Vec3 Vec3::operator*(double d) const
 
 inline Vec3 Vec3::operator+(const Vec3& v) const
 {
-    return Vec3(_v[0] + v[0], _v[1] + v[1], _v[2] + v[2]);
+    return Vec3(_v[0] + v._v[0], _v[1] + v._v[1], _v[2] + v._v[2]);
 }
 
 inline Vec3 Vec3::operator-(const Vec3& v) const
 {
-    return Vec3(_v[0] - v[0], _v[1] - v[1], _v[2] - v[2]);
+    return Vec3(_v[0] - v._v[0], _v[1] - v._v[1], _v[2] - v._v[2]);
 }
 
 inline double Vec3::Normalize(void)
@@ -150,67 +150,67 @@ inline Eigen::Vector3d Vec3::getEigenVector() const
 //==============================================================================
 inline Vec3 Rotate(const SE3& T, const Vec3& v)
 {
-    return Vec3(T._T[0] * v[0] + T._T[3] * v[1] + T._T[6] * v[2],
-                T._T[1] * v[0] + T._T[4] * v[1] + T._T[7] * v[2],
-                T._T[2] * v[0] + T._T[5] * v[1] + T._T[8] * v[2]);
+    return Vec3(T._T[0] * v._v[0] + T._T[3] * v._v[1] + T._T[6] * v._v[2],
+                T._T[1] * v._v[0] + T._T[4] * v._v[1] + T._T[7] * v._v[2],
+                T._T[2] * v._v[0] + T._T[5] * v._v[1] + T._T[8] * v._v[2]);
 }
 
 inline Vec3 InvRotate(const SE3& T, const Vec3& v)
 {
-    return Vec3(T._T[0] * v[0] + T._T[1] * v[1] + T._T[2] * v[2],
-                T._T[3] * v[0] + T._T[4] * v[1] + T._T[5] * v[2],
-                T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2]);
+    return Vec3(T._T[0] * v._v[0] + T._T[1] * v._v[1] + T._T[2] * v._v[2],
+                T._T[3] * v._v[0] + T._T[4] * v._v[1] + T._T[5] * v._v[2],
+                T._T[6] * v._v[0] + T._T[7] * v._v[1] + T._T[8] * v._v[2]);
 }
 
 inline Vec3 operator*(double d, const Vec3& v)
 {
-    return Vec3(d * v[0], d * v[1], d * v[2]);
+    return Vec3(d * v._v[0], d * v._v[1], d * v._v[2]);
 }
 
 inline double Norm(const Vec3& v)
 {
-    return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    return sqrt(v._v[0] * v._v[0] + v._v[1] * v._v[1] + v._v[2] * v._v[2]);
 }
 
 inline Vec3 Normalize(const Vec3& v)
 {
-    double mag = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    double mag = sqrt(v._v[0] * v._v[0] + v._v[1] * v._v[1] + v._v[2] * v._v[2]);
     if ( mag < LIE_EPS )	// make a unit vector in z-direction
         return Vec3(SCALAR_0, SCALAR_0, SCALAR_1);
 
     mag = SCALAR_1 / mag;
-    return Vec3(mag * v[0], mag * v[1], mag * v[2]);
+    return Vec3(mag * v._v[0], mag * v._v[1], mag * v._v[2]);
 }
 
 inline Vec3 Cross(const Vec3& p, const Vec3& q)
 {
-    return Vec3(p[1] * q[2] - p[2] * q[1],
-                p[2] * q[0] - p[0] * q[2],
-                p[0] * q[1] - p[1] * q[0]);
+    return Vec3(p._v[1] * q._v[2] - p._v[2] * q._v[1],
+                p._v[2] * q._v[0] - p._v[0] * q._v[2],
+                p._v[0] * q._v[1] - p._v[1] * q._v[0]);
 }
 
 inline double Inner(const Vec3& p, const Vec3& q)
 {
-    return (p[0] * q[0] + p[1] * q[1] + p[2] * q[2]);
+    return (p._v[0] * q._v[0] + p._v[1] * q._v[1] + p._v[2] * q._v[2]);
 }
 
 inline double SquareSum(const Vec3& p)
 {
-    return (p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
+    return (p._v[0] * p._v[0] + p._v[1] * p._v[1] + p._v[2] * p._v[2]);
 }
 
 inline Vec3 MinusLinearAd(const Vec3& p, const se3& s)
 {
-    return Vec3(p[2] * s[1] - p[1] * s[2] + s[3],
-                p[0] * s[2] - p[2] * s[0] + s[4],
-                p[1] * s[0] - p[0] * s[1] + s[5]);
+    return Vec3(p._v[2] * s._w[1] - p._v[1] * s._w[2] + s._w[3],
+                p._v[0] * s._w[2] - p._v[2] * s._w[0] + s._w[4],
+                p._v[1] * s._w[0] - p._v[0] * s._w[1] + s._w[5]);
 }
 
 inline Vec3 InvAd(const SE3& T, const Vec3& v)
 {
-    return Vec3(T._T[0] * v[0] + T._T[1] * v[1] + T._T[2] * v[2],
-                T._T[3] * v[0] + T._T[4] * v[1] + T._T[5] * v[2],
-                T._T[6] * v[0] + T._T[7] * v[1] + T._T[8] * v[2]);
+    return Vec3(T._T[0] * v._v[0] + T._T[1] * v._v[1] + T._T[2] * v._v[2],
+                T._T[3] * v._v[0] + T._T[4] * v._v[1] + T._T[5] * v._v[2],
+                T._T[6] * v._v[0] + T._T[7] * v._v[1] + T._T[8] * v._v[2]);
 }
 
 inline Vec3 iEulerXYZ(const SE3& T)
@@ -243,9 +243,9 @@ inline Vec3 iEulerZXY(const SE3& T)
 
 inline Vec3 ad(const Vec3& s1, const se3& s2)
 {
-    return Vec3(s2[2] * s1[1] - s2[1] * s1[2],
-                s2[0] * s1[2] - s2[2] * s1[0],
-                s2[1] * s1[0] - s2[0] * s1[1]);
+    return Vec3(s2._w[2] * s1._v[1] - s2._w[1] * s1._v[2],
+                s2._w[0] * s1._v[2] - s2._w[2] * s1._v[0],
+                s2._w[1] * s1._v[0] - s2._w[0] * s1._v[1]);
 }
 
 //==============================================================================
@@ -261,7 +261,8 @@ inline se3::se3(double k)
     _w[0] = _w[1] = _w[2] = _w[3] = _w[4] = _w[5] = k;
 }
 
-inline se3::se3(double w0, double w1, double w2, double w3, double w4, double w5)
+inline se3::se3(double w0, double w1, double w2,
+                double w3, double w4, double w5)
 {
     _w[0] = w0;
     _w[1] = w1;
@@ -273,12 +274,31 @@ inline se3::se3(double w0, double w1, double w2, double w3, double w4, double w5
 
 inline se3::se3(const Axis& w, const Vec3& v)
 {
-    _w[0] = w[0];
-    _w[1] = w[1];
-    _w[2] = w[2];
-    _w[3] = v[0];
-    _w[4] = v[1];
-    _w[5] = v[2];
+    _w[0] = w._v[0];
+    _w[1] = w._v[1];
+    _w[2] = w._v[2];
+    _w[3] = v._v[0];
+    _w[4] = v._v[1];
+    _w[5] = v._v[2];
+}
+
+inline se3::se3(const Axis& w)
+{
+    _w[0] = w._v[0];
+    _w[1] = w._v[1];
+    _w[2] = w._v[2];
+
+    _w[3] = _w[4] = _w[5] = 0.0;
+}
+
+
+inline se3::se3(const Vec3& v)
+{
+    _w[0] = _w[1] = _w[2] = 0.0;
+
+    _w[3] = v._v[0];
+    _w[4] = v._v[1];
+    _w[5] = v._v[2];
 }
 
 inline const se3& se3::operator+(void) const
@@ -293,29 +313,29 @@ inline se3 se3::operator-(void) const
 
 inline const se3& se3::operator = (const se3& s)
 {
-    _w[0] = s[0];
-    _w[1] = s[1];
-    _w[2] = s[2];
-    _w[3] = s[3];
-    _w[4] = s[4];
-    _w[5] = s[5];
+    _w[0] = s._w[0];
+    _w[1] = s._w[1];
+    _w[2] = s._w[2];
+    _w[3] = s._w[3];
+    _w[4] = s._w[4];
+    _w[5] = s._w[5];
     return *this;
 }
 
 inline const se3& se3::operator = (const Vec3& s)
 {
     _w[0] = _w[1] = _w[2] = SCALAR_0;
-    _w[3] = s[0];
-    _w[4] = s[1];
-    _w[5] = s[2];
+    _w[3] = s._v[0];
+    _w[4] = s._v[1];
+    _w[5] = s._v[2];
     return *this;
 }
 
 inline const se3& se3::operator = (const Axis& s)
 {
-    _w[0] = s[0];
-    _w[1] = s[1];
-    _w[2] = s[2];
+    _w[0] = s._v[0];
+    _w[1] = s._v[1];
+    _w[2] = s._v[2];
     _w[3] = _w[4] = _w[5] = SCALAR_0;
     return *this;
 }
@@ -328,39 +348,39 @@ inline const se3& se3::operator = (double d)
 
 inline const se3& se3::operator += (const se3& s)
 {
-    _w[0] += s[0];
-    _w[1] += s[1];
-    _w[2] += s[2];
-    _w[3] += s[3];
-    _w[4] += s[4];
-    _w[5] += s[5];
+    _w[0] += s._w[0];
+    _w[1] += s._w[1];
+    _w[2] += s._w[2];
+    _w[3] += s._w[3];
+    _w[4] += s._w[4];
+    _w[5] += s._w[5];
     return *this;
 }
 
 inline const se3& se3::operator += (const Axis& s)
 {
-    _w[0] += s[0];
-    _w[1] += s[1];
-    _w[2] += s[2];
+    _w[0] += s._v[0];
+    _w[1] += s._v[1];
+    _w[2] += s._v[2];
     return *this;
 }
 
 inline const se3& se3::operator += (const Vec3& s)
 {
-    _w[3] += s[0];
-    _w[4] += s[1];
-    _w[5] += s[2];
+    _w[3] += s._v[0];
+    _w[4] += s._v[1];
+    _w[5] += s._v[2];
     return *this;
 }
 
 inline const se3& se3::operator-= (const se3& s)
 {
-    _w[0] -= s[0];
-    _w[1] -= s[1];
-    _w[2] -= s[2];
-    _w[3] -= s[3];
-    _w[4] -= s[4];
-    _w[5] -= s[5];
+    _w[0] -= s._w[0];
+    _w[1] -= s._w[1];
+    _w[2] -= s._w[2];
+    _w[3] -= s._w[3];
+    _w[4] -= s._w[4];
+    _w[5] -= s._w[5];
     return *this;
 }
 
@@ -391,17 +411,20 @@ inline bool se3::operator!=(const se3& S) const
 
 inline se3 se3::operator+(const se3& s) const
 {
-    return se3(_w[0] + s[0], _w[1] + s[1], _w[2] + s[2], _w[3] + s[3], _w[4] + s[4], _w[5] + s[5]);
+    return se3(_w[0] + s._w[0], _w[1] + s._w[1], _w[2] + s._w[2],
+               _w[3] + s._w[3], _w[4] + s._w[4], _w[5] + s._w[5]);
 }
 
 inline se3 se3::operator-(const se3& s) const
 {
-    return se3(_w[0] - s[0], _w[1] - s[1], _w[2] - s[2], _w[3] - s[3], _w[4] - s[4], _w[5] - s[5]);
+    return se3(_w[0] - s._w[0], _w[1] - s._w[1], _w[2] - s._w[2],
+               _w[3] - s._w[3], _w[4] - s._w[4], _w[5] - s._w[5]);
 }
 
 inline se3 se3::operator*(double d) const
 {
-    return se3(d * _w[0], d * _w[1], d * _w[2], d * _w[3], d * _w[4], d * _w[5]);
+    return se3(d * _w[0], d * _w[1], d * _w[2],
+               d * _w[3], d * _w[4], d * _w[5]);
 }
 
 inline double& se3::operator[](int i)
@@ -440,23 +463,27 @@ inline void se3::setFromMatrixForm(const Eigen::Matrix4d& mat)
 // *this = T * s * Inv(T)
 inline void se3::setAd(const SE3& T, const se3& s)
 {
-    _w[0] = T._T[0] * s[0] + T._T[3] * s[1] + T._T[6] * s[2];
-    _w[1] = T._T[1] * s[0] + T._T[4] * s[1] + T._T[7] * s[2];
-    _w[2] = T._T[2] * s[0] + T._T[5] * s[1] + T._T[8] * s[2];
-    _w[3] = T._T[10] * _w[2] - T._T[11] * _w[1] + T._T[0] * s[3] + T._T[3] * s[4] + T._T[6] * s[5];
-    _w[4] = T._T[11] * _w[0] - T._T[9] * _w[2] + T._T[1] * s[3] + T._T[4] * s[4] + T._T[7] * s[5];
-    _w[5] = T._T[9] * _w[1] - T._T[10] * _w[0] + T._T[2] * s[3] + T._T[5] * s[4] + T._T[8] * s[5];
+    _w[0] = T._T[0] * s._w[0] + T._T[3] * s._w[1] + T._T[6] * s._w[2];
+    _w[1] = T._T[1] * s._w[0] + T._T[4] * s._w[1] + T._T[7] * s._w[2];
+    _w[2] = T._T[2] * s._w[0] + T._T[5] * s._w[1] + T._T[8] * s._w[2];
+
+    _w[3] = T._T[10] * _w[2] - T._T[11] * _w[1]
+            + T._T[0] * s._w[3] + T._T[3] * s._w[4] + T._T[6] * s._w[5];
+    _w[4] = T._T[11] * _w[0] - T._T[9] * _w[2]
+            + T._T[1] * s._w[3] + T._T[4] * s._w[4] + T._T[7] * s._w[5];
+    _w[5] = T._T[9] * _w[1] - T._T[10] * _w[0]
+            + T._T[2] * s._w[3] + T._T[5] * s._w[4] + T._T[8] * s._w[5];
 }
 
 // re = Inv(T) * s * T
 inline void se3::setInvAd(const SE3& T, const se3& s)
 {
-    double _tmp[3] = {	s[3] + s[1] * T._T[11] - s[2] * T._T[10],
-                        s[4] + s[2] * T._T[9] - s[0] * T._T[11],
-                        s[5] + s[0] * T._T[10] - s[1] * T._T[9] };
-    _w[0] = T._T[0] * s[0] + T._T[1] * s[1] + T._T[2] * s[2];
-    _w[1] = T._T[3] * s[0] + T._T[4] * s[1] + T._T[5] * s[2];
-    _w[2] = T._T[6] * s[0] + T._T[7] * s[1] + T._T[8] * s[2];
+    double _tmp[3] = {	s[3] + s._w[1] * T._T[11] - s._w[2] * T._T[10],
+                        s[4] + s._w[2] * T._T[9]  - s._w[0] * T._T[11],
+                        s[5] + s._w[0] * T._T[10] - s._w[1] * T._T[9] };
+    _w[0] = T._T[0] * s._w[0] + T._T[1] * s._w[1] + T._T[2] * s._w[2];
+    _w[1] = T._T[3] * s._w[0] + T._T[4] * s._w[1] + T._T[5] * s._w[2];
+    _w[2] = T._T[6] * s._w[0] + T._T[7] * s._w[1] + T._T[8] * s._w[2];
     _w[3] = T._T[0] * _tmp[0] + T._T[1] * _tmp[1] + T._T[2] * _tmp[2];
     _w[4] = T._T[3] * _tmp[0] + T._T[4] * _tmp[1] + T._T[5] * _tmp[2];
     _w[5] = T._T[6] * _tmp[0] + T._T[7] * _tmp[1] + T._T[8] * _tmp[2];
@@ -464,22 +491,27 @@ inline void se3::setInvAd(const SE3& T, const se3& s)
 
 inline void se3::setad(const se3& s1, const se3& s2)
 {
-    _w[0] =	s1[1] * s2[2] - s1[2] * s2[1];
-    _w[1] =	s1[2] * s2[0] - s1[0] * s2[2];
-    _w[2] =	s1[0] * s2[1] - s1[1] * s2[0];
-    _w[3] =	s1[1] * s2[5] - s1[2] * s2[4] - s2[1] * s1[5] + s2[2] * s1[4];
-    _w[4] =	s1[2] * s2[3] - s1[0] * s2[5] - s2[2] * s1[3] + s2[0] * s1[5];
-    _w[5] =	s1[0] * s2[4] - s1[1] * s2[3] - s2[0] * s1[4] + s2[1] * s1[3];
+    _w[0] =	s1._w[1] * s2._w[2] - s1._w[2] * s2._w[1];
+    _w[1] =	s1._w[2] * s2._w[0] - s1._w[0] * s2._w[2];
+    _w[2] =	s1._w[0] * s2._w[1] - s1._w[1] * s2._w[0];
+
+    _w[3] =	s1._w[1] * s2._w[5] - s1._w[2] * s2._w[4]
+          - s2._w[1] * s1._w[5] + s2._w[2] * s1._w[4];
+    _w[4] =	s1._w[2] * s2._w[3] - s1._w[0] * s2._w[5]
+          - s2._w[2] * s1._w[3] + s2._w[0] * s1._w[5];
+    _w[5] =	s1._w[0] * s2._w[4] - s1._w[1] * s2._w[3]
+          - s2._w[0] * s1._w[4] + s2._w[1] * s1._w[3];
 }
 
 inline void se3::setad(const se3& s1, const Axis& s2)
 {
-    _w[0] =	s1[1] * s2[2] - s1[2] * s2[1];
-    _w[1] =	s1[2] * s2[0] - s1[0] * s2[2];
-    _w[2] =	s1[0] * s2[1] - s1[1] * s2[0];
-    _w[3] =	s2[2] * s1[4] - s2[1] * s1[5];
-    _w[4] =	s2[0] * s1[5] - s2[2] * s1[3];
-    _w[5] = s2[1] * s1[3] - s2[0] * s1[4];
+    _w[0] =	s1._w[1] * s2._v[2] - s1._w[2] * s2._v[1];
+    _w[1] =	s1._w[2] * s2._v[0] - s1._w[0] * s2._v[2];
+    _w[2] =	s1._w[0] * s2._v[1] - s1._w[1] * s2._v[0];
+
+    _w[3] =	s2._v[2] * s1._w[4] - s2._v[1] * s1._w[5];
+    _w[4] =	s2._v[0] * s1._w[5] - s2._v[2] * s1._w[3];
+    _w[5] = s2._v[1] * s1._w[3] - s2._v[0] * s1._w[4];
 }
 
 inline void se3::setEigenVector(const Eigen::Matrix<double,6,1>& vec6)
@@ -553,17 +585,19 @@ inline Eigen::Matrix4d se3::getEigenMatrix() const
 //==============================================================================
 inline se3 operator*(double d, const se3& s)
 {
-    return se3(d * s[0], d * s[1], d * s[2], d * s[3], d * s[4], d * s[5]);
+    return se3(d * s._w[0], d * s._w[1], d * s._w[2],
+               d * s._w[3], d * s._w[4], d * s._w[5]);
 }
 
 inline double operator*(const dse3& t, const se3& s)
 {
-    return (t[0] * s[0] + t[1] * s[1] + t[2] * s[2] + t[3] * s[3] + t[4] * s[4] + t[5] * s[5]);
+    return (t._m[0] * s._w[0] + t._m[1] * s._w[1] + t._m[2] * s._w[2]
+          + t._m[3] * s._w[3] + t._m[4] * s._w[4] + t._m[5] * s._w[5]);
 }
 
 inline double operator*(const dse3& t, const Axis& s)
 {
-    return (t[0] * s[0] + t[1] * s[1] + t[2] * s[2]);
+    return (t._m[0] * s._v[0] + t._m[1] * s._v[1] + t._m[2] * s._v[2]);
 }
 
 //double operator*(const dse3& t, const Vec3& s)
@@ -1758,19 +1792,29 @@ inline SE3 Exp(const se3& S)
         alpha = sin_t / theta;
         beta = (SCALAR_1 - cos_t) / theta / theta;
         gamma = (S[0] * S[3] + S[1] * S[4] + S[2] * S[5]) * (theta - sin_t) / theta / theta / theta;
-    } else
+    }
+    else
     {
         alpha = SCALAR_1 - SCALAR_1_6 * theta * theta;
         beta = SCALAR_1_2 - SCALAR_1_24 * theta * theta;
         gamma = (S[0] * S[3] + S[1] * S[4] + S[2] * S[5]) * SCALAR_1_6 - SCALAR_1_120 * theta * theta;
     }
 
-    return SE3(	beta * s2[0] + cos_t, beta * s3[0] + alpha * S[2], beta * s3[2] - alpha * S[1],
-                beta * s3[0] - alpha * S[2], beta * s2[1] + cos_t, beta * s3[1] + alpha * S[0],
-                beta * s3[2] + alpha * S[1], beta * s3[1] - alpha * S[0], beta * s2[2] + cos_t,
-                alpha * S[3] + beta * (S[1] * S[5] - S[2] * S[4]) + gamma * S[0],
-                alpha * S[4] + beta * (S[2] * S[3] - S[0] * S[5]) + gamma * S[1],
-                alpha * S[5] + beta * (S[0] * S[4] - S[1] * S[3]) + gamma * S[2]);
+    return SE3(beta * s2[0] + cos_t,
+               beta * s3[0] + alpha * S[2],
+               beta * s3[2] - alpha * S[1],
+
+               beta * s3[0] - alpha * S[2],
+               beta * s2[1] + cos_t,
+               beta * s3[1] + alpha * S[0],
+
+               beta * s3[2] + alpha * S[1],
+               beta * s3[1] - alpha * S[0],
+               beta * s2[2] + cos_t,
+
+               alpha * S[3] + beta * (S[1] * S[5] - S[2] * S[4]) + gamma * S[0],
+               alpha * S[4] + beta * (S[2] * S[3] - S[0] * S[5]) + gamma * S[1],
+               alpha * S[5] + beta * (S[0] * S[4] - S[1] * S[3]) + gamma * S[2]);
 }
 
 // I + sin(t) / t * [S] + (1 - cos(t)) / t^2 * [S]^2, where t = |S|
@@ -1797,6 +1841,11 @@ inline SE3 Exp(const Axis& S)
     return SE3( beta * s2[0] + cos_t, beta * s3[0] + alpha * S[2], beta * s3[2] - alpha * S[1],
                 beta * s3[0] - alpha * S[2], beta * s2[1] + cos_t, beta * s3[1] + alpha * S[0],
                 beta * s3[2] + alpha * S[1], beta * s3[1] - alpha * S[0], beta * s2[2] + cos_t);
+}
+
+inline SE3 Exp(const Vec3& S)
+{
+    return SE3(S);
 }
 
 // I + sin(t) * [S] + (1 - cos(t)) * [S]^2,, where |S| = 1
@@ -3111,6 +3160,5 @@ inline double Norm(const dse3& F)
             + F[4] * F[4]
             + F[5] * F[5]);
 }
-
 
 

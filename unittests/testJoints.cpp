@@ -44,6 +44,7 @@
 #include "math/UtilsMath.h"
 #include "kinematics/BallJoint.h"
 #include "kinematics/RevoluteJoint.h"
+#include "kinematics/FreeJoint.h"
 #include "kinematics/TranslationalJoint.h"
 #include "dynamics/BodyNodeDynamics.h"
 #include "dynamics/SkeletonDynamics.h"
@@ -76,7 +77,7 @@ void JOINTS::kinematicsTest(Joint* _joint)
     VectorXd dq = VectorXd::Zero(dof);
     VectorXd ddq = VectorXd::Zero(dof);
 
-    double dt = 0.001;
+    double dt = 0.000001;
 
     for (int i = 0; i < dof; ++i)
     {
@@ -119,26 +120,27 @@ void JOINTS::kinematicsTest(Joint* _joint)
         VectorXd q_a = q;
         _joint->set_q(q_a);
         _joint->updateKinematics();
-
-        SE3 Tinv_a = Inv(T);
-        Matrix4d Tinv_a_eigen = Tinv_a.getEigenMatrix();
-        SE3 T_a = T;
+        SE3 T_a = _joint->getLocalTransformation();
 
         // b
         VectorXd q_b = q;
         q_b(i) += dt;
         _joint->set_q(q_b);
         _joint->updateKinematics();
-
         SE3 T_b = _joint->getLocalTransformation();
 
-        // dTdt
+        //
+        SE3 Tinv_a = Inv(T_a);
+        Matrix4d Tinv_a_eigen = Tinv_a.getEigenMatrix();
+
+        // dTdq
         Matrix4d T_a_eigen = T_a.getEigenMatrix();
         Matrix4d T_b_eigen = T_b.getEigenMatrix();
-        Matrix4d dTdt_eigen = (T_b_eigen - T_a_eigen) / dt;
+        Matrix4d dTdq_eigen = (T_b_eigen - T_a_eigen) / dt;
+        //Matrix4d dTdq_eigen = (T_b_eigen * T_a_eigen.inverse()) / dt;
 
         // J(i)
-        Matrix4d Ji_4x4matrix_eigen = Tinv_a_eigen * dTdt_eigen;
+        Matrix4d Ji_4x4matrix_eigen = Tinv_a_eigen * dTdq_eigen;
         se3 Ji;
         Ji.setFromMatrixForm(Ji_4x4matrix_eigen);
         numericJ.setColumn(i, Ji);
@@ -151,26 +153,30 @@ void JOINTS::kinematicsTest(Joint* _joint)
 
 TEST_F(JOINTS, REVOLUTE_JOINT)
 {
-//    RevoluteJoint revJoint;
+    RevoluteJoint revJoint;
 
-//    dtdbg << "RevoluteJoint\n";
-//    kinematicsTest(&revJoint);
+    kinematicsTest(&revJoint);
 }
 
 TEST_F(JOINTS, BALL_JOINT)
 {
     BallJoint ballJoint;
 
-    dtdbg << "BallJoint\n";
     kinematicsTest(&ballJoint);
 }
 
 TEST_F(JOINTS, TRANSLATIONAL_JOINT)
 {
-//    TranslationalJoint translationalJoint;
+    TranslationalJoint translationalJoint;
 
-//    dtdbg << "TranslationalJoint\n";
-//    kinematicsTest(&translationalJoint);
+    kinematicsTest(&translationalJoint);
+}
+
+TEST_F(JOINTS, FREE_JOINT)
+{
+    FreeJoint freeJoint;
+
+    kinematicsTest(&freeJoint);
 }
 
 /******************************************************************************/

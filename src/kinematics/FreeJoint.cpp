@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/21/2013
+ * Date: 05/29/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -37,46 +37,56 @@
 
 #include "math/UtilsMath.h"
 #include "math/LieGroup.h"
-#include "kinematics/BallJoint.h"
+#include "kinematics/FreeJoint.h"
 
 namespace dart {
 namespace kinematics {
 
-#define BJOINT_EPS 1e-6
+#define FJOINT_EPS 1e-6
 
-BallJoint::BallJoint()
+FreeJoint::FreeJoint()
     : Joint()
 {
-    mName.assign("Revolute joint");
-    mJointType = BALL;
+    mName.assign("Free joint");
+    mJointType = FREE;
     mDofs.push_back(&mCoordinate[0]);
     mDofs.push_back(&mCoordinate[1]);
     mDofs.push_back(&mCoordinate[2]);
-    mS.setSize(3);
-    mdS.setSize(3);
+    mDofs.push_back(&mCoordinate[3]);
+    mDofs.push_back(&mCoordinate[4]);
+    mDofs.push_back(&mCoordinate[5]);
+    mS.setSize(6);
+    mdS.setSize(6);
 }
 
-BallJoint::~BallJoint()
+FreeJoint::~FreeJoint()
 {
 }
 
-void BallJoint::_updateTransformation()
+void FreeJoint::_updateTransformation()
 {
     // T
     math::so3 w(mCoordinate[0].get_q(),
-            mCoordinate[1].get_q(),
-            mCoordinate[2].get_q());
+                mCoordinate[1].get_q(),
+                mCoordinate[2].get_q());
+    math::Vec3 v(mCoordinate[3].get_q(),
+                 mCoordinate[4].get_q(),
+                 mCoordinate[5].get_q());
     mT = mT_ParentBodyToJoint
-         * math::Exp(w)
+         * math::Exp(v) * math::Exp(w)
          / mT_ChildBodyToJoint;
 }
 
-void BallJoint::_updateVelocity()
+void FreeJoint::_updateVelocity()
 {
     // TODO: NEED TO CHECK !!
     //       NOT FINISHED.
 
     // S
+    math::so3 w(mCoordinate[0].get_q(),
+                mCoordinate[1].get_q(),
+                mCoordinate[2].get_q());
+
     Eigen::Vector3d q;
     q << mCoordinate[0].get_q(), mCoordinate[1].get_q(), mCoordinate[2].get_q();
     double theta = q.norm();
@@ -85,7 +95,7 @@ void BallJoint::_updateVelocity()
     Eigen::Matrix3d qss = math::makeSkewSymmetric(q);
     Eigen::Matrix3d qss2 =  qss*qss;
 
-    if(theta < BJOINT_EPS)
+    if(theta < FJOINT_EPS)
         J = Eigen::Matrix3d::Identity() + 0.5*qss +  (1.0/6.0)*qss2;
     else
         J = Eigen::Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
@@ -93,16 +103,22 @@ void BallJoint::_updateVelocity()
     math::se3 J0(J(0,0), J(0,1), J(0,2), 0, 0, 0);
     math::se3 J1(J(1,0), J(1,1), J(1,2), 0, 0, 0);
     math::se3 J2(J(2,0), J(2,1), J(2,2), 0, 0, 0);
+    math::se3 J3(0, 0, 0, 1, 0, 0);
+    math::se3 J4(0, 0, 0, 0, 1, 0);
+    math::se3 J5(0, 0, 0, 0, 0, 1);
 
     mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, J0));
     mS.setColumn(1, math::Ad(mT_ChildBodyToJoint, J1));
     mS.setColumn(2, math::Ad(mT_ChildBodyToJoint, J2));
+    mS.setColumn(3, math::Ad(mT_ChildBodyToJoint / Exp(w), J3));
+    mS.setColumn(4, math::Ad(mT_ChildBodyToJoint / Exp(w), J4));
+    mS.setColumn(5, math::Ad(mT_ChildBodyToJoint / Exp(w), J5));
 
     // V = S * dq
     mV = mS * get_dq();
 }
 
-void BallJoint::_updateAcceleration()
+void FreeJoint::_updateAcceleration()
 {
     // TODO: NEED TO CHECK !!
     //       NOT FINISHED.
@@ -126,7 +142,7 @@ void BallJoint::_updateAcceleration()
     double t4 = t3*theta;
     double t5 = t4*theta;
 
-    if (theta < BJOINT_EPS)
+    if (theta < FJOINT_EPS)
     {
         Jdot = 0.5*qdss + (1.0/6.0)*(qss*qdss + qdss*qss);
         Jdot += (-1.0/12)*ttdot*qss + (-1.0/60)*ttdot*qss2;
@@ -140,10 +156,16 @@ void BallJoint::_updateAcceleration()
     math::se3 dJ0(Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0);
     math::se3 dJ1(Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0);
     math::se3 dJ2(Jdot(2,0), Jdot(2,1), Jdot(2,2), 0, 0, 0);
+    math::se3 dJ3(0, 0, 0, 0, 0, 0);
+    math::se3 dJ4(0, 0, 0, 0, 0, 0);
+    math::se3 dJ5(0, 0, 0, 0, 0, 0);
 
     mdS.setColumn(0, math::Ad(mT_ChildBodyToJoint, dJ0));
     mdS.setColumn(1, math::Ad(mT_ChildBodyToJoint, dJ1));
     mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ2));
+    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ3));
+    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ4));
+    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ5));
 
     // dV = dS * dq + S * ddq
     mdV = mdS * get_dq() + mS * get_ddq();

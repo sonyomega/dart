@@ -35,58 +35,68 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "math/SO3.h"
-#include "kinematics/FreeJoint.h"
+#ifndef DART_KINEMATICS_WELD_JOINT_H
+#define DART_KINEMATICS_WELD_JOINT_H
+
+#include <Eigen/Dense>
+
+#include "kinematics/Dof.h"
+#include "kinematics/Joint.h"
 
 namespace dart {
 namespace kinematics {
 
-FreeJoint::FreeJoint()
-    : Joint(),
-      mAxis(math::so3())
+class WeldJoint : public Joint
 {
-    mName.assign("Free joint");
-    mJointType = FREE;
-    mDofs.push_back(&mCoordinate[0]);
-    mDofs.push_back(&mCoordinate[1]);
-    mDofs.push_back(&mCoordinate[2]);
-    mDofs.push_back(&mCoordinate[3]);
-    mDofs.push_back(&mCoordinate[4]);
-    mDofs.push_back(&mCoordinate[5]);
-    mS.setSize(6);
-    mdS.setSize(6);
-}
+public:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    WeldJoint();
 
-FreeJoint::~FreeJoint()
-{
-}
+    /// @brief
+    virtual ~WeldJoint();
 
-void FreeJoint::_updateTransformation()
-{
-    // T
-    mT = mT_ParentBodyToJoint
-         * math::SE3(mAxis * mCoordinate.get_q())
-         * mT_ChildBodyToJoint.getInverse();
-}
+    //--------------------------------------------------------------------------
+    // Kinematical Properties
+    //--------------------------------------------------------------------------
 
-void FreeJoint::_updateVelocity()
-{
-    // S
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(mAxis)));
+    //--------------------------------------------------------------------------
+    // Structueral Properties
+    //--------------------------------------------------------------------------
 
-    // V = S * dq
-    mV = mS * get_q();
-    //mV.setAngular(mAxis * mCoordinate.get_q());
-}
+    //--------------------------------------------------------------------------
+    // Recursive Kinematics Algorithms
+    //--------------------------------------------------------------------------
 
-void FreeJoint::_updateAcceleration()
-{
-    // dS = 0
-    mdS.setZero();
+protected:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    // Document inherited.
+    virtual void _updateTransformation();
 
-    // dV = dS * dq + S * ddq
-    mdV = mS * get_ddq();
-}
+    // Document inherited.
+    virtual void _updateVelocity();
+
+    // Document inherited.
+    virtual void _updateAcceleration();
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+
+private:
+
+public:
+    //
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
 
 } // namespace kinematics
 } // namespace dart
+
+#endif // #ifndef DART_KINEMATICS_WELD_JOINT_H
+
