@@ -46,7 +46,7 @@
 #include "dynamics/RevoluteJoint.h"
 #include "dynamics/FreeJoint.h"
 #include "dynamics/TranslationalJoint.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 #include "simulation/World.h"
 
 using namespace dart;

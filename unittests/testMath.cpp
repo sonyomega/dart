@@ -43,7 +43,7 @@
 #include "math/LieGroup.h"
 #include "math/UtilsMath.h"
 #include "dynamics/RevoluteJoint.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 #include "simulation/World.h"
 
 using namespace dart;

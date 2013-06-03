@@ -59,7 +59,7 @@ class FreeJoint;
 
 namespace dynamics {
 class BodyNode;
-class SkeletonDynamics;
+class Skeleton;
 }
 
 namespace simulation {
@@ -151,37 +151,37 @@ simulation::World* readDARTFile(const std::string& _filename);
 simulation::World* readWorld(tinyxml2::XMLElement* _worldElement);
 
 /// @brief
-dynamics::SkeletonDynamics* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
+dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
                                          World* _world);
 
 /// @brief
 dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
-                                     dynamics::SkeletonDynamics* _skeleton);
+                                     dynamics::Skeleton* _skeleton);
 
 /// @brief
 dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
-                             dynamics::SkeletonDynamics* _skeleton);
+                             dynamics::Skeleton* _skeleton);
 
 /// @brief
 dynamics::RevoluteJoint* readRevoluteJoint(
         tinyxml2::XMLElement* _revoluteJointElement,
-        dynamics::SkeletonDynamics* _skeleton);
+        dynamics::Skeleton* _skeleton);
 
 dynamics::BallJoint* readBallJoint(
         tinyxml2::XMLElement* _ballJointElement,
-        dynamics::SkeletonDynamics* _skeleton);
+        dynamics::Skeleton* _skeleton);
 
 dynamics::TranslationalJoint* readTranslationalJoint(
         tinyxml2::XMLElement* _translationalJointElement,
-        dynamics::SkeletonDynamics* _skeleton);
+        dynamics::Skeleton* _skeleton);
 
 dynamics::FreeJoint* readFreeJoint(
         tinyxml2::XMLElement* _freeJointElement,
-        dynamics::SkeletonDynamics* _skeleton);
+        dynamics::Skeleton* _skeleton);
 
 dart::dynamics::WeldJoint* readWeldJoint(
         tinyxml2::XMLElement* _weldJointElement,
-        dynamics::SkeletonDynamics* _skeleton);
+        dynamics::Skeleton* _skeleton);
 
 //------------------------------------------------------------------------------
 //

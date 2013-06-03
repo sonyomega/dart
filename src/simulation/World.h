@@ -57,7 +57,7 @@ class Integrator;
 }
 
 namespace dynamics {
-class SkeletonDynamics;
+class Skeleton;
 }
 
 namespace constraint {
@@ -135,20 +135,20 @@ public:
     //--------------------------------------------------------------------------
     /// @brief Get the indexed skeleton.
     /// @param[in] _index
-    dynamics::SkeletonDynamics* getSkeleton(int _index) const;
+    dynamics::Skeleton* getSkeleton(int _index) const;
 
     /// @brief Find body node by name.
     /// @param[in] The name of body node looking for.
     /// @return Searched body node. If the skeleton does not have a body
     /// node with _name, then return NULL.
-    dynamics::SkeletonDynamics* getSkeleton(const std::string& _name) const;
+    dynamics::Skeleton* getSkeleton(const std::string& _name) const;
 
     /// @brief Get the number of skeletons.
     int getNumSkeletons() const { return mSkeletons.size(); }
 
     /// @brief .
     /// @param[in] _skel
-    void addSkeleton(dynamics::SkeletonDynamics* _skeleton);
+    void addSkeleton(dynamics::Skeleton* _skeleton);
 
     /// @brief Get the dof index for the indexed skeleton.
     /// @param[in] _index
@@ -183,7 +183,7 @@ protected:
 
 
     /// @brief Skeletones in this world.
-    std::vector<dynamics::SkeletonDynamics*> mSkeletons;
+    std::vector<dynamics::Skeleton*> mSkeletons;
 
     /// @brief The first indeices of each skeleton's dof in mDofs.
     ///

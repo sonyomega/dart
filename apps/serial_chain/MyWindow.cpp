@@ -1,6 +1,6 @@
 #include "MyWindow.h"
 #include "simulation/World.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 
 using namespace Eigen;
 

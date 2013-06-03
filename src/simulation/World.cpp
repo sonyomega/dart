@@ -44,7 +44,7 @@
 
 #include "integration/EulerIntegrator.h"
 #include "dynamics/Dof.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 #include "constraint/ConstraintDynamics.h"
 #include "simulation/World.h"
 
@@ -172,15 +172,15 @@ void World::step()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-dynamics::SkeletonDynamics* World::getSkeleton(int _index) const
+dynamics::Skeleton* World::getSkeleton(int _index) const
 {
     return mSkeletons[_index];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-dynamics::SkeletonDynamics* World::getSkeleton(const std::string& _name) const
+dynamics::Skeleton* World::getSkeleton(const std::string& _name) const
 {
-    for (std::vector<dynamics::SkeletonDynamics*>::const_iterator itrSkeleton
+    for (std::vector<dynamics::Skeleton*>::const_iterator itrSkeleton
          = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
          ++itrSkeleton)
@@ -193,7 +193,7 @@ dynamics::SkeletonDynamics* World::getSkeleton(const std::string& _name) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void World::addSkeleton(dynamics::SkeletonDynamics* _skeleton)
+void World::addSkeleton(dynamics::Skeleton* _skeleton)
 {
     assert(_skeleton != NULL);
 
@@ -215,7 +215,7 @@ bool World::checkCollision(bool checkAllCollisions)
 
 void World::_computeForwardDynamics()
 {
-    for (std::vector<dynamics::SkeletonDynamics*>::iterator itrSkeleton = mSkeletons.begin();
+    for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
          ++itrSkeleton)
     {

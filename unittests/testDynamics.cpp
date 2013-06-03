@@ -36,7 +36,7 @@
 #include <Eigen/Dense>
 #include <gtest/gtest.h>
 //#include "dynamics/BodyNodeDynamics.h"
-//#include "dynamics/SkeletonDynamics.h"
+//#include "dynamics/Skeleton.h"
 //#include "dynamics/FileInfoSkel.hpp"
 //#include "dynamics/FileInfoDof.h"
 //#include "dynamics/BodyNode.h"

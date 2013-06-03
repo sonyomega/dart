@@ -42,7 +42,7 @@
 #include "math/LieGroup.h"
 #include "dynamics/BodyNode.h"
 #include "dynamics/RevoluteJoint.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 #include "simulation/World.h"
 
 using namespace dart;
@@ -57,9 +57,9 @@ TEST(BUILDING, BASIC)
 	//
 	//--------------------------------------------------------------------------
 	// Bodies
-	BodyNode body1;
-	BodyNode body2;
-	BodyNode body3;
+    BodyNode body1;
+    BodyNode body2;
+    BodyNode body3;
 
 	// Joints
 	RevoluteJoint joint1;
@@ -67,7 +67,7 @@ TEST(BUILDING, BASIC)
 	RevoluteJoint joint3;
 
 	// Skeletons
-	SkeletonDynamics skel1;
+    Skeleton skel1;
 
 	// World
 	World world;

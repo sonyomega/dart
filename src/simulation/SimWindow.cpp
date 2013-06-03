@@ -42,7 +42,7 @@
 
 #include "SimWindow.h"
 #include "simulation/World.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 #include "constraint/ConstraintDynamics.h"
 #include "collision/CollisionDetector.h"
 #include "yui/GLFuncs.h"

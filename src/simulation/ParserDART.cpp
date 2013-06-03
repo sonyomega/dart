@@ -53,7 +53,7 @@
 #include "dynamics/TranslationalJoint.h"
 #include "dynamics/BallJoint.h"
 #include "dynamics/FreeJoint.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 #include "simulation/World.h"
 #include "simulation/ParserDART.h"
 
@@ -234,7 +234,7 @@ simulation::World* readWorld(tinyxml2::XMLElement* _worldElement)
     ElementEnumerator skeletonElements(_worldElement, "skeleton");
     while (skeletonElements.next())
     {
-        dynamics::SkeletonDynamics* newSkeleton
+        dynamics::Skeleton* newSkeleton
                 = readSkeleton(skeletonElements.get(), newWorld);
 
         newWorld->addSkeleton(newSkeleton);
@@ -243,13 +243,13 @@ simulation::World* readWorld(tinyxml2::XMLElement* _worldElement)
     return newWorld;
 }
 
-dynamics::SkeletonDynamics* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
+dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
                                          World* _world)
 {
     assert(_skeletonElement != NULL);
     assert(_world != NULL);
 
-    dynamics::SkeletonDynamics* newSkeleton = new dynamics::SkeletonDynamics;
+    dynamics::Skeleton* newSkeleton = new dynamics::Skeleton;
 
     //--------------------------------------------------------------------------
     // Name attribute
@@ -293,7 +293,7 @@ dynamics::SkeletonDynamics* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
 }
 
 dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
-                                     dynamics::SkeletonDynamics* _skeleton)
+                                     dynamics::Skeleton* _skeleton)
 {
     assert(_bodyElement != NULL);
     assert(_skeleton != NULL);
@@ -474,7 +474,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
 }
 
 dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
-                            dynamics::SkeletonDynamics* _skeleton)
+                            dynamics::Skeleton* _skeleton)
 {
     assert(_jointElement != NULL);
     assert(_skeleton != NULL);
@@ -566,7 +566,7 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
 
 dynamics::WeldJoint*readWeldJoint(
         tinyxml2::XMLElement* _weldJointElement,
-        dynamics::SkeletonDynamics* _skeleton)
+        dynamics::Skeleton* _skeleton)
 {
     assert(_weldJointElement != NULL);
     assert(_skeleton != NULL);
@@ -579,7 +579,7 @@ dynamics::WeldJoint*readWeldJoint(
 
 dynamics::RevoluteJoint*readRevoluteJoint(
         tinyxml2::XMLElement* _revoluteJointElement,
-        dynamics::SkeletonDynamics* _skeleton)
+        dynamics::Skeleton* _skeleton)
 {
     assert(_revoluteJointElement != NULL);
     assert(_skeleton != NULL);
@@ -603,7 +603,7 @@ dynamics::RevoluteJoint*readRevoluteJoint(
 
 dynamics::BallJoint*readBallJoint(
         tinyxml2::XMLElement* _ballJointElement,
-        dynamics::SkeletonDynamics* _skeleton)
+        dynamics::Skeleton* _skeleton)
 {
     assert(_ballJointElement != NULL);
     assert(_skeleton != NULL);
@@ -615,7 +615,7 @@ dynamics::BallJoint*readBallJoint(
 
 dynamics::TranslationalJoint*readTranslationalJoint(
         tinyxml2::XMLElement* _translationalJointElement,
-        dynamics::SkeletonDynamics* _skeleton)
+        dynamics::Skeleton* _skeleton)
 {
     assert(_translationalJointElement != NULL);
     assert(_skeleton != NULL);
@@ -628,7 +628,7 @@ dynamics::TranslationalJoint*readTranslationalJoint(
 
 dynamics::FreeJoint*readFreeJoint(
         tinyxml2::XMLElement* _freeJointElement,
-        dynamics::SkeletonDynamics* _skeleton)
+        dynamics::Skeleton* _skeleton)
 {
     assert(_freeJointElement != NULL);
     assert(_skeleton != NULL);

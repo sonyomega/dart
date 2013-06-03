@@ -49,7 +49,7 @@ namespace dart {
 
 namespace dynamics {
     class BodyNode;
-    class SkeletonDynamics;
+    class Skeleton;
     class BodyNode;
 } // namespace dynamics
 
@@ -57,14 +57,14 @@ namespace constraint {
 
     class ConstraintDynamics {
     public:
-        ConstraintDynamics(const std::vector<dynamics::SkeletonDynamics*>& _skels, double _dt, double _mu = 1.0, int _d = 4);
+        ConstraintDynamics(const std::vector<dynamics::Skeleton*>& _skels, double _dt, double _mu = 1.0, int _d = 4);
         virtual ~ConstraintDynamics();
 
         void reset();
         void computeConstraintForces();            
         void addConstraint(Constraint *_constr);
         void deleteConstraint(int _index);
-        void addSkeleton(dynamics::SkeletonDynamics* _newSkel);
+        void addSkeleton(dynamics::Skeleton* _newSkel);
         void setTimeStep(double _timeStep) { mDt = _timeStep; }
         double getTimeStep() const { return mDt; }
 
@@ -109,7 +109,7 @@ namespace constraint {
         inline int getTotalNumDofs() const { return mIndices[mIndices.size() - 1]; }
 
             
-        std::vector<dynamics::SkeletonDynamics*> mSkels;
+        std::vector<dynamics::Skeleton*> mSkels;
         std::vector<int> mBodyIndexToSkelIndex;
         std::vector<int> mIndices;
         collision::CollisionDetector* mCollisionChecker;

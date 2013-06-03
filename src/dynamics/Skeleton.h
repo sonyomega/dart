@@ -77,6 +77,9 @@ public:
     /// @brief
     void initKinematics();
 
+    /// @brief
+    void initDynamics();
+
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
@@ -85,6 +88,8 @@ public:
 
     /// @brief
     const std::string& getName() const { return mName; }
+
+
 
     //--------------------------------------------------------------------------
     // Kinematical Properties
@@ -96,6 +101,26 @@ public:
     /// @brief
     bool getSelfCollidable() const { return mSelfCollidable; }
 
+
+    //--------------------------------------------------------------------------
+    // Dynamical Properties
+    //--------------------------------------------------------------------------
+    /// @brief
+    void setImmobileState(bool _immobile) { mImmobile = _immobile; }
+
+    /// @brief
+    bool getImmobileState() const { return mImmobile; }
+
+    /// @brief
+    /// @todo Let's set this state for each joints
+    DEPRECATED bool getJointLimitState() const { return mJointLimit; }
+
+    /// @brief
+    /// @todo Let's set this state for each joints
+    DEPRECATED void setJointLimitState(bool _s) { mJointLimit = _s; }
+
+    /// @brief
+    double getTotalMass() const { return mTotalMass; }
 
     //--------------------------------------------------------------------------
     // Structueral Properties
@@ -148,11 +173,53 @@ public:
     void updateForwardKinematics(bool _firstDerivative = true,
                                  bool _secondDerivative = true);
 
-    //--------------------------------------------------------------------------
-    //
-    //--------------------------------------------------------------------------
+
+    /// @brief (q, dq, ddq) --> (tau)
+    void computeInverseDynamics(const Eigen::Vector3d& _gravity);
+    void _inverseDynamicsFwdRecursion();
+    void _inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity);
+
+    /// @brief (q, dq, tau) --> (ddq)
+    void computeForwardDynamics(const Eigen::Vector3d& _gravity,
+                                bool _equationsOfMotion = true);
+
+    /// @brief (q, dq, tau) --> (ddq)
+    void computeForwardDynamicsID(const Eigen::Vector3d& _gravity,
+                                  bool _equationsOfMotion = true);
+
+    /// @brief (q, dq, tau) --> (ddq)
+    void computeForwardDynamicsFS(const Eigen::Vector3d& _gravity,
+                                  bool _equationsOfMotion = true);
+
+    /// @brief (q, dq, ddq_v, tau_u) --> (tau_v, ddq_u)
+    void computeHybridDynamicsFS(const Eigen::Vector3d& _gravity,
+                                 bool _equationsOfMotion = true);
+
+    /// @brief (q, dq) --> M, C, G
+    void computeEquationsOfMotionID(const Eigen::Vector3d& _gravity);
+
+    /// @brief (q, dq) --> M, C, G
+    void computeEquationsOfMotionRecursive(const Eigen::Vector3d& _gravity);
+
+    /// @brief
     math::Jacobian getJacobian() const;
 
+
+    //--------------------------------------------------------------------------
+    // Dynamics Equation
+    //--------------------------------------------------------------------------
+    /// @brief
+    Eigen::MatrixXd getMassMatrix() const { return mM; }
+
+    /// @brief
+    Eigen::MatrixXd getInvMassMatrix() const { return mMInv; }
+
+    Eigen::MatrixXd getCoriolisMatrix() const { return mC; }
+    Eigen::VectorXd getCoriolisVector() const { return mCvec; }
+    Eigen::VectorXd getGravityVector() const { return mG; }
+    Eigen::VectorXd getCombinedVector() const { return mCg; }
+    Eigen::VectorXd getExternalForces() const { return mFext; }
+    Eigen::VectorXd getInternalForces() const { return get_tau(); }
     //--------------------------------------------------------------------------
     // Rendering
     //--------------------------------------------------------------------------
@@ -196,8 +263,42 @@ protected:
     std::vector<Joint*> mJoints;
 
 
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief If the skeleton is immobile, its dynamic effect is equivalent to
+    /// having infinite mass. If the DOFs of an immobile skeleton are manually
+    /// changed, the collision results might not be correct.
+    bool mImmobile;
 
+    /// @brief True if the joint limits are enforced in dynamic simulation.
+    bool mJointLimit;
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    double mTotalMass;
+
+    /// @brief Mass matrix for the skeleton.
+    Eigen::MatrixXd mM;
+
+    /// @brief Inverse of mass matrix for the skeleton.
+    Eigen::MatrixXd mMInv;
+
+    Eigen::MatrixXd mC;    ///< Coriolis matrix for the skeleton; not being used currently
+    Eigen::VectorXd mCvec;    ///< Coriolis vector for the skeleton == mC*qdot
+    Eigen::VectorXd mG;    ///< Gravity vector for the skeleton; computed in nonrecursive dynamics only
+    Eigen::VectorXd mCg;   ///< combined coriolis and gravity term == mC*qdot + g
+    Eigen::VectorXd mFext; ///< external forces vector for the skeleton
+    //Eigen::VectorXd mFint; ///< internal forces vector for the skeleton; computed by an external controller
+
+    /// @brief
+    //std::vector<BodyNodeDynamics*> mDynamicsBodies;
 private:
+
+public:
+    //
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 } // namespace dynamics

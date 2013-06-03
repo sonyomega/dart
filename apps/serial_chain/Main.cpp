@@ -1,7 +1,7 @@
 #include "utils/Paths.h"
 #include "math/UtilsMath.h"
 #include "simulation/ParserDART.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 #include "MyWindow.h"
 
 int main(int argc, char* argv[])

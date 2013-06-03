@@ -6,7 +6,7 @@
 #include "collision/fcl/FCLCollisionDetector.h"
 #include "dynamics/BodyNode.h"
 #include "dynamics/Dof.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 #include "constraint/ConstraintDynamics.h"
 
 using namespace Eigen;
@@ -18,7 +18,7 @@ using namespace math;
 
 namespace dart {
     namespace constraint {
-        ConstraintDynamics::ConstraintDynamics(const std::vector<dynamics::SkeletonDynamics*>& _skels, double _dt, double _mu, int _d)
+        ConstraintDynamics::ConstraintDynamics(const std::vector<dynamics::Skeleton*>& _skels, double _dt, double _mu, int _d)
             : mSkels(_skels), mDt(_dt), mMu(_mu), mNumDir(_d), mCollisionChecker(NULL) {
             initialize();
         }
@@ -115,7 +115,7 @@ namespace dart {
             delete mConstraints[_index];
         }
 
-        void ConstraintDynamics::addSkeleton(dynamics::SkeletonDynamics* _newSkel)
+        void ConstraintDynamics::addSkeleton(dynamics::Skeleton* _newSkel)
         {
             mSkels.push_back(_newSkel);
 
@@ -154,7 +154,7 @@ namespace dart {
             mIndices.push_back(sumNDofs);
 
             for (int i = 0; i < mSkels.size(); i++) {
-                dynamics::SkeletonDynamics* skel = mSkels[i];
+                dynamics::Skeleton* skel = mSkels[i];
                 int nDofs = skel->getNumDofs();
                 if (mSkels[i]->getImmobileState())
                     nDofs = 0;
@@ -176,7 +176,7 @@ namespace dart {
             int rows = 0;
             int cols = 0;
             for (int i = 0; i < mSkels.size(); i++) {
-                dynamics::SkeletonDynamics* skel = mSkels[i];
+                dynamics::Skeleton* skel = mSkels[i];
                 int nNodes = skel->getNumNodes();
 
                 for (int j = 0; j < nNodes; j++) {
@@ -218,7 +218,7 @@ namespace dart {
             mIndices.push_back(sumNDofs);
 
             for (int i = 0; i < mSkels.size(); i++) {
-                dynamics::SkeletonDynamics* skel = mSkels[i];
+                dynamics::Skeleton* skel = mSkels[i];
                 int nDofs = skel->getNumDofs();
                 if (mSkels[i]->getImmobileState())
                     nDofs = 0;

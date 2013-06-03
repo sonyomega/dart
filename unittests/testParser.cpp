@@ -40,7 +40,7 @@
 #include "TestHelpers.h"
 
 #include "dynamics/RevoluteJoint.h"
-#include "dynamics/SkeletonDynamics.h"
+#include "dynamics/Skeleton.h"
 #include "utils/Paths.h"
 #include "simulation/World.h"
 #include "simulation/ParserDART.h"
@@ -131,7 +131,7 @@ TEST(PARSER, PARSER_DART_SINGLE_PENDULUM)
     EXPECT_EQ(world->getGravity()(2), 0);
     EXPECT_EQ(world->getNumSkeletons(), 1);
 
-    SkeletonDynamics* skel1 = world->getSkeleton("skeleton 1");
+    Skeleton* skel1 = world->getSkeleton("skeleton 1");
 
     EXPECT_EQ(skel1->getNumNodes(), 1);
     EXPECT_EQ(skel1->getNumJoints(), 1);
@@ -152,7 +152,7 @@ TEST(PARSER, PARSER_DART_SERIAL_CAHIN)
     EXPECT_EQ(world->getGravity()(2), 0);
     EXPECT_EQ(world->getNumSkeletons(), 1);
 
-    SkeletonDynamics* skel1 = world->getSkeleton("skeleton 1");
+    Skeleton* skel1 = world->getSkeleton("skeleton 1");
 
     EXPECT_EQ(skel1->getNumNodes(), 10);
     EXPECT_EQ(skel1->getNumJoints(), 10);
