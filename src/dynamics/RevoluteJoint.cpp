@@ -45,10 +45,9 @@ using namespace math;
 namespace dynamics {
 
 RevoluteJoint::RevoluteJoint()
-    : Joint(),
+    : Joint("Revolute joint"),
       mAxis(math::so3(1.0, 0.0, 0.0))
 {
-    mName.assign("Revolute joint");
     mJointType = REVOLUTE;
     mDofs.push_back(&mCoordinate);
     mS.setSize(1);

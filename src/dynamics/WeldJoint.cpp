@@ -45,9 +45,8 @@ namespace dynamics {
 #define FJOINT_EPS 1e-6
 
 WeldJoint::WeldJoint()
-    : Joint()
+    : Joint("Weld joint")
 {
-    mName.assign("Weld joint");
     mJointType = WELD;
     mS.setSize(0);
     mdS.setSize(0);

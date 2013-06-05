@@ -34,16 +34,30 @@
 
 #include <iostream>
 #include <gtest/gtest.h>
+
+#include "utils/Paths.h"
+#include "math/UtilsMath.h"
 //#include "dynamics/FileInfoSkel.hpp"
-//#include "dynamics/Skeleton.h"
-//#include "dynamics/BodyNode.h"
+#include "dynamics/Skeleton.h"
+#include "dynamics/BodyNode.h"
 //#include "dynamics/FileInfoDof.h"
 //#include "dynamics/FileInfoC3D.h"
-//#include "dynamics/TrfmRotateExpmap.h"
-//#include "utils/Paths.h"
-//#include "math/UtilsMath.h"
+#include "simulation/World.h"
+#include "simulation/ParserDART.h"
 
 //using namespace std;
+using namespace dart;
+using namespace math;
+using namespace dynamics;
+using namespace simulation;
+
+#define KIN_TOL 1e-6
+
+class KINEMATICS : public testing::Test
+{
+public:
+    void JacobianTest(const std::string& dartFileName);
+};
 
 ///* ********************************************************************************************* */
 //TEST(KINEMATICS, VSK_LOADER) {
@@ -164,8 +178,73 @@
 //    }
 //}
 
-TEST(KINEMATICS, TRANSFORM_LOCAL_JACOBIAN) {
 
+void KINEMATICS::JacobianTest(const string& dartFileName)
+{
+    World* world = readDARTFile(dartFileName);
+    EXPECT_TRUE(world != NULL);
+
+    // Proceed one step
+    world->step();
+
+    int numSkel = world->getNumSkeletons();
+    for (int i = 0; i < numSkel; ++i)
+    {
+        Skeleton* skel = world->getSkeleton(i);
+        BodyNode* body = skel->getBody(skel->getNumBodies() - 1);
+
+        Jacobian J = body->getBodyJacobian();
+        se3 J_dq = J * skel->get_dq();
+        se3 V = body->getBodyVelocity();
+
+        for (int j = 0; j < 6; ++j)
+            EXPECT_NEAR(J_dq(j), V(j), KIN_TOL);
+    }
+
+    // Proceed more steps
+    int steps = 300;
+    for (int i = 0; i < steps; ++i)
+        world->step();
+
+    for (int i = 0; i < numSkel; ++i)
+    {
+        Skeleton* skel = world->getSkeleton(i);
+        BodyNode* body = skel->getBody(skel->getNumBodies() - 1);
+
+        Jacobian J = body->getBodyJacobian();
+        se3 J_dq = J * skel->get_dq();
+        se3 V = body->getBodyVelocity();
+
+        for (int j = 0; j < 6; ++j)
+            EXPECT_NEAR(J_dq(j), V(j), KIN_TOL);
+    }
+
+    delete world;
+}
+
+/* ********************************************************************************************* */
+TEST_F(KINEMATICS, JACOBIAN_AND_BODYVELOCITY)
+{
+    dtdbg << "ball_joints.dart\n";
+    JacobianTest(DART_DATA_PATH"dart/test/ball_joints.dart");
+
+    dtdbg << "free_joints.dart\n";
+    JacobianTest(DART_DATA_PATH"dart/test/free_joints.dart");
+
+    dtdbg << "single_pendulum.dart\n";
+    JacobianTest(DART_DATA_PATH"dart/test/single_pendulum.dart");
+
+    dtdbg << "double_pendulum.dart\n";
+    JacobianTest(DART_DATA_PATH"dart/test/double_pendulum.dart");
+
+    dtdbg << "serial_chain.dart\n";
+    JacobianTest(DART_DATA_PATH"dart/test/serial_chain.dart");
+
+    dtdbg << "serial_chain_rjoint.dart\n";
+    JacobianTest(DART_DATA_PATH"dart/test/serial_chain_rjoint.dart");
+
+    dtdbg << "drop.dart\n";
+    JacobianTest(DART_DATA_PATH"dart/test/drop.dart");
 }
 
 /* ********************************************************************************************* */
@@ -174,3 +253,4 @@ int main(int argc, char* argv[]) {
     return RUN_ALL_TESTS();
 }
 /* ********************************************************************************************* */
+

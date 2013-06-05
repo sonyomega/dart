@@ -127,6 +127,7 @@ Eigen::VectorXd World::evalDeriv()
         int start = mIndices[i] * 2;
         int size = getSkeleton(i)->getNumDofs();
 
+        // TODO:
         Eigen::VectorXd qddot = mSkeletons[i]->getInvMassMatrix()
                                 * (-mSkeletons[i]->getCombinedVector()
                                    + mSkeletons[i]->getExternalForces()
@@ -199,7 +200,7 @@ void World::addSkeleton(dynamics::Skeleton* _skeleton)
 
     mSkeletons.push_back(_skeleton);
 
-    _skeleton->initKinematics();
+    //_skeleton->initKinematics();
     _skeleton->initDynamics();
     _skeleton->updateForwardKinematics();
 

@@ -43,8 +43,8 @@
 namespace dart {
 namespace dynamics {
 
-Joint::Joint()
-    : mName("Unknown joint"),
+Joint::Joint(const std::string& _name)
+    : mName(_name),
       mJointType(UNKNOWN),
       mParentBody(NULL),
       mChildBody(NULL),

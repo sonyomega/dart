@@ -49,19 +49,19 @@ using namespace Eigen;
 namespace dart {
 namespace dynamics {
 
-Skeleton::Skeleton()
+Skeleton::Skeleton(const std::string& _name)
     : System(),
-      mTotalMass(0.0)
+      mName(_name),
+      mTotalMass(0.0),
+      mGraph(NULL)
 {
+
 }
 
 Skeleton::~Skeleton()
 {
-}
-
-BodyNode* Skeleton::createBodyNode() const
-{
-    return new BodyNode();
+    if (mGraph != NULL)
+        delete mGraph;
 }
 
 void Skeleton::addBody(BodyNode* _body, bool _addParentJoint)
@@ -69,6 +69,7 @@ void Skeleton::addBody(BodyNode* _body, bool _addParentJoint)
     assert(_body != NULL);
 
     mBodies.push_back(_body);
+    _body->setSkelIndex(mBodies.size() - 1);
 
     // The parent joint possibly be null
     if (_addParentJoint)
@@ -97,6 +98,18 @@ BodyNode*Skeleton::findBody(const string& _name) const
     return NULL;
 }
 
+Eigen::VectorXd Skeleton::getDependentConfiguration(BodyNode* _beginBody,
+                                                    BodyNode* _endBody) const
+{
+    assert(_beginBody != NULL);
+    assert(_endBody != NULL);
+
+    int beginBodyID = _beginBody->getSkelIndex();
+    int endBodyID = _endBody->getSkelIndex();
+
+
+}
+
 void Skeleton::setPose(const Eigen::VectorXd& _pose,
                        bool bCalcTrans,
                        bool bCalcDeriv)
@@ -116,6 +129,7 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
 void Skeleton::initKinematics()
 {
     mRoot = mBodies[0];
+    mGraph = new SkeletonGraph(getNumNodes());
 
 	//--------------------------------------------------------------------------
 	// Set dofs
@@ -126,16 +140,12 @@ void Skeleton::initKinematics()
     // init the dependsOnDof stucture for each bodylink
     for(int i = 0; i < getNumNodes(); i++)
     {
-        mBodies[i]->setSkel(this);
-        // mNodes[i]->setDependDofMap(getNumDofs());
-        mBodies[i]->setDependDofList();
-        //mBodies.at(i)->init();
+        mBodies.at(i)->setSkel(this);
+        mBodies.at(i)->setDependDofList();
+        mBodies.at(i)->init();
     }
 
-//    for(int i = 0; i < getNumNodes(); i++)
-//        mBodies.at(i)->updateTransformation();
-
-	for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
+    for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
 		 itrJoint != mJoints.end();
 		 ++itrJoint)
 	{
@@ -147,7 +157,17 @@ void Skeleton::initKinematics()
 		{
 			mDofs.push_back((*itrDof));
 		}
+
+        if ((*itrJoint)->getParentBody() != NULL
+                && (*itrJoint)->getChildBody() != NULL)
+        {
+            boost::add_edge((*itrJoint)->getParentBody()->getSkelIndex(),
+                            (*itrJoint)->getChildBody()->getSkelIndex(),
+                            *mGraph);
+        }
 	}
+
+    //boost::write_graphviz(std::cout, *mGraph);
 }
 
 void Skeleton::updateForwardKinematics(bool _firstDerivative,
@@ -165,14 +185,14 @@ void Skeleton::draw(renderer::RenderInterface* _ri,
 }
 
 void Skeleton::_updateJointKinematics(bool _firstDerivative,
-                                           bool _secondDerivative)
+                                      bool _secondDerivative)
 {
     for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
          itrJoint != mJoints.end();
          ++itrJoint)
     {
         (*itrJoint)->updateKinematics(_firstDerivative,
-                                           _secondDerivative);
+                                      _secondDerivative);
     }
 }
 
@@ -183,13 +203,20 @@ void Skeleton::_updateBodyForwardKinematics(bool _firstDerivative,
          itrBody != mBodies.end();
          ++itrBody)
     {
-        (*itrBody)->updateForwardKinematics(_firstDerivative,
-                                            _secondDerivative);
+        (*itrBody)->updateTransformation();
+
+        if (_firstDerivative)
+            (*itrBody)->updateVelocity();
+
+        if (_secondDerivative)
+            (*itrBody)->updateAcceleration();
     }
 }
 
 void Skeleton::initDynamics()
 {
+    initKinematics();
+
     mM = MatrixXd::Zero(getDOF(), getDOF());
     mC = MatrixXd::Zero(getDOF(), getDOF());
     mCvec = VectorXd::Zero(getDOF());
@@ -202,9 +229,7 @@ void Skeleton::initDynamics()
     // init the dependsOnDof stucture for each bodylink
     mTotalMass = 0.0;
     for(int i = 0; i < getNumNodes(); i++)
-    {
         mTotalMass += getBody(i)->getMass();
-    }
 }
 
 void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity)
@@ -286,9 +311,9 @@ void Skeleton::_inverseDynamicsFwdRecursion()
          itrBody != mBodies.end();
          ++itrBody)
     {
-        (*itrBody)->_updateTransformation();
-        (*itrBody)->_updateVelocity();
-        (*itrBody)->_updateAcceleration();
+        (*itrBody)->updateTransformation();
+        (*itrBody)->updateVelocity();
+        (*itrBody)->updateAcceleration();
     }
 }
 
@@ -302,8 +327,8 @@ void Skeleton::_inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity)
         dynamics::BodyNode* body
                 = dynamic_cast<dynamics::BodyNode*>(*ritrBody);
 
-        body->_updateBodyForce(_gravity);
-        body->_updateGeneralizedForce();
+        body->updateBodyForce(_gravity);
+        body->updateGeneralizedForce();
     }
 }
 

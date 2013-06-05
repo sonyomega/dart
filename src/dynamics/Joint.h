@@ -82,7 +82,7 @@ public:
     // Constructor and Destructor
     //--------------------------------------------------------------------------
     /// @brief
-    Joint();
+    Joint(const std::string& _name = "");
 
     /// @brief
     virtual ~Joint();

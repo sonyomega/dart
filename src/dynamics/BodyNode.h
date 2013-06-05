@@ -110,13 +110,13 @@ public:
     // Constructor and Desctructor
     //--------------------------------------------------------------------------
     /// @brief
-    BodyNode();
+    BodyNode(const std::string& _name = "");
 
     /// @brief
     virtual ~BodyNode();
 
     //--------------------------------------------------------------------------
-    //
+    // Static properties
     //--------------------------------------------------------------------------
     /// @brief
     void setName(const std::string& _name) { mName = _name; }
@@ -124,23 +124,13 @@ public:
     /// @brief
     const std::string& getName() const { return mName; }
 
-    /// @brief
-    void setVisualizationShape(Shape* _shape) { mVizShape = _shape; }
+
 
     /// @brief
-    Shape* getVisualizationShape() const { return mVizShape; }
+    void setGravityMode(bool _onoff) { mGravityMode = _onoff; }
 
     /// @brief
-    void setCollisionShape(Shape* _shape) { mColShape = _shape; }
-
-    /// @brief
-    Shape* getCollisionShape() const { return mColShape; }
-
-    /// @brief
-    void setColliding(bool _colliding) { mColliding = _colliding; }
-
-    /// @brief
-    bool getColliding() { return mColliding; }
+    bool getGravityMode() const { return mGravityMode; }
 
     /// @brief
     bool getCollideState() const { return mCollidable; }
@@ -184,8 +174,93 @@ public:
     //DEPRECATED Eigen::Vector3d getWorldCOM() { return evalWorldPos(mCOMLocal); }
 
     //--------------------------------------------------------------------------
-    // Kinematical Properties
+    // Structueral Properties
     //--------------------------------------------------------------------------
+    /// @brief
+    void setSkelIndex(int _idx) { mSkelIndex = _idx; }
+
+    /// @brief
+    int getSkelIndex() const { return mSkelIndex; }
+
+    /// @brief
+    void setVisualizationShape(Shape* _shape) { mVizShape = _shape; }
+
+    /// @brief
+    Shape* getVisualizationShape() const { return mVizShape; }
+
+    /// @brief
+    void setCollisionShape(Shape* _shape) { mColShape = _shape; }
+
+    /// @brief
+    Shape* getCollisionShape() const { return mColShape; }
+
+    /// @brief
+    DEPRECATED void setSkel(Skeleton* _skel) { mSkeleton = _skel; }
+    void setSkeleton(Skeleton* _skel) { mSkeleton = _skel; }
+
+    /// @brief
+    DEPRECATED Skeleton* getSkel() const { return mSkeleton; }
+    Skeleton* getSkeleton() const { return mSkeleton; }
+
+    /// @brief
+    void setParentJoint(Joint* _joint) { mParentJoint = _joint; }
+
+    /// @brief
+    Joint* getParentJoint() const { return mParentJoint; }
+
+    /// @brief
+    void addChildJoint(Joint* _joint);
+
+    /// @brief
+    Joint* getChildJoint(int _idx) const;
+
+    /// @brief
+    const std::vector<Joint*>& getChildJoints() const { return mJointsChild; }
+
+    /// @brief
+    int getNumChildJoints() const { return mJointsChild.size(); }
+
+    /// @brief
+    void setParentBody(BodyNode* _body) { mParentBody = _body; }
+
+    /// @brief
+    BodyNode* getParentBody() const { return mParentBody; }
+
+    /// @brief
+    void addChildBody(BodyNode* _body);
+
+    /// @brief
+    DEPRECATED BodyNode* getChildNode(int _idx) const;
+    BodyNode* getChildBody(int _idx) const;
+
+    /// @brief
+    const std::vector<BodyNode*>& getChildBodies() const { return mChildBodies; }
+
+    // TODO: Check
+    void setDependDofList();
+
+    // TODO: Check
+    int getNumLocalDofs() const;
+
+    // TODO: Check
+    Dof* getLocalDof(int _idx) const;
+
+    // TODO: Check
+    /// @brief The number of the dofs by which this node is affected.
+    int getNumDependentDofs() const { return mDependentDofs.size(); }
+
+    // TODO: Check
+    /// @brief Return an dof index from the array index (< getNumDependentDofs).
+    int getDependentDof(int _arrayIndex) { return mDependentDofs[_arrayIndex]; }
+
+    // TODO: Check
+    /// @brief
+    Eigen::VectorXd getDependDofs() const;
+
+    //--------------------------------------------------------------------------
+    // Properties updated by dynamics (kinematics)
+    //--------------------------------------------------------------------------
+
     /// @brief
     void setWorldTransformation(const math::SE3& _W) { mW = _W; }
 
@@ -216,10 +291,25 @@ public:
     const math::se3& getBodyAcceleration() const { return mdV; }
 
     /// @brief
-    void setGravityMode(bool _onoff) { mGravityMode = _onoff; }
+    const math::Jacobian& getBodyJacobian() const { return mBodyJacobian; }
 
     /// @brief
-    bool getGravityMode() const { return mGravityMode; }
+    math::Jacobian getBodyJacobianWorld() const;
+
+    /// @brief Get body Jacobian at contact point.
+    math::Jacobian getBodyJacobianAtContactPoint(
+            const math::Vec3& r_world) const;
+
+    // TODO: Speed up here.
+    /// @brief
+    Eigen::MatrixXd getBodyJacobianAtContactPoint_LinearPartOnly(
+            const math::Vec3& r_world) const;
+
+    /// @brief
+    void setColliding(bool _colliding) { mColliding = _colliding; }
+
+    /// @brief
+    bool getColliding() { return mColliding; }
 
     /// @brief
     void setExternalForceLocal(const math::dse3& _FextLocal);
@@ -273,75 +363,6 @@ public:
     const math::dse3& getBodyForce() const { return mF; }
 
     //--------------------------------------------------------------------------
-    // Structueral Properties
-    //--------------------------------------------------------------------------
-    /// @brief
-    DEPRECATED void setSkel(Skeleton* _skel) { mSkeleton = _skel; }
-    void setSkeleton(Skeleton* _skel) { mSkeleton = _skel; }
-
-    /// @brief
-    DEPRECATED Skeleton* getSkel() const { return mSkeleton; }
-    Skeleton* getSkeleton() const { return mSkeleton; }
-
-    /// @brief
-    void setParentJoint(Joint* _joint) { mParentJoint = _joint; }
-
-    /// @brief
-    Joint* getParentJoint() const { return mParentJoint; }
-
-    /// @brief
-    void addChildJoint(Joint* _joint);
-
-    /// @brief
-    Joint* getChildJoint(int _idx) const;
-
-    /// @brief
-    const std::vector<Joint*>& getChildJoints() const { return mJointsChild; }
-
-    /// @brief
-    int getNumChildJoints() const { return mJointsChild.size(); }
-
-    /// @brief
-    void setParentBody(BodyNode* _body) { mParentBody = _body; }
-
-    /// @brief
-    BodyNode* getParentBody() const { return mParentBody; }
-
-    /// @brief
-    void addChildBody(BodyNode* _body);
-
-    /// @brief
-    DEPRECATED BodyNode* getChildNode(int _idx) const;
-    BodyNode* getChildBody(int _idx) const;
-
-    /// @brief
-    const std::vector<BodyNode*>& getChildBodies() const { return mChildBodies; }
-
-    // TODO: Check
-    void setDependDofList();
-
-    // TODO: Check
-    int getNumLocalDofs() const;
-
-    // TODO: Check
-    Dof* getDof(int _idx) const;
-
-    // TODO: Check
-    /// @brief The number of the dofs by which this node is affected.
-    int getNumDependentDofs() const { return mDependentDofs.size(); }
-
-    // TODO: Check
-    /// @brief Return an dof index from the array index (< getNumDependentDofs).
-    int getDependentDof(int _arrayIndex) { return mDependentDofs[_arrayIndex]; }
-
-    //--------------------------------------------------------------------------
-    // Recursive Kinematics Algorithms
-    //--------------------------------------------------------------------------
-    /// @brief (q, dq, ddq) --> (W, V, dV)
-    void updateForwardKinematics(bool _firstDerivative = true,
-                                 bool _secondDerivative = true);
-
-    //--------------------------------------------------------------------------
     // Rendering
     //--------------------------------------------------------------------------
     /// @brief Render the entire subtree rooted at this body node.
@@ -352,30 +373,33 @@ public:
     //--------------------------------------------------------------------------
     // Sub-functions for Recursive Kinematics Algorithms
     //--------------------------------------------------------------------------
+    /// @brief Initialize the vector memebers with proper sizes.
+    void init();
+
     /// @brief
     /// parentJoint.T, parentBody.W --> W
-    void _updateTransformation();
+    void updateTransformation();
 
     /// @brief
     /// parentJoint.V, parentBody.V --> V
     /// parentJoint.S --> J
-    void _updateVelocity(bool _updateJacobian = false);
+    void updateVelocity(bool _updateJacobian = true);
 
     /// @brief
     /// parentJoint.V, parentJoint.dV, parentBody.dV, V --> dV
     /// parentJoint.dS --> dJ
-    void _updateAcceleration(bool _updateJacobianDeriv = false);
+    void updateAcceleration(bool _updateJacobianDeriv = false);
 
     /// @brief
     /// childBodies.F, V, dV --> F, Fgravity
-    void _updateBodyForce(const Eigen::Vector3d& _gravity);
+    void updateBodyForce(const Eigen::Vector3d& _gravity);
 
     /// @brief
     /// parentJoint.S, F --> tau
-    void _updateGeneralizedForce();
+    void updateGeneralizedForce();
 
     /// @brief
-    void _updateDampingForce();
+    void updateDampingForce();
 
 protected:
     //--------------------------------------------------------------------------
@@ -389,6 +413,9 @@ protected:
 
     /// @brief
     std::string mName;
+
+    /// @brief Index in the model
+    int mSkelIndex;
 
     /// @brief If the gravity mode is false, this body node does not
     /// being affected by gravity.
@@ -444,10 +471,10 @@ protected:
     math::SE3 mW;
 
     /// @brief
-    math::Jacobian mJacobianBody;
+    math::Jacobian mBodyJacobian;
 
     /// @brief
-    math::Jacobian mJacobianBodyDeriv;
+    math::Jacobian mBodyJacobianDeriv;
 
     /// @brief Generalized body velocity w.r.t. body frame.
     math::se3 mV;

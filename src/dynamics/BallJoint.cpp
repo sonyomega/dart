@@ -45,9 +45,8 @@ namespace dynamics {
 #define BJOINT_EPS 1e-6
 
 BallJoint::BallJoint()
-    : Joint()
+    : Joint("Ball joint")
 {
-    mName.assign("Revolute joint");
     mJointType = BALL;
     mDofs.push_back(&mCoordinate[0]);
     mDofs.push_back(&mCoordinate[1]);
@@ -60,7 +59,7 @@ BallJoint::~BallJoint()
 {
 }
 
-void BallJoint::_updateTransformation()
+inline void BallJoint::_updateTransformation()
 {
     // T
     math::so3 w(mCoordinate[0].get_q(),
@@ -71,7 +70,7 @@ void BallJoint::_updateTransformation()
          / mT_ChildBodyToJoint;
 }
 
-void BallJoint::_updateVelocity()
+inline void BallJoint::_updateVelocity()
 {
     // TODO: NEED TO CHECK !!
     //       NOT FINISHED.
@@ -102,7 +101,7 @@ void BallJoint::_updateVelocity()
     mV = mS * get_dq();
 }
 
-void BallJoint::_updateAcceleration()
+inline void BallJoint::_updateAcceleration()
 {
     // TODO: NEED TO CHECK !!
     //       NOT FINISHED.

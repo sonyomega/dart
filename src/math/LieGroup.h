@@ -47,8 +47,10 @@ class Axis;
 class se3;
 class dse3;
 class SE3;
+class SO3;
 class Inertia;
 class AInertia;
+class Jacobian;
 
 // TODO:
 //   1. copy constructors
@@ -246,13 +248,13 @@ inline SE3 Inv(const SE3& T);
 
 /// @brief get rotation matrix rotated along x-axis by theta angle.
 /// @note theta is represented in radian.
-inline SE3 RotX(double);
+inline SE3 RotX(double angle);
 
 /// @brief get rotation matrix rotated along y-axis by theta angle.
-inline SE3 RotY(double);
+inline SE3 RotY(double angle);
 
 /// @brief get rotation matrix rotated along z-axis by theta angle.
-inline SE3 RotZ(double);
+inline SE3 RotZ(double angle);
 
 //------------------------------------------------------------------------------
 
@@ -269,7 +271,7 @@ inline se3 Linearize(const SE3& T);
 /// It is one step of @f$R_{i_1}=1/2(R_i + R_i^{-T})@f$.
 /// Hence by calling this function iterativley, you can make the rotation part
 /// closer to SO(3).
-inline SE3 Normalize(const SE3& );
+inline SE3 Normalize(const SE3& T);
 
 //------------------------------------------------------------------------------
 
@@ -324,6 +326,15 @@ inline se3 Ad(const SE3& T, const Axis& w);
 /// @brief fast version of Ad(T, se3(Axis(0), v)
 inline se3 Ad(const SE3& T, const Vec3& v);
 
+/// @brief fast version of Ad([R 0; 0 1], V)
+inline se3 AdR(const SE3& T, const se3& V);
+
+/// @brief
+inline Jacobian Ad(const SE3& T, const Jacobian& J);
+
+/// @brief fast version of Ad([R 0; 0 1], J)
+inline Jacobian AdR(const SE3& T, const Jacobian& J);
+
 /// @brief fast version of Ad(Inv(T), V)
 inline se3 InvAd(const SE3& T, const se3& V);
 
@@ -368,19 +379,19 @@ inline dse3 dad(const se3& V, const dse3& F);
 //------------------------------------------------------------------------------
 
 /// @brief standard output operator
-std::ostream& operator<<(std::ostream& os, const Vec3& );
+std::ostream& operator<<(std::ostream& os, const Vec3& v);
 
 /// @brief standard output operator
-std::ostream& operator<<(std::ostream& os, const Axis& );
+std::ostream& operator<<(std::ostream& os, const Axis& w);
 
 /// @brief standard output operator
-std::ostream& operator<<(std::ostream& , const se3& );
+std::ostream& operator<<(std::ostream& os, const se3& V);
 
 /// @brief standard output operator
-std::ostream &operator<<(std::ostream& , const dse3& );
+std::ostream& operator<<(std::ostream& os, const dse3& F);
 
 /// @brief standard output operator
-std::ostream& operator<<(std::ostream& , const SE3& );
+std::ostream& operator<<(std::ostream& os, const SE3& T);
 
 //==============================================================================
 // Vec3
@@ -777,6 +788,7 @@ public:
     friend Vec3 MinusLinearAd(const Vec3& p, const se3& V);
     friend se3 setad(const se3& X, const se3& Y);
     friend se3 Ad(const SE3& T, const se3& s);
+    friend se3 AdR(const SE3& T, const se3& s);
     friend se3 InvAd(const SE3& T, const se3& s);
     friend se3 ad(const se3& s1, const se3& s2);
     friend Vec3 ad(const Vec3& s1, const se3& s2);
@@ -1167,26 +1179,27 @@ public:
     friend class AInertia;
 
     friend std::ostream& operator<<(std::ostream& os, const SE3& T);
-    friend SE3 Inv(const SE3& T);
-    friend SE3 Exp(const se3& );
-    friend se3 Log(const SE3& );
+    friend SE3  Inv(const SE3& T);
+    friend SE3  Exp(const se3& S);
+    friend se3  Log(const SE3& T);
     friend Axis LogR(const SE3& T);
-    friend se3 Linearize(const SE3& T);
-    friend Vec3 iEulerXYZ(const SE3 &T);
+    friend se3  Linearize(const SE3& T);
+    friend Vec3 iEulerXYZ(const SE3& T);
     friend Vec3 iEulerZXY(const SE3& T);
     friend Vec3 iEulerZYX(const SE3& T);
     friend Vec3 iEulerZYZ(const SE3& T);
-    friend SE3 Normalize(const SE3& );
+    friend SE3  Normalize(const SE3& T);
     friend Vec3 Rotate(const SE3& T, const Vec3& v);
-    friend se3 Rotate(const SE3& T, const se3& v);
+    friend se3  Rotate(const SE3& T, const se3& v);
     friend Axis Rotate(const SE3& T, const Axis& v);
     friend Vec3 InvRotate(const SE3& T, const Vec3& v);
-    friend se3 InvRotate(const SE3& T, const se3& v);
+    friend se3  InvRotate(const SE3& T, const se3& v);
     friend Axis InvRotate(const SE3& T, const Axis& v);
-    friend se3 Ad(const SE3& T, const se3& s);
-    friend se3 Ad(const SE3& T, const Axis& s);
-    friend se3 Ad(const SE3& T, const Vec3& v);
-    friend se3 InvAd(const SE3& T, const se3& s);
+    friend se3  Ad(const SE3& T, const se3& s);
+    friend se3  Ad(const SE3& T, const Axis& s);
+    friend se3  Ad(const SE3& T, const Vec3& v);
+    friend se3  AdR(const SE3& T, const se3& s);
+    friend se3  InvAd(const SE3& T, const se3& s);
     friend Vec3 InvAd(const SE3& T, const Vec3& v);
     friend Axis InvAd(const SE3& T, const Axis& v);
     friend dse3 dAd(const SE3& T, const dse3& t);
@@ -1463,6 +1476,9 @@ public:
     //--------------------------------------------------------------------------
     // Operators
     //--------------------------------------------------------------------------
+    /// @brief substitution operator
+    const Jacobian& operator=(const Jacobian& T);
+
     /// @brief Access to the idx th element.
     se3& operator[](int _i);
 
@@ -1535,6 +1551,8 @@ protected:
     std::vector<se3> mJ;
 
 private:
+    friend Jacobian Ad(const SE3& T, const Jacobian& J);
+    friend Jacobian AdR(const SE3& T, const Jacobian& J);
 
 };
 

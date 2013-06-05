@@ -465,17 +465,8 @@ namespace dart {
         }
 
         MatrixXd ConstraintDynamics::getJacobian(dynamics::BodyNode* node, const Vector3d& p) {
-            int nDofs = node->getSkel()->getNumDofs();
-            MatrixXd Jt = MatrixXd::Zero(nDofs, 3);
-            Vector3d invP = xformHom(node->getWorldInvTransformation().getEigenMatrix(), p);
-
-            //==================================================================
-            // TODO: JS COMMENTED
-            //       JS MUST UNCOMMENT BELOW CODE WHEN THE REFACTORING IS DONE.
-//            for(int dofIndex = 0; dofIndex < node->getNumDependentDofs(); dofIndex++) {
-//                int i = node->getDependentDof(dofIndex);
-//                Jt.row(i) = xformHom(node->getDerivWorldTransform(dofIndex), invP);
-//            }
+            MatrixXd Jt
+                    = node->getBodyJacobianAtContactPoint_LinearPartOnly(math::Vec3(p)).transpose();
 
             return Jt;
         }

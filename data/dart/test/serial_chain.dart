@@ -9,10 +9,22 @@
             <body name="link 1">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 0 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -20,10 +32,22 @@
             <body name="link 2">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 -0.1 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -31,10 +55,22 @@
             <body name="link 3">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 -0.2 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -42,10 +78,22 @@
             <body name="link 4">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 -0.3 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -53,10 +101,22 @@
             <body name="link 5">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 -0.4 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -64,10 +124,22 @@
             <body name="link 6">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 -0.5 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -75,10 +147,22 @@
             <body name="link 7">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 -0.6 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -86,10 +170,22 @@
             <body name="link 8">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 -0.7 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -97,10 +193,22 @@
             <body name="link 9">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 -0.8 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -108,10 +216,22 @@
             <body name="link 10">
                 <gravity>1</gravity>
                 <transformation>0 0 0 0 -0.9 0</transformation>
+                <inertia>
+                    <mass>0.1</mass>
+                    <offset>0 0 0</offset>
+                    <moment_of_inertia>
+                        <ixx>1</ixx>
+                        <iyy>0.1</iyy>
+                        <izz>1</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                    </moment_of_inertia>
+                </inertia>
                 <visualization_shape>
                     <geometry>
                         <box>
-                            <size>0.05 0.1 0.05</size>
+                            <size>0.01 0.1 0.01</size>
                         </box>
                     </geometry>
                 </visualization_shape>

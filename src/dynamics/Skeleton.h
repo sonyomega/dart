@@ -41,6 +41,10 @@
 
 #include <vector>
 #include <Eigen/Dense>
+#include <boost/graph/adjacency_matrix.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/graphviz.hpp>
+#include <boost/graph/breadth_first_search.hpp>
 
 #include "math/LieGroup.h"
 #include "utils/Deprecated.h"
@@ -49,6 +53,8 @@
 namespace dart {
 namespace renderer { class RenderInterface; }
 namespace dynamics {
+
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS> SkeletonGraph;
 
 class BodyNode;
 class Joint;
@@ -61,24 +67,10 @@ public:
     // Constructor and Destructor
     //--------------------------------------------------------------------------
     /// @brief
-    Skeleton();
+    Skeleton(const std::string& _name = "");
 
     /// @brief
     virtual ~Skeleton();
-
-    //--------------------------------------------------------------------------
-    //
-    //--------------------------------------------------------------------------
-    BodyNode* createBodyNode() const;
-
-    //--------------------------------------------------------------------------
-    //
-    //--------------------------------------------------------------------------
-    /// @brief
-    void initKinematics();
-
-    /// @brief
-    void initDynamics();
 
     //--------------------------------------------------------------------------
     //
@@ -89,11 +81,6 @@ public:
     /// @brief
     const std::string& getName() const { return mName; }
 
-
-
-    //--------------------------------------------------------------------------
-    // Kinematical Properties
-    //--------------------------------------------------------------------------
     /// @brief
     void setSelfCollidable(bool _selfCollidable)
     { mSelfCollidable = _selfCollidable; }
@@ -101,10 +88,6 @@ public:
     /// @brief
     bool getSelfCollidable() const { return mSelfCollidable; }
 
-
-    //--------------------------------------------------------------------------
-    // Dynamical Properties
-    //--------------------------------------------------------------------------
     /// @brief
     void setImmobileState(bool _immobile) { mImmobile = _immobile; }
 
@@ -152,8 +135,13 @@ public:
     //BodyNode* findBody(const std::string& _name) const;
     BodyNode* findBody(const std::string& _name) const;
 
+    /// @brief
+    // TODO: Not implemented.
+    Eigen::VectorXd getDependentConfiguration(BodyNode* _beginBody,
+                                              BodyNode* _endBody) const;
+
     //--------------------------------------------------------------------------
-    // Recursive Kinematics Algorithms
+    // Properties updated by dynamics (kinematics)
     //--------------------------------------------------------------------------
     /// @brief
     /// @todo Use set_q(const Eigen::VectorXd& _state) instead.
@@ -169,10 +157,47 @@ public:
     /// @todo Use get_dq() instead.
     DEPRECATED Eigen::VectorXd getPoseVelocity() const { return get_dq(); }
 
-    /// @brief (q, dq, ddq) --> (W, V, dV)
+    /// @brief
+    // TODO: Not implemented.
+    math::Jacobian getJacobian(BodyNode* _beginBody,
+                               BodyNode* _endBody) const;
+
+    // Dynamics equation
+    Eigen::MatrixXd getMassMatrix() const { return mM; }
+    Eigen::MatrixXd getInvMassMatrix() const { return mMInv; }
+    Eigen::MatrixXd getCoriolisMatrix() const { return mC; }
+    Eigen::VectorXd getCoriolisVector() const { return mCvec; }
+    Eigen::VectorXd getGravityVector() const { return mG; }
+    Eigen::VectorXd getCombinedVector() const { return mCg; }
+    Eigen::VectorXd getExternalForces() const { return mFext; }
+    Eigen::VectorXd getInternalForces() const { return get_tau(); }
+
+    //--------------------------------------------------------------------------
+    // Recursive kinematics Algorithms
+    //--------------------------------------------------------------------------
+    /// @brief
+    void initKinematics();
+
+    /// @brief Update joint and body kinematics.
     void updateForwardKinematics(bool _firstDerivative = true,
                                  bool _secondDerivative = true);
 
+    /// @brief Update joint dynamics (T, S, V, dS, dV)
+    void _updateJointKinematics(bool _firstDerivative = true,
+                                bool _secondDerivative = true);
+
+    /// @brief Update body dynamics (W, V, dV)
+    void _updateBodyForwardKinematics(bool _firstDerivative = true,
+                                      bool _secondDerivative = true);
+
+    // TODO: Inverse Kinematics
+
+    //--------------------------------------------------------------------------
+    // Recursive dynamics Algorithms
+    //--------------------------------------------------------------------------
+
+    /// @brief
+    void initDynamics();
 
     /// @brief (q, dq, ddq) --> (tau)
     void computeInverseDynamics(const Eigen::Vector3d& _gravity);
@@ -201,25 +226,6 @@ public:
     /// @brief (q, dq) --> M, C, G
     void computeEquationsOfMotionRecursive(const Eigen::Vector3d& _gravity);
 
-    /// @brief
-    math::Jacobian getJacobian() const;
-
-
-    //--------------------------------------------------------------------------
-    // Dynamics Equation
-    //--------------------------------------------------------------------------
-    /// @brief
-    Eigen::MatrixXd getMassMatrix() const { return mM; }
-
-    /// @brief
-    Eigen::MatrixXd getInvMassMatrix() const { return mMInv; }
-
-    Eigen::MatrixXd getCoriolisMatrix() const { return mC; }
-    Eigen::VectorXd getCoriolisVector() const { return mCvec; }
-    Eigen::VectorXd getGravityVector() const { return mG; }
-    Eigen::VectorXd getCombinedVector() const { return mCg; }
-    Eigen::VectorXd getExternalForces() const { return mFext; }
-    Eigen::VectorXd getInternalForces() const { return get_tau(); }
     //--------------------------------------------------------------------------
     // Rendering
     //--------------------------------------------------------------------------
@@ -231,13 +237,7 @@ protected:
     //--------------------------------------------------------------------------
     // Sub-functions for Recursive Algorithms
     //--------------------------------------------------------------------------
-    /// @brief Update joint dynamics (T, S, V, dS, dV)
-    void _updateJointKinematics(bool _firstDerivative = true,
-                                     bool _secondDerivative = true);
 
-    /// @brief Update body dynamics (W, V, dV)
-    void _updateBodyForwardKinematics(bool _firstDerivative = true,
-                                      bool _secondDerivative = true);
 
 
 protected:
@@ -247,7 +247,6 @@ protected:
     /// @brief
     bool mSelfCollidable;
 
-protected:
     //--------------------------------------------------------------------------
     // Structual Properties
     //--------------------------------------------------------------------------
@@ -263,6 +262,7 @@ protected:
     std::vector<Joint*> mJoints;
 
 
+
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
@@ -273,6 +273,7 @@ protected:
 
     /// @brief True if the joint limits are enforced in dynamic simulation.
     bool mJointLimit;
+
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
@@ -294,6 +295,10 @@ protected:
 
     /// @brief
     //std::vector<BodyNodeDynamics*> mDynamicsBodies;
+
+
+    SkeletonGraph* mGraph;
+
 private:
 
 public:

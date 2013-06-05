@@ -729,6 +729,41 @@ inline se3 Ad(const SE3& T, const Vec3& v)
                 T._T[2] * v._v[0] + T._T[5] * v._v[1] + T._T[8] * v._v[2]);
 }
 
+inline Jacobian Ad(const SE3& T, const Jacobian& J)
+{
+    Jacobian AdTJ(J.mJ.size());
+
+    for (int i = 0; i < J.mJ.size(); ++i)
+    {
+        AdTJ[i] = Ad(T, J.mJ[i]);
+    }
+
+    return AdTJ;
+}
+
+inline se3 AdR(const SE3& T, const se3& s)
+{
+    return se3(	T._T[0] * s._w[0] + T._T[3] * s._w[1] + T._T[6] * s._w[2],
+                T._T[1] * s._w[0] + T._T[4] * s._w[1] + T._T[7] * s._w[2],
+                T._T[2] * s._w[0] + T._T[5] * s._w[1] + T._T[8] * s._w[2],
+
+                T._T[0] * s._w[3] + T._T[3] * s._w[4] + T._T[6] * s._w[5],
+                T._T[1] * s._w[3] + T._T[4] * s._w[4] + T._T[7] * s._w[5],
+                T._T[2] * s._w[3] + T._T[5] * s._w[4] + T._T[8] * s._w[5]);
+}
+
+inline Jacobian AdR(const SE3& T, const Jacobian& J)
+{
+    Jacobian AdTJ(J.mJ.size());
+
+    for (int i = 0; i < J.mJ.size(); ++i)
+    {
+        AdTJ[i] = AdR(T, J.mJ[i]);
+    }
+
+    return AdTJ;
+}
+
 // re = Inv(T) * s * T
 inline se3 InvAd(const SE3& T, const se3& s)
 {
@@ -3046,6 +3081,12 @@ inline Jacobian::~Jacobian()
 {
 }
 
+inline const Jacobian& Jacobian::operator=(const Jacobian& T)
+{
+    mJ = T.mJ;
+    return *this;
+}
+
 inline void Jacobian::setFromEigenMatrix(const Eigen::MatrixXd& _J)
 {
     assert(_J.rows() == 6);
@@ -3208,5 +3249,8 @@ inline double Norm(const dse3& f)
             + f._m[4] * f._m[4]
             + f._m[5] * f._m[5]);
 }
+
+
+
 
 

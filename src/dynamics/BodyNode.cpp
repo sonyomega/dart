@@ -43,14 +43,16 @@
 #include "dynamics/BodyNode.h"
 #include "dynamics/Joint.h"
 #include "dynamics/Shape.h"
+#include "dynamics/Skeleton.h"
 
 namespace dart {
 namespace dynamics {
 
 int BodyNode::msBodyNodeCount = 0;
 
-BodyNode::BodyNode()
-    : //mVizShapes(std::vector<Shape*>(1, static_cast<Shape*>(NULL))),
+BodyNode::BodyNode(const std::string& _name)
+    : mName(_name),
+      //mVizShapes(std::vector<Shape*>(1, static_cast<Shape*>(NULL))),
       mVizShape(NULL),
       //mColShapes(std::vector<Shape*>(1, static_cast<Shape*>(NULL))),
       mColShape(NULL),
@@ -121,7 +123,7 @@ void BodyNode::setDependDofList()
 
     for (int i = 0; i < getNumLocalDofs(); i++)
     {
-        int dofID = getDof(i)->getSkelIndex();
+        int dofID = getLocalDof(i)->getSkelIndex();
         mDependentDofs.push_back(dofID);
     }
 
@@ -144,20 +146,81 @@ int BodyNode::getNumLocalDofs() const
     return mParentJoint->getNumDofs();
 }
 
-Dof* BodyNode::getDof(int _idx) const
+Dof* BodyNode::getLocalDof(int _idx) const
 {
     return mParentJoint->getDof(_idx);
 }
 
-void BodyNode::updateForwardKinematics(bool _firstDerivative, bool _secondDerivative)
+Eigen::VectorXd BodyNode::getDependDofs() const
 {
-    _updateTransformation();
+//    Eigen::VectorXd depDofs;
 
-    if (_firstDerivative)
-        _updateVelocity();
+//    for (int i = 0; i < getNumDependentDofs(); ++i)
+//    {
+//        depDofs[i] = mSkeleton->get_q()[getDependentDof(i)];
+//    }
 
-    if (_secondDerivative)
-        _updateAcceleration();
+    //    return depDofs;
+}
+
+math::Jacobian BodyNode::getBodyJacobianWorld() const
+{
+    return math::AdR(mW, mBodyJacobian);
+}
+
+math::Jacobian BodyNode::getBodyJacobianAtContactPoint(const math::Vec3& r_world) const
+{
+    //--------------------------------------------------------------------------
+    // Jb                : body jacobian
+    //
+    // X = | I r_world | : frame whose origin is at contact point
+    //     | 0       1 |
+    //
+    // X^{-1} = | I -r_world |
+    //          | 0        1 |
+    //
+    // W = | R p |       : body frame
+    //     | 0 1 |
+    //
+    // body_jacobian_at_contact_point = Ad(X^{-1} * W, Jb)
+    //--------------------------------------------------------------------------
+
+    return math::Ad(math::SE3(-r_world) * mW, mBodyJacobian);
+}
+
+Eigen::MatrixXd BodyNode::getBodyJacobianAtContactPoint_LinearPartOnly(
+        const math::Vec3& r_world) const
+{
+    //--------------------------------------------------------------------------
+    // Jb                : body jacobian
+    //
+    // X = | I r_world | : frame whose origin is at contact point
+    //     | 0       1 |
+    //
+    // X^{-1} = | I -r_world |
+    //          | 0        1 |
+    //
+    // W = | R p |       : body frame
+    //     | 0 1 |
+    //
+    // body_jacobian_at_contact_point = Ad(X^{-1} * W, Jb)
+    //--------------------------------------------------------------------------
+
+    // TODO: Speed up here.
+    Eigen::MatrixXd JcLinear = Eigen::MatrixXd::Zero(3, getNumDependentDofs());
+
+    JcLinear = getBodyJacobianAtContactPoint(r_world).getEigenMatrix().bottomLeftCorner(3,getNumDependentDofs());
+
+    return JcLinear;
+}
+
+void BodyNode::init()
+{
+    assert(mSkeleton != NULL);
+
+    const int numDepDofs = getNumDependentDofs();
+    mBodyJacobian.setSize(numDepDofs);
+    mBodyJacobian.setZero();
 }
 
 void BodyNode::draw(renderer::RenderInterface* _ri,
@@ -189,7 +252,7 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
     _ri->popMatrix();
 }
 
-void BodyNode::_updateTransformation()
+void BodyNode::updateTransformation()
 {
     if (mParentBody)
         mW = mParentBody->getWorldTransformation()
@@ -198,9 +261,14 @@ void BodyNode::_updateTransformation()
         mW = mParentJoint->getLocalTransformation();
 }
 
-void BodyNode::_updateVelocity(bool _updateJacobian)
+void BodyNode::updateVelocity(bool _updateJacobian)
 {
+    //--------------------------------------------------------------------------
+    // Body velocity update
+    //
     // V(i) = Ad(T(i, i-1), V(i-1)) + S * dq
+    //--------------------------------------------------------------------------
+
     if (mParentBody)
     {
         mV.setInvAd(mParentJoint->getLocalTransformation(),
@@ -214,18 +282,56 @@ void BodyNode::_updateVelocity(bool _updateJacobian)
 
     // TODO:
     //dterr << "Not implemented: Jacobian update.\n";
+    if (_updateJacobian == false)
+        return;
+
+    //--------------------------------------------------------------------------
+    // Jacobian update
+    //
+    // J = | J1 J2 ... Jn |
+    //   = | Ad(T(i,i-1), J_parent) J_local |
+    //
+    //   J_parent: (6 x parentDOF)
+    //    J_local: (6 x localDOF)
+    //         Ji: (6 x 1) se3
+    //          n: number of dependent coordinates
+    //--------------------------------------------------------------------------
+
+    const int numLocalDOFs = getNumLocalDofs();
+    const int numParentDOFs = getNumDependentDofs()-numLocalDOFs;
+
+    // Parent Jacobian
+    if (mParentBody != NULL)
+    {
+        assert(mParentBody->mBodyJacobian.getSize() + getNumLocalDofs()
+               == mBodyJacobian.getSize());
+
+        for (int i = 0; i < numParentDOFs; ++i)
+        {
+            assert(mParentJoint);
+            math::se3 Ji = math::InvAd(mParentJoint->getLocalTransformation(),
+                                       mParentBody->mBodyJacobian[i]);
+            mBodyJacobian[i] = Ji;
+        }
+    }
+
+    // Local Jacobian
+    for(int i = 0; i < numLocalDOFs; i++)
+    {
+        mBodyJacobian[numParentDOFs + i] = mParentJoint->getLocalJacobian()[i];
+    }
 }
 
-void BodyNode::_updateAcceleration(bool _updateJacobianDeriv)
+void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
 {
     // dV(i) = Ad(T(i, i-1), dV(i-1)) + ad(V(i), S * dq)
     //         + dS * dq + S * ddq
     if (mParentBody)
     {
-        mdV.setInvAd(mParentJoint->getLocalTransformation(),
-                    mParentBody->getBodyAcceleration());
-        mdV += math::ad(mV, mParentJoint->getLocalVelocity());
-        mdV += mParentJoint->getLocalAcceleration();
+        mdV = InvAd(mParentJoint->getLocalTransformation(),
+                    mParentBody->getBodyAcceleration())
+              + math::ad(mV, mParentJoint->getLocalVelocity())
+              + mParentJoint->getLocalAcceleration();
     }
     else
     {
@@ -293,12 +399,12 @@ math::dse3 BodyNode::getExternalForceGlobal() const
     dterr << "Not implemented.\n";
 }
 
-void BodyNode::_updateBodyForce(const Eigen::Vector3d& _gravity)
+void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity)
 {
     mFgravity = mI * math::InvAd(mW, math::Vec3(_gravity));
 
     mF = mI * mdV;                // Inertial force
-    mF -= mFext;                  // External force
+    //mF -= mFext;                  // External force
     mF -= mFgravity;              // Gravity force
     mF -= math::dad(mV, mI * mV); // Coriolis force
 
@@ -316,7 +422,7 @@ void BodyNode::_updateBodyForce(const Eigen::Vector3d& _gravity)
     }
 }
 
-void BodyNode::_updateGeneralizedForce()
+void BodyNode::updateGeneralizedForce()
 {
     assert(mParentJoint != NULL);
 
@@ -327,7 +433,7 @@ void BodyNode::_updateGeneralizedForce()
     mParentJoint->set_tau(J.getInnerProduct(mF));
 }
 
-void BodyNode::_updateDampingForce()
+void BodyNode::updateDampingForce()
 {
     dterr << "Not implemented.\n";
 }

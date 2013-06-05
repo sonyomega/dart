@@ -45,9 +45,8 @@ namespace dynamics {
 #define FJOINT_EPS 1e-6
 
 FreeJoint::FreeJoint()
-    : Joint()
+    : Joint("Free joint")
 {
-    mName.assign("Free joint");
     mJointType = FREE;
     mDofs.push_back(&mCoordinate[0]);
     mDofs.push_back(&mCoordinate[1]);

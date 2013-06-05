@@ -28,7 +28,7 @@ if(MSVC)
 endif()
 
 install(DIRECTORY ./ DESTINATION include/dart 
-        FILES_MATCHING PATTERN "*.h*" 
+        FILES_MATCHING PATTERN "*.h*" PATTERN "*.inl"
         PATTERN "*CMake*" EXCLUDE)
         
 install(TARGETS dart DESTINATION lib)
