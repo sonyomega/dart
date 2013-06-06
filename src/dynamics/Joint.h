@@ -122,6 +122,12 @@ public:
     // Structueral Properties
     //--------------------------------------------------------------------------
     /// @brief
+    void setSkelIndex(int _idx){mSkelIndex= _idx;}
+
+    /// @brief
+    int getSkelIndex() const {return mSkelIndex;}
+
+    /// @brief
     void setParentBody(BodyNode* _body);
 
     /// @brief
@@ -195,6 +201,9 @@ protected:
     //--------------------------------------------------------------------------
     // Structueral Properties
     //--------------------------------------------------------------------------
+    /// @brief Unique dof id in skeleton
+    int mSkelIndex;
+
     /// @brief Type of joint e.g. ball, hinge etc.
     JointType mJointType;
 

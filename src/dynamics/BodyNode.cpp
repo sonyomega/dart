@@ -51,7 +51,8 @@ namespace dynamics {
 int BodyNode::msBodyNodeCount = 0;
 
 BodyNode::BodyNode(const std::string& _name)
-    : mName(_name),
+    : mSkelIndex(-1),
+      mName(_name),
       //mVizShapes(std::vector<Shape*>(1, static_cast<Shape*>(NULL))),
       mVizShape(NULL),
       //mColShapes(std::vector<Shape*>(1, static_cast<Shape*>(NULL))),

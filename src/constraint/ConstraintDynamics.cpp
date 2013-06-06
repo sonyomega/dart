@@ -465,8 +465,17 @@ namespace dart {
         }
 
         MatrixXd ConstraintDynamics::getJacobian(dynamics::BodyNode* node, const Vector3d& p) {
-            MatrixXd Jt
+            int nDofs = node->getSkel()->getNumDofs();
+            MatrixXd Jt = MatrixXd::Zero(nDofs, 3);
+
+            MatrixXd JtBody
                     = node->getJacobianWorldAtPoint_LinearPartOnly(math::Vec3(p)).transpose();
+
+            for(int dofIndex = 0; dofIndex < node->getNumDependentDofs(); dofIndex++)
+            {
+                int i = node->getDependentDof(dofIndex);
+                Jt.row(i) = JtBody.row(dofIndex);
+            }
 
             return Jt;
         }

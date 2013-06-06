@@ -84,6 +84,23 @@ void Skeleton::addJoint(Joint* _joint)
     assert(_joint != NULL);
 
     mJoints.push_back(_joint);
+    _joint->setSkelIndex(mJoints.size() - 1);
+
+    const std::vector<Dof*>& dofs = _joint->getDofs();
+    for (std::vector<Dof*>::const_iterator itrDof = dofs.begin();
+         itrDof != dofs.end();
+         ++itrDof)
+    {
+        mDofs.push_back((*itrDof));
+        (*itrDof)->setSkelIndex(mDofs.size() - 1);
+    }
+
+    if (_joint->getParentBody() != NULL && _joint->getChildBody() != NULL)
+    {
+        boost::add_edge(_joint->getParentBody()->getSkelIndex(),
+                        _joint->getChildBody()->getSkelIndex(),
+                        *mGraph);
+    }
 }
 
 BodyNode*Skeleton::findBody(const string& _name) const
@@ -134,10 +151,7 @@ void Skeleton::initKinematics()
     mRoot = mBodies[0];
     mGraph = new SkeletonGraph(getNumNodes());
 
-	//--------------------------------------------------------------------------
-	// Set dofs
-	//--------------------------------------------------------------------------
-	mDofs.clear();
+
 
     // calculate mass
     // init the dependsOnDof stucture for each bodylink
@@ -147,28 +161,6 @@ void Skeleton::initKinematics()
         mBodies.at(i)->setDependDofList();
         mBodies.at(i)->init();
     }
-
-    for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
-		 itrJoint != mJoints.end();
-		 ++itrJoint)
-	{
-        const std::vector<Dof*>& dofs = (*itrJoint)->getDofs();
-
-        for (std::vector<Dof*>::const_iterator itrDof = dofs.begin();
-			 itrDof != dofs.end();
-			 ++itrDof)
-		{
-			mDofs.push_back((*itrDof));
-		}
-
-        if ((*itrJoint)->getParentBody() != NULL
-                && (*itrJoint)->getChildBody() != NULL)
-        {
-            boost::add_edge((*itrJoint)->getParentBody()->getSkelIndex(),
-                            (*itrJoint)->getChildBody()->getSkelIndex(),
-                            *mGraph);
-        }
-	}
 
     //boost::write_graphviz(std::cout, *mGraph);
 }

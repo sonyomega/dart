@@ -99,8 +99,7 @@ namespace constraint {
         void updateMassMat();
         void updateTauStar();
         void updateNBMatrices();
-        // TODO: Let's move getJacobian() to Skeleton class.
-        DEPRECATED Eigen::MatrixXd getJacobian(dynamics::BodyNode* node, const Eigen::Vector3d& p);
+        Eigen::MatrixXd getJacobian(dynamics::BodyNode* node, const Eigen::Vector3d& p);
         Eigen::MatrixXd getTangentBasisMatrix(const Eigen::Vector3d& p, const Eigen::Vector3d& n) ; // gets a matrix of tangent dirs.
         Eigen::MatrixXd getContactMatrix() const; // E matrix
         Eigen::MatrixXd getMuMatrix() const; // mu matrix

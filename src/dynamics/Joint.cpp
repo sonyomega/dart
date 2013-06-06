@@ -45,6 +45,7 @@ namespace dynamics {
 
 Joint::Joint(const std::string& _name)
     : mName(_name),
+      mSkelIndex(-1),
       mJointType(UNKNOWN),
       mParentBody(NULL),
       mChildBody(NULL),
