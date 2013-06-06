@@ -386,7 +386,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
 
             Eigen::Vector3d size = getValueVector3d(ellipsoidElement, "size");
 
-            shape = new dynamics::ShapeBox(size);
+            shape = new dynamics::ShapeEllipsoid(size);
         }
         else if (hasElement(geometryElement, "cylinder"))
         {
@@ -442,7 +442,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
 
             Eigen::Vector3d size = getValueVector3d(ellipsoidElement, "size");
 
-            shape = new dynamics::ShapeBox(size);
+            shape = new dynamics::ShapeEllipsoid(size);
         }
         else if (hasElement(geometryElement, "cylinder"))
         {
