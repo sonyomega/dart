@@ -233,6 +233,23 @@ protected:
     //--------------------------------------------------------------------------
 public:
     /// @brief
+    void setDampingCoefficient(int _idx, double _d)
+    {
+        assert(0 <= _idx && _idx < getNumDofs());
+        assert(_d >= 0.0);
+
+        mDampingCoefficient[_idx] = _d;
+    }
+
+    /// @brief
+    double getDampingCoefficient(int _idx) const
+    {
+        assert(0 <= _idx && _idx < getNumDofs());
+
+        return mDampingCoefficient[_idx];
+    }
+
+    /// @brief
     std::vector<double> mDampingCoefficient;
 
     Eigen::VectorXd getDampingForce() const
