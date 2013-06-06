@@ -171,6 +171,7 @@ public:
     Eigen::VectorXd getCombinedVector() const { return mCg; }
     Eigen::VectorXd getExternalForces() const { return mFext; }
     Eigen::VectorXd getInternalForces() const { return get_tau(); }
+    Eigen::VectorXd getDampingForces() const;
 
     //--------------------------------------------------------------------------
     // Recursive kinematics Algorithms

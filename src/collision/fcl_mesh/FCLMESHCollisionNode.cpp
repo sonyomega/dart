@@ -234,7 +234,7 @@ int FCLMESHCollisionNode::checkCollision(
 }
 
 void FCLMESHCollisionNode::evalRT() {
-    mWorldTrans = mBodyNode->getWorldTransformation().getEigenMatrix();
+    mWorldTrans = mBodyNode->getTransformationWorld().getEigenMatrix();
     //Vector3d p = xformHom(mWorldTrans, mBodyNode->getCollisionShape()->getOffset());
     //mWorldTrans.block(0, 3, 3, 1) = p;
     mWorldTrans = mWorldTrans * mBodyNode->getCollisionShape()->getTransform().matrix();

@@ -163,9 +163,9 @@ public:
 
     /// @brief
     DEPRECATED void setLocalCOM(const Eigen::Vector3d& _off)
-    { setCenterOfMass(_off); }
-    void setCenterOfMass(const Eigen::Vector3d& _com)
-    { mI.setOffset(math::Vec3(_com(0), _com(1), _com(2))); }
+    { setCenterOfMass(math::Vec3(_off[0], _off[1], _off[2])); }
+    void setCenterOfMass(const math::Vec3& _com)
+    { mI.setOffset(_com); }
 
     /// @brief
     DEPRECATED Eigen::Vector3d getLocalCOM() const { return getCenterOfMass(); }
@@ -268,7 +268,7 @@ public:
     /// the world coordinates.
 //    DEPRECATED Eigen::Matrix4d getWorldTransform() const
 //    { return mW.getMatrix(); }
-    const math::SE3& getWorldTransformation() const { return mW; }
+    const math::SE3& getTransformationWorld() const { return mW; }
 
     /// @brief Transformation from the world coordinates to the local
     /// coordinates of this body node.
@@ -277,32 +277,48 @@ public:
     math::SE3 getWorldInvTransformation() const { return math::Inv(mW); }
 
     /// @brief
-    //const math::Jacobian& getJacobianBody() const { return mJacobianBody; }
+    const math::se3& getVelocityBody() const { return mV; }
 
     /// @brief
-    ///
-//    math::Jacobian getJacobianWorld() const
-//    { return mJacobianBody.getAdjointed(math::SE3(mW.getOrientation())); }
+    math::se3 getVelocityWorld() const;
 
     /// @brief
-    const math::se3& getBodyVelocity() const { return mV; }
+    math::se3 getVelocityWorldAtCOG() const;
+
+    /// @breif
+    math::se3 getVelocityWorldAtPoint(const math::Vec3& _pointBody) const;
+
+    /// @breif
+    math::se3 getVelocityWorldAtFrame(const math::SE3& _T) const;
 
     /// @brief
-    const math::se3& getBodyAcceleration() const { return mdV; }
+    const math::se3& getAcceleration() const { return mdV; }
 
     /// @brief
-    const math::Jacobian& getBodyJacobian() const { return mBodyJacobian; }
+    math::se3 getAccelerationWorld() const;
 
     /// @brief
-    math::Jacobian getBodyJacobianWorld() const;
+    math::se3 getAccelerationWorldAtCOG() const;
+
+    /// @breif
+    math::se3 getAccelerationWorldAtPoint(const math::Vec3& _pointBody) const;
+
+    /// @breif
+    math::se3 getAccelerationWorldAtFrame(const math::SE3& _T) const;
+
+    /// @brief
+    const math::Jacobian& getJacobianBody() const { return mBodyJacobian; }
+
+    /// @brief
+    math::Jacobian getJacobianWorld() const;
 
     /// @brief Get body Jacobian at contact point.
-    math::Jacobian getBodyJacobianAtContactPoint(
-            const math::Vec3& r_world) const;
+    math::Jacobian getJacobianWorldAtPoint(const math::Vec3& r_world) const;
 
     // TODO: Speed up here.
+    // TODO: Eigne?
     /// @brief
-    Eigen::MatrixXd getBodyJacobianAtContactPoint_LinearPartOnly(
+    Eigen::MatrixXd getJacobianWorldAtPoint_LinearPartOnly(
             const math::Vec3& r_world) const;
 
     /// @brief

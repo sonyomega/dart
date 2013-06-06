@@ -182,6 +182,10 @@ protected:
     /// dV(q, dq, ddq) = dS(q) * dq + S(q) * ddq
     virtual void _updateAcceleration() = 0;
 
+    // TODO:
+    /// @brief
+    //virtual void _updateDampingForce() = 0;
+
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
@@ -207,7 +211,7 @@ protected:
     math::SE3 mT_ChildBodyToJoint;
 
     //--------------------------------------------------------------------------
-    // Kinematical Properties
+    // Kinematics variables
     //--------------------------------------------------------------------------
     /// @brief Local transformation.
     math::SE3 mT;
@@ -223,6 +227,24 @@ protected:
 
     /// @brief Time derivative of local Jacobian.
     math::Jacobian mdS;
+
+    //--------------------------------------------------------------------------
+    // Dynamics variables
+    //--------------------------------------------------------------------------
+public:
+    /// @brief
+    std::vector<double> mDampingCoefficient;
+
+    Eigen::VectorXd getDampingForce() const
+    {
+        int numDofs = getNumDofs();
+        Eigen::VectorXd dampingForce(numDofs);
+
+        for (int i = 0; i < numDofs; ++i)
+            dampingForce(i) = -mDampingCoefficient[i] * getDof(i)->get_dq();
+
+        return dampingForce;
+    }
 
 private:
 

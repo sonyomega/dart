@@ -163,12 +163,62 @@ Eigen::VectorXd BodyNode::getDependDofs() const
     //    return depDofs;
 }
 
-math::Jacobian BodyNode::getBodyJacobianWorld() const
+math::se3 BodyNode::getVelocityWorld() const
+{
+    //return math::Rotate(mW, mV);
+    return math::AdR(mW, mV);
+}
+
+math::se3 BodyNode::getVelocityWorldAtCOG() const
+{
+    math::SE3 worldFrameAtCOG = mW;
+    worldFrameAtCOG.setPosition(math::Rotate(mW, -mI.getOffset()));
+    return math::Ad(worldFrameAtCOG, mV);
+}
+
+math::se3 BodyNode::getVelocityWorldAtPoint(const math::Vec3& _pointBody) const
+{
+    math::SE3 worldFrameAtPoint = mW;
+    worldFrameAtPoint.setPosition(math::Rotate(mW, -_pointBody));
+    return math::Ad(worldFrameAtPoint, mV);
+}
+
+math::se3 BodyNode::getVelocityWorldAtFrame(const math::SE3& _T) const
+{
+    return math::Ad(math::Inv(_T) * mW, mV);
+}
+
+math::se3 BodyNode::getAccelerationWorld() const
+{
+    //return math::Rotate(mW, mdV);
+    return math::AdR(mW, mdV);
+}
+
+math::se3 BodyNode::getAccelerationWorldAtCOG() const
+{
+    math::SE3 worldFrameAtCOG = mW;
+    worldFrameAtCOG.setPosition(math::Rotate(mW, -mI.getOffset()));
+    return math::Ad(worldFrameAtCOG, mdV);
+}
+
+math::se3 BodyNode::getAccelerationWorldAtPoint(const math::Vec3& _pointBody) const
+{
+    math::SE3 worldFrameAtPoint = mW;
+    worldFrameAtPoint.setPosition(math::Rotate(mW, -_pointBody));
+    return math::Ad(worldFrameAtPoint, mdV);
+}
+
+math::se3 BodyNode::getAccelerationWorldAtFrame(const math::SE3& _T) const
+{
+    return math::Ad(math::Inv(_T) * mW, mdV);
+}
+
+math::Jacobian BodyNode::getJacobianWorld() const
 {
     return math::AdR(mW, mBodyJacobian);
 }
 
-math::Jacobian BodyNode::getBodyJacobianAtContactPoint(const math::Vec3& r_world) const
+math::Jacobian BodyNode::getJacobianWorldAtPoint(const math::Vec3& r_world) const
 {
     //--------------------------------------------------------------------------
     // Jb                : body jacobian
@@ -188,7 +238,7 @@ math::Jacobian BodyNode::getBodyJacobianAtContactPoint(const math::Vec3& r_world
     return math::Ad(math::SE3(-r_world) * mW, mBodyJacobian);
 }
 
-Eigen::MatrixXd BodyNode::getBodyJacobianAtContactPoint_LinearPartOnly(
+Eigen::MatrixXd BodyNode::getJacobianWorldAtPoint_LinearPartOnly(
         const math::Vec3& r_world) const
 {
     //--------------------------------------------------------------------------
@@ -209,7 +259,7 @@ Eigen::MatrixXd BodyNode::getBodyJacobianAtContactPoint_LinearPartOnly(
     // TODO: Speed up here.
     Eigen::MatrixXd JcLinear = Eigen::MatrixXd::Zero(3, getNumDependentDofs());
 
-    JcLinear = getBodyJacobianAtContactPoint(r_world).getEigenMatrix().bottomLeftCorner(3,getNumDependentDofs());
+    JcLinear = getJacobianWorldAtPoint(r_world).getEigenMatrix().bottomLeftCorner(3,getNumDependentDofs());
 
     return JcLinear;
 }
@@ -255,7 +305,7 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
 void BodyNode::updateTransformation()
 {
     if (mParentBody)
-        mW = mParentBody->getWorldTransformation()
+        mW = mParentBody->getTransformationWorld()
              * mParentJoint->getLocalTransformation();
     else
         mW = mParentJoint->getLocalTransformation();
@@ -272,7 +322,7 @@ void BodyNode::updateVelocity(bool _updateJacobian)
     if (mParentBody)
     {
         mV.setInvAd(mParentJoint->getLocalTransformation(),
-                    mParentBody->getBodyVelocity());
+                    mParentBody->getVelocityBody());
         mV += mParentJoint->getLocalVelocity();
     }
     else
@@ -329,7 +379,7 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
     if (mParentBody)
     {
         mdV = InvAd(mParentJoint->getLocalTransformation(),
-                    mParentBody->getBodyAcceleration())
+                    mParentBody->getAcceleration())
               + math::ad(mV, mParentJoint->getLocalVelocity())
               + mParentJoint->getLocalAcceleration();
     }

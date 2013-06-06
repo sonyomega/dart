@@ -332,6 +332,26 @@ void Skeleton::_inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity)
     }
 }
 
+Eigen::VectorXd Skeleton::getDampingForces() const
+{
+    Eigen::VectorXd dampingForce = Eigen::VectorXd(getNumDofs());
+
+    int idx = 0;
+    int numJoints = mJoints.size();
+
+    for (int i = 0; i < numJoints; ++i)
+    {
+        int numDofsJoint = mJoints[i]->getDOF();
+        Eigen::VectorXd dampingForceJoint = mJoints[i]->getDampingForce();
+
+        dampingForce.segment(idx, numDofsJoint) = dampingForceJoint;
+
+        idx += numDofsJoint;
+    }
+
+    return dampingForce;
+}
+
 
 
 } // namespace dynamics

@@ -338,7 +338,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
         newBody->setMass(mass);
 
         // offset
-        Eigen::Vector3d offset = getValueVector3d(inertiaElement, "offset");
+        math::Vec3 offset = getValueVec3(inertiaElement, "offset");
         newBody->setCenterOfMass(offset);
 
         // moment of inertia
@@ -547,9 +547,9 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     transformationElement = _jointElement->FirstChildElement("transformation");
     math::SE3 parentWorld;
     math::SE3 childToJoint;
-    math::SE3 childWorld = childBody->getWorldTransformation();
+    math::SE3 childWorld = childBody->getTransformationWorld();
     if (parentBody)
-         parentWorld = parentBody->getWorldTransformation();
+         parentWorld = parentBody->getTransformationWorld();
     if (transformationElement != NULL)
     {
         std::string strTransformation = transformationElement->GetText();
@@ -689,6 +689,16 @@ std::string toString(const Eigen::Vector3d& _v)
     return boost::lexical_cast<std::string>(rowVector3d);
 }
 
+std::string toString(const math::Vec3& _v)
+{
+    std::ostringstream ostr;
+    ostr.precision(6);
+
+    ostr << _v(0) << " " << _v(1) << " " << _v(2);
+
+    return ostr.str();
+}
+
 std::string toString(const math::so3& _v)
 {
     std::ostringstream ostr;
@@ -786,6 +796,42 @@ Eigen::Vector2d toVector2d(const std::string& _str)
 Eigen::Vector3d toVector3d(const std::string& _str)
 {
     Eigen::Vector3d ret;
+
+    std::vector<double> elements;
+    std::vector<std::string> pieces;
+    boost::split(pieces, _str, boost::is_any_of(" "));
+    assert(pieces.size() == 3);
+
+    for (int i = 0; i < pieces.size(); ++i)
+    {
+        if (pieces[i] != "")
+        {
+            try
+            {
+                elements.push_back(boost::lexical_cast<double>(pieces[i].c_str()));
+            }
+            catch(boost::bad_lexical_cast& e)
+            {
+                std::cerr << "value ["
+                          << pieces[i]
+                          << "] is not a valid double for Eigen::Vector3d["
+                          << i
+                          << "]"
+                          << std::endl;
+            }
+        }
+    }
+
+    ret(0) = elements[0];
+    ret(1) = elements[1];
+    ret(2) = elements[2];
+
+    return ret;
+}
+
+math::Vec3 toVec3(const std::string& _str)
+{
+    math::Vec3 ret;
 
     std::vector<double> elements;
     std::vector<std::string> pieces;
@@ -1017,6 +1063,16 @@ Eigen::Vector3d getValueVector3d(tinyxml2::XMLElement* _parentElement, const std
     return toVector3d(str);
 }
 
+math::Vec3 getValueVec3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
+{
+    assert(_parentElement != NULL);
+    assert(!_name.empty());
+
+    std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
+
+    return toVec3(str);
+}
+
 math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
@@ -1062,6 +1118,11 @@ tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement,
 
     return _parentElement->FirstChildElement(_name.c_str());
 }
+
+
+
+
+
 
 } // namespace simulation
 } // namespace dart

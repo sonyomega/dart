@@ -67,6 +67,15 @@ public:
     /// @brief
     const math::so3& getAxis() const { return mAxis; }
 
+    /// @brief
+    math::so3 getAxisGlobal() const;
+
+//    /// @brief
+//    void setDampingCoefficient(double _c) { mDampingCoefficient = _c; }
+
+//    /// @brief
+//    double getDampingCoefficient() { return mDampingCoefficient; }
+
     //--------------------------------------------------------------------------
     // Structueral Properties
     //--------------------------------------------------------------------------
@@ -95,7 +104,10 @@ protected:
     Dof mCoordinate;
 
     /// @brief Rotational axis.
-    math::so3 mAxis;
+    math::Axis mAxis;
+
+//    /// @brief Daping coefficient of revolute joint.
+//    double mDampingCoefficient;
 
 private:
 

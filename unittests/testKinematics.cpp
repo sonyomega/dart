@@ -193,9 +193,9 @@ void KINEMATICS::JacobianTest(const string& dartFileName)
         Skeleton* skel = world->getSkeleton(i);
         BodyNode* body = skel->getBody(skel->getNumBodies() - 1);
 
-        Jacobian J = body->getBodyJacobian();
+        Jacobian J = body->getJacobianBody();
         se3 J_dq = J * skel->get_dq();
-        se3 V = body->getBodyVelocity();
+        se3 V = body->getVelocityBody();
 
         for (int j = 0; j < 6; ++j)
             EXPECT_NEAR(J_dq(j), V(j), KIN_TOL);
@@ -211,9 +211,9 @@ void KINEMATICS::JacobianTest(const string& dartFileName)
         Skeleton* skel = world->getSkeleton(i);
         BodyNode* body = skel->getBody(skel->getNumBodies() - 1);
 
-        Jacobian J = body->getBodyJacobian();
+        Jacobian J = body->getJacobianBody();
         se3 J_dq = J * skel->get_dq();
-        se3 V = body->getBodyVelocity();
+        se3 V = body->getVelocityBody();
 
         for (int j = 0; j < 6; ++j)
             EXPECT_NEAR(J_dq(j), V(j), KIN_TOL);

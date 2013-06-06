@@ -36,6 +36,7 @@
  */
 
 #include "math/LieGroup.h"
+#include "dynamics/BodyNode.h"
 #include "dynamics/RevoluteJoint.h"
 
 namespace dart {
@@ -47,15 +48,28 @@ namespace dynamics {
 RevoluteJoint::RevoluteJoint()
     : Joint("Revolute joint"),
       mAxis(math::so3(1.0, 0.0, 0.0))
+      //mDampingCoefficient(0.0)
 {
     mJointType = REVOLUTE;
     mDofs.push_back(&mCoordinate);
     mS.setSize(1);
     mdS.setSize(1);
+    // TODO:
+    mDampingCoefficient.resize(1, 0);
 }
 
 RevoluteJoint::~RevoluteJoint()
 {
+}
+
+so3 RevoluteJoint::getAxisGlobal() const
+{
+    math::SE3 parentTransf;
+
+    if (this->mParentBody != NULL)
+        parentTransf = mParentBody->getTransformationWorld();
+
+    return math::Rotate(parentTransf * mT_ParentBodyToJoint, mAxis);
 }
 
 void RevoluteJoint::_updateTransformation()

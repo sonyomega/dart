@@ -466,7 +466,7 @@ namespace dart {
 
         MatrixXd ConstraintDynamics::getJacobian(dynamics::BodyNode* node, const Vector3d& p) {
             MatrixXd Jt
-                    = node->getBodyJacobianAtContactPoint_LinearPartOnly(math::Vec3(p)).transpose();
+                    = node->getJacobianWorldAtPoint_LinearPartOnly(math::Vec3(p)).transpose();
 
             return Jt;
         }

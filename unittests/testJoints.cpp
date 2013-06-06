@@ -45,6 +45,7 @@
 #include "dynamics/BallJoint.h"
 #include "dynamics/RevoluteJoint.h"
 #include "dynamics/FreeJoint.h"
+#include "dynamics/WeldJoint.h"
 #include "dynamics/TranslationalJoint.h"
 #include "dynamics/Skeleton.h"
 #include "simulation/World.h"
@@ -149,6 +150,15 @@ void JOINTS::kinematicsTest(Joint* _joint)
             EXPECT_NEAR(J[i](j), numericJ[i](j), JOINT_TOL);
 }
 
+// 0-dof joint
+TEST_F(JOINTS, WELD_JOINT)
+{
+    WeldJoint weldJoint;
+
+    kinematicsTest(&weldJoint);
+}
+
+// 1-dof joint
 TEST_F(JOINTS, REVOLUTE_JOINT)
 {
     RevoluteJoint revJoint;
@@ -156,6 +166,7 @@ TEST_F(JOINTS, REVOLUTE_JOINT)
     kinematicsTest(&revJoint);
 }
 
+// 3-dof joint
 TEST_F(JOINTS, BALL_JOINT)
 {
     BallJoint ballJoint;
@@ -163,6 +174,7 @@ TEST_F(JOINTS, BALL_JOINT)
     kinematicsTest(&ballJoint);
 }
 
+// 3-dof joint
 TEST_F(JOINTS, TRANSLATIONAL_JOINT)
 {
     TranslationalJoint translationalJoint;
@@ -170,6 +182,7 @@ TEST_F(JOINTS, TRANSLATIONAL_JOINT)
     kinematicsTest(&translationalJoint);
 }
 
+// 6-dof joint
 TEST_F(JOINTS, FREE_JOINT)
 {
     FreeJoint freeJoint;
