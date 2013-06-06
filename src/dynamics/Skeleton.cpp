@@ -58,7 +58,7 @@ Skeleton::Skeleton(const std::string& _name)
       mJointLimit(true),
       mGraph(NULL)
 {
-
+    mGraph = new SkeletonGraph(getNumNodes());
 }
 
 Skeleton::~Skeleton()
@@ -149,7 +149,7 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
 void Skeleton::initKinematics()
 {
     mRoot = mBodies[0];
-    mGraph = new SkeletonGraph(getNumNodes());
+
 
 
 
