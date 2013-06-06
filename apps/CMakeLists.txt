@@ -18,7 +18,7 @@ foreach(APPDIR
 	#hardcodedDesign
 	#closedLoop
 	#drawRRT
-	#spheres
+    spheres
 	serial_chain
 	)
     add_subdirectory(${APPDIR})
