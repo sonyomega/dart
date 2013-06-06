@@ -54,7 +54,8 @@ RevoluteJoint::RevoluteJoint()
     mDofs.push_back(&mCoordinate);
     mS.setSize(1);
     mdS.setSize(1);
-    // TODO:
+
+    // TODO: Temporary code
     mDampingCoefficient.resize(1, 0);
 }
 

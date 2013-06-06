@@ -56,6 +56,9 @@ FreeJoint::FreeJoint()
     mDofs.push_back(&mCoordinate[5]);
     mS.setSize(6);
     mdS.setSize(6);
+
+    // TODO: Temporary code
+    mDampingCoefficient.resize(6, 0);
 }
 
 FreeJoint::~FreeJoint()
