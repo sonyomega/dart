@@ -66,8 +66,8 @@ class Dof
 public:
     // TODO: Use get_q(), get_qMin(), get_qMax instead.
     DEPRECATED double getValue() const { return q; }
-    DEPRECATED double getMax() const { return qMin; }
-    DEPRECATED double getMin() const { return qMax; }
+    DEPRECATED double getMax() const { return qMax; }
+    DEPRECATED double getMin() const { return qMin; }
 
 public:
     /// @brief

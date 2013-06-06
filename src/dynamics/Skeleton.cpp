@@ -52,7 +52,10 @@ namespace dynamics {
 Skeleton::Skeleton(const std::string& _name)
     : System(),
       mName(_name),
+      mSelfCollidable(false),
       mTotalMass(0.0),
+      mImmobile(false),
+      mJointLimit(true),
       mGraph(NULL)
 {
 

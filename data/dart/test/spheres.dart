@@ -69,7 +69,6 @@
             <joint type="free" name="sphere free joint 1">
                 <parent>world</parent>
                 <child>sphere link 1</child>
-                <transformation>0 0 0 -0.1 0 0</transformation>
             </joint>
         </skeleton>	
         
@@ -110,7 +109,6 @@
             <joint type="free" name="sphere free joint 1">
                 <parent>world</parent>
                 <child>sphere link 1</child>
-                <transformation>0 0 0 -0.1 0 0</transformation>
             </joint>
         </skeleton>	
         
