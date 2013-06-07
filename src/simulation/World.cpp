@@ -156,8 +156,8 @@ void World::setTimeStep(double _timeStep)
 ////////////////////////////////////////////////////////////////////////////////
 void World::reset()
 {
-//    for (unsigned int i = 0; i < getNumSkeletons(); ++i)
-//        mSkeletons[i]->restoreInitState();
+    for (unsigned int i = 0; i < getNumSkeletons(); ++i)
+        mSkeletons[i]->restoreInitState();
 
     // Reset time and number of frames.
     mTime = 0;
@@ -204,6 +204,7 @@ void World::addSkeleton(dynamics::Skeleton* _skeleton)
     //_skeleton->initKinematics();
     _skeleton->initDynamics();
     _skeleton->updateForwardKinematics();
+    _skeleton->backupInitState();
 
     mIndices.push_back(mIndices.back() + _skeleton->getNumDofs());
 
