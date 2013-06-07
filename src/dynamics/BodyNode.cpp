@@ -460,7 +460,8 @@ void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
     mF = mI * mdV;                // Inertial force
     if (_withExternalForces)
         mF -= mFext;              // External force
-    mF -= mFgravity;              // Gravity force
+    if (mGravityMode == true)
+        mF -= mFgravity;              // Gravity force
     mF -= math::dad(mV, mI * mV); // Coriolis force
 
     for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
