@@ -80,6 +80,9 @@ public:
     // Structueral Properties
     //--------------------------------------------------------------------------
 
+    // Documentation is inherited.
+    virtual double getPotentialEnergy() const {}
+
     //--------------------------------------------------------------------------
     // Recursive Kinematics Algorithms
     //--------------------------------------------------------------------------
@@ -101,7 +104,7 @@ protected:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    Dof mCoordinate;
+    GenCoord mCoordinate;
 
     /// @brief Rotational axis.
     math::Axis mAxis;

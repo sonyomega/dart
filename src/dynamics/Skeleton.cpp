@@ -50,7 +50,7 @@ namespace dart {
 namespace dynamics {
 
 Skeleton::Skeleton(const std::string& _name)
-    : System(),
+    : GenCoordSystem(),
       mName(_name),
       mSelfCollidable(false),
       mTotalMass(0.0),
@@ -86,8 +86,8 @@ void Skeleton::addJoint(Joint* _joint)
     mJoints.push_back(_joint);
     _joint->setSkelIndex(mJoints.size() - 1);
 
-    const std::vector<Dof*>& dofs = _joint->getDofs();
-    for (std::vector<Dof*>::const_iterator itrDof = dofs.begin();
+    const std::vector<GenCoord*>& dofs = _joint->getDofs();
+    for (std::vector<GenCoord*>::const_iterator itrDof = dofs.begin();
          itrDof != dofs.end();
          ++itrDof)
     {
@@ -227,7 +227,8 @@ void Skeleton::initDynamics()
         mTotalMass += getBody(i)->getMass();
 }
 
-void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity)
+void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity,
+                                      bool _withExternalForces)
 {
     _updateJointKinematics();
     _inverseDynamicsFwdRecursion();
@@ -258,7 +259,7 @@ void Skeleton::computeForwardDynamicsID(
     Eigen::VectorXd b = get_tau();
     mCg = b;
 
-    // Calcualtion M
+    // Calcualtion M column by column
     for (int i = 0; i < n; ++i)
     {
         Eigen::VectorXd basis = Eigen::VectorXd::Zero(n);
@@ -312,7 +313,8 @@ void Skeleton::_inverseDynamicsFwdRecursion()
     }
 }
 
-void Skeleton::_inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity)
+void Skeleton::_inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity,
+                                            bool _withExternalForces)
 {
     // Backward recursion
     for (std::vector<dynamics::BodyNode*>::reverse_iterator ritrBody = mBodies.rbegin();
@@ -347,7 +349,75 @@ Eigen::VectorXd Skeleton::getDampingForces() const
     return dampingForce;
 }
 
+double Skeleton::getKineticEnergy() const
+{
+    double KineticEnergy = 0.0;
 
+    for (int i = 0; i < mBodies.size(); i++)
+        KineticEnergy += mBodies[i]->getKineticEnergy();
+
+    return 0.5 * KineticEnergy;
+}
+
+double Skeleton::getPotentialEnergy() const
+{
+    double potentialEnergy = 0.0;
+
+    // Gravity and Springs on bodies
+    for (int i = 0; i < mBodies.size(); i++)
+        potentialEnergy += mBodies[i]->getPotentialEnergy();
+
+    // Springs on joints
+    for (int i = 0; i < mJoints.size(); i++)
+        potentialEnergy += mJoints[i]->getPotentialEnergy();
+
+    return potentialEnergy;
+}
+
+math::Vec3 Skeleton::getPositionCOMGlobal()
+{
+    math::Vec3 p(0,0,0);
+
+    // TODO: Not implemented.
+
+    return p;
+}
+
+math::Vec3 Skeleton::getVelocityCOMGlobal()
+{
+    math::Vec3 p(0,0,0);
+
+    // TODO: Not implemented.
+
+    return p;
+}
+
+math::Vec3 Skeleton::getAccelerationCOMGlobal()
+{
+    math::Vec3 p(0,0,0);
+
+    // TODO: Not implemented.
+
+    return p;
+}
+
+math::dse3 Skeleton::getMomentumGlobal()
+{
+    math::dse3 M(0, 0, 0, 0, 0, 0);
+
+    // TODO: Not implemented.
+
+    return M;
+}
+
+math::dse3 Skeleton::getMomentumCOM()
+{
+    math::dse3 M(0, 0, 0, 0, 0, 0);
+
+    // TODO: Not implemented.
+
+    return M;
+}
 
 } // namespace dynamics
 } // namespace dart

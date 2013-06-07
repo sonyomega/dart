@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 06/02/2013
+ * Date: 05/21/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,31 +35,70 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <limits>
-
-#include "dynamics/GenCoord.h"
+#include "math/LieGroup.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/PrismaticJoint.h"
 
 namespace dart {
+
+using namespace math;
+
 namespace dynamics {
 
-GenCoordinates::GenCoordinates()
-    : mName("Generalized Coordinate")
+PrismaticJoint::PrismaticJoint()
+    : Joint("Revolute joint"),
+      mDirectionVector(math::Vec3(1.0, 0.0, 0.0))
+      //mDampingCoefficient(0.0)
+{
+    mJointType = REVOLUTE;
+    mDofs.push_back(&mCoordinate);
+    mS.setSize(1);
+    mdS.setSize(1);
+
+    // TODO: Temporary code
+    mDampingCoefficient.resize(1, 0);
+}
+
+PrismaticJoint::~PrismaticJoint()
 {
 }
 
-GenCoordinates::~GenCoordinates()
+Vec3 PrismaticJoint::getAxisGlobal() const
 {
+    math::SE3 parentTransf;
+
+    if (this->mParentBody != NULL)
+        parentTransf = mParentBody->getTransformationWorld();
+
+    return math::Rotate(parentTransf * mT_ParentBodyToJoint, mDirectionVector);
 }
 
-void GenCoordinates::backupInitState()
+void PrismaticJoint::_updateTransformation()
 {
+    // T
+    mT = mT_ParentBodyToJoint
+         * Exp(mDirectionVector * mCoordinate.get_q())
+         * Inv(mT_ChildBodyToJoint);
 }
 
-void GenCoordinates::restoreInitState()
+void PrismaticJoint::_updateVelocity()
 {
+    // S
+    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(mDirectionVector)));
+
+    // V = S * dq
+    mV = mS * get_dq();
+    //mV.setAngular(mAxis * mCoordinate.get_q());
 }
 
+void PrismaticJoint::_updateAcceleration()
+{
+    // dS = 0
+    mdS.setZero();
 
+    // dV = dS * dq + S * ddq
+    mdV = mS * get_ddq();
+}
 
 } // namespace dynamics
 } // namespace dart

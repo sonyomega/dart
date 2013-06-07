@@ -44,6 +44,7 @@
 #include "math/UtilsMath.h"
 #include "dynamics/BallJoint.h"
 #include "dynamics/RevoluteJoint.h"
+#include "dynamics/PrismaticJoint.h"
 #include "dynamics/FreeJoint.h"
 #include "dynamics/WeldJoint.h"
 #include "dynamics/TranslationalJoint.h"
@@ -76,78 +77,86 @@ void JOINTS::kinematicsTest(Joint* _joint)
     VectorXd dq = VectorXd::Zero(dof);
     VectorXd ddq = VectorXd::Zero(dof);
 
-    double dt = 0.000001;
-
-    for (int i = 0; i < dof; ++i)
+    for (int idxTest = 0; idxTest < 100; ++idxTest)
     {
-        q(i) = random(-M_PI, M_PI);
-        dq(i) = random(-M_PI, M_PI);
-        ddq(i) = random(-M_PI, M_PI);
-    }
+        double dt = 0.000001;
 
-    _joint->set_q(q);
-    _joint->set_dq(dq);
-    _joint->set_ddq(ddq);
+        for (int i = 0; i < dof; ++i)
+        {
+            q(i) = random(-M_PI, M_PI);
+            dq(i) = random(-M_PI, M_PI);
+            ddq(i) = random(-M_PI, M_PI);
+        }
 
-    _joint->updateKinematics();
+        _joint->set_q(q);
+        _joint->set_dq(dq);
+        _joint->set_ddq(ddq);
 
-    SE3 T = _joint->getLocalTransformation();
-    se3 V = _joint->getLocalVelocity();
-    Jacobian J = _joint->getLocalJacobian();
-    se3 dV = _joint->getLocalAcceleration();
-    Jacobian dJ = _joint->getLocalJacobianFirstDerivative();
-
-    // Test V == J * dq
-    se3 Jdq = J * _joint->get_dq();
-    for (int i = 0; i < 6; ++i)
-        EXPECT_NEAR(V(i), Jdq(i), JOINT_TOL);
-
-    // Test dV == dJ * dq + J * ddq
-    se3 dJdq = dJ * _joint->get_dq();
-    se3 Jddq = J * _joint->get_ddq();
-    se3 dJdq_Jddq = dJdq + Jddq;
-    for (int i = 0; i < 6; ++i)
-        EXPECT_NEAR(dV(i), dJdq_Jddq(i), JOINT_TOL);
-
-    //--------------------------------------------------------------------------
-    // Test analytic Jacobian and numerical Jacobian
-    //--------------------------------------------------------------------------
-    Jacobian numericJ(dof);
-    for (int i = 0; i < dof; ++i)
-    {
-        // a
-        VectorXd q_a = q;
-        _joint->set_q(q_a);
         _joint->updateKinematics();
-        SE3 T_a = _joint->getLocalTransformation();
 
-        // b
-        VectorXd q_b = q;
-        q_b(i) += dt;
-        _joint->set_q(q_b);
-        _joint->updateKinematics();
-        SE3 T_b = _joint->getLocalTransformation();
+        SE3 T = _joint->getLocalTransformation();
+        se3 V = _joint->getLocalVelocity();
+        Jacobian J = _joint->getLocalJacobian();
+        se3 dV = _joint->getLocalAcceleration();
+        Jacobian dJ = _joint->getLocalJacobianFirstDerivative();
 
-        //
-        SE3 Tinv_a = Inv(T_a);
-        Matrix4d Tinv_a_eigen = Tinv_a.getEigenMatrix();
+        //--------------------------------------------------------------------------
+        // Test V == J * dq
+        //--------------------------------------------------------------------------
+        se3 Jdq = J * _joint->get_dq();
+        for (int i = 0; i < 6; ++i)
+            EXPECT_NEAR(V(i), Jdq(i), JOINT_TOL);
 
-        // dTdq
-        Matrix4d T_a_eigen = T_a.getEigenMatrix();
-        Matrix4d T_b_eigen = T_b.getEigenMatrix();
-        Matrix4d dTdq_eigen = (T_b_eigen - T_a_eigen) / dt;
-        //Matrix4d dTdq_eigen = (T_b_eigen * T_a_eigen.inverse()) / dt;
+        //--------------------------------------------------------------------------
+        // Test dV == dJ * dq + J * ddq
+        //--------------------------------------------------------------------------
+        se3 dJdq = dJ * _joint->get_dq();
+        se3 Jddq = J * _joint->get_ddq();
+        se3 dJdq_Jddq = dJdq + Jddq;
+        for (int i = 0; i < 6; ++i)
+            EXPECT_NEAR(dV(i), dJdq_Jddq(i), JOINT_TOL);
 
-        // J(i)
-        Matrix4d Ji_4x4matrix_eigen = Tinv_a_eigen * dTdq_eigen;
-        se3 Ji;
-        Ji.setFromMatrixForm(Ji_4x4matrix_eigen);
-        numericJ.setColumn(i, Ji);
+        //--------------------------------------------------------------------------
+        // Test analytic Jacobian and numerical Jacobian
+        // J == numericalJ
+        //--------------------------------------------------------------------------
+        Jacobian numericJ(dof);
+        for (int i = 0; i < dof; ++i)
+        {
+            // a
+            VectorXd q_a = q;
+            _joint->set_q(q_a);
+            _joint->updateKinematics();
+            SE3 T_a = _joint->getLocalTransformation();
+
+            // b
+            VectorXd q_b = q;
+            q_b(i) += dt;
+            _joint->set_q(q_b);
+            _joint->updateKinematics();
+            SE3 T_b = _joint->getLocalTransformation();
+
+            //
+            SE3 Tinv_a = Inv(T_a);
+            Matrix4d Tinv_a_eigen = Tinv_a.getEigenMatrix();
+
+            // dTdq
+            Matrix4d T_a_eigen = T_a.getEigenMatrix();
+            Matrix4d T_b_eigen = T_b.getEigenMatrix();
+            Matrix4d dTdq_eigen = (T_b_eigen - T_a_eigen) / dt;
+            //Matrix4d dTdq_eigen = (T_b_eigen * T_a_eigen.inverse()) / dt;
+
+            // J(i)
+            Matrix4d Ji_4x4matrix_eigen = Tinv_a_eigen * dTdq_eigen;
+            se3 Ji;
+            Ji.setFromMatrixForm(Ji_4x4matrix_eigen);
+            numericJ.setColumn(i, Ji);
+        }
+
+        for (int i = 0; i < dof; ++i)
+            for (int j = 0; j < 6; ++j)
+                EXPECT_NEAR(J[i](j), numericJ[i](j), JOINT_TOL);
     }
-
-    for (int i = 0; i < dof; ++i)
-        for (int j = 0; j < 6; ++j)
-            EXPECT_NEAR(J[i](j), numericJ[i](j), JOINT_TOL);
 }
 
 // 0-dof joint
@@ -164,6 +173,14 @@ TEST_F(JOINTS, REVOLUTE_JOINT)
     RevoluteJoint revJoint;
 
     kinematicsTest(&revJoint);
+}
+
+// 1-dof joint
+TEST_F(JOINTS, PRISMATIC_JOINT)
+{
+    PrismaticJoint priJoint;
+
+    kinematicsTest(&priJoint);
 }
 
 // 3-dof joint

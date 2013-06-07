@@ -13,9 +13,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -36,9 +36,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -59,9 +59,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -82,9 +82,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -105,9 +105,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -128,9 +128,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -151,9 +151,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -174,9 +174,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -197,9 +197,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -220,9 +220,9 @@
                     <mass>0.1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>0.1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.001</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>

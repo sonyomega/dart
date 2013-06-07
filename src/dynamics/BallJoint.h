@@ -62,6 +62,8 @@ public:
     // Kinematical Properties
     //--------------------------------------------------------------------------
 
+    // Documentation is inherited.
+    virtual double getPotentialEnergy() const {}
 
     //--------------------------------------------------------------------------
     // Structueral Properties
@@ -88,7 +90,7 @@ protected:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    Dof mCoordinate[3];
+    GenCoord mCoordinate[3];
 
 private:
 

@@ -36,12 +36,12 @@
                 <gravity>1</gravity>
                 <transformation>1 2 3 0 0.5 0</transformation>
                 <inertia>
-                    <mass>5</mass>
+                    <mass>1</mass>
                     <offset>0 0 0</offset>
                     <moment_of_inertia>
-                        <ixx>1</ixx>
-                        <iyy>1</iyy>
-                        <izz>1</izz>
+                        <ixx>0.01</ixx>
+                        <iyy>0.01</iyy>
+                        <izz>0.01</izz>
                         <ixy>0</ixy>
                         <ixz>0</ixz>
                         <iyz>0</iyz>
@@ -51,7 +51,7 @@
                     <transformation>0 0 0 0 0 0</transformation>
                     <geometry>
                         <box>
-                            <size>0.1 0.2 0.3</size>
+                            <size>0.2 0.2 0.2</size>
                         </box>
                     </geometry>
                 </visualization_shape>
@@ -59,7 +59,7 @@
                     <transformation>0 0 0 0 0 0</transformation>
                     <geometry>
                         <box>
-                            <size>0.1 0.2 0.3</size>
+                            <size>0.2 0.2 0.2</size>
                         </box>
                     </geometry>
                 </collision_shape>                                

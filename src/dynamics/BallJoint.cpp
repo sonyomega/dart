@@ -53,6 +53,9 @@ BallJoint::BallJoint()
     mDofs.push_back(&mCoordinate[2]);
     mS.setSize(3);
     mdS.setSize(3);
+
+    // TODO: Temporary code
+    mDampingCoefficient.resize(6, 0);
 }
 
 BallJoint::~BallJoint()

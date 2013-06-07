@@ -43,7 +43,7 @@
 #include "dynamics/System.h"
 
 namespace dart {
-namespace dynamics { class System; }
+namespace dynamics { class GenCoordSystem; }
 namespace integration {
 
 /// @brief Any class that uses an integrator should implement this interface.

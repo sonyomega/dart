@@ -354,6 +354,12 @@ inline Vec3 InvAd(const SE3& T, const Vec3& v);
 /// @brief fast version of Ad(Inv(T), se3(w, Vec3(0)))
 inline Axis InvAd(const SE3& T, const Axis& w);
 
+/// @brief Fast version of Ad(Inv([R 0; 0 1]), V)
+inline se3 InvAdR(const SE3& T, const se3& V);
+
+/// @brief Fast version of Ad(Inv([R 0; 0 1]), se3(Vec3(0), v))
+inline se3 InvAdR(const SE3& T, const Vec3& V);
+
 /// @brief get a linear part of Ad(SE3(-p), V).
 inline Vec3 MinusLinearAd(const Vec3& p, const se3& V);
 
@@ -510,11 +516,12 @@ public:
     friend double Inner(const dse3& f, const Vec3& v);
     friend Axis Square(const Axis& p);
     friend double SquareSum(const Vec3& );
-    friend se3 Ad(const SE3& T, const Vec3& v);
-    friend se3 Ad(const Vec3& p, const se3& s);
+    friend se3  Ad(const SE3& T, const Vec3& v);
+    friend se3  Ad(const Vec3& p, const se3& s);
     friend dse3 dAd(const SE3& T, const Vec3& F);
     friend dse3 InvdAd(const Vec3& p, const Vec3& F);
     friend Vec3 InvAd(const SE3& T, const Vec3& v);
+    friend se3  InvAdR(const SE3& T, const Vec3& V);
     friend Axis ad(const Axis& s1, const se3& s2);
     friend Axis ad(const Axis& s1, const Axis& s2);
     friend SE3 EulerZYX(const Vec3& angle);
@@ -807,6 +814,7 @@ public:
     friend se3 Ad(const Vec3& p, const se3& s);
     friend se3 AdR(const SE3& T, const se3& s);
     friend se3 InvAd(const SE3& T, const se3& s);
+    friend se3 InvAdR(const SE3& T, const se3& s);
     friend se3 ad(const se3& s1, const se3& s2);
     friend Vec3 ad(const Vec3& s1, const se3& s2);
     friend Axis ad(const Axis& s1, const se3& s2);
@@ -901,6 +909,9 @@ public:
     //--------------------------------------------------------------------------
     // Setters and getters
     //--------------------------------------------------------------------------
+    /// @brief Set as zeros.
+    void setZero();
+
     /// @brief set itself to be dad(V, F).
     void dad(const se3& V, const dse3& F);
 
@@ -1222,6 +1233,8 @@ public:
     friend se3  InvAd(const SE3& T, const se3& s);
     friend Vec3 InvAd(const SE3& T, const Vec3& v);
     friend Axis InvAd(const SE3& T, const Axis& v);
+    friend se3  InvAdR(const SE3& T, const se3& s);
+    friend se3 InvAdR(const SE3& T, const Vec3& V);
     friend dse3 dAd(const SE3& T, const dse3& t);
     friend dse3 dAd(const SE3& T, const Vec3& f);
     friend dse3 InvdAd(const SE3& T, const dse3& t);
@@ -1296,6 +1309,9 @@ public:
     // M = | I - m * [r] * [r]   m * [r] |
     //     |          -m * [r]     m * 1 |
     void toDoubleArray(double M[]) const;
+
+    /// @brief Fill in the Eigen matrix (6 x 6 matrix)
+    Eigen::Matrix<double,6,6> toTensor() const;
 
     /// @brief Set a mass.
     void setMass(double mass);
@@ -2303,8 +2319,8 @@ inline se3 Ad(const SE3& T, const se3& s)
                         T._T[2] * s._w[0] + T._T[5] * s._w[1] + T._T[8] * s._w[2] };
     return se3(	tmp[0], tmp[1], tmp[2],
                 T._T[10] * tmp[2] - T._T[11] * tmp[1] + T._T[0] * s._w[3] + T._T[3] * s._w[4] + T._T[6] * s._w[5],
-                T._T[11] * tmp[0] - T._T[9]  * tmp[2] + T._T[1] * s._w[3] + T._T[4] * s._w[4] + T._T[7] * s._w[5],
-                T._T[9]  * tmp[1] - T._T[10] * tmp[0] + T._T[2] * s._w[3] + T._T[5] * s._w[4] + T._T[8] * s._w[5]);
+                T._T[11] * tmp[0] - T._T[ 9] * tmp[2] + T._T[1] * s._w[3] + T._T[4] * s._w[4] + T._T[7] * s._w[5],
+                T._T[ 9] * tmp[1] - T._T[10] * tmp[0] + T._T[2] * s._w[3] + T._T[5] * s._w[4] + T._T[8] * s._w[5]);
 }
 
 inline se3 Ad(const SE3& T, const Axis& s)
@@ -2400,6 +2416,26 @@ inline se3 InvAd(const SE3& T, const se3& s)
                 T._T[0] * tmp[0] + T._T[1] * tmp[1] + T._T[2] * tmp[2],
                 T._T[3] * tmp[0] + T._T[4] * tmp[1] + T._T[5] * tmp[2],
                 T._T[6] * tmp[0] + T._T[7] * tmp[1] + T._T[8] * tmp[2]);
+}
+
+inline se3 InvAdR(const SE3& T, const se3& s)
+{
+    return se3(	T._T[0] * s._w[0] + T._T[1] * s._w[1] + T._T[2] * s._w[2],
+                T._T[3] * s._w[0] + T._T[4] * s._w[1] + T._T[5] * s._w[2],
+                T._T[6] * s._w[0] + T._T[7] * s._w[1] + T._T[8] * s._w[2],
+                T._T[0] * s._w[3] + T._T[1] * s._w[4] + T._T[2] * s._w[5],
+                T._T[3] * s._w[3] + T._T[4] * s._w[4] + T._T[5] * s._w[5],
+                T._T[6] * s._w[3] + T._T[7] * s._w[4] + T._T[8] * s._w[5]);
+}
+
+inline se3 InvAdR(const SE3& T, const Vec3& v)
+{
+    return se3(	0.0,
+                0.0,
+                0.0,
+                T._T[0] * v._v[0] + T._T[1] * v._v[1] + T._T[2] * v._v[2],
+                T._T[3] * v._v[0] + T._T[4] * v._v[1] + T._T[5] * v._v[2],
+                T._T[6] * v._v[0] + T._T[7] * v._v[1] + T._T[8] * v._v[5]);
 }
 
 inline se3 ad(const se3& s1, const se3& s2)
@@ -2602,6 +2638,11 @@ inline double& dse3::operator()(int i)
 inline const double& dse3::operator()(int i) const
 {
     return _m[i];
+}
+
+inline void dse3::setZero()
+{
+    _m[0] = _m[1] = _m[2] = _m[3] = _m[4] = _m[5] = 0.0;
 }
 
 inline dse3 dad(const se3& s, const dse3& t)
@@ -3596,6 +3637,7 @@ inline SE3 Inv(const SE3& T)
     return SE3(	T._T[0], T._T[3], T._T[6],
                 T._T[1], T._T[4], T._T[7],
                 T._T[2], T._T[5], T._T[8],
+
                -T._T[0] * T._T[9] - T._T[1] * T._T[10] - T._T[2] * T._T[11],
                -T._T[3] * T._T[9] - T._T[4] * T._T[10] - T._T[5] * T._T[11],
                -T._T[6] * T._T[9] - T._T[7] * T._T[10] - T._T[8] * T._T[11]);
@@ -3765,12 +3807,12 @@ inline dse3 Inertia::operator*(const se3& s) const
     // M = I * w + m * (r X v - r X (r X w))
     // F = m * (v - r X w)
 
-    // r X w
+    // rw <-- r X w
     double rw0 =_I[7] * s._w[2] - _I[8] * s._w[1];
     double rw1 =_I[8] * s._w[0] - _I[6] * s._w[2];
     double rw2 =_I[6] * s._w[1] - _I[7] * s._w[0];
 
-    // r X v - r X (r x w)
+    // R <-- r X v - r X (r x w)
     double R0 = (_I[7] * s._w[5] - _I[8] * s._w[4]) - (_I[7] * rw2 - _I[8] * rw1);
     double R1 = (_I[8] * s._w[3] - _I[6] * s._w[5]) - (_I[8] * rw0 - _I[6] * rw2);
     double R2 = (_I[6] * s._w[4] - _I[7] * s._w[3]) - (_I[6] * rw1 - _I[7] * rw0);
@@ -3780,6 +3822,7 @@ inline dse3 Inertia::operator*(const se3& s) const
     return dse3(_I[0] * s._w[0] + _I[3] * s._w[1] + _I[4] * s._w[2] + _I[9] * R0, // M[0]
                 _I[3] * s._w[0] + _I[1] * s._w[1] + _I[5] * s._w[2] + _I[9] * R1, // M[1]
                 _I[4] * s._w[0] + _I[5] * s._w[1] + _I[2] * s._w[2] + _I[9] * R2, // M[2]
+
                 _I[9] * (s._w[3] - rw0),									 // F[0]
                 _I[9] * (s._w[4] - rw1),									 // F[1]
                 _I[9] * (s._w[5] - rw2));									 // F[2]
@@ -3838,6 +3881,37 @@ inline void Inertia::toDoubleArray(double M[]) const
     M[3] =   0.0;                    M[9]  =    mr2;                   M[15] =   -mr1;                   M[21] =  _I[9];   M[27] =    0.0;   M[33] =    0.0;
     M[4] =  -mr2;                    M[10] =    0.0;                   M[16] =    mr0;                   M[22] =    0.0;   M[28] =  _I[9];   M[34] =    0.0;
     M[5] =   mr1;                    M[11] =   -mr0;                   M[17] =    0.0;                   M[23] =    0.0;   M[29] =    0.0;   M[35] =  _I[9];
+}
+
+inline Eigen::Matrix<double,6,6> Inertia::toTensor() const
+{
+    Eigen::Matrix<double,6,6> M;
+
+    // G = | I - m * [r] * [r]   m * [r] |
+    //     |          -m * [r]     m * 1 |
+
+    // m * r
+    double mr0 = _I[9] * _I[6];
+    double mr1 = _I[9] * _I[7];
+    double mr2 = _I[9] * _I[8];
+
+    // m * [r] * [r]
+    double mr0r0 = mr0 * _I[6];
+    double mr1r1 = mr1 * _I[7];
+    double mr2r2 = mr2 * _I[8];
+    double mr0r1 = mr0 * _I[7];
+    double mr1r2 = mr1 * _I[8];
+    double mr2r0 = mr2 * _I[6];
+
+    M(0,0) =  _I[0] + mr1r1 + mr2r2;   M(0,1) =  _I[3] - mr0r1;           M(0,2) =  _I[4] - mr2r0;           M(0,3) =    0.0;   M(0,4) =   -mr2;   M(0,5) =    mr1;
+    M(1,0) =  M(0,1);                  M(1,1) =  _I[1] + mr2r2 + mr0r0;   M(1,2) =  _I[5] - mr1r2;           M(1,3) =    mr2;   M(1,4) =    0.0;   M(1,5) =   -mr0;
+    M(2,0) =  M(0,2);                  M(2,1) =  M(1,2);                  M(2,2) =  _I[2] + mr0r0 + mr1r1;   M(2,3) =   -mr1;   M(2,4) =    mr0;   M(2,5) =    0.0;
+
+    M(3,0) =   0.0;                    M(3,1) =    mr2;                   M(3,2) =   -mr1;                   M(3,3) =  _I[9];   M(3,4) =    0.0;   M(3,5) =    0.0;
+    M(4,0) =  -mr2;                    M(4,1) =    0.0;                   M(4,2) =    mr0;                   M(4,3) =    0.0;   M(4,4) =  _I[9];   M(4,5) =    0.0;
+    M(5,0) =   mr1;                    M(5,1) =   -mr0;                   M(5,2) =    0.0;                   M(5,3) =    0.0;   M(5,4) =    0.0;   M(5,5) =  _I[9];
+
+    return M;
 }
 
 inline const Inertia& Inertia::operator=(const Inertia& I)

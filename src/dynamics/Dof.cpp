@@ -44,7 +44,7 @@
 namespace dart {
 namespace dynamics {
 
-Dof::Dof()
+GenCoord::GenCoord()
     : q(0.0),
       dq(0.0),
       ddq(0.0),
@@ -69,11 +69,11 @@ Dof::Dof()
 {
 }
 
-Dof::~Dof()
+GenCoord::~GenCoord()
 {
 }
 
-void Dof::init()
+void GenCoord::init()
 {
     mName.assign("dof");
 
@@ -88,13 +88,13 @@ void Dof::init()
     //    mJoint = NULL;	// remains null if const dof
 }
 
-void Dof::backupInitState()
+void GenCoord::backupInitState()
 {
     init_q = q;
     init_dq = dq;
 }
 
-void Dof::restoreInitState()
+void GenCoord::restoreInitState()
 {
     q = init_q;
     dq = init_dq;

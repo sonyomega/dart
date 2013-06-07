@@ -147,7 +147,7 @@ int BodyNode::getNumLocalDofs() const
     return mParentJoint->getNumDofs();
 }
 
-Dof* BodyNode::getLocalDof(int _idx) const
+GenCoord* BodyNode::getLocalDof(int _idx) const
 {
     return mParentJoint->getDof(_idx);
 }
@@ -395,13 +395,13 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
 }
 
 void BodyNode::setLocalInertia(double _Ixx, double _Iyy, double _Izz,
-                                       double _Ixy, double _Ixz, double _Iyz)
+                               double _Ixy, double _Ixz, double _Iyz)
 {
     setMomentOfInertia(_Ixx, _Iyy, _Izz, _Ixy, _Ixz, _Iyz);
 }
 
 void BodyNode::setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
-                                          double _Ixy, double _Ixz, double _Iyz)
+                                  double _Ixy, double _Ixz, double _Iyz)
 {
     mI.setAngularMomentDiag(_Ixx, _Iyy, _Izz);
     mI.setAngularMomentOffDiag(_Ixy, _Ixz, _Iyz);
@@ -423,7 +423,9 @@ void BodyNode::setExternalForceLocal(
 {
 }
 
-void BodyNode::addExtForce(const Eigen::Vector3d& _offset, const Eigen::Vector3d& _force, bool _isOffsetLocal, bool _isForceLocal)
+void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
+                           const Eigen::Vector3d& _force,
+                           bool _isOffsetLocal, bool _isForceLocal)
 {
     dterr << "Not implemented.\n";
 }
@@ -450,12 +452,14 @@ math::dse3 BodyNode::getExternalForceGlobal() const
     dterr << "Not implemented.\n";
 }
 
-void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity)
+void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
+                               bool _withExternalForces)
 {
-    mFgravity = mI * math::InvAd(mW, math::Vec3(_gravity));
+    mFgravity = mI * math::InvAdR(mW, math::Vec3(_gravity));
 
     mF = mI * mdV;                // Inertial force
-    //mF -= mFext;                  // External force
+    if (_withExternalForces)
+        mF -= mFext;              // External force
     mF -= mFgravity;              // Gravity force
     mF -= math::dad(mV, mI * mV); // Coriolis force
 
@@ -496,6 +500,7 @@ void BodyNode::addExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
 
 void BodyNode::clearExternalForces()
 {
+    mFext.setZero();
     dterr << "Not implemented.\n";
 }
 

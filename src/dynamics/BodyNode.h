@@ -83,7 +83,7 @@ namespace dart {
 namespace renderer { class RenderInterface; }
 namespace dynamics {
 
-class Dof;
+class GenCoord;
 class Skeleton;
 class Joint;
 class Shape;
@@ -243,7 +243,7 @@ public:
     int getNumLocalDofs() const;
 
     // TODO: Check
-    Dof* getLocalDof(int _idx) const;
+    GenCoord* getLocalDof(int _idx) const;
 
     // TODO: Check
     /// @brief The number of the dofs by which this node is affected.
@@ -378,6 +378,14 @@ public:
     /// @brief
     const math::dse3& getBodyForce() const { return mF; }
 
+    /// @brief
+    double getKineticEnergy() const { return 0.5 * math::Inner(mV, mI * mV); }
+
+    // TODO: Not implemented.
+    /// @brief
+    double getPotentialEnergy() const {}
+
+
     //--------------------------------------------------------------------------
     // Rendering
     //--------------------------------------------------------------------------
@@ -408,7 +416,8 @@ public:
 
     /// @brief
     /// childBodies.F, V, dV --> F, Fgravity
-    void updateBodyForce(const Eigen::Vector3d& _gravity);
+    void updateBodyForce(const Eigen::Vector3d& _gravity,
+                         bool _withExternalForces = false);
 
     /// @brief
     /// parentJoint.S, F --> tau

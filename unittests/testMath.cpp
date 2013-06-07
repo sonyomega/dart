@@ -52,13 +52,38 @@ using namespace math;
 using namespace dynamics;
 using namespace simulation;
 
-#define MATH_TOL 0.01
+#define MATH_TOL 0.000001
 #define MATH_EPS 0.000001
+
+class EigenSE3
+{
+public:
+    explicit EigenSE3(const Eigen::Matrix4d& T)
+        : mT(T)
+    {}
+
+    /// @brief multiplication operator
+    inline EigenSE3 operator*(const EigenSE3& T) const
+    {
+        return EigenSE3(mT * T.mT);
+    }
+
+    /// @brief multiplication operator@n
+    inline const EigenSE3& operator*=(const EigenSE3& T)
+    {
+        mT *= T.mT;
+        return *this;
+    }
+
+protected:
+private:
+    Eigen::Matrix4d mT;
+};
 
 /******************************************************************************/
 TEST(MATH, SE3_VS_EIGENMATRIX4D)
 {
-    int n = 100;
+    int n = 1000;
     double min = -100;
     double max = 100;
 
@@ -75,6 +100,11 @@ TEST(MATH, SE3_VS_EIGENMATRIX4D)
     Eigen::Matrix4d E2 = T2.getEigenMatrix();
     Eigen::Matrix4d E3 = T3.getEigenMatrix();
     Eigen::Matrix4d E4 = T4.getEigenMatrix();
+
+    EigenSE3 ESE3_1(E1);
+    EigenSE3 ESE3_2(E2);
+    EigenSE3 ESE3_3(E3);
+    EigenSE3 ESE3_4(E4);
 
     {
         Timer SE3Timer("SE3 timer");
@@ -95,6 +125,16 @@ TEST(MATH, SE3_VS_EIGENMATRIX4D)
         EigenTimer.stopTimer();
     }
     std::cout << E3 << std::endl;
+
+    {
+        Timer EigenSE3Timer("EigenSE3 timer");
+        EigenSE3Timer.startTimer();
+        for (int i = 0; i < n; ++i)
+            for (int j = 0; j < n; ++j)
+                ESE3_3 *= ESE3_1 * ESE3_2;
+        EigenSE3Timer.stopTimer();
+    }
+    //std::cout << E3 << std::endl;
 
     {
         Timer SE3Timer("SE3 inverse timer");
@@ -192,6 +232,84 @@ TEST(MATH, SE3)
 //    //EXPECT_EQ(AdTVmat_eig, TVinvT);
 
 //    EXPECT_EQ(Ad(T, Ad(Inv(T), V)), V);
+}
+
+/// @brief
+Eigen::Matrix<double,6,6> Ad(const SE3& T)
+{
+    Eigen::Matrix<double,6,6> AdT = Eigen::Matrix<double,6,6>::Zero();
+
+    // R
+    AdT(0,0) =  T(0,0);   AdT(0,1) =  T(0,1);   AdT(0,2) =  T(0,2);
+    AdT(1,0) =  T(1,0);   AdT(1,1) =  T(1,1);   AdT(1,2) =  T(1,2);
+    AdT(2,0) =  T(2,0);   AdT(2,1) =  T(2,1);   AdT(2,2) =  T(2,2);
+
+    // R
+    AdT(3,3) =  T(0,0);   AdT(3,4) =  T(0,1);   AdT(3,5) =  T(0,2);
+    AdT(4,3) =  T(1,0);   AdT(4,4) =  T(1,1);   AdT(4,5) =  T(1,2);
+    AdT(5,3) =  T(2,0);   AdT(5,4) =  T(2,1);   AdT(5,5) =  T(2,2);
+
+    // [p]R
+    AdT(3,0) = T(1,3)*T(2,0) - T(2,3)*T(1,0);   AdT(3,1) = T(1,3)*T(2,1) - T(2,3)*T(1,1);   AdT(3,2) = T(1,3)*T(2,2) - T(2,3)*T(1,2);
+    AdT(4,0) = T(2,3)*T(0,0) - T(0,3)*T(2,0);   AdT(4,1) = T(2,3)*T(0,1) - T(0,3)*T(2,1);   AdT(4,2) = T(2,3)*T(0,2) - T(0,3)*T(2,2);
+    AdT(5,0) = T(0,3)*T(1,0) - T(1,3)*T(0,0);   AdT(5,1) = T(0,3)*T(1,1) - T(1,3)*T(0,1);   AdT(5,2) = T(0,3)*T(1,2) - T(1,3)*T(0,2);
+
+    return AdT;
+}
+
+/// @brief
+Eigen::Matrix<double,6,6> dAd(const SE3& T)
+{
+    return Ad(T).transpose();
+}
+
+/******************************************************************************/
+TEST(MATH, ADJOINT_MAPPING)
+{
+    double min = -100;
+    double max = 100;
+    math::se3 t(random(min,max), random(min,max), random(min,max),
+                random(min,max), random(min,max), random(min,max));
+    math::SE3 T = math::Exp(t);
+    math::se3 S(random(min,max), random(min,max), random(min,max),
+                random(min,max), random(min,max), random(min,max));
+
+    Eigen::VectorXd AdT_S = math::Ad(T, S).getEigenVector();
+    Eigen::VectorXd AdT_S2 = Ad(T) * S.getEigenVector();
+
+    Eigen::MatrixXd I = Ad(T) * Ad(math::Inv(T));
+    Eigen::MatrixXd SE3Identity = T.getEigenMatrix() * (math::Inv(T)).getEigenMatrix();
+
+    for (int i = 0; i < 6; i++)
+        EXPECT_NEAR(AdT_S(i), AdT_S2(i), MATH_TOL);
+}
+
+/******************************************************************************/
+TEST(MATH, INERTIA)
+{
+    for (int k = 0; k < 100; ++k)
+    {
+        double min = -10;
+        double max = 10;
+        math::Vec3 r(random(min,max), random(min,max), random(min,max));
+        math::SE3 Tr(r);
+        math::Inertia I(random(0.1,max), random(0.1,max), random(0.1,max),
+                        random(0.1,max), random(0.1,max), random(0.1,max),
+                        random(min,max), random(min,max), random(min,max),
+                        random(0.1,max));
+        math::Inertia Ioffset = I;
+
+        I.setOffset(math::Vec3(0, 0, 0));
+        Ioffset.setOffset(r);
+
+        Eigen::MatrixXd G = I.toTensor();
+        Eigen::MatrixXd Goffset = Ioffset.toTensor();
+        Eigen::MatrixXd dAdinvTGAdinvT = dAd(math::Inv(Tr)) * G * Ad(math::Inv(Tr));
+
+        for (int i = 0; i < 6; i++)
+            for (int j = 0; j < 6; j++)
+                EXPECT_NEAR(Goffset(i,j), dAdinvTGAdinvT(i,j), MATH_TOL);
+    }
 }
 
 /******************************************************************************/

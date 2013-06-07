@@ -40,22 +40,22 @@
 namespace dart {
 namespace dynamics {
 
-System::System()
+GenCoordSystem::GenCoordSystem()
 {
 }
 
-System::~System()
+GenCoordSystem::~GenCoordSystem()
 {
 }
 
-Dof* System::getDof(int _idx) const
+GenCoord* GenCoordSystem::getDof(int _idx) const
 {
     assert(0 <= _idx && _idx < getNumDofs());
 
     return mDofs[_idx];
 }
 
-Dof* System::getDof(const std::string& _name) const
+GenCoord* GenCoordSystem::getDof(const std::string& _name) const
 {
     int size = getNumDofs();
 
@@ -66,7 +66,7 @@ Dof* System::getDof(const std::string& _name) const
     return NULL;
 }
 
-void System::backupInitState()
+void GenCoordSystem::backupInitState()
 {
     int size = getNumDofs();
 
@@ -74,7 +74,7 @@ void System::backupInitState()
         mDofs[i]->backupInitState();
 }
 
-void System::restoreInitState()
+void GenCoordSystem::restoreInitState()
 {
     int size = getNumDofs();
 
@@ -82,7 +82,7 @@ void System::restoreInitState()
         mDofs[i]->restoreInitState();
 }
 
-void System::set_q(const Eigen::VectorXd& _q)
+void GenCoordSystem::set_q(const Eigen::VectorXd& _q)
 {
     assert(_q.size() == getNumDofs());
 
@@ -92,7 +92,7 @@ void System::set_q(const Eigen::VectorXd& _q)
         mDofs[i]->set_q(_q[i]);
 }
 
-void System::set_dq(const Eigen::VectorXd& _dq)
+void GenCoordSystem::set_dq(const Eigen::VectorXd& _dq)
 {
     assert(_dq.size() == getNumDofs());
 
@@ -102,7 +102,7 @@ void System::set_dq(const Eigen::VectorXd& _dq)
         mDofs[i]->set_dq(_dq[i]);
 }
 
-void System::set_ddq(const Eigen::VectorXd& _ddq)
+void GenCoordSystem::set_ddq(const Eigen::VectorXd& _ddq)
 {
     assert(_ddq.size() == getNumDofs());
 
@@ -112,7 +112,7 @@ void System::set_ddq(const Eigen::VectorXd& _ddq)
         mDofs[i]->set_ddq(_ddq[i]);
 }
 
-void System::set_tau(const Eigen::VectorXd& _tau)
+void GenCoordSystem::set_tau(const Eigen::VectorXd& _tau)
 {
     assert(_tau.size() == getNumDofs());
 
@@ -122,7 +122,7 @@ void System::set_tau(const Eigen::VectorXd& _tau)
         mDofs[i]->set_tau(_tau[i]);
 }
 
-void System::set_qMin(const Eigen::VectorXd& _qMin)
+void GenCoordSystem::set_qMin(const Eigen::VectorXd& _qMin)
 {
     assert(_qMin.size() == getNumDofs());
 
@@ -132,7 +132,7 @@ void System::set_qMin(const Eigen::VectorXd& _qMin)
         mDofs[i]->set_qMin(_qMin[i]);
 }
 
-void System::set_dqMin(const Eigen::VectorXd& _dqMin)
+void GenCoordSystem::set_dqMin(const Eigen::VectorXd& _dqMin)
 {
     assert(_dqMin.size() == getNumDofs());
 
@@ -142,7 +142,7 @@ void System::set_dqMin(const Eigen::VectorXd& _dqMin)
         mDofs[i]->set_dqMin(_dqMin[i]);
 }
 
-void System::set_ddqMin(const Eigen::VectorXd& _ddqMin)
+void GenCoordSystem::set_ddqMin(const Eigen::VectorXd& _ddqMin)
 {
     assert(_ddqMin.size() == getNumDofs());
 
@@ -152,7 +152,7 @@ void System::set_ddqMin(const Eigen::VectorXd& _ddqMin)
         mDofs[i]->set_ddqMin(_ddqMin[i]);
 }
 
-void System::set_tauMin(const Eigen::VectorXd& _tauMin)
+void GenCoordSystem::set_tauMin(const Eigen::VectorXd& _tauMin)
 {
     assert(_tauMin.size() == getNumDofs());
 
@@ -163,7 +163,7 @@ void System::set_tauMin(const Eigen::VectorXd& _tauMin)
 }
 
 
-void System::set_qMax(const Eigen::VectorXd& _qMax)
+void GenCoordSystem::set_qMax(const Eigen::VectorXd& _qMax)
 {
     assert(_qMax.size() == getNumDofs());
 
@@ -173,7 +173,7 @@ void System::set_qMax(const Eigen::VectorXd& _qMax)
         mDofs[i]->set_qMax(_qMax[i]);
 }
 
-void System::set_dqMax(const Eigen::VectorXd& _dqMax)
+void GenCoordSystem::set_dqMax(const Eigen::VectorXd& _dqMax)
 {
     assert(_dqMax.size() == getNumDofs());
 
@@ -183,7 +183,7 @@ void System::set_dqMax(const Eigen::VectorXd& _dqMax)
         mDofs[i]->set_dqMax(_dqMax[i]);
 }
 
-void System::set_ddqMax(const Eigen::VectorXd& _ddqMax)
+void GenCoordSystem::set_ddqMax(const Eigen::VectorXd& _ddqMax)
 {
     assert(_ddqMax.size() == getNumDofs());
 
@@ -193,7 +193,7 @@ void System::set_ddqMax(const Eigen::VectorXd& _ddqMax)
         mDofs[i]->set_ddqMax(_ddqMax[i]);
 }
 
-void System::set_tauMax(const Eigen::VectorXd& _tauMax)
+void GenCoordSystem::set_tauMax(const Eigen::VectorXd& _tauMax)
 {
     assert(_tauMax.size() == getNumDofs());
 
@@ -243,7 +243,7 @@ void System::set_tauMax(const Eigen::VectorXd& _tauMax)
 //        mDofs[i]->DtauDp = _DtauDp[i];
 //}
 
-Eigen::VectorXd System::get_q() const
+Eigen::VectorXd GenCoordSystem::get_q() const
 {
     int size = getNumDofs();
     Eigen::VectorXd q = Eigen::VectorXd::Zero(size);
@@ -254,7 +254,7 @@ Eigen::VectorXd System::get_q() const
     return q;
 }
 
-Eigen::VectorXd System::get_dq() const
+Eigen::VectorXd GenCoordSystem::get_dq() const
 {
     int size = getNumDofs();
     Eigen::VectorXd dq = Eigen::VectorXd::Zero(size);
@@ -265,7 +265,7 @@ Eigen::VectorXd System::get_dq() const
     return dq;
 }
 
-Eigen::VectorXd System::get_ddq() const
+Eigen::VectorXd GenCoordSystem::get_ddq() const
 {
     int size = getNumDofs();
     Eigen::VectorXd ddq = Eigen::VectorXd::Zero(size);
@@ -276,7 +276,7 @@ Eigen::VectorXd System::get_ddq() const
     return ddq;
 }
 
-Eigen::VectorXd System::get_tau() const
+Eigen::VectorXd GenCoordSystem::get_tau() const
 {
     int size = getNumDofs();
     Eigen::VectorXd tau = Eigen::VectorXd::Zero(size);

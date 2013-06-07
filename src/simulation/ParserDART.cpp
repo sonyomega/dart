@@ -538,7 +538,7 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     assert(childElement != NULL);
     std::string strChild = childElement->GetText();
     dynamics::BodyNode* childBody = _skeleton->findBody(strChild);
-    assert(childBody != NULL);
+    assert(childBody != NULL && "Dart cannot find child body.");
     newJoint->setChildBody(childBody);
 
     //--------------------------------------------------------------------------

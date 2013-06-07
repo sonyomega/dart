@@ -58,7 +58,7 @@ class BodyNode;
 /// dq: generalized velocity (scalar)
 /// ddq: generalized acceleration (scalar)
 /// tau: generalized force (torque) (scalar)
-class Joint : public System
+class Joint : public GenCoordSystem
 {
 public:
     //--------------------------------------------------------------------------
@@ -155,6 +155,10 @@ public:
     const math::SE3& getLocalTransformationFromChildBody() const
     { return mT_ChildBodyToJoint; }
 
+    // TODO: Not implemented.
+    /// @brief
+    virtual double getPotentialEnergy() const = 0;
+
     //--------------------------------------------------------------------------
     // Recursive Kinematics Algorithms
     //--------------------------------------------------------------------------
@@ -242,6 +246,9 @@ protected:
     //--------------------------------------------------------------------------
 public:
     /// @brief
+    std::vector<double> mDampingCoefficient;
+
+    /// @brief
     void setDampingCoefficient(int _idx, double _d)
     {
         assert(0 <= _idx && _idx < getNumDofs());
@@ -258,8 +265,6 @@ public:
         return mDampingCoefficient[_idx];
     }
 
-    /// @brief
-    std::vector<double> mDampingCoefficient;
 
     Eigen::VectorXd getDampingForce() const
     {
@@ -271,6 +276,9 @@ public:
 
         return dampingForce;
     }
+
+    /// @brief
+    std::vector<double> mSpringStiffness;
 
 private:
 

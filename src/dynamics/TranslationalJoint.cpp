@@ -51,6 +51,9 @@ TranslationalJoint::TranslationalJoint()
     mDofs.push_back(&mCoordinate[2]);
     mS.setSize(3);
     mdS.setSize(3);
+
+    // TODO: Temporary code
+    mDampingCoefficient.resize(3, 0);
 }
 
 TranslationalJoint::~TranslationalJoint()

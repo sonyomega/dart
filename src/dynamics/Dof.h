@@ -61,7 +61,7 @@ class Transformation;
 //   orientation and the two coordinates of any fixed point of the figure.
 /// @brief Generalized coordinate.
 /// A set of generalized coordiante describes the configuration of a system.
-class Dof
+class GenCoord
 {
 public:
     // TODO: Use get_q(), get_qMin(), get_qMax instead.
@@ -71,10 +71,10 @@ public:
 
 public:
     /// @brief
-    Dof();
+    GenCoord();
 
     /// @brief
-    virtual ~Dof();
+    virtual ~GenCoord();
 
 public:
     /// @brief
@@ -91,18 +91,6 @@ public:
 
     /// @brief
     void setSkelIndex(int _idx) { mSkelIndex = _idx; }
-
-    /// @brief
-    //bool isVariable() const { return mVariable; }
-
-    /// @brief
-    //void setVariable() { mVariable = true; }
-
-    /// @brief
-    //void setTrans(Transformation *_t){ mTrans = _t; }
-
-    /// @brief
-    //Transformation* getTrans() const{ return mTrans; }
 
     /// @brief
     //void setJoint(Joint *_j) { mJoint = _j; }
@@ -157,14 +145,8 @@ protected:
     /// @brief Unique to dof in model.
     int mSkelIndex;
 
-    /// @brief Transformation associated with
-    //Transformation *mTrans;
-
     /// @brief Joint to which it belongs.
     //Joint *mJoint;
-
-    /// @brief True when it is a variable and included int he model.
-    //bool mVariable;
 
     //--------------------------------------------------------------------------
     // Position

@@ -130,7 +130,7 @@ Eigen::VectorXd World::evalDeriv()
         // TODO:
         Eigen::VectorXd qddot = mSkeletons[i]->getInvMassMatrix()
                                 * (-mSkeletons[i]->getCombinedVector()
-                                   + mSkeletons[i]->getExternalForces()
+                                   //+ mSkeletons[i]->getExternalForces()
                                    + mSkeletons[i]->getInternalForces()
                                    + mSkeletons[i]->getDampingForces()  // TODO:
                                    + mCollisionHandle->getTotalConstraintForce(i)

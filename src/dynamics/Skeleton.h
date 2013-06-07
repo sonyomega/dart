@@ -51,16 +51,19 @@
 #include "dynamics/System.h"
 
 namespace dart {
-namespace renderer { class RenderInterface; }
+
+namespace renderer {
+class RenderInterface;
+}
+
 namespace dynamics {
 
 typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS> SkeletonGraph;
-
 class BodyNode;
 class Joint;
 
 /// @brief
-class Skeleton : public System
+class Skeleton : public GenCoordSystem
 {
 public:
     //--------------------------------------------------------------------------
@@ -173,6 +176,33 @@ public:
     Eigen::VectorXd getInternalForces() const { return get_tau(); }
     Eigen::VectorXd getDampingForces() const;
 
+    /// @brief
+    double getKineticEnergy() const;
+
+    // TODO: Not implemented.
+    /// @brief
+    double getPotentialEnergy() const;
+
+    // TODO: Not implemented.
+    /// @brief
+    math::Vec3 getPositionCOMGlobal();
+
+    // TODO: Not implemented.
+    /// @brief
+    math::Vec3 getVelocityCOMGlobal();
+
+    // TODO: Not implemented.
+    /// @brief
+    math::Vec3 getAccelerationCOMGlobal();
+
+    // TODO: Not implemented.
+    /// @brief
+    math::dse3 getMomentumGlobal();
+
+    // TODO: Not implemented.
+    /// @brief
+    math::dse3 getMomentumCOM();
+
     //--------------------------------------------------------------------------
     // Recursive kinematics Algorithms
     //--------------------------------------------------------------------------
@@ -201,9 +231,11 @@ public:
     void initDynamics();
 
     /// @brief (q, dq, ddq) --> (tau)
-    void computeInverseDynamics(const Eigen::Vector3d& _gravity);
+    void computeInverseDynamics(const Eigen::Vector3d& _gravity,
+                                bool _withExternalForces = false);
     void _inverseDynamicsFwdRecursion();
-    void _inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity);
+    void _inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity,
+                                      bool _withExternalForces = false);
 
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamics(const Eigen::Vector3d& _gravity,

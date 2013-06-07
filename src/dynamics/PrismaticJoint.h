@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/29/2013
+ * Date: 05/21/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_KINEMATICS_WELD_JOINT_H
-#define DART_KINEMATICS_WELD_JOINT_H
+#ifndef DART_KINEMATICS_PRISMATIC_JOINT_H
+#define DART_KINEMATICS_PRISMATIC_JOINT_H
 
 #include <Eigen/Dense>
 
@@ -46,24 +46,38 @@
 namespace dart {
 namespace dynamics {
 
-class WeldJoint : public Joint
+class PrismaticJoint : public Joint
 {
 public:
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
     /// @brief
-    WeldJoint();
+    PrismaticJoint();
 
     /// @brief
-    virtual ~WeldJoint();
+    virtual ~PrismaticJoint();
 
     //--------------------------------------------------------------------------
     // Kinematical Properties
     //--------------------------------------------------------------------------
+    /// @brief
+    void setAxis(const math::Vec3& _axis) { assert(math::Norm(_axis) == 1); mDirectionVector = _axis; }
+
+    /// @brief
+    const math::Vec3& getAxis() const { return mDirectionVector; }
+
+    /// @brief
+    math::Vec3 getAxisGlobal() const;
+
+//    /// @brief
+//    void setDampingCoefficient(double _c) { mDampingCoefficient = _c; }
+
+//    /// @brief
+//    double getDampingCoefficient() { return mDampingCoefficient; }
 
     // Documentation is inherited.
-    virtual double getPotentialEnergy() const { return 0.0; }
+    virtual double getPotentialEnergy() const {}
 
     //--------------------------------------------------------------------------
     // Structueral Properties
@@ -90,6 +104,13 @@ protected:
     //
     //--------------------------------------------------------------------------
     /// @brief
+    GenCoord mCoordinate;
+
+    /// @brief Rotational axis.
+    math::Vec3 mDirectionVector;
+
+//    /// @brief Daping coefficient of revolute joint.
+//    double mDampingCoefficient;
 
 private:
 
@@ -101,5 +122,5 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_KINEMATICS_WELD_JOINT_H
+#endif // #ifndef DART_KINEMATICS_PRISMATIC_JOINT_H
 

@@ -47,27 +47,27 @@ namespace dart {
 namespace dynamics {
 
 /// @brief System is a base class for every classes that has Dofs.
-class System
+class GenCoordSystem
 {
 public:
     /// @brief
-    System();
+    GenCoordSystem();
 
     /// @brief
-    virtual ~System();
+    virtual ~GenCoordSystem();
 
     /// @brief
     DEPRECATED int getNumDofs() const { return mDofs.size(); }
     int getDOF() const { return mDofs.size(); }
 
     /// @brief
-    const std::vector<Dof*>& getDofs() const { return mDofs; }
+    const std::vector<GenCoord*>& getDofs() const { return mDofs; }
 
     /// @brief
-    Dof* getDof(int _idx) const;
+    GenCoord* getDof(int _idx) const;
 
     /// @brief
-    Dof* getDof(const std::string& _name) const;
+    GenCoord* getDof(const std::string& _name) const;
 
     /// @brief Backup current state as initial state.
     void backupInitState();
@@ -133,7 +133,7 @@ public:
 
 protected:
     /// @brief Pointers to Dofs.
-    std::vector<Dof*> mDofs;
+    std::vector<GenCoord*> mDofs;
 
 private:
 
