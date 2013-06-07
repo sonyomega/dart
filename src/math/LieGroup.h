@@ -1191,6 +1191,7 @@ public:
 
     /// @brief
     Eigen::Matrix4d getEigenMatrix() const;
+    Eigen::Affine3d getEigenAffine() const;
 
     /// @brief convert SE3 to unit quaternion
     /// @note The first element of q[] is a real part and the last three are imaginary parts
@@ -3440,6 +3441,29 @@ inline void SE3::toDoubleArray(double M[]) const
 inline Eigen::Matrix4d SE3::getEigenMatrix() const
 {
     Eigen::Matrix4d M = Eigen::Matrix4d::Identity();
+
+    M(0,0) = _T[0];
+    M(1,0) = _T[1];
+    M(2,0) = _T[2];
+
+    M(0,1) = _T[3];
+    M(1,1) = _T[4];
+    M(2,1) = _T[5];
+
+    M(0,2) = _T[6];
+    M(1,2) = _T[7];
+    M(2,2) = _T[8];
+
+    M(0,3) = _T[9];
+    M(1,3) = _T[10];
+    M(2,3) = _T[11];
+
+    return M;
+}
+
+inline Eigen::Affine3d SE3::getEigenAffine() const
+{
+    Eigen::Affine3d M = Eigen::Affine3d::Identity();
 
     M(0,0) = _T[0];
     M(1,0) = _T[1];

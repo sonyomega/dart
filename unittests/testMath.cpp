@@ -83,7 +83,7 @@ private:
 /******************************************************************************/
 TEST(MATH, SE3_VS_EIGENMATRIX4D)
 {
-    int n = 1000;
+    int n = 10000;
     double min = -100;
     double max = 100;
 
@@ -100,6 +100,12 @@ TEST(MATH, SE3_VS_EIGENMATRIX4D)
     Eigen::Matrix4d E2 = T2.getEigenMatrix();
     Eigen::Matrix4d E3 = T3.getEigenMatrix();
     Eigen::Matrix4d E4 = T4.getEigenMatrix();
+
+    Eigen::Affine3d A1(E1);
+    Eigen::Affine3d A2(E2);
+    Eigen::Affine3d A3(E3);
+    Eigen::Affine3d A4(E4);
+
 
     EigenSE3 ESE3_1(E1);
     EigenSE3 ESE3_2(E2);
@@ -126,35 +132,45 @@ TEST(MATH, SE3_VS_EIGENMATRIX4D)
     }
     std::cout << E3 << std::endl;
 
-    {
-        Timer EigenSE3Timer("EigenSE3 timer");
-        EigenSE3Timer.startTimer();
-        for (int i = 0; i < n; ++i)
-            for (int j = 0; j < n; ++j)
-                ESE3_3 *= ESE3_1 * ESE3_2;
-        EigenSE3Timer.stopTimer();
-    }
-    //std::cout << E3 << std::endl;
+//    {
+//        Timer EigenSE3Timer("EigenSE3 timer");
+//        EigenSE3Timer.startTimer();
+//        for (int i = 0; i < n; ++i)
+//            for (int j = 0; j < n; ++j)
+//                ESE3_3 *= ESE3_1 * ESE3_2;
+//        EigenSE3Timer.stopTimer();
+//    }
+//    //std::cout << E3 << std::endl;
 
     {
-        Timer SE3Timer("SE3 inverse timer");
-        SE3Timer.startTimer();
+        Timer AffineTimer("Eigen::Affine3d timer");
+        AffineTimer.startTimer();
         for (int i = 0; i < n; ++i)
             for (int j = 0; j < n; ++j)
-                T4 *= Inv(T1) * Inv(T2);
-        SE3Timer.stopTimer();
+                A3 = A3 * A1 * A2;
+        AffineTimer.stopTimer();
     }
-    std::cout << T4 << std::endl;
+    std::cout << A3.matrix() << std::endl;
 
-    {
-        Timer EigenTimer("Eigen::Matrix4d inverse timer");
-        EigenTimer.startTimer();
-        for (int i = 0; i < n; ++i)
-            for (int j = 0; j < n; ++j)
-                E4 *= E1.inverse() * E2.inverse();
-        EigenTimer.stopTimer();
-    }
-    std::cout << E4 << std::endl;
+//    {
+//        Timer SE3Timer("SE3 inverse timer");
+//        SE3Timer.startTimer();
+//        for (int i = 0; i < n; ++i)
+//            for (int j = 0; j < n; ++j)
+//                T4 *= Inv(T1) * Inv(T2);
+//        SE3Timer.stopTimer();
+//    }
+//    std::cout << T4 << std::endl;
+
+//    {
+//        Timer EigenTimer("Eigen::Matrix4d inverse timer");
+//        EigenTimer.startTimer();
+//        for (int i = 0; i < n; ++i)
+//            for (int j = 0; j < n; ++j)
+//                E4 *= E1.inverse() * E2.inverse();
+//        EigenTimer.stopTimer();
+//    }
+//    std::cout << E4 << std::endl;
 }
 
 /******************************************************************************/
