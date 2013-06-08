@@ -455,13 +455,15 @@ math::dse3 BodyNode::getExternalForceGlobal() const
 void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
                                bool _withExternalForces)
 {
-    mFgravity = mI * math::InvAdR(mW, math::Vec3(_gravity));
+    if (mGravityMode == true)
+        mFgravity = mI * math::InvAdR(mW, math::Vec3(_gravity));
+    else
+        mFgravity.setZero();
 
     mF = mI * mdV;                // Inertial force
     if (_withExternalForces)
         mF -= mFext;              // External force
-    if (mGravityMode == true)
-        mF -= mFgravity;              // Gravity force
+    mF -= mFgravity;              // Gravity force
     mF -= math::dad(mV, mI * mV); // Coriolis force
 
     for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();

@@ -262,6 +262,9 @@ public:
     //--------------------------------------------------------------------------
 
     /// @brief
+    /// This function should be called only in modeling process. The
+    /// transformation of this link will be updating by dynamics algorithms
+    /// automatically.
     void setWorldTransformation(const math::SE3& _W) { mW = _W; }
 
     /// @brief Transformation from the local coordinates of this body node to
