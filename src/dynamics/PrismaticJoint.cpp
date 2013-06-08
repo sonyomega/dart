@@ -45,9 +45,9 @@ using namespace math;
 
 namespace dynamics {
 
-PrismaticJoint::PrismaticJoint()
+PrismaticJoint::PrismaticJoint(const Vec3& axis)
     : Joint("Revolute joint"),
-      mDirectionVector(math::Vec3(1.0, 0.0, 0.0))
+      mDirectionVector(axis)
       //mDampingCoefficient(0.0)
 {
     mJointType = REVOLUTE;

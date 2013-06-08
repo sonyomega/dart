@@ -53,7 +53,7 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    RevoluteJoint();
+    RevoluteJoint(const math::Axis& axis = math::Axis(1.0, 0.0, 0.0));
 
     /// @brief
     virtual ~RevoluteJoint();

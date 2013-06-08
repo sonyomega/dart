@@ -74,7 +74,8 @@ public:
         UNIVERSAL,
         PLANAR,        // 2 dof
         TRANSLATIONAL,
-        BALL,     // 3 dof
+        BALL,          // 3 dof
+        BALL_EULER,
         FREE           // 6 dof
     };
 

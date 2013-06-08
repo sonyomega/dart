@@ -45,9 +45,9 @@ using namespace math;
 
 namespace dynamics {
 
-RevoluteJoint::RevoluteJoint()
+RevoluteJoint::RevoluteJoint(const math::Axis& axis)
     : Joint("Revolute joint"),
-      mAxis(math::so3(1.0, 0.0, 0.0))
+      mAxis(axis)
       //mDampingCoefficient(0.0)
 {
     mJointType = REVOLUTE;

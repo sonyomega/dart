@@ -53,7 +53,7 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    PrismaticJoint();
+    PrismaticJoint(const math::Vec3& axis = math::Vec3(1.0, 0.0, 0.0));
 
     /// @brief
     virtual ~PrismaticJoint();
