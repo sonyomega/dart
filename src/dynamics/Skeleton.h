@@ -176,6 +176,9 @@ public:
     Eigen::VectorXd getInternalForces() const { return get_tau(); }
     Eigen::VectorXd getDampingForces() const;
 
+    void setInternalForces(const Eigen::VectorXd& _forces) { set_tau(_forces); }
+    void clearInternalForces() { set_tau(Eigen::VectorXd::Zero(getDOF())); }
+
     /// @brief
     double getKineticEnergy() const;
 
