@@ -694,7 +694,7 @@ std::string toString(const math::Vec3& _v)
     std::ostringstream ostr;
     ostr.precision(6);
 
-    ostr << _v(0) << " " << _v(1) << " " << _v(2);
+    ostr << _v[0] << " " << _v[1] << " " << _v[2];
 
     return ostr.str();
 }
@@ -722,9 +722,9 @@ std::string toString(const math::SE3& _v)
     math::Vec3 XYZ = math::iEulerXYZ(_v);
     math::Vec3 position = _v.getPosition();
 
-    ostr << XYZ(0) << " " << XYZ(1) << " " << XYZ(2);
+    ostr << XYZ[0] << " " << XYZ[1] << " " << XYZ[2];
     ostr << " ";
-    ostr << position(0) << " " << position(1) << " " << position(2);
+    ostr << position[0] << " " << position[1] << " " << position[2];
 
     return ostr.str();
 }
@@ -858,9 +858,9 @@ math::Vec3 toVec3(const std::string& _str)
         }
     }
 
-    ret(0) = elements[0];
-    ret(1) = elements[1];
-    ret(2) = elements[2];
+    ret[0] = elements[0];
+    ret[1] = elements[1];
+    ret[2] = elements[2];
 
     return ret;
 }

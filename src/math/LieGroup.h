@@ -450,8 +450,8 @@ public:
     Vec3 operator-() const;
 
     /// @brief access to the idx th element.
-    double& operator()(int idx);
-    const double& operator()(int) const;
+    double& operator[](int idx);
+    const double& operator[](int) const;
 
     /// @brief substitution operator
     const Vec3& operator=(const Vec3& );
@@ -487,6 +487,9 @@ public:
     //--------------------------------------------------------------------------
     // Getters and setters
     //--------------------------------------------------------------------------
+    /// @brief
+    void setValues(double x, double y, double z);
+
     /// @brief normalize the vector.
     /// @return length of the vector.
     double Normalize();
@@ -1118,8 +1121,8 @@ public:
     /// | T[2]	T[5]	T[8]	T[11] |
     /// ,where the left 3X3 matrix is the rotation matrix and the right 3 vector
     /// is the position.
-//    const double& operator[](int i) const;
-//    double& operator[](int i);
+    const double& operator[](int i) const;
+    double& operator[](int i);
 
     /// @brief substitution operator
     const SE3& operator=(const SE3& T);
@@ -1643,12 +1646,12 @@ inline Vec3 Vec3::operator-(void) const
     return Vec3(-_v[0], -_v[1], -_v[2]);
 }
 
-inline double& Vec3::operator()(int i)
+inline double& Vec3::operator[](int i)
 {
     return _v[i];
 }
 
-inline const double& Vec3::operator()(int i) const
+inline const double& Vec3::operator[](int i) const
 {
     return _v[i];
 }
@@ -1719,6 +1722,13 @@ inline Vec3 Vec3::operator+(const Vec3& v) const
 inline Vec3 Vec3::operator-(const Vec3& v) const
 {
     return Vec3(_v[0] - v._v[0], _v[1] - v._v[1], _v[2] - v._v[2]);
+}
+
+inline void Vec3::setValues(double x, double y, double z)
+{
+    _v[0] = x;
+    _v[1] = y;
+    _v[2] = z;
 }
 
 inline double Vec3::Normalize(void)
@@ -3150,15 +3160,15 @@ inline double SE3::operator()(int i, int j) const
     return _T[i + (3 * j)];
 }
 
-//inline const double& SE3::operator[](int i) const
-//{
-//    return _T[i];
-//}
+inline const double& SE3::operator[](int i) const
+{
+    return _T[i];
+}
 
-//inline double& SE3::operator[](int i)
-//{
-//    return _T[i];
-//}
+inline double& SE3::operator[](int i)
+{
+    return _T[i];
+}
 
 inline const SE3& SE3::operator=(const SE3& T)
 {
