@@ -2436,7 +2436,7 @@ inline se3 InvAdR(const SE3& T, const Vec3& v)
                 0.0,
                 T._T[0] * v._v[0] + T._T[1] * v._v[1] + T._T[2] * v._v[2],
                 T._T[3] * v._v[0] + T._T[4] * v._v[1] + T._T[5] * v._v[2],
-                T._T[6] * v._v[0] + T._T[7] * v._v[1] + T._T[8] * v._v[5]);
+                T._T[6] * v._v[0] + T._T[7] * v._v[1] + T._T[8] * v._v[2]);
 }
 
 inline se3 ad(const se3& s1, const se3& s2)
