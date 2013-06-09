@@ -1053,6 +1053,12 @@ inline void dse3::setZero()
     _m[0] = _m[1] = _m[2] = _m[3] = _m[4] = _m[5] = 0.0;
 }
 
+inline Eigen::Matrix<double,6,1> dse3::getEigenVector() const
+{
+    Eigen::Matrix<double,6,1> ret;
+    ret << _m[0], _m[1], _m[2], _m[3], _m[4], _m[5];
+}
+
 inline dse3 dad(const se3& s, const dse3& t)
 {
     return dse3(t._m[1] * s._w[2] - t._m[2] * s._w[1] + t._m[4] * s._w[5] - t._m[5] * s._w[4],
@@ -2681,6 +2687,8 @@ inline void AInertia::ToArray(TYPE M[]) const
 
 inline AInertia AInertia::Transform(const SE3& T) const
 {
+    // operation count: multiplication = 186, addition = 117, subtract = 21
+
     double d0 = _J[ 3] + T._T[11] * _J[16] - T._T[10] * _J[17];
     double d1 = _J[ 8] - T._T[11] * _J[15] + T._T[ 9] * _J[17];
     double d2 = _J[12] + T._T[10] * _J[15] - T._T[ 9] * _J[16];
@@ -2990,6 +2998,18 @@ inline const AInertia& AInertia::operator = (const Inertia& I)
                                                     _J[15] = I[9];			_J[16] = SCALAR_0;	_J[17] = SCALAR_0;
                                                                             _J[18] = I[9];			_J[19] = SCALAR_0;
                                                                                                     _J[20] = I[9];
+    return *this;
+}
+
+inline const AInertia& AInertia::operator=(
+        const Eigen::Matrix<double,6,6>& _mat)
+{
+    _J[0] = _mat(0,0); _J[1] = _mat(0,1); _J[ 2] = _mat(0,2); _J[ 3] = _mat(0,3); _J[ 4] = _mat(0,4); _J[ 5] = _mat(0,5);
+                       _J[6] = _mat(1,1); _J[ 7] = _mat(1,2); _J[ 8] = _mat(1,3); _J[ 9] = _mat(1,4); _J[10] = _mat(1,5);
+                                          _J[11] = _mat(2,2); _J[12] = _mat(2,3); _J[13] = _mat(2,4); _J[14] = _mat(2,5);
+                                                              _J[15] = _mat(3,3); _J[16] = _mat(3,4); _J[17] = _mat(3,5);
+                                                                                  _J[18] = _mat(4,4); _J[19] = _mat(4,5);
+                                                                                                      _J[20] = _mat(5,5);
     return *this;
 }
 

@@ -92,10 +92,10 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    void setName(const std::string& _name) { mName = _name; }
+    void setName(const std::string& _name);
 
     /// @brief
-    const std::string& getName() const { return mName; }
+    const std::string& getName() const;
 
     //--------------------------------------------------------------------------
     // Kinematical Properties
@@ -282,7 +282,7 @@ public:
     std::vector<double> mSpringStiffness;
 
 private:
-
+    friend class BodyNode;
 };
 
 } // namespace dynamics

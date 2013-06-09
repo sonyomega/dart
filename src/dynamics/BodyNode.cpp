@@ -385,21 +385,22 @@ void BodyNode::updateVelocity(bool _updateJacobian)
     }
 }
 
+void BodyNode::updateEta()
+{
+    m_eta = math::ad(mV, mParentJoint->getLocalVelocity());
+}
+
 void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
 {
     // dV(i) = Ad(T(i, i-1), dV(i-1)) + ad(V(i), S * dq)
     //         + dS * dq + S * ddq
-    if (mParentBody)
-    {
-        mdV = InvAd(mParentJoint->getLocalTransformation(),
-                    mParentBody->getAcceleration())
-              + math::ad(mV, mParentJoint->getLocalVelocity())
-              + mParentJoint->getLocalAcceleration();
+    if (mParentBody) {
+        mdV = math::InvAd(mParentJoint->getLocalTransformation(),
+                          mParentBody->getAcceleration()) +
+              m_eta + mParentJoint->getLocalAcceleration();
     }
-    else
-    {
-        mdV = math::ad(mV, mParentJoint->getLocalVelocity())
-              + mParentJoint->getLocalAcceleration();
+    else {
+        mdV = m_eta + mParentJoint->getLocalAcceleration();
     }
 
     //
@@ -478,12 +479,12 @@ void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
     mF -= mFgravity;              // Gravity force
     mF -= math::dad(mV, mI * mV); // Coriolis force
 
-    for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
-         itrBody != mChildBodies.end();
-         ++itrBody) {
-        dynamics::Joint* childJoint = (*itrBody)->getParentJoint();
+    for (std::vector<BodyNode*>::iterator iChildBody = mChildBodies.begin();
+         iChildBody != mChildBodies.end();
+         ++iChildBody) {
+        dynamics::Joint* childJoint = (*iChildBody)->getParentJoint();
         assert(childJoint != NULL);
-        BodyNode* bodyDyn = dynamic_cast<BodyNode*>(*itrBody);
+        BodyNode* bodyDyn = dynamic_cast<BodyNode*>(*iChildBody);
         assert(bodyDyn != NULL);
 
         mF += math::InvdAd(childJoint->getLocalTransformation(),
@@ -500,6 +501,63 @@ void BodyNode::updateGeneralizedForce()
     assert(J.getSize() == mParentJoint->getNumDofs());
 
     mParentJoint->set_tau(J.getInnerProduct(mF));
+}
+
+void BodyNode::updateArticulatedInertia()
+{
+    // TODO: Need code optimization
+    mAI = mI; // aI = AInertia(I);
+
+    for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
+         itrBody != mChildBodies.end();
+         ++itrBody) {
+        mAI += mPi.Transform(math::Inv(mW));
+    }
+}
+
+void BodyNode::updatePsi()
+{
+    // TODO: Need code optimization
+    assert(mParentJoint != NULL);
+
+    int n = mParentJoint->getDOF();
+    const math::Jacobian& S = mParentJoint->mS;
+    AI_S = Eigen::MatrixXd::Zero(6, n);
+    Psi = Eigen::MatrixXd::Zero(n, n);
+
+    for (int i = 0; i < n; ++i) {
+        AI_S.col(i) = (mAI * S[i]).getEigenVector();
+        for (int j = 0; j < n; ++j) {
+            Psi(i, j) = math::Inner(S[i], mAI * S[j]);
+        }
+    }
+
+    Psi = Psi.inverse();
+}
+
+void BodyNode::updatePi()
+{
+    mPi = mAI;
+
+    mPi = AI_S * Psi * AI_S.transpose();
+}
+
+void BodyNode::updateBeta()
+{
+    dterr << "Not implemented.\n";
+    //mBeta = mB + mAI * ()
+}
+
+void BodyNode::updateBiasForce()
+{
+    mB = -math::dad(mV, mI*mV);
+    mB -= mFext;
+
+    for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
+         itrBody != mChildBodies.end();
+         ++itrBody) {
+        mB += math::InvdAd(mW, mBeta);
+    }
 }
 
 void BodyNode::updateDampingForce()

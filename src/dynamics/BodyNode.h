@@ -412,6 +412,9 @@ public:
     void updateVelocity(bool _updateJacobian = true);
 
     /// @brief
+    void updateEta();
+
+    /// @brief
     /// parentJoint.V, parentJoint.dV, parentBody.dV, V --> dV
     /// parentJoint.dS --> dJ
     void updateAcceleration(bool _updateJacobianDeriv = false);
@@ -424,6 +427,21 @@ public:
     /// @brief
     /// parentJoint.S, F --> tau
     void updateGeneralizedForce();
+
+    /// @brief
+    void updateArticulatedInertia();
+
+    /// @brief
+    void updatePsi();
+
+    /// @brief
+    void updatePi();
+
+    /// @brief
+    void updateBeta();
+
+    /// @brief
+    void updateBiasForce();
 
     /// @brief
     void updateDampingForce();
@@ -514,17 +532,46 @@ protected:
     /// @brief Generalized body velocity w.r.t. body frame.
     math::se3 mV;
 
+    /// @brief
+    math::se3 m_eta;
+
     /// @brief Generalized body acceleration w.r.t. body frame.
     math::se3 mdV;
 
     /// @brief Generalized body force w.r.t. body frame.
     math::dse3 mF;
 
+    /// @brief Articulated inertia
+    math::AInertia mAI;
+
+    math::AInertia mPi;
+
+    /// @brief Bias force
+    math::dse3 mB;
+
+    /// @brief
+    math::dse3 mBeta;
+
     /// @brief
     math::dse3 mFext;
 
     /// @brief
     math::dse3 mFgravity;
+
+    /// @brief
+    Eigen::MatrixXd Psi;
+
+    Eigen::MatrixXd AI_S;
+
+    struct ForwardDynamicsCacheData {
+        // AI
+        // B
+        // Beta
+        // Pi
+        // Psi
+    };
+
+    ForwardDynamicsCacheData mCache;
 
 private:
 

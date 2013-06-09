@@ -238,9 +238,6 @@ public:
     /// @brief (q, dq, ddq) --> (tau)
     void computeInverseDynamics(const Eigen::Vector3d& _gravity,
                                 bool _withExternalForces = false);
-    void _inverseDynamicsFwdRecursion();
-    void _inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity,
-                                      bool _withExternalForces = false);
 
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamics(const Eigen::Vector3d& _gravity,

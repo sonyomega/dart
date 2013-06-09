@@ -63,6 +63,16 @@ Joint::~Joint()
 {
 }
 
+void Joint::setName(const std::string& _name)
+{
+    mName = _name;
+}
+
+const std::string& Joint::getName() const
+{
+    return mName;
+}
+
 void Joint::setParentBody(BodyNode* _body)
 {
     mParentBody = _body;
@@ -124,3 +134,5 @@ void Joint::applyGLTransform(renderer::RenderInterface* _ri)
 
 } // namespace dynamics
 } // namespace dart
+
+

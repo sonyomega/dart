@@ -223,8 +223,25 @@ void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity,
                                       bool _withExternalForces)
 {
     _updateJointKinematics();
-    _inverseDynamicsFwdRecursion();
-    _inverseDynamicsBwdRecursion(_gravity);
+
+    // Forward recursion
+    for (std::vector<dynamics::BodyNode*>::iterator itrBody = mBodies.begin();
+         itrBody != mBodies.end();
+         ++itrBody) {
+        (*itrBody)->updateTransformation();
+        (*itrBody)->updateVelocity();
+        (*itrBody)->updateEta();
+        (*itrBody)->updateAcceleration();
+    }
+
+    // Backward recursion
+    for (std::vector<dynamics::BodyNode*>::reverse_iterator ritrBody
+         = mBodies.rbegin();
+         ritrBody != mBodies.rend();
+         ++ritrBody) {
+        (*ritrBody)->updateBodyForce(_gravity, _withExternalForces);
+        (*ritrBody)->updateGeneralizedForce();
+    }
 }
 
 void Skeleton::computeForwardDynamics(
@@ -274,6 +291,28 @@ void Skeleton::computeForwardDynamicsID(
 void Skeleton::computeForwardDynamicsFS(
         const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
 {
+    // Forward recursion
+    for (std::vector<dynamics::BodyNode*>::iterator itrBody = mBodies.begin();
+         itrBody != mBodies.end();
+         ++itrBody) {
+        (*itrBody)->updateTransformation();
+        (*itrBody)->updateVelocity();
+    }
+
+    // Backward recursion
+    for (std::vector<dynamics::BodyNode*>::reverse_iterator ritrBody
+         = mBodies.rbegin();
+         ritrBody != mBodies.rend();
+         ++ritrBody) {
+//        (*ritrBody)->updateBodyForce(_gravity, _withExternalForces);
+//        (*ritrBody)->updateGeneralizedForce();
+    }
+
+    for (std::vector<dynamics::BodyNode*>::iterator itrBody = mBodies.begin();
+         itrBody != mBodies.end();
+         ++itrBody) {
+//         (*iter_pbody)->fsDynaRecursion_c();
+     }
 }
 
 void Skeleton::computeHybridDynamicsFS(
@@ -289,33 +328,6 @@ void Skeleton::computeEquationsOfMotionID(
 void Skeleton::computeEquationsOfMotionRecursive(
         const Eigen::Vector3d& _gravity)
 {
-}
-
-void Skeleton::_inverseDynamicsFwdRecursion()
-{
-    // Forward recursion
-    for (std::vector<dynamics::BodyNode*>::iterator itrBody = mBodies.begin();
-         itrBody != mBodies.end();
-         ++itrBody) {
-        (*itrBody)->updateTransformation();
-        (*itrBody)->updateVelocity();
-        (*itrBody)->updateAcceleration();
-    }
-}
-
-void Skeleton::_inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity,
-                                            bool _withExternalForces)
-{
-    // Backward recursion
-    for (std::vector<dynamics::BodyNode*>::reverse_iterator ritrBody = mBodies.rbegin();
-         ritrBody != mBodies.rend();
-         ++ritrBody) {
-        dynamics::BodyNode* body
-                = dynamic_cast<dynamics::BodyNode*>(*ritrBody);
-
-        body->updateBodyForce(_gravity);
-        body->updateGeneralizedForce();
-    }
 }
 
 Eigen::VectorXd Skeleton::getDampingForces() const

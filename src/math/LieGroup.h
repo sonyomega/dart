@@ -917,6 +917,9 @@ public:
     /// @brief Set as zeros.
     void setZero();
 
+    /// @brief
+    Eigen::Matrix<double,6,1> getEigenVector() const;
+
     /// @brief set itself to be dad(V, F).
     void dad(const se3& V, const dse3& F);
 
@@ -1484,6 +1487,10 @@ public:
     /// @brief
     const AInertia& operator=(const Inertia& I);
 
+    // TODO:
+    /// @brief
+    const AInertia& operator=(const Eigen::Matrix<double,6,6>& _matrix);
+
     //--------------------------------------------------------------------------
     // Setters and getters
     //--------------------------------------------------------------------------
@@ -1494,7 +1501,7 @@ public:
     void AddTransform(const AInertia& , const SE3& );
 
     /// @brief
-    AInertia Transform(const SE3& ) const;
+    AInertia Transform(const SE3& T) const;
 
     /// @brief
     template <class TYPE>
