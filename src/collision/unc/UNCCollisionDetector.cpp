@@ -325,7 +325,7 @@ done:
 // fields.
 int dBoxBox__MARK7(const dVector3 p1, const dMatrix3 R1, const dVector3 side1,
                    const dVector3 p2, const dMatrix3 R2, const dVector3 side2,
-                   vpCollisionInfoArray& result)
+                   CollisionInfoArray& result)
 {
     const double fudge_factor = 1.05;
     dVector3 p,pp,normalC;
@@ -488,7 +488,7 @@ int dBoxBox__MARK7(const dVector3 p1, const dMatrix3 R1, const dVector3 side1,
             point_vec.setValues(0.5*(pa[0]+pb[0]), 0.5*(pa[1]+pb[1]), 0.5*(pa[2]+pb[2]));
             penetration = -s;
 
-            vpCollisionInfo newContact;
+            CollisionInfo newContact;
             newContact.point = point_vec;
             newContact.normal = normal;
             newContact.penetration = penetration;
@@ -668,7 +668,7 @@ int dBoxBox__MARK7(const dVector3 p1, const dMatrix3 R1, const dVector3 side1,
         for (j=0; j < cnum; j++)
         {
             point_vec.setValues(point[j*3+0] + pa[0], point[j*3+1] + pa[1], point[j*3+2] + pa[2]);
-            vpCollisionInfo newContact;
+            CollisionInfo newContact;
             newContact.point = point_vec;
             newContact.normal = normal;
             newContact.penetration = dep[j];
@@ -694,7 +694,7 @@ int dBoxBox__MARK7(const dVector3 p1, const dMatrix3 R1, const dVector3 side1,
         for (j=0; j < cnum; j++)
         {
             point_vec.setValues(point[iret[j]*3+0] + pa[0], point[iret[j]*3+1] + pa[1], point[iret[j]*3+2] + pa[2]);
-            vpCollisionInfo newContact;
+            CollisionInfo newContact;
             newContact.point = point_vec;
             newContact.normal = normal;
             newContact.penetration = dep[iret[j]];
@@ -706,7 +706,7 @@ int dBoxBox__MARK7(const dVector3 p1, const dMatrix3 R1, const dVector3 side1,
 
 int _BoxBox_____________MARK8(const Vec3& size0, const SE3& T0,
                               const Vec3& size1, const SE3& T1,
-                              vpCollisionInfoArray& result)
+                              CollisionInfoArray& result)
 {
     Vec3 halfSize0 = 0.5*size0;
     Vec3 halfSize1 = 0.5*size1;
@@ -729,7 +729,7 @@ int _BoxBox_____________MARK8(const Vec3& size0, const SE3& T0,
 
 int	_BoxSphere__________MARK8(const Vec3& size0, const SE3& T0,
                               double r1,    const SE3& T1,
-                              vpCollisionInfoArray& result)
+                              CollisionInfoArray& result)
 {
     Vec3 halfSize0 = 0.5*size0;
 
@@ -778,7 +778,7 @@ int	_BoxSphere__________MARK8(const Vec3& size0, const SE3& T0,
         normal = Rotate(T1, normal);
         penetration = min + r1;
 
-        vpCollisionInfo newContact;
+        CollisionInfo newContact;
         newContact.point = c0;
         newContact.normal = normal;
         newContact.penetration = penetration;
@@ -803,7 +803,7 @@ int	_BoxSphere__________MARK8(const Vec3& size0, const SE3& T0,
     {
         normal *= (1.0/mag);
 
-        vpCollisionInfo newContact;
+        CollisionInfo newContact;
         newContact.point = contactpt;
         newContact.normal = normal;
         newContact.penetration = penetration;
@@ -831,7 +831,7 @@ int	_BoxSphere__________MARK8(const Vec3& size0, const SE3& T0,
         normal[idx] = (p[idx] > 0.0 ? -1.0 : 1.0);
         normal = Rotate(T1, normal);
 
-        vpCollisionInfo newContact;
+        CollisionInfo newContact;
         newContact.point = contactpt;
         newContact.normal = normal;
         newContact.penetration = penetration;
@@ -1166,7 +1166,7 @@ got_answer:
 
 int _SphereBox__________MARK8(double r0, const SE3& T0,
                               const Vec3& size, const SE3& T1,
-                              vpCollisionInfoArray& result)
+                              CollisionInfoArray& result)
 {
     Vec3 halfSize = 0.5*size;
 
@@ -1212,7 +1212,7 @@ int _SphereBox__________MARK8(double r0, const SE3& T0,
         normal = Rotate(T1, normal);
         penetration = min + r0;
 
-        vpCollisionInfo newContact;
+        CollisionInfo newContact;
         newContact.point = c0;
         newContact.normal = normal;
         newContact.penetration = penetration;
@@ -1236,7 +1236,7 @@ int _SphereBox__________MARK8(double r0, const SE3& T0,
     {
         normal *= (1.0/mag);
 
-        vpCollisionInfo newContact;
+        CollisionInfo newContact;
         newContact.point = contactpt;
         newContact.normal = normal;
         newContact.penetration = penetration;
@@ -1263,7 +1263,7 @@ int _SphereBox__________MARK8(double r0, const SE3& T0,
         normal[idx] = (p[idx] > 0.0 ? 1.0 : -1.0);
         normal = Rotate(T1, normal);
 
-        vpCollisionInfo newContact;
+        CollisionInfo newContact;
         newContact.point = contactpt;
         newContact.normal = normal;
         newContact.penetration = penetration;
@@ -1274,7 +1274,7 @@ int _SphereBox__________MARK8(double r0, const SE3& T0,
 
 int _SphereSphere_______MARK8(double r0, const SE3& T0,
                               double r1, const SE3& T1,
-                              vpCollisionInfoArray& result)
+                              CollisionInfoArray& result)
 {
     double rsum = r0 + r1;
     Vec3 normal(T0[9] - T1[9], T0[10] - T1[10], T0[11] - T1[11]);
@@ -1296,7 +1296,7 @@ int _SphereSphere_______MARK8(double r0, const SE3& T0,
         normal.setValues(0.0,0.0,1.0);
         penetration = rsum;
 
-        vpCollisionInfo newContact;
+        CollisionInfo newContact;
         newContact.point = point;
         newContact.normal = normal;
         newContact.penetration = penetration;
@@ -1309,7 +1309,7 @@ int _SphereSphere_______MARK8(double r0, const SE3& T0,
     normal *= (1.0/normal_sqr);
     penetration = rsum - normal_sqr;
 
-    vpCollisionInfo newContact;
+    CollisionInfo newContact;
     newContact.point = point;
     newContact.normal = normal;
     newContact.penetration = penetration;
@@ -2063,7 +2063,7 @@ int _SphereSphere_______MARK8(double r0, const SE3& T0,
 
 int _BoxPlane___________MARK8(const SE3& T0,
                               const Vec3& size, const SE3& T1,
-                              vpCollisionInfoArray& result)
+                              CollisionInfoArray& result)
 {
     // Plane
     //const SE3 & T0 = pRightCol->getFrame();
@@ -2123,7 +2123,7 @@ int _BoxPlane___________MARK8(const SE3& T0,
     if (nCp > 4) nCp = 4;
     for (i = 0 ; i < nCp ; i++)
     {
-        vpCollisionInfo newContact;
+        CollisionInfo newContact;
         newContact.point = vVertex[idx_dist[i]];
         newContact.normal = normal;
         newContact.penetration = dist[idx_dist[i]];
@@ -2672,7 +2672,7 @@ int _BoxPlane___________MARK8(const SE3& T0,
 
 int collide(dynamics::Shape* shape0, const SE3& T0,
             dynamics::Shape* shape1, const SE3& T1,
-            vpCollisionInfoArray& result, int n)
+            CollisionInfoArray& result, int n)
 {
 //    srGeometryInfo::SHAPETYPE LeftType = pLeftCol->getCollisionShape();
 //    srGeometryInfo::SHAPETYPE RightType = pRightCol->getCollisionShape();

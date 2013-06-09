@@ -88,7 +88,7 @@ private:
 
 
 
-struct vpCollisionInfo
+struct CollisionInfo
 {
     Vec3 point;			/*!< point of collision in a global frame */
     Vec3 normal;		/*!< surface normal of the right body at the collision point in a global frame */
@@ -102,27 +102,27 @@ struct vpCollisionInfo
 //    double contactForce;
 };
 
-typedef std::vector<vpCollisionInfo> vpCollisionInfoArray;
+typedef std::vector<CollisionInfo> CollisionInfoArray;
 
 int collide(dynamics::Shape* shape0, const math::SE3& T0,
             dynamics::Shape* shape1, const math::SE3& T1,
-            vpCollisionInfoArray& result, int n);
+            CollisionInfoArray& result, int n);
 
 int	_BoxBox_____________MARK8(const Vec3& size0, const SE3& T0,
                               const Vec3& size1, const SE3& T1,
-                              vpCollisionInfoArray& result);
+                              CollisionInfoArray& result);
 int	_BoxSphere__________MARK8(const Vec3& size0, const SE3& T0,
                               double r1, const SE3& T1,
-                              vpCollisionInfoArray& result);
+                              CollisionInfoArray& result);
 //int	_BoxCylinder________MARK8();
 //int	_BoxCapsule_________MARK8();
 
 int	_SphereBox__________MARK8(const Vec3& size, const SE3& T0,
                               double r0, const SE3& T1,
-                              vpCollisionInfoArray& result);
+                              CollisionInfoArray& result);
 int	_SphereSphere_______MARK8(double r0, const SE3& T0,
                               double r1, const SE3& T1,
-                              vpCollisionInfoArray& result);
+                              CollisionInfoArray& result);
 //int	_SphereCylinder_____MARK8();
 //int	_SphereCapsule______MARK8();
 
@@ -143,111 +143,11 @@ int	_SphereSphere_______MARK8(double r0, const SE3& T0,
 
 int	_BoxPlane___________MARK8(const SE3& T0,
                               const Vec3& size, const SE3& T1,
-                              vpCollisionInfoArray& result);
+                              CollisionInfoArray& result);
 //int	_SpherePlane________MARK8();
 //int	_CylinderPlane______MARK8();
 //int	_CapsulePlane_______MARK8();
 
-//------------------------------------------------------------------------------
-// Sphere-Sphere
-bool ColDetSphereSphere(
-        double r0, const Vec3& c0, double r1, const Vec3& c1,
-        Vec3 &normal, Vec3 &point, double &rsum);
-bool ColDetSphereSphere(
-        double r0, const SE3 &c0, double r1, const SE3 &c1);
-bool ColDetSphereSphere(
-        double r0, const SE3 &c0, double r1, const SE3 &c1,
-        Vec3 &normal, Vec3 &point, double &rsum);
-
-// Sphere-Box
-bool ColDetSphereBox(
-        const double& r0, const SE3& T0,
-        const Vec3& size, const SE3& T1);
-bool ColDetSphereBox(
-        const double& r0, const SE3& T0,
-        const Vec3& size, const SE3& T1,
-        Vec3 &normal, Vec3 &point, double &penetration);
-
-// Sphere-Plane
-bool ColDetSpherePlane(
-        const double &rad, const Vec3 &c,
-        const Vec3 &plane_normal, const SE3 &T,
-        Vec3 &normal, Vec3 &point, double &penetration);
-
-//------------------------------------------------------------------------------
-// Box
-//------------------------------------------------------------------------------
-// Box-Box
-bool ColDetBoxBox(
-        const Vec3 &size0, const SE3 &T0,
-        const Vec3 &size1, const SE3 &T1,
-        vpCollisionInfoArray &info, int max_nc);
-bool ColDetBoxBox(
-        const Vec3 &size0, const SE3 &T0,
-        const Vec3 &size1, const SE3 &T1,
-        vpCollisionInfoArray &info, int max_nc);
-
-bool ColDetBoxPlane(
-        const Vec3 &halfSize, const SE3 &Tbox,
-        const Vec3 &planeNormal, const SE3 &Tplane,
-        vpCollisionInfoArray &info);
-
-//------------------------------------------------------------------------------
-// Capsule
-//------------------------------------------------------------------------------
-// Capsule-Capsule
-bool ColDetCapsuleCapsule(
-        const double &r0, const double &h0, const SE3 &T0,
-        const double &r1, const double &h1, const SE3 &T1);
-bool ColDetCapsuleCapsule(
-        const double &r0, const double &h0, const SE3 &T0,
-        const double &r1, const double &h1, const SE3 &T1,
-        Vec3 &normal, Vec3 &point, double &penetration);
-
-// Capsule-Sphere
-bool ColDetCapsuleSphere(
-        const double &r0, const double &h, const SE3 &T0,
-        const double &r1, const SE3 &T1);
-bool ColDetCapsuleSphere(
-        const double &r0, const double &h, const SE3 &T0,
-        const double &r1, const SE3 &T1,
-        Vec3 &normal, Vec3 &point, double &penetration);
-
-// Cpasule-Box
-bool ColDetCapsuleBox(
-        const double &r, const double &h, const SE3 &T0,
-        const Vec3 &size, const SE3 &T1);
-bool ColDetCapsuleBox(
-        const double &r, const double &h, const SE3 &T0,
-        const Vec3 &size, const SE3 &T1,
-        Vec3 &normal, Vec3 &point, double &penetration);
-
-
-
-//------------------------------------------------------------------------------
-// Cylinder
-//------------------------------------------------------------------------------
-// Cylinder-Plane
-bool ColDetCylinderPlane(
-        const double &rad, const double &half_height, const SE3 &T0,
-        const Vec3 &plane_normal, const SE3 &T1,
-        Vec3 &normal, Vec3 &point, double &penetration);
-// Cylinder-Sphere
-bool ColDetCylinderSphere(
-        const double &cyl_rad, const double &half_height, const SE3 &T0,
-        const double &sphere_rad, const SE3 &T1,
-        Vec3 &normal, Vec3 &point, double &penetration);
-
-//------------------------------------------------------------------------------
-// Torus
-//------------------------------------------------------------------------------
-// Torus-Plane
-bool ColDetTorusPlane(
-        const double &ring_rad, const double &tube_rad, const SE3 &T0,
-        const Vec3 &plane_normal, const SE3 &T1,
-        Vec3 &normal, Vec3 &point, double &penetration);
-//bool ColDetTorusTorus(const double &, const double &, const SE3 &, const double &, const double &, const SE3 &, Vec3 &, Vec3 &, double &);
-//bool ColDetTorusSphere(const double &, const double &, const SE3 &, const double &, const double &, const SE3 &, Vec3 &, Vec3 &, double &);
 
 } // namespace collision
 } // namespace dart
