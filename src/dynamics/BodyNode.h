@@ -119,12 +119,10 @@ public:
     // Static properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setName(const std::string& _name) { mName = _name; }
+    void setName(const std::string& _name);
 
     /// @brief
-    const std::string& getName() const { return mName; }
-
-
+    const std::string& getName() const;
 
     /// @brief
     void setGravityMode(bool _onoff) { mGravityMode = _onoff; }
