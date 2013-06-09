@@ -1179,6 +1179,15 @@ public:
     /// @brief Set rotation with quaternion values.
     void setOrientationQuaternion(double w, double x, double y, double z);
 
+    /// @brief Get x-axis from orientation part.
+    Vec3 getRx(void) const;
+
+    /// @brief Get y-axis from orientation part.
+    Vec3 getRy(void) const;
+
+    /// @brief Get z-axis from orientation part.
+    Vec3 getRz(void) const;
+
     /// @brief set position part from p.
     void setPosition(const Vec3& p);
 
@@ -3414,6 +3423,21 @@ inline void SE3::setOrientationQuaternion(double w, double x, double y, double z
     _T[6] = SCALAR_2 * (q31 + q02);
     _T[7] = SCALAR_2 * (q23 - q01);
     _T[8] = SCALAR_1 - SCALAR_2 * (q11 + q22);
+}
+
+inline Vec3 SE3::getRx() const
+{
+    return Vec3(_T[0], _T[1], _T[2]);
+}
+
+inline Vec3 SE3::getRy() const
+{
+    return Vec3(_T[3], _T[4], _T[5]);
+}
+
+inline Vec3 SE3::getRz() const
+{
+    return Vec3(_T[6], _T[7], _T[8]);
 }
 
 inline void SE3::setPosition(const Vec3& Pos)

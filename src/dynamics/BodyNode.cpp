@@ -68,7 +68,9 @@ BodyNode::BodyNode(const std::string& _name)
       mdV(math::se3()),
       mGravityMode(true),
       mI(math::Inertia()),
-      mF(math::dse3())
+      mF(math::dse3()),
+      mRestitutionCoeff(0.5),
+      mRestitutionCoeff(0.4)
 {
     mID = BodyNode::msBodyNodeCount++;
 }

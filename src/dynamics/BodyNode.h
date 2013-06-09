@@ -467,6 +467,14 @@ protected:
     /// @brief Whether the node is currently in collision with another node.
     bool mColliding;
 
+    // TODO: This will be used soon.
+    /// @brief Restitution coefficient
+    double mRestitutionCoeff;
+
+    // TODO: This will be used soon.
+    /// @brief Friction coefficient.
+    double mFrictionCoeff;
+
     //--------------------------------------------------------------------------
     // Structual Properties
     //--------------------------------------------------------------------------

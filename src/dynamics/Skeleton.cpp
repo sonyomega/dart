@@ -89,14 +89,12 @@ void Skeleton::addJoint(Joint* _joint)
     const std::vector<GenCoord*>& dofs = _joint->getDofs();
     for (std::vector<GenCoord*>::const_iterator itrDof = dofs.begin();
          itrDof != dofs.end();
-         ++itrDof)
-    {
+         ++itrDof) {
         mDofs.push_back((*itrDof));
         (*itrDof)->setSkelIndex(mDofs.size() - 1);
     }
 
-    if (_joint->getParentBody() != NULL && _joint->getChildBody() != NULL)
-    {
+    if (_joint->getParentBody() != NULL && _joint->getChildBody() != NULL) {
         boost::add_edge(_joint->getParentBody()->getSkelIndex(),
                         _joint->getChildBody()->getSkelIndex(),
                         *mGraph);
@@ -109,8 +107,7 @@ BodyNode*Skeleton::findBody(const string& _name) const
 
     for (std::vector<BodyNode*>::const_iterator itrBody = mBodies.begin();
          itrBody != mBodies.end();
-         ++itrBody)
-    {
+         ++itrBody) {
         if ((*itrBody)->getName() == _name)
             return *itrBody;
     }
@@ -137,8 +134,7 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
     for (int i = 0; i < getNumDofs(); i++)
         mDofs.at(i)->set_q(_pose[i]);
 
-    if (bCalcTrans)
-    {
+    if (bCalcTrans) {
         if (bCalcDeriv)
             updateForwardKinematics(true, false);
         else
@@ -149,9 +145,6 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
 void Skeleton::initKinematics()
 {
     mRoot = mBodies[0];
-
-
-
 
     // calculate mass
     // init the dependsOnDof stucture for each bodylink
@@ -184,8 +177,7 @@ void Skeleton::_updateJointKinematics(bool _firstDerivative,
 {
     for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
          itrJoint != mJoints.end();
-         ++itrJoint)
-    {
+         ++itrJoint) {
         (*itrJoint)->updateKinematics(_firstDerivative,
                                       _secondDerivative);
     }
@@ -196,8 +188,7 @@ void Skeleton::_updateBodyForwardKinematics(bool _firstDerivative,
 {
     for (std::vector<BodyNode*>::iterator itrBody = mBodies.begin();
          itrBody != mBodies.end();
-         ++itrBody)
-    {
+         ++itrBody) {
         (*itrBody)->updateTransformation();
 
         if (_firstDerivative)
@@ -260,8 +251,7 @@ void Skeleton::computeForwardDynamicsID(
     mCg = b;
 
     // Calcualtion M column by column
-    for (int i = 0; i < n; ++i)
-    {
+    for (int i = 0; i < n; ++i) {
         Eigen::VectorXd basis = Eigen::VectorXd::Zero(n);
         basis(i) = 1;
         set_ddq(basis);
@@ -305,8 +295,7 @@ void Skeleton::_inverseDynamicsFwdRecursion()
     // Forward recursion
     for (std::vector<dynamics::BodyNode*>::iterator itrBody = mBodies.begin();
          itrBody != mBodies.end();
-         ++itrBody)
-    {
+         ++itrBody) {
         (*itrBody)->updateTransformation();
         (*itrBody)->updateVelocity();
         (*itrBody)->updateAcceleration();
@@ -319,8 +308,7 @@ void Skeleton::_inverseDynamicsBwdRecursion(const Eigen::Vector3d& _gravity,
     // Backward recursion
     for (std::vector<dynamics::BodyNode*>::reverse_iterator ritrBody = mBodies.rbegin();
          ritrBody != mBodies.rend();
-         ++ritrBody)
-    {
+         ++ritrBody) {
         dynamics::BodyNode* body
                 = dynamic_cast<dynamics::BodyNode*>(*ritrBody);
 
@@ -336,8 +324,7 @@ Eigen::VectorXd Skeleton::getDampingForces() const
     int idx = 0;
     int numJoints = mJoints.size();
 
-    for (int i = 0; i < numJoints; ++i)
-    {
+    for (int i = 0; i < numJoints; ++i) {
         int numDofsJoint = mJoints[i]->getDOF();
         Eigen::VectorXd dampingForceJoint = mJoints[i]->getDampingForce();
 
