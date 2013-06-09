@@ -43,6 +43,7 @@
 #include <string>
 
 #include "utils/Deprecated.h"
+#include "math/LieGroup.h"
 
 namespace dart {
 namespace dynamics {
@@ -50,6 +51,64 @@ namespace dynamics {
 class Joint;
 class Transformation;
 
+struct ScalarCoord{
+    double q;       ///< Position
+    double qMin;    ///< Min value allowed.
+    double qMax;    ///< Max value allowed.
+
+    double dq;       ///< Velocity
+    double dqMin;    ///< Min value allowed.
+    double dqMax;    ///< Max value allowed.
+
+    double ddq;       ///< Acceleration
+    double ddqMin;    ///< Min value allowed.
+    double ddqMax;    ///< Max value allowed.
+
+    double tau;       ///< Force (torque)
+    double tauMin;    ///< Min value allowed.
+    double tauMax;    ///< Max value allowed.
+
+    double init_q;
+    double init_dq;
+};
+
+struct SO3Coord {
+    math::SO3 q;       ///< Position
+
+    math::so3 dq;       ///< Velocity
+    math::so3 dqMin;    ///< Min value allowed.
+    math::so3 dqMax;    ///< Max value allowed.
+
+    math::so3 ddq;       ///< Acceleration
+    math::so3 ddqMin;    ///< Min value allowed.
+    math::so3 ddqMax;    ///< Max value allowed.
+
+    math::dso3 tau;       ///< Force (torque)
+    math::dso3 tauMin;    ///< Min value allowed.
+    math::dso3 tauMax;    ///< Max value allowed.
+
+    math::SO3 init_q;
+    math::SO3 init_dq;
+};
+
+struct SE3Coord {
+    math::SE3 q;       ///< Position
+
+    math::se3 dq;       ///< Velocity
+    math::se3 dqMin;    ///< Min value allowed.
+    math::se3 dqMax;    ///< Max value allowed.
+
+    math::se3 ddq;       ///< Acceleration
+    math::se3 ddqMin;    ///< Min value allowed.
+    math::se3 ddqMax;    ///< Max value allowed.
+
+    math::dse3 tau;       ///< Force (torque)
+    math::dse3 tauMin;    ///< Min value allowed.
+    math::dse3 tauMax;    ///< Max value allowed.
+
+    math::SE3 init_q;
+    math::SE3 init_dq;
+};
 
 // TODO: Change name (Dof --> GeneralizedCoordinate).
 // A degrees of freedom is just a number of generalized coordinates.
@@ -64,19 +123,18 @@ class Transformation;
 class GenCoord
 {
 public:
-    // TODO: Use get_q(), get_qMin(), get_qMax instead.
-    DEPRECATED double getValue() const { return q; }
-    DEPRECATED double getMax() const { return qMax; }
-    DEPRECATED double getMin() const { return qMin; }
+    enum CoordType {
+        CT_REAL,
+        CT_SO3,
+        CT_SE3
+    };
 
-public:
     /// @brief
     GenCoord();
 
     /// @brief
     virtual ~GenCoord();
 
-public:
     /// @brief
     void init();
 

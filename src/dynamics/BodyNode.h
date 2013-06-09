@@ -563,6 +563,15 @@ protected:
 
     Eigen::MatrixXd AI_S;
 
+    struct BodyState {
+        math::SE3 W;
+        math::se3 V;
+        math::se3 dV;
+        math::dse3 Fjoint;
+        math::dse3 Fgravity;
+        math::dse3 Fext;
+    };
+
     struct ForwardDynamicsCacheData {
         // AI
         // B

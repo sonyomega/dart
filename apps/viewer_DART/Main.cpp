@@ -15,8 +15,8 @@ int main(int argc, char* argv[])
                   //DART_DATA_PATH"/dart/test/translational_joints.dart");
                   //DART_DATA_PATH"/dart/test/free_joints.dart");
                   //DART_DATA_PATH"/dart/test/serial_chain.dart");
-                  //DART_DATA_PATH"/dart/test/drop.dart");
-                  DART_DATA_PATH"/dart/test/drop_unrotated_box.dart");
+                  DART_DATA_PATH"/dart/test/drop.dart");
+                  //DART_DATA_PATH"/dart/test/drop_unrotated_box.dart");
                   //DART_DATA_PATH"/dart/test/SimplePendulum.dart");
     assert(myWorld != NULL);
 
