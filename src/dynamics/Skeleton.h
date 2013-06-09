@@ -40,7 +40,9 @@
 #define DART_KINEMATICS_SKELETON_H
 
 #include <vector>
+
 #include <Eigen/Dense>
+
 #include <boost/graph/adjacency_matrix.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graphviz.hpp>

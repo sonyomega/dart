@@ -70,13 +70,23 @@ BodyNode::BodyNode(const std::string& _name)
       mI(math::Inertia()),
       mF(math::dse3()),
       mRestitutionCoeff(0.5),
-      mRestitutionCoeff(0.4)
+      mFrictionCoeff(0.4)
 {
     mID = BodyNode::msBodyNodeCount++;
 }
 
 BodyNode::~BodyNode()
 {
+}
+
+void BodyNode::setName(const std::string& _name)
+{
+    mName = _name;
+}
+
+const std::string& BodyNode::getName() const
+{
+    return mName;
 }
 
 void BodyNode::addChildJoint(Joint* _joint)

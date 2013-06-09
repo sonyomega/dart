@@ -248,8 +248,9 @@ Eigen::VectorXd GenCoordSystem::get_q() const
     int size = getNumDofs();
     Eigen::VectorXd q = Eigen::VectorXd::Zero(size);
 
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < size; ++i) {
         q(i) = mDofs[i]->get_q();
+    }
 
     return q;
 }
@@ -259,8 +260,9 @@ Eigen::VectorXd GenCoordSystem::get_dq() const
     int size = getNumDofs();
     Eigen::VectorXd dq = Eigen::VectorXd::Zero(size);
 
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < size; ++i) {
         dq(i) = mDofs[i]->get_dq();
+    }
 
     return dq;
 }
@@ -270,8 +272,9 @@ Eigen::VectorXd GenCoordSystem::get_ddq() const
     int size = getNumDofs();
     Eigen::VectorXd ddq = Eigen::VectorXd::Zero(size);
 
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < size; ++i) {
         ddq(i) = mDofs[i]->get_ddq();
+    }
 
     return ddq;
 }
@@ -281,8 +284,9 @@ Eigen::VectorXd GenCoordSystem::get_tau() const
     int size = getNumDofs();
     Eigen::VectorXd tau = Eigen::VectorXd::Zero(size);
 
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < size; ++i) {
         tau(i) = mDofs[i]->get_tau();
+    }
 
     return tau;
 }

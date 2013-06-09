@@ -36,6 +36,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "math/LieGroup.h"
 #include "math/UtilsMath.h"
 #include "dynamics/BodyNode.h"
 #include "dynamics/Dof.h"

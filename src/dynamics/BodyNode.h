@@ -74,6 +74,7 @@ Runge-Kutta and fourth-order Runge Kutta.
 #define DART_KINEMATICS_BODYNODE_H
 
 #include <vector>
+
 #include <Eigen/Dense>
 
 #include "utils/Deprecated.h"

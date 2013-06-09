@@ -40,9 +40,6 @@
 #include "dynamics/RevoluteJoint.h"
 
 namespace dart {
-
-using namespace math;
-
 namespace dynamics {
 
 RevoluteJoint::RevoluteJoint(const math::Axis& axis)
@@ -63,7 +60,7 @@ RevoluteJoint::~RevoluteJoint()
 {
 }
 
-so3 RevoluteJoint::getAxisGlobal() const
+math::so3 RevoluteJoint::getAxisGlobal() const
 {
     math::SE3 parentTransf;
 
@@ -77,8 +74,8 @@ void RevoluteJoint::_updateTransformation()
 {
     // T
     mT = mT_ParentBodyToJoint
-         * Exp(se3(mAxis * mCoordinate.get_q(), Vec3(0.0, 0.0, 0.0)))
-         * Inv(mT_ChildBodyToJoint);
+         * math::Exp(math::se3(mAxis * mCoordinate.get_q(), math::Vec3(0.0, 0.0, 0.0)))
+         * math::Inv(mT_ChildBodyToJoint);
 }
 
 void RevoluteJoint::_updateVelocity()
