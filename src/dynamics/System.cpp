@@ -298,17 +298,17 @@ int SystemConfiguration::getDof() const
 
 SystemConfiguration GenCoordSystem::getConfiguration() const
 {
-    int size = getNumDofs();
-    Eigen::VectorXd dq = Eigen::VectorXd::Zero(size);
+//    int size = getNumDofs();
+//    Eigen::VectorXd dq = Eigen::VectorXd::Zero(size);
 
-    SystemConfiguration config;
+//    SystemConfiguration config;
 
-    for (int i = 0; i < mGeneralizedCoordinates.size(); ++i) {
-        mGeneralizedCoordinates[i];
+//    for (int i = 0; i < mGeneralizedCoordinates.size(); ++i) {
+//        mGeneralizedCoordinates[i];
 
-    }
+//    }
 
-    return config;
+//    return config;
 }
 
 //void System::setState(const Eigen::VectorXd& _state)
