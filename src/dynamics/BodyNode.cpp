@@ -480,8 +480,7 @@ void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
 
     for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
          itrBody != mChildBodies.end();
-         ++itrBody)
-    {
+         ++itrBody) {
         dynamics::Joint* childJoint = (*itrBody)->getParentJoint();
         assert(childJoint != NULL);
         BodyNode* bodyDyn = dynamic_cast<BodyNode*>(*itrBody);
