@@ -485,17 +485,17 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     // Type attribute
     std::string type = getAttribute(_jointElement, "type");
     assert(!type.empty());
-    if (type ==std::string("weld"))
+    if (type == std::string("weld"))
         newJoint = readWeldJoint(_jointElement, _skeleton);
     if (type == std::string("revolute"))
         newJoint = readRevoluteJoint(_jointElement, _skeleton);
-    if (type ==std::string("ball"))
+    if (type == std::string("ball"))
         newJoint = readBallJoint(_jointElement, _skeleton);
-    if (type ==std::string("euler_xyz"))
+    if (type == std::string("euler_xyz"))
         newJoint = readEulerXYZJoint(_jointElement, _skeleton);
-    if (type ==std::string("translational"))
+    if (type == std::string("translational"))
         newJoint = readTranslationalJoint(_jointElement, _skeleton);
-    if (type ==std::string("free"))
+    if (type == std::string("free"))
         newJoint = readFreeJoint(_jointElement, _skeleton);
     assert(newJoint != NULL);
 
