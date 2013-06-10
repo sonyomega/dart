@@ -1288,10 +1288,10 @@ public:
     explicit Inertia(double mass, double Ixx, double Iyy, double Izz);
 
     /// @brief constructor
-    explicit Inertia(double Ixx, double Iyy, double Izz,
+    explicit Inertia(double mass,
+                     double Ixx, double Iyy, double Izz,
                      double Ixy, double Iyz, double Izx,
-                     double r0, double r1, double r2,
-                     double mass);
+                     double r0, double r1, double r2);
 
     ~Inertia();
 
@@ -1349,6 +1349,30 @@ public:
 
     /// @brief
     void setAngularMomentOffDiag(double Ixy, double Ixz, double Iyz);
+
+    /// @brief
+    void setBoxShapeWithDensity(double density, const Vec3& size);
+
+    /// @brief
+    void setSphereShapeWithDensity(double density, double radius);
+
+    /// @brief
+    void setCylinderShapeWithDensity(double density, double radius, double height);
+
+    /// @brief
+    void setTorusShapeWithDensity(double density, double ring_rad, double tube_rad);
+
+    /// @brief
+    void setBoxShapeWithMass(double mass, const Vec3& size);
+
+    /// @brief
+    void setSphereShapeWithMass(double mass, double radius);
+
+    /// @brief
+    void setCylinderShapeWithMass(double mass, double radius, double height);
+
+    /// @brief
+    void setTorusShapeWithMass(double mass, double ring_rad, double tube_rad);
 
     /// @brief
     Vec3 getAngularMomentOffDiag() const;

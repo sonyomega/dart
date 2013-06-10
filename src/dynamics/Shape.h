@@ -40,6 +40,8 @@
 
 #include <Eigen/Dense>
 
+#include "math/LieGroup.h"
+
 extern "C" { struct aiScene; }
 
 namespace dart {
@@ -95,8 +97,12 @@ public:
     { return mTransform.translation(); }
 
     /// @brief
-    virtual Eigen::Matrix3d computeInertia(double _mass)
+    virtual Eigen::Matrix3d computeInertia(double _mass) const
     { return Eigen::Matrix3d::Zero(); }
+
+    /// @brief
+    virtual math::Inertia computeInertia2(double _mass) const
+    { return math::Inertia(); }
 
     /// @brief
     void setVolume(double _v) { mVolume = _v; }

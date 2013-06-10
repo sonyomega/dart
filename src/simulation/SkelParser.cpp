@@ -327,37 +327,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
         newBody->setWorldTransformation(W);
     }
 
-    //--------------------------------------------------------------------------
-    // inertia
-    if (hasElement(_bodyElement, "inertia"))
-    {
-        tinyxml2::XMLElement* inertiaElement = getElement(_bodyElement, "inertia");
 
-        // mass
-        double mass = getValueDouble(inertiaElement, "mass");
-        newBody->setMass(mass);
-
-        // offset
-        math::Vec3 offset = getValueVec3(inertiaElement, "offset");
-        newBody->setCenterOfMass(offset);
-
-        // moment of inertia
-        if (hasElement(inertiaElement, "moment_of_inertia"))
-        {
-            tinyxml2::XMLElement* moiElement
-                    = getElement(inertiaElement, "moment_of_inertia");
-
-            double ixx = getValueDouble(moiElement, "ixx");
-            double iyy = getValueDouble(moiElement, "iyy");
-            double izz = getValueDouble(moiElement, "izz");
-
-            double ixy = getValueDouble(moiElement, "ixy");
-            double ixz = getValueDouble(moiElement, "ixz");
-            double iyz = getValueDouble(moiElement, "iyz");
-
-            newBody->setMomentOfInertia(ixx, iyy, izz, ixy, ixz, iyz);
-        }
-    }
 
     // visualization_shape
     if (hasElement(_bodyElement, "visualization_shape"))
@@ -468,6 +438,45 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
             AF.matrix() = W.getEigenMatrix();
             shape->setTransform(AF);
         }
+    }
+
+    //--------------------------------------------------------------------------
+    // inertia
+    if (hasElement(_bodyElement, "inertia"))
+    {
+        tinyxml2::XMLElement* inertiaElement = getElement(_bodyElement, "inertia");
+
+        math::Inertia I;
+
+        // mass
+        double mass = getValueDouble(inertiaElement, "mass");
+        I.setMass(mass);
+
+        // moment of inertia
+        if (hasElement(inertiaElement, "moment_of_inertia")) {
+            tinyxml2::XMLElement* moiElement
+                    = getElement(inertiaElement, "moment_of_inertia");
+
+            double ixx = getValueDouble(moiElement, "ixx");
+            double iyy = getValueDouble(moiElement, "iyy");
+            double izz = getValueDouble(moiElement, "izz");
+
+            double ixy = getValueDouble(moiElement, "ixy");
+            double ixz = getValueDouble(moiElement, "ixz");
+            double iyz = getValueDouble(moiElement, "iyz");
+
+            I.setAngularMomentDiag   (ixx, iyy, izz);
+            I.setAngularMomentOffDiag(ixy, ixz, iyz);
+        }
+        else if (newBody->getVisualizationShape() != 0) {
+            I = newBody->getVisualizationShape()->computeInertia2(mass);
+        }
+
+        // offset
+        math::Vec3 offset = getValueVec3(inertiaElement, "offset");
+        I.setOffset(offset);
+
+        newBody->setInertia(I);
     }
 
     return newBody;

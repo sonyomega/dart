@@ -74,6 +74,14 @@ namespace dynamics {
         return inertia;
     }
 
+    math::Inertia ShapeEllipsoid::computeInertia2(double _mass) const
+    {
+        return math::Inertia(_mass,
+                             _mass / 20.0 * (mDim(1) * mDim(1) + mDim(2) * mDim(2)),
+                             _mass / 20.0 * (mDim(0) * mDim(0) + mDim(2) * mDim(2)),
+                             _mass / 20.0 * (mDim(0) * mDim(0) + mDim(1) * mDim(1)));
+    }
+
     bool ShapeEllipsoid::isSphere() const {
         if (mDim[0] == mDim[1] && mDim[1] == mDim[2])
             return true;

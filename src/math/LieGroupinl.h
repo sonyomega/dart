@@ -2222,10 +2222,10 @@ inline Inertia::Inertia(double mass, double Ixx, double Iyy, double Izz)
     _I[3] = _I[4] = _I[5] = _I[6] = _I[7] = _I[8] = SCALAR_0;
 }
 
-inline Inertia::Inertia(double Ixx, double Iyy, double Izz,
+inline Inertia::Inertia(double mass,
+                        double Ixx, double Iyy, double Izz,
                         double Ixy, double Iyz, double Izx,
-                        double r0, double r1, double r2,
-                        double mass)
+                        double r0, double r1, double r2)
 {
     _I[0] = Ixx;
     _I[1] = Iyy;
@@ -2420,6 +2420,81 @@ inline void Inertia::setMass(double mass)
 inline double Inertia::getMass(void) const
 {
     return _I[9];
+}
+
+inline void Inertia::setBoxShapeWithDensity(double density, const Vec3& size)
+{
+    double mass = (double)8.0 * density * size._v[0] * size._v[1] * size._v[2];
+
+    setBoxShapeWithMass(mass, size);
+}
+
+inline void Inertia::setSphereShapeWithDensity(double density, double rad)
+{
+    rad *= rad;
+    double mass = density * M_PI * rad;
+
+    setSphereShapeWithMass(mass, rad);
+}
+
+inline void Inertia::setCylinderShapeWithDensity(double density, double rad, double height)
+{
+    rad *= rad;
+    double mass = density * M_PI * rad * height;
+
+    setCylinderShapeWithMass(mass, rad, height);
+}
+
+inline void Inertia::setTorusShapeWithDensity(double density, double ring_rad,
+                                              double tube_rad)
+{
+    double mass = density * SCALAR_2 * M_PI_SQR * ring_rad * tube_rad * tube_rad;
+
+    setTorusShapeWithMass(mass, ring_rad, tube_rad);
+}
+
+inline void Inertia::setBoxShapeWithMass(double mass, const Vec3& size)
+{
+    _I[0] = mass * (size._v[1] * size._v[1] + size._v[2] * size._v[2]) / SCALAR_3;
+    _I[1] = mass * (size._v[0] * size._v[0] + size._v[2] * size._v[2]) / SCALAR_3;
+    _I[2] = mass * (size._v[0] * size._v[0] + size._v[1] * size._v[1]) / SCALAR_3;
+
+    _I[3] = _I[4] = _I[5] = 0.0;
+
+    _I[9] = mass;
+}
+
+inline void Inertia::setSphereShapeWithMass(double mass, double rad)
+{
+    rad *= rad;
+
+    _I[0] = _I[1] = _I[2] = (double)0.4 * mass * rad;
+
+    _I[3] = _I[4] = _I[5] = 0.0;
+
+    _I[9] = mass;
+}
+
+inline void Inertia::setCylinderShapeWithMass(double mass, double rad, double height)
+{
+    rad *= rad;
+
+    _I[0] = _I[1] = mass * height * height  / (double)12.0 + SCALAR_1_4 * mass * rad;
+    _I[2] = SCALAR_1_2 * mass * rad;
+
+    _I[3] = _I[4] = _I[5] = 0.0;
+
+    _I[9] = mass;
+}
+
+inline void Inertia::setTorusShapeWithMass(double mass, double ring_rad, double tube_rad)
+{
+    _I[0] = _I[1] = mass * ((double)0.625 * tube_rad * tube_rad + SCALAR_1_2 * ring_rad + ring_rad);
+    _I[2] = mass * ((double)0.75 * tube_rad * tube_rad + ring_rad + ring_rad);
+
+    _I[3] = _I[4] = _I[5] = 0.0;
+
+    _I[9] = mass;
 }
 
 inline void Inertia::setAngularMomentDiag(double Ixx, double Iyy, double Izz)

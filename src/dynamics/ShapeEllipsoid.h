@@ -57,6 +57,9 @@ public:
     // Documentation inherited.
     virtual Eigen::Matrix3d computeInertia(double _mass);
 
+    // Documentation inherited.
+    math::Inertia computeInertia2(double _mass) const;
+
     /// @brief True if (mDim[0] == mDim[1] == mDim[2]).
     bool isSphere(void) const;
 

@@ -80,5 +80,13 @@ namespace dynamics {
         return inertia;
     }
 
+    math::Inertia ShapeCylinder::computeInertia2(double _mass) const
+    {
+        return math::Inertia(_mass,
+                             _mass * (3.0 * mRadius * mRadius + mHeight * mHeight) / 12.0,
+                             _mass * (3.0 * mRadius * mRadius + mHeight * mHeight) / 12.0,
+                             0.5 * _mass * mRadius * mRadius);
+    }
+
 } // namespace dynamics
 } // namespace dart

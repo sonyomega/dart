@@ -65,13 +65,21 @@ void ShapeBox::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool
     _ri->popMatrix();
 }
 
-Matrix3d ShapeBox::computeInertia(double _mass) {
+Matrix3d ShapeBox::computeInertia(double _mass) const {
     Matrix3d inertia = Matrix3d::Zero();
     inertia(0, 0) = _mass / 12.0 * (mDim(1) * mDim(1) + mDim(2) * mDim(2));
     inertia(1, 1) = _mass / 12.0 * (mDim(0) * mDim(0) + mDim(2) * mDim(2));
     inertia(2, 2) = _mass / 12.0 * (mDim(0) * mDim(0) + mDim(1) * mDim(1));
 
     return inertia;
+}
+
+math::Inertia ShapeBox::computeInertia2(double _mass) const
+{
+    return math::Inertia(_mass,
+                         _mass / 12.0 * (mDim(1) * mDim(1) + mDim(2) * mDim(2)),
+                         _mass / 12.0 * (mDim(0) * mDim(0) + mDim(2) * mDim(2)),
+                         _mass / 12.0 * (mDim(0) * mDim(0) + mDim(1) * mDim(1)));
 }
 
 void ShapeBox::computeVolume() {

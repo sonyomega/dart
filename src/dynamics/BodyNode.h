@@ -150,6 +150,9 @@ public:
                             double _Ixy, double _Ixz, double _Iyz);
 
     /// @brief
+    void setInertia(const math::Inertia& _I) { mI = _I; }
+
+    /// @brief
     const math::Inertia& getInertia() const { return mI; }
 
     //void setLocalInertia(const Eigen::Matrix3d& _inertia) { mI = _inertia; }
