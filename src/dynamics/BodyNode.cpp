@@ -284,6 +284,8 @@ void BodyNode::init()
     const int numDepDofs = getNumDependentDofs();
     mBodyJacobian.setSize(numDepDofs);
     mBodyJacobian.setZero();
+
+    mM = Eigen::MatrixXd::Zero(getNumDependentDofs(), getNumDependentDofs());
 }
 
 void BodyNode::draw(renderer::RenderInterface* _ri,
@@ -563,6 +565,19 @@ void BodyNode::updateBiasForce()
 void BodyNode::updateDampingForce()
 {
     dterr << "Not implemented.\n";
+}
+
+void BodyNode::updateMassMatrix()
+{
+    mM.triangularView<Eigen::Upper>() = mBodyJacobian.getEigenMatrix().transpose() * mI.toTensor() * mBodyJacobian.getEigenMatrix();
+    mM.triangularView<Eigen::StrictlyLower>() = mM.transpose();
+}
+
+void BodyNode::aggregateMass(Eigen::MatrixXd& _M)
+{
+    for(int i=0; i<getNumDependentDofs(); i++)
+        for(int j=0; j<getNumDependentDofs(); j++)
+            _M(mDependentDofs[i], mDependentDofs[j]) += mM(i, j);
 }
 
 void BodyNode::addExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)

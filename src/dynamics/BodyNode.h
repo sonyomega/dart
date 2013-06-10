@@ -446,6 +446,12 @@ public:
     /// @brief
     void updateDampingForce();
 
+    /// @brief
+    void updateMassMatrix();
+
+    /// @brief
+    void aggregateMass(Eigen::MatrixXd& M);
+
 protected:
     //--------------------------------------------------------------------------
     // General properties
@@ -581,6 +587,9 @@ protected:
     };
 
     ForwardDynamicsCacheData mCache;
+
+    /// @brief
+    Eigen::MatrixXd mM;
 
 private:
 

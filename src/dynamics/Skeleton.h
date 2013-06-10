@@ -248,6 +248,10 @@ public:
                                   bool _equationsOfMotion = true);
 
     /// @brief (q, dq, tau) --> (ddq)
+    void computeForwardDynamicsID2(const Eigen::Vector3d& _gravity,
+                                  bool _equationsOfMotion = true);
+
+    /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamicsFS(const Eigen::Vector3d& _gravity,
                                   bool _equationsOfMotion = true);
 
