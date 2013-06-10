@@ -99,6 +99,59 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
+class EulerXYZJoint : public Joint
+{
+public:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief
+    EulerXYZJoint();
+
+    /// @brief
+    virtual ~EulerXYZJoint();
+
+    //--------------------------------------------------------------------------
+    // Kinematical Properties
+    //--------------------------------------------------------------------------
+
+    // Documentation is inherited.
+    virtual double getPotentialEnergy() const {}
+
+    //--------------------------------------------------------------------------
+    // Structueral Properties
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    // Recursive Kinematics Algorithms
+    //--------------------------------------------------------------------------
+
+protected:
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    // Document inherited.
+    virtual void _updateTransformation();
+
+    // Document inherited.
+    virtual void _updateVelocity();
+
+    // Document inherited.
+    virtual void _updateAcceleration();
+
+    //--------------------------------------------------------------------------
+    //
+    //--------------------------------------------------------------------------
+    /// @brief Euler angles X, Y, Z
+    GenCoord mCoordinate[3];
+
+private:
+
+public:
+    //
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
+
 } // namespace dynamics
 } // namespace dart
 

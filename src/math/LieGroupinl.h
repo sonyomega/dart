@@ -1955,10 +1955,32 @@ inline void SE3::toQuaternion(double q[4]) const
 //==============================================================================
 //
 //==============================================================================
+inline SE3 EulerXYZ(const Vec3& angle)
+{
+    double c0 = cos(angle._v[0]);
+    double s0 = sin(angle._v[0]);
+    double c1 = cos(angle._v[1]);
+    double s1 = sin(angle._v[1]);
+    double c2 = cos(angle._v[2]);
+    double s2 = sin(angle._v[2]);
+
+    return SE3( c1*c2, c0*s2 + c2*s0*s1, s0*s2 - c0*c2*s1,
+               -c1*s2, c0*c2 - s0*s1*s2, c2*s0 + c0*s1*s2,
+                   s1,           -c1*s0,            c0*c1);
+}
+
 inline SE3 EulerZYX(const Vec3& angle)
 {
-    double ca = cos(angle._v[0]), sa = sin(angle._v[0]), cb = cos(angle._v[1]), sb = sin(angle._v[1]), cg = cos(angle._v[2]), sg = sin(angle._v[2]);
-    return SE3(ca * cb, sa * cb, -sb, ca * sb * sg - sa * cg, sa * sb * sg + ca * cg, cb * sg, ca * sb * cg + sa * sg, sa * sb * cg - ca * sg, cb * cg);
+    double ca = cos(angle._v[0]);
+    double sa = sin(angle._v[0]);
+    double cb = cos(angle._v[1]);
+    double sb = sin(angle._v[1]);
+    double cg = cos(angle._v[2]);
+    double sg = sin(angle._v[2]);
+
+    return SE3(               ca * cb,                sa * cb,     -sb,
+               ca * sb * sg - sa * cg, sa * sb * sg + ca * cg, cb * sg,
+               ca * sb * cg + sa * sg, sa * sb * cg - ca * sg, cb * cg);
 }
 
 inline SE3 EulerZYZ(const Vec3& angle)

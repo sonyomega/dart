@@ -55,7 +55,7 @@ BallJoint::BallJoint()
     mdS.setSize(3);
 
     // TODO: Temporary code
-    mDampingCoefficient.resize(6, 0);
+    mDampingCoefficient.resize(3, 0);
 }
 
 BallJoint::~BallJoint()
@@ -142,6 +142,106 @@ inline void BallJoint::_updateAcceleration()
     math::se3 dJ0(Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0);
     math::se3 dJ1(Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0);
     math::se3 dJ2(Jdot(2,0), Jdot(2,1), Jdot(2,2), 0, 0, 0);
+
+    mdS.setColumn(0, math::Ad(mT_ChildBodyToJoint, dJ0));
+    mdS.setColumn(1, math::Ad(mT_ChildBodyToJoint, dJ1));
+    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ2));
+
+    // dV = dS * dq + S * ddq
+    mdV = mdS * get_dq() + mS * get_ddq();
+}
+
+
+EulerXYZJoint::EulerXYZJoint()
+    : Joint("EulerXYZ joint")
+{
+    mJointType = EULER_XYZ;
+    mDofs.push_back(&mCoordinate[0]);
+    mDofs.push_back(&mCoordinate[1]);
+    mDofs.push_back(&mCoordinate[2]);
+    mS.setSize(3);
+    mdS.setSize(3);
+
+    // TODO: Temporary code
+    mDampingCoefficient.resize(3, 0);
+}
+
+EulerXYZJoint::~EulerXYZJoint()
+{
+}
+
+inline void EulerXYZJoint::_updateTransformation()
+{
+    // T
+    mT = mT_ParentBodyToJoint *
+         math::EulerXYZ(math::Vec3(mCoordinate[0].get_q(),
+                                   mCoordinate[1].get_q(),
+                                   mCoordinate[2].get_q())) /
+         mT_ChildBodyToJoint;
+}
+
+inline void EulerXYZJoint::_updateVelocity()
+{
+    // S
+    double q0 = mCoordinate[0].get_q();
+    double q1 = mCoordinate[1].get_q();
+    double q2 = mCoordinate[2].get_q();
+
+    //double c0 = cos(q0);
+    double c1 = cos(q1);
+    double c2 = cos(q2);
+
+    //double s0 = sin(q0);
+    double s1 = sin(q1);
+    double s2 = sin(q2);
+
+    // S = [    c1*c2, s2,  0
+    //       -(c1*s2), c2,  0
+    //             s1,  0,  1
+    //              0,  0,  0
+    //              0,  0,  0
+    //              0,  0,  0 ];
+    math::se3 J0(c1*c2, -(c1*s2),  s1, 0.0, 0.0, 0.0);
+    math::se3 J1(   s2,       c2, 0.0, 0.0, 0.0, 0.0);
+    math::se3 J2(  0.0,      0.0, 1.0, 0.0, 0.0, 0.0);
+
+    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, J0));
+    mS.setColumn(1, math::Ad(mT_ChildBodyToJoint, J1));
+    mS.setColumn(2, math::Ad(mT_ChildBodyToJoint, J2));
+
+    // V = S * dq
+    mV = mS * get_dq();
+}
+
+inline void EulerXYZJoint::_updateAcceleration()
+{
+    // dS
+    double q0 = mCoordinate[0].get_q();
+    double q1 = mCoordinate[1].get_q();
+    double q2 = mCoordinate[2].get_q();
+
+    double dq0 = mCoordinate[0].get_dq();
+    double dq1 = mCoordinate[1].get_dq();
+    double dq2 = mCoordinate[2].get_dq();
+
+    double c0 = cos(q0);
+    double c1 = cos(q1);
+    double c2 = cos(q2);
+
+    double s0 = sin(q0);
+    double s1 = sin(q1);
+    double s2 = sin(q2);
+
+    // dS = [  -(dq1*c2*s1) - dq2*c1*s2,    dq2*c2,  0
+    //         -(dq2*c1*c2) + dq1*s1*s2, -(dq2*s2),  0
+    //                           dq1*c1,         0,  0
+    //                                0,         0,  0
+    //                                0,         0,  0
+    //                                0,         0,  0 ];
+
+    math::se3 dJ0(-(dq1*c2*s1) - dq2*c1*s2, -(dq2*c1*c2) + dq1*s1*s2, dq1*c1, 0, 0, 0);
+    math::se3 dJ1(                  dq2*c2,                -(dq2*s2),    0.0, 0.0, 0.0, 0.0);
+    math::se3 dJ2(0.0);
 
     mdS.setColumn(0, math::Ad(mT_ChildBodyToJoint, dJ0));
     mdS.setColumn(1, math::Ad(mT_ChildBodyToJoint, dJ1));

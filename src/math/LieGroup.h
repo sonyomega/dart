@@ -114,6 +114,9 @@ inline double SquareSum(const se3& S);
 inline double SquareSum(const dse3& );
 
 //------------------------------------------------------------------------------
+/// @brief Get a transformation matrix given by the Euler XYZ angle,
+/// where the positional part is set to be zero.
+inline SE3 EulerXYZ(const Vec3& angle);
 
 /// @brief get a transformation matrix given by the Euler XYZ angle and
 /// position.
@@ -529,6 +532,7 @@ public:
     friend se3  InvAdR(const SE3& T, const Vec3& V);
     friend Axis ad(const Axis& s1, const se3& s2);
     friend Axis ad(const Axis& s1, const Axis& s2);
+    friend SE3 EulerXYZ(const Vec3& angle);
     friend SE3 EulerZYX(const Vec3& angle);
     friend SE3 EulerZYX(const Vec3& angle, const Vec3& position);
     friend SE3 EulerXYZ(const Vec3& angle, const Vec3& position);
