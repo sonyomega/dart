@@ -10,12 +10,12 @@ int main(int argc, char* argv[])
     // create and initialize the world
     dart::simulation::World *myWorld
             = dart::simulation::readSkelFile(
-                  //DART_DATA_PATH"/skel/test/serial_chain.skel");
+                  DART_DATA_PATH"/skel/test/serial_chain_ball_joint.skel");
                   //DART_DATA_PATH"/skel/test/serial_chain_eulerxyz_joint.skel");
-                  DART_DATA_PATH"/skel/test/serial_chain_revolute_joint.skel");
+                  //DART_DATA_PATH"/skel/test/serial_chain_revolute_joint.skel");
     assert(myWorld != NULL);
 
-    myWorld->setTimeStep(1.0/2000);
+    myWorld->setTimeStep(1.0/5000);
 
     int nDof = myWorld->getSkeleton(0)->getDOF();
     Eigen::VectorXd initPose(nDof);

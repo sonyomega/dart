@@ -17,12 +17,9 @@ public:
     /// @brief
     virtual void timeStepping();
 
-    /// @brief
-    virtual void keyboard(unsigned char key, int x, int y);
-
 private:
     /// @brief
-    Eigen::Vector3d mForce;
+    Eigen::VectorXd computeDamping();
 };
 
 #endif
