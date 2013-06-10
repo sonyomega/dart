@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_SIMULATION_PARSER_DART_H
-#define DART_SIMULATION_PARSER_DART_H
+#ifndef DART_SIMULATION_SKEL_PARSER_H
+#define DART_SIMULATION_SKEL_PARSER_H
 
 #include <vector>
 #include <Eigen/Dense>
@@ -150,7 +150,7 @@ tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement,
 // Parsing Helper Functions
 //------------------------------------------------------------------------------
 /// @brief
-simulation::World* readDARTFile(const std::string& _filename);
+simulation::World* readSkelFile(const std::string& _filename);
 
 /// @brief
 simulation::World* readWorld(tinyxml2::XMLElement* _worldElement);
@@ -236,4 +236,4 @@ private:
 }
 }
 
-#endif // DART_SIMULATION_PARSER_DART_H
+#endif // DART_SIMULATION_SKEL_PARSER_H

@@ -1,5 +1,5 @@
 ================================================================================
-DART file format - version 1.0
+skel file format - version 1.0
 ================================================================================
 
 Description:
@@ -16,7 +16,7 @@ Attributes:
 --------------------------------------------------------------------------------
 Hierarchy
 --------------------------------------------------------------------------------
-<dart>
+<skel>
  +- <description>
  +- <author>
  +- <world>
@@ -92,12 +92,12 @@ Hierarchy
 --------------------------------------------------------------------------------
 Details
 --------------------------------------------------------------------------------
-<dart>
+<skel>
     Description:
     Required: 1
     Type: n/a
     Attributes:
-        version: Version number of the DART format
+        version: Version number of the skel format
             Type: string
             Default: 1.0
     <world>

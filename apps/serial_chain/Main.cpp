@@ -1,6 +1,6 @@
 #include "utils/Paths.h"
 #include "math/UtilsMath.h"
-#include "simulation/ParserDART.h"
+#include "simulation/SkelParser.h"
 #include "dynamics/Skeleton.h"
 #include "MyWindow.h"
 
@@ -9,8 +9,8 @@ int main(int argc, char* argv[])
     // load a skeleton file
     // create and initialize the world
     dart::simulation::World *myWorld
-            = dart::simulation::readDARTFile(
-                  DART_DATA_PATH"/dart/test/serial_chain.dart");
+            = dart::simulation::readSkelFile(
+                  DART_DATA_PATH"/skel/test/serial_chain.skel");
     assert(myWorld != NULL);
 
     int nDof = myWorld->getSkeleton(0)->getDOF();

@@ -1,5 +1,5 @@
 #include "utils/Paths.h"
-#include "simulation/ParserDART.h"
+#include "simulation/SkelParser.h"
 #include "MyWindow.h"
 
 int main(int argc, char* argv[])
@@ -7,17 +7,17 @@ int main(int argc, char* argv[])
     // load a skeleton file
     // create and initialize the world
     dart::simulation::World *myWorld
-            = dart::simulation::readDARTFile(
-                  //DART_DATA_PATH"/dart/single_pendulum.dart");
-                  //DART_DATA_PATH"/dart/double_pendulum.dart");
-                  //DART_DATA_PATH"/dart/boxes.dart");
-                  //DART_DATA_PATH"/dart/test/ball_joints.dart");
-                  //DART_DATA_PATH"/dart/test/translational_joints.dart");
-                  //DART_DATA_PATH"/dart/test/free_joints.dart");
-                  //DART_DATA_PATH"/dart/test/serial_chain.dart");
-                  DART_DATA_PATH"/dart/test/drop.dart");
-                  //DART_DATA_PATH"/dart/test/drop_unrotated_box.dart");
-                  //DART_DATA_PATH"/dart/test/SimplePendulum.dart");
+            = dart::simulation::readSkelFile(
+                  //DART_DATA_PATH"/skel/single_pendulum.skel");
+                  //DART_DATA_PATH"/skel/double_pendulum.skel");
+                  //DART_DATA_PATH"/skel/boxes.skel");
+                  //DART_DATA_PATH"/skel/test/ball_joints.skel");
+                  //DART_DATA_PATH"/skel/test/translational_joints.skel");
+                  //DART_DATA_PATH"/skel/test/free_joints.skel");
+                  //DART_DATA_PATH"/skel/test/serial_chain.skel");
+                  DART_DATA_PATH"/skel/test/drop.skel");
+                  //DART_DATA_PATH"/skel/test/drop_unrotated_box.skel");
+                  //DART_DATA_PATH"/skel/test/SimplePendulum.skel");
     assert(myWorld != NULL);
 
     // create a window and link it to the world

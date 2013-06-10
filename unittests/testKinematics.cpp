@@ -43,7 +43,7 @@
 //#include "dynamics/FileInfoDof.h"
 //#include "dynamics/FileInfoC3D.h"
 #include "simulation/World.h"
-#include "simulation/ParserDART.h"
+#include "simulation/SkelParser.h"
 
 //using namespace std;
 using namespace dart;
@@ -181,7 +181,7 @@ public:
 
 void KINEMATICS::JacobianTest(const string& dartFileName)
 {
-    World* world = readDARTFile(dartFileName);
+    World* world = readSkelFile(dartFileName);
     EXPECT_TRUE(world != NULL);
 
     // Proceed one step

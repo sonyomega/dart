@@ -55,7 +55,7 @@
 #include "dynamics/FreeJoint.h"
 #include "dynamics/Skeleton.h"
 #include "simulation/World.h"
-#include "simulation/ParserDART.h"
+#include "simulation/SkelParser.h"
 
 namespace dart {
 namespace simulation {
@@ -161,7 +161,7 @@ static void getAttribute(tinyxml2::XMLElement* element,
     }
 }
 
-simulation::World* readDARTFile(const std::string& _filename)
+simulation::World* readSkelFile(const std::string& _filename)
 {
     //--------------------------------------------------------------------------
     // Load xml and create Document
@@ -179,7 +179,7 @@ simulation::World* readDARTFile(const std::string& _filename)
     //--------------------------------------------------------------------------
     // Load DART
     tinyxml2::XMLElement* dartElement = NULL;
-    dartElement = _dartFile.FirstChildElement("dart");
+    dartElement = _dartFile.FirstChildElement("skel");
     if (dartElement == NULL)
         return NULL;
 

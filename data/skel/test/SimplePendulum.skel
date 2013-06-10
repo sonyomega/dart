@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<dart version="1.0">
+<skel version="1.0">
     <world name="default">
         <physics>
             <time_step>0.001</time_step>
@@ -137,4 +137,4 @@
         </skeleton>	
         
     </world>
-</dart>
+</skel>
