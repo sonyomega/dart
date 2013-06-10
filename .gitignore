@@ -16,7 +16,6 @@ Testing/
 DARTConfig.cmake
 src/utils/Paths.h
 Makefile
-docs/
 TAGS
 .DS_Store
 .cproject
