@@ -491,6 +491,8 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
         newJoint = readRevoluteJoint(_jointElement, _skeleton);
     if (type ==std::string("ball"))
         newJoint = readBallJoint(_jointElement, _skeleton);
+    if (type ==std::string("euler_xyz"))
+        newJoint = readEulerXYZJoint(_jointElement, _skeleton);
     if (type ==std::string("translational"))
         newJoint = readTranslationalJoint(_jointElement, _skeleton);
     if (type ==std::string("free"))
@@ -611,6 +613,18 @@ dynamics::BallJoint*readBallJoint(
     dynamics::BallJoint* newBallJoint = new dynamics::BallJoint;
 
     return newBallJoint;
+}
+
+dynamics::EulerXYZJoint* readEulerXYZJoint(
+        tinyxml2::XMLElement* _eulerXYZJointElement,
+        dynamics::Skeleton* _skeleton)
+{
+    assert(_eulerXYZJointElement != NULL);
+    assert(_skeleton != NULL);
+
+    dynamics::EulerXYZJoint* newEulerXYZJoint = new dynamics::EulerXYZJoint;
+
+    return newEulerXYZJoint;
 }
 
 dynamics::TranslationalJoint*readTranslationalJoint(

@@ -53,6 +53,7 @@ class WeldJoint;
 class Joint;
 class RevoluteJoint;
 class BallJoint;
+class EulerXYZJoint;
 class TranslationalJoint;
 class FreeJoint;
 }
@@ -174,6 +175,10 @@ dynamics::RevoluteJoint* readRevoluteJoint(
 
 dynamics::BallJoint* readBallJoint(
         tinyxml2::XMLElement* _ballJointElement,
+        dynamics::Skeleton* _skeleton);
+
+dart::dynamics::EulerXYZJoint* readEulerXYZJoint(
+        tinyxml2::XMLElement* _eulerXYZJointElement,
         dynamics::Skeleton* _skeleton);
 
 dynamics::TranslationalJoint* readTranslationalJoint(

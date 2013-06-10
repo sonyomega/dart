@@ -10,7 +10,8 @@ int main(int argc, char* argv[])
     // create and initialize the world
     dart::simulation::World *myWorld
             = dart::simulation::readSkelFile(
-                  DART_DATA_PATH"/skel/test/serial_chain.skel");
+                  //DART_DATA_PATH"/skel/test/serial_chain.skel");
+                  DART_DATA_PATH"/skel/test/serial_chain_eulerxyz_joint.skel");
     assert(myWorld != NULL);
 
     int nDof = myWorld->getSkeleton(0)->getDOF();
