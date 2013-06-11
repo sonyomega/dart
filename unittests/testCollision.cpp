@@ -44,6 +44,11 @@
 
 #include "utils/UtilsCode.h"
 #include "math/UtilsMath.h"
+#include "collision/unc/UNCCollisionDetector.h"
+
+using namespace dart;
+using namespace math;
+using namespace collision;
 
 class COLLISION : public testing::Test
 {
@@ -176,10 +181,14 @@ void COLLISION::dropWithRotation(fcl::CollisionGeometry* _object,
                   << result.numContacts()
                   << std::endl;
 
+        fcl::Transform3f objectTransfInv = objectTransf;
+        objectTransfInv.inverse();
         for (int i = 0; i < result.numContacts(); ++i)
         {
+            fcl::Vec3f posWorld = objectTransfInv.transform(result.getContact(i).pos);
             std::cout << "----- CONTACT " << i << " --------" << std::endl;
             std::cout << "contact_points: " << result.getContact(i).pos << std::endl;
+            std::cout << "contact_points(w): " << posWorld << std::endl;
             std::cout << "norm: " << result.getContact(i).pos.length() << std::endl;
             std::cout << "penetration_depth: " << result.getContact(i).penetration_depth << std::endl;
             std::cout << "normal: " << result.getContact(i).normal << std::endl;
@@ -370,7 +379,8 @@ void COLLISION::printResult(const fcl::CollisionResult& _result)
 //}
 
 
-TEST_F(COLLISION, DROP) {
+TEST_F(COLLISION, DROP)
+{
     dtdbg << "Unrotated box\n";
     fcl::Box box1(0.5, 0.5, 0.5);
     dropWithRotation(&box1, 0, 0, 0);
@@ -381,6 +391,111 @@ TEST_F(COLLISION, DROP) {
                      dart::math::random(-3.14, 3.14),
                      dart::math::random(-3.14, 3.14),
                      dart::math::random(-3.14, 3.14));
+
+    dropWithRotation(&box2,
+                     0.0,
+                     0.1,
+                     0.0);
+}
+
+TEST_F(COLLISION, FCL_BOX_BOX)
+{
+    double EulerZ = 1;
+    double EulerY = 2;
+    double EulerX = 3;
+
+    // Collision test setting
+    fcl::CollisionResult result;
+    fcl::CollisionRequest request;
+    request.enable_contact = true;
+    request.num_max_contacts = 100;
+
+    // Ground like box setting
+    fcl::Box groundObject(100, 100, 0.1);
+    fcl::Transform3f groundTransf;
+    groundTransf.setIdentity();
+    fcl::Vec3f ground_position(0.0, 0.0, -0.05);
+    groundTransf.setTranslation(ground_position);
+
+    // Dropping box object setting
+    fcl::Box box(0.5, 0.5, 0.5);
+    fcl::Transform3f objectTransf;
+    fcl::Matrix3f rot;
+    rot.setEulerZYX(EulerZ, EulerY, EulerX);
+    objectTransf.setRotation(rot);
+    fcl::Vec3f dropping_position(0.0, 0.0, 5.0);
+    objectTransf.setTranslation(dropping_position);
+
+    // Let's drop the object until it collide with ground
+    do {
+        objectTransf.setTranslation(dropping_position);
+
+        fcl::collide(&box, objectTransf, &groundObject, groundTransf, request, result);
+
+        dropping_position[2] -= 0.00001;
+    }
+    while (result.numContacts() == 0);
+
+    std::cout << "Current position of the object: "
+              << objectTransf.getTranslation()
+              << std::endl
+              << "Number of contacts: "
+              << result.numContacts()
+              << std::endl;
+
+    for (int i = 0; i < result.numContacts(); ++i)
+    {
+        std::cout << "----- CONTACT " << i << " --------" << std::endl;
+        std::cout << "contact_points: " << result.getContact(i).pos << std::endl;
+        std::cout << "penetration_depth: " << result.getContact(i).penetration_depth << std::endl;
+        std::cout << "normal: " << result.getContact(i).normal << std::endl;
+    }
+}
+
+TEST_F(COLLISION, OWN_COLLISION_CODE)
+{
+    double EulerZ = 1;
+    double EulerY = 2;
+    double EulerX = 3;
+
+    // Collision test setting
+    CollisionInfoArray result;
+
+    Vec3 size1(100.0, 100.0, 0.1);
+    SE3 T1(Vec3(0.0, 0.0, -0.05));
+
+    Vec3 size2(0.5, 0.5, 0.5);
+    Vec3 pos2(0.0, 0.0, 5.0);
+    SE3 T2;
+    T2 = EulerZYX(Vec3(EulerZ, EulerY, EulerX));
+    T2.setPosition(pos2);
+
+    // Let's drop the object until it collide with ground
+    do {
+        T2.setPosition(pos2);
+
+        _BoxBox_____________MARK8(size1, T1, size2, T2, result);
+
+        pos2[2] -= 0.00001;
+    }
+    while (result.size() == 0);
+
+    std::cout //<< "Current position of the object: "
+              //<< objectTransf.getTranslation()
+              //<< std::endl
+              << "Number of contacts: "
+              << result.size()
+              << std::endl;
+
+    for (int i = 0; i < result.size(); ++i)
+    {
+        std::cout << "----- CONTACT " << i << " --------" << std::endl;
+        std::cout << "contact_points: " << result.at(i).point;
+        std::cout << "penetration_depth: " << result.at(i).penetration << std::endl;
+        std::cout << "normal: " << result.at(i).normal << std::endl;
+    }
+
+
 }
 
 /* ********************************************************************************************* */
