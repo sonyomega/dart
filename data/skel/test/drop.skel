@@ -7,7 +7,7 @@
         </physics>
         <skeleton name="grount skeleton">
             <body name="ground">
-                <transformation>0 0 0 0 -0.5 0</transformation>
+                <transformation>0 -0.5 0 0 0 0</transformation>
                 <visualization_shape>
                     <transformation>0 0 0 0 0 0</transformation>
                     <geometry>
@@ -34,7 +34,7 @@
         <skeleton name="box skeleton">
             <body name="box">
                 <gravity>1</gravity>
-                <transformation>1 2 3 -0.3 0.2 0</transformation>
+                <transformation>-0.3 0.2 0 1 2 3</transformation>
                 <inertia>
                     <mass>1</mass>
                     <offset>0 0 0</offset>
@@ -74,7 +74,7 @@
         <skeleton name="skeleton_2">
             <body name="link_1">
                 <gravity>1</gravity>
-                <transformation>0 0 0 0.5 -0.1 0</transformation>
+                <transformation>0.5 -0.1 0 0 0 0</transformation>
                 <inertia>
                     <mass>1</mass>
                     <offset>0 0 0</offset>
@@ -114,7 +114,7 @@
         <skeleton name="skeleton_3">
             <body name="link_1">
                 <gravity>1</gravity>
-                <transformation>0 0 0 0.5 0.2 0</transformation>
+                <transformation>0.5 0.2 0 0 0 0</transformation>
                 <inertia>
                     <mass>1</mass>
                     <offset>0 0 0</offset>
@@ -154,7 +154,7 @@
         <skeleton name="skeleton_3">
             <body name="link_1">
                 <gravity>1</gravity>
-                <transformation>3 2 1 0.0 0.0 0</transformation>
+                <transformation>0.0 0.0 0.0 3 2 1</transformation>
                 <inertia>
                     <mass>1</mass>
                     <offset>0 0 0</offset>

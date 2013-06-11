@@ -9,7 +9,7 @@
         <skeleton name="skeleton_1">
             <body name="link_1">
                 <gravity>1</gravity>
-                <transformation>1.57079633 0.0 0.0 0.0 0.0 10.1</transformation>
+                <transformation>0.0 0.0 10.1 1.57079633 0.0 0.0</transformation>
                 <inertia>
                     <mass>5.0</mass>
                     <offset>0 0 -10</offset>
@@ -23,7 +23,7 @@
                     </moment_of_inertia>
                 </inertia>
                 <visualization_shape>
-                    <transformation>0 0 0 0 0 -5.0</transformation>
+                    <transformation>0 0 -5.0 0 0 0</transformation>
                     <geometry>
                         <cylinder>
                             <radius>0.05</radius>
@@ -32,7 +32,7 @@
                     </geometry>
                 </visualization_shape>
                 <collision_shape>
-                    <transformation>0 0 0 0 0 -5.0</transformation>
+                    <transformation>0 0 -5.0 0 0 0</transformation>
                     <geometry>
                         <cylinder>
                             <radius>0.05</radius>
@@ -43,7 +43,7 @@
             </body>
             <body name="link_2">
                 <gravity>1</gravity>
-                <transformation>1.57079633 0.0 0.0 0.0 10.0 10.1</transformation>
+                <transformation>0.0 10.0 10.1 1.57079633 0.0 0.0</transformation>
                 <inertia>
                     <mass>5.0</mass>
                     <offset>0 0 0</offset>
@@ -94,7 +94,7 @@
         <skeleton name="skeleton_2">
             <body name="link_1">
                 <gravity>1</gravity>
-                <transformation>1.57079633 0.0 0.0 1.0 0.0 10.1</transformation>
+                <transformation>1.0 0.0 10.1 1.57079633 0.0 0.0</transformation>
                 <inertia>
                     <mass>10.0</mass>
                     <offset>0 0 -10</offset>
@@ -108,7 +108,7 @@
                     </moment_of_inertia>
                 </inertia>
                 <visualization_shape>
-                    <transformation>0 0 0 0 0 -5.0</transformation>
+                    <transformation>0 0 -5.0 0 0 0</transformation>
                     <geometry>
                         <cylinder>
                             <radius>0.1</radius>
@@ -117,7 +117,7 @@
                     </geometry>
                 </visualization_shape>
                 <collision_shape>
-                    <transformation>0 0 0 0 0 -5.0</transformation>
+                    <transformation>0 0 -5.0 0 0 0</transformation>
                     <geometry>
                         <cylinder>
                             <radius>0.1</radius>

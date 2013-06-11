@@ -8,7 +8,7 @@
 
         <skeleton name="grount skeleton">
             <body name="ground">
-                <transformation>0 0 0 0 -0.5 0</transformation>
+                <transformation>0 -0.5 0 0 0 0</transformation>
                 <visualization_shape>
                     <transformation>0 0 0 0 0 0</transformation>
                     <geometry>
@@ -35,7 +35,7 @@
         <skeleton name="sphere skeleton 1 - no cog offset">
             <body name="sphere link 1">
                 <gravity>1</gravity>
-                <transformation>0 0 0 0 1.0 0</transformation>
+                <transformation>0 1.0 0 0 0 0</transformation>
                 <inertia>
                     <mass>5</mass>
                     <offset>0 0 0</offset>
@@ -75,7 +75,7 @@
         <skeleton name="sphere skeleton - cog offset (0.05, 0.0, 0.0)">
             <body name="sphere link 1">
                 <gravity>1</gravity>
-                <transformation>0 0 0 0.5 1.0 0</transformation>
+                <transformation>0.5 1.0 0 0 0 0</transformation>
                 <inertia>
                     <mass>5</mass>
                     <offset>0.05 0 0</offset>

@@ -751,9 +751,9 @@ std::string toString(const math::SE3& _v)
     math::Vec3 XYZ = math::iEulerXYZ(_v);
     math::Vec3 position = _v.getPosition();
 
-    ostr << XYZ[0] << " " << XYZ[1] << " " << XYZ[2];
-    ostr << " ";
     ostr << position[0] << " " << position[1] << " " << position[2];
+    ostr << " ";
+    ostr << XYZ[0] << " " << XYZ[1] << " " << XYZ[2];
 
     return ostr.str();
 }
@@ -998,8 +998,8 @@ math::SE3 toSE3(const std::string& _str)
         }
     }
 
-    return math::EulerXYZ(math::Vec3(elements[0], elements[1], elements[2]),
-                          math::Vec3(elements[3], elements[4], elements[5]));
+    return math::EulerXYZ(math::Vec3(elements[3], elements[4], elements[5]),
+                          math::Vec3(elements[0], elements[1], elements[2]));
 }
 
 std::string getValueString(tinyxml2::XMLElement* _parentElement, const std::string& _name)
