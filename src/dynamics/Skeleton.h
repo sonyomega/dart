@@ -114,6 +114,11 @@ public:
     // Structueral Properties
     //--------------------------------------------------------------------------
     /// @brief
+    void setWorldTransformation(const math::SE3& _W, bool _updateChilds = true);
+
+    const math::SE3& getWorldTransformation() const { return mFrame; }
+
+    /// @brief
     void addBody(BodyNode* _body, bool _addParentJoint = true);
 
     /// @brief
@@ -304,11 +309,16 @@ protected:
     BodyNode* mRoot;
 
     /// @brief
+    math::SE3 mFrame;
+
+    /// @brief Constant
+    math::SE3 mToRootBody;
+
+    /// @brief
     std::vector<BodyNode*> mBodies;
 
     /// @brief
     std::vector<Joint*> mJoints;
-
 
 
     //--------------------------------------------------------------------------
@@ -344,7 +354,6 @@ protected:
 
     /// @brief
     //std::vector<BodyNodeDynamics*> mDynamicsBodies;
-
 
     SkeletonGraph* mGraph;
 

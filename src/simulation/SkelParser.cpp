@@ -244,7 +244,7 @@ simulation::World* readWorld(tinyxml2::XMLElement* _worldElement)
 }
 
 dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
-                                         World* _world)
+                                 World* _world)
 {
     assert(_skeletonElement != NULL);
     assert(_world != NULL);
@@ -255,6 +255,14 @@ dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
     // Name attribute
     std::string name = getAttribute(_skeletonElement, "name");
     newSkeleton->setName(name);
+
+    //--------------------------------------------------------------------------
+    // transformation
+    if (hasElement(_skeletonElement, "transformation"))
+    {
+        math::SE3 W = getValueSE3(_skeletonElement, "transformation");
+        newSkeleton->setWorldTransformation(W, false);
+    }
 
     //--------------------------------------------------------------------------
     // immobile attribute
@@ -324,10 +332,8 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
     if (hasElement(_bodyElement, "transformation"))
     {
         math::SE3 W = getValueSE3(_bodyElement, "transformation");
-        newBody->setWorldTransformation(W);
+        newBody->setWorldTransformation(_skeleton->getWorldTransformation() * W);
     }
-
-
 
     // visualization_shape
     if (hasElement(_bodyElement, "visualization_shape"))

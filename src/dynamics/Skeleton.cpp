@@ -68,6 +68,16 @@ Skeleton::~Skeleton()
         delete mGraph;
 }
 
+void Skeleton::setWorldTransformation(const math::SE3& _W, bool _updateChilds)
+{
+    mFrame = _W;
+
+    if (_updateChilds)
+    {
+        updateForwardKinematics(false, false);
+    }
+}
+
 void Skeleton::initDynamics()
 {
     initKinematics();
@@ -166,6 +176,7 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
 void Skeleton::initKinematics()
 {
     mRoot = mBodies[0];
+    mToRootBody = math::Inv(mFrame) * mRoot->getWorldInvTransformation();
 
     // calculate mass
     // init the dependsOnDof stucture for each bodylink
@@ -218,6 +229,8 @@ void Skeleton::_updateBodyForwardKinematics(bool _firstDerivative,
         if (_secondDerivative)
             (*itrBody)->updateAcceleration();
     }
+
+    mFrame = mRoot->getTransformationWorld() * math::Inv(mToRootBody);
 }
 
 void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity,

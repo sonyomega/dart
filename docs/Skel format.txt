@@ -24,6 +24,8 @@ Hierarchy
  |       +- <time_step>
  |       +- <gravity>
  +- <skeleton>
+     +- <transformation>
+     +- <immobile>
      +- <body>
      |   +- <gravity>
      |   +- <self_collide>
@@ -135,11 +137,11 @@ Details
                 Required: 0
                 Type: bool
                 Default: 0
-#            <transformation>
-#                Description:
-#                Required: 0
-#                Type: SE3
-#                Default: 0 0 0 0 0 0
+            <transformation>
+                Description:
+                Required: 0
+                Type: SE3
+                Default: 0 0 0 0 0 0
             <body>
                 Description:
                 Required: +1
