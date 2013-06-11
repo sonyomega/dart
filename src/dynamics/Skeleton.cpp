@@ -68,6 +68,26 @@ Skeleton::~Skeleton()
         delete mGraph;
 }
 
+void Skeleton::initDynamics()
+{
+    initKinematics();
+
+    mM = MatrixXd::Zero(getDOF(), getDOF());
+    mC = MatrixXd::Zero(getDOF(), getDOF());
+    mCvec = VectorXd::Zero(getDOF());
+    mG = VectorXd::Zero(getDOF());
+    mCg = VectorXd::Zero(getDOF());
+    set_tau(VectorXd::Zero(getDOF()));
+    mFext = VectorXd::Zero(getNumDofs());
+    mFc = VectorXd::Zero(getNumDofs());
+
+    // calculate mass
+    // init the dependsOnDof stucture for each bodylink
+    mTotalMass = 0.0;
+    for(int i = 0; i < getNumNodes(); i++)
+        mTotalMass += getBody(i)->getMass();
+}
+
 void Skeleton::addBody(BodyNode* _body, bool _addParentJoint)
 {
     assert(_body != NULL);
@@ -200,27 +220,11 @@ void Skeleton::_updateBodyForwardKinematics(bool _firstDerivative,
     }
 }
 
-void Skeleton::initDynamics()
-{
-    initKinematics();
-
-    mM = MatrixXd::Zero(getDOF(), getDOF());
-    mC = MatrixXd::Zero(getDOF(), getDOF());
-    mCvec = VectorXd::Zero(getDOF());
-    mG = VectorXd::Zero(getDOF());
-    mCg = VectorXd::Zero(getDOF());
-    set_tau(VectorXd::Zero(getDOF()));
-    mFext = VectorXd::Zero(getNumDofs());
-
-    // calculate mass
-    // init the dependsOnDof stucture for each bodylink
-    mTotalMass = 0.0;
-    for(int i = 0; i < getNumNodes(); i++)
-        mTotalMass += getBody(i)->getMass();
-}
-
 void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity,
-                                      bool _withExternalForces)
+                                      bool _computeJacobian,
+                                      bool _computeJacobianDeriv,
+                                      bool _withExternalForces,
+                                      bool _withDampingForces)
 {
     _updateJointKinematics();
 
@@ -229,19 +233,27 @@ void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity,
          itrBody != mBodies.end();
          ++itrBody) {
         (*itrBody)->updateTransformation();
-        (*itrBody)->updateVelocity();
+        (*itrBody)->updateVelocity(_computeJacobian);
         (*itrBody)->updateEta();
-        (*itrBody)->updateAcceleration();
+        (*itrBody)->updateAcceleration(_computeJacobianDeriv);
     }
 
     // Backward recursion
     for (std::vector<dynamics::BodyNode*>::reverse_iterator ritrBody
          = mBodies.rbegin();
          ritrBody != mBodies.rend();
-         ++ritrBody) {
-        (*ritrBody)->updateBodyForce(_gravity, _withExternalForces);
-        (*ritrBody)->updateGeneralizedForce();
+         ++ritrBody)
+    {
+        (*ritrBody)->updateBodyForce(_gravity,
+                                     _withExternalForces);
+        (*ritrBody)->updateGeneralizedForce(_withDampingForces);
     }
+}
+
+void Skeleton::computeInverseDynamicsWithZeroAcceleration(
+        const Eigen::Vector3d& _gravity, bool _withExternalForces)
+{
+
 }
 
 void Skeleton::computeForwardDynamics(
@@ -254,34 +266,44 @@ void Skeleton::computeForwardDynamicsID(
 {
     int n = getNumDofs();
 
+    // skip immobile objects in forward simulation
+    if (getImmobileState() == true || n == 0) {
+        return;
+    }
+
     // Save current tau
     Eigen::VectorXd tau_old = get_tau();
 
     // Set ddq as zero
     set_ddq(Eigen::VectorXd::Zero(n));
 
-    //
-    mM = Eigen::MatrixXd::Zero(n,n);
-
     // M(q) * ddq + b(q,dq) = tau
     computeInverseDynamics(_gravity);
-    Eigen::VectorXd b = get_tau();
-    mCg = b;
+    mCg = get_tau();
 
-    // Calcualtion M column by column
+    // Calcualtion mass matrix, M
+    mM = Eigen::MatrixXd::Zero(n,n);
     for (int i = 0; i < getNumNodes(); i++) {
         BodyNode *nodei = static_cast<BodyNode*>(getNode(i));
-        // mass matrix M
         nodei->updateMassMatrix();
         nodei->aggregateMass(mM);
     }
 
-    //
+    // Inverse of mass matrix
+    //mMInv = mM.inverse();
+    mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
+
+    // Restore the torque
     set_tau(tau_old);
 
-    // TODO:
-    mMInv = mM.inverse();
-    //mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
+    Eigen::VectorXd qddot = this->getInvMassMatrix()
+                            * (-this->getCombinedVector()
+                               + this->getExternalForces()
+                               + this->getInternalForces()
+                               + this->getDampingForces()
+                               + this->getConstraintForces() );
+
+    this->set_ddq(qddot);
 
 //    Eigen::VectorXd new_ddq = mMInv * (tau_old - b);
 //    set_ddq(new_ddq);

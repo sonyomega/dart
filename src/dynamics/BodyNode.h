@@ -429,7 +429,7 @@ public:
 
     /// @brief
     /// parentJoint.S, F --> tau
-    void updateGeneralizedForce();
+    void updateGeneralizedForce(bool _withDampingForces = false);
 
     /// @brief
     void updateArticulatedInertia();

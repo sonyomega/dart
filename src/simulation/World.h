@@ -173,7 +173,7 @@ public:
 
 protected:
     /// @brief
-    void _computeForwardDynamics();
+    void computeForwardDynamics();
 
 
     //--------------------------------------------------------------------------

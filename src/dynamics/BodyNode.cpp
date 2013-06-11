@@ -231,7 +231,8 @@ math::Jacobian BodyNode::getJacobianWorld() const
     return math::AdR(mW, mBodyJacobian);
 }
 
-math::Jacobian BodyNode::getJacobianWorldAtPoint(const math::Vec3& r_world) const
+math::Jacobian BodyNode::getJacobianWorldAtPoint(
+        const math::Vec3& r_world) const
 {
     //--------------------------------------------------------------------------
     // Jb                : body jacobian
@@ -284,6 +285,8 @@ void BodyNode::init()
     const int numDepDofs = getNumDependentDofs();
     mBodyJacobian.setSize(numDepDofs);
     mBodyJacobian.setZero();
+    mBodyJacobianDeriv.setSize(numDepDofs);
+    mBodyJacobianDeriv.setZero();
 
     mM = Eigen::MatrixXd::Zero(getNumDependentDofs(), getNumDependentDofs());
 }
@@ -312,7 +315,9 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
 
     // render the subtree
     for (unsigned int i = 0; i < mJointsChild.size(); i++)
+    {
         mJointsChild[i]->getChildNode()->draw(_ri, _color, _useDefaultColor);
+    }
 
     _ri->popMatrix();
 }
@@ -320,10 +325,14 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
 void BodyNode::updateTransformation()
 {
     if (mParentBody)
+    {
         mW = mParentBody->getTransformationWorld()
              * mParentJoint->getLocalTransformation();
+    }
     else
+    {
         mW = mParentJoint->getLocalTransformation();
+    }
 }
 
 void BodyNode::updateVelocity(bool _updateJacobian)
@@ -345,8 +354,6 @@ void BodyNode::updateVelocity(bool _updateJacobian)
         mV = mParentJoint->getLocalVelocity();
     }
 
-    // TODO:
-    //dterr << "Not implemented: Jacobian update.\n";
     if (_updateJacobian == false)
         return;
 
@@ -396,17 +403,56 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
 {
     // dV(i) = Ad(T(i, i-1), dV(i-1)) + ad(V(i), S * dq)
     //         + dS * dq + S * ddq
-    if (mParentBody) {
+    if (mParentBody)
+    {
         mdV = math::InvAd(mParentJoint->getLocalTransformation(),
                           mParentBody->getAcceleration()) +
               m_eta + mParentJoint->getLocalAcceleration();
     }
-    else {
+    else
+    {
         mdV = m_eta + mParentJoint->getLocalAcceleration();
     }
 
+    if (_updateJacobianDeriv == false)
+        return;
+
+    //--------------------------------------------------------------------------
+    // Jacobian first derivative update
     //
-    //dterr << "Not implemented: JacobianDeriv update.\n";
+    // dJ = | dJ1 dJ2 ... dJn |
+    //   = | Ad(T(i,i-1), dJ_parent) dJ_local |
+    //
+    //   dJ_parent: (6 x parentDOF)
+    //    dJ_local: (6 x localDOF)
+    //         dJi: (6 x 1) se3
+    //          n: number of dependent coordinates
+    //--------------------------------------------------------------------------
+
+    const int numLocalDOFs = getNumLocalDofs();
+    const int numParentDOFs = getNumDependentDofs() - numLocalDOFs;
+
+    // Parent Jacobian
+    if (mParentBody != NULL)
+    {
+        assert(mParentBody->mBodyJacobianDeriv.getSize() + getNumLocalDofs()
+               == mBodyJacobianDeriv.getSize());
+
+        for (int i = 0; i < numParentDOFs; ++i)
+        {
+            assert(mParentJoint);
+            math::se3 dJi = math::InvAd(mParentJoint->getLocalTransformation(),
+                                       mParentBody->mBodyJacobianDeriv[i]);
+            mBodyJacobianDeriv[i] = dJi;
+        }
+    }
+
+    // Local Jacobian
+    for(int i = 0; i < numLocalDOFs; i++)
+    {
+        mBodyJacobianDeriv[numParentDOFs + i]
+                = mParentJoint->getLocalJacobianFirstDerivative()[i];
+    }
 }
 
 void BodyNode::setLocalInertia(double _Ixx, double _Iyy, double _Izz,
@@ -483,7 +529,8 @@ void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
 
     for (std::vector<BodyNode*>::iterator iChildBody = mChildBodies.begin();
          iChildBody != mChildBodies.end();
-         ++iChildBody) {
+         ++iChildBody)
+    {
         dynamics::Joint* childJoint = (*iChildBody)->getParentJoint();
         assert(childJoint != NULL);
         BodyNode* bodyDyn = dynamic_cast<BodyNode*>(*iChildBody);
@@ -494,13 +541,14 @@ void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
     }
 }
 
-void BodyNode::updateGeneralizedForce()
+void BodyNode::updateGeneralizedForce(bool _withDampingForces)
 {
     assert(mParentJoint != NULL);
 
     const math::Jacobian& J = mParentJoint->getLocalJacobian();
 
-    assert(J.getSize() == mParentJoint->getNumDofs());
+//    if (_withDampingForces)
+//        mF -= mFDamp;
 
     mParentJoint->set_tau(J.getInnerProduct(mF));
 }
@@ -512,7 +560,8 @@ void BodyNode::updateArticulatedInertia()
 
     for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
          itrBody != mChildBodies.end();
-         ++itrBody) {
+         ++itrBody)
+    {
         mAI += mPi.Transform(math::Inv(mW));
     }
 }
@@ -527,9 +576,11 @@ void BodyNode::updatePsi()
     AI_S = Eigen::MatrixXd::Zero(6, n);
     Psi = Eigen::MatrixXd::Zero(n, n);
 
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
         AI_S.col(i) = (mAI * S[i]).getEigenVector();
-        for (int j = 0; j < n; ++j) {
+        for (int j = 0; j < n; ++j)
+        {
             Psi(i, j) = math::Inner(S[i], mAI * S[j]);
         }
     }
@@ -557,7 +608,8 @@ void BodyNode::updateBiasForce()
 
     for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
          itrBody != mChildBodies.end();
-         ++itrBody) {
+         ++itrBody)
+    {
         mB += math::InvdAd(mW, mBeta);
     }
 }
@@ -576,8 +628,12 @@ void BodyNode::updateMassMatrix()
 void BodyNode::aggregateMass(Eigen::MatrixXd& _M)
 {
     for(int i=0; i<getNumDependentDofs(); i++)
+    {
         for(int j=0; j<getNumDependentDofs(); j++)
+        {
             _M(mDependentDofs[i], mDependentDofs[j]) += mM(i, j);
+        }
+    }
 }
 
 void BodyNode::addExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)

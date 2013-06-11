@@ -74,8 +74,7 @@ Eigen::VectorXd World::getState() const
 {
     Eigen::VectorXd state(mIndices.back() * 2);
 
-    for (unsigned int i = 0; i < getNumSkeletons(); i++)
-    {
+    for (unsigned int i = 0; i < getNumSkeletons(); i++) {
         int start = mIndices[i] * 2;
         int size = getSkeleton(i)->getNumDofs();
         state.segment(start, size) = getSkeleton(i)->get_q();
@@ -87,8 +86,7 @@ Eigen::VectorXd World::getState() const
 
 void World::setState(const Eigen::VectorXd& _newState)
 {
-    for (int i = 0; i < getNumSkeletons(); i++)
-    {
+    for (int i = 0; i < getNumSkeletons(); i++) {
         int start = mIndices[i] * 2;
         int size = getSkeleton(i)->getNumDofs();
 
@@ -103,44 +101,46 @@ void World::setState(const Eigen::VectorXd& _newState)
 
 void World::setControlInput()
 {
-    for (int i = 0; i < getNumSkeletons(); i++)
-    {
+    for (int i = 0; i < getNumSkeletons(); i++) {
         getSkeleton(i);
     }
 }
 
 Eigen::VectorXd World::evalDeriv()
 {
-    _computeForwardDynamics();
-
-    // compute contact forces
+    // compute constraint (contact/contact, joint limit) forces
     mCollisionHandle->computeConstraintForces();
+
+    // set constraint force
+    for (unsigned int i = 0; i < getNumSkeletons(); i++) {
+        // skip immobile objects in forward simulation
+        if (mSkeletons[i]->getImmobileState()) {
+            continue;
+        }
+
+        mSkeletons[i]->setConstraintForces(
+                    mCollisionHandle->getTotalConstraintForce(i));
+    }
+
+    // compute forward dynamics
+    computeForwardDynamics();
 
     // compute derivatives for integration
     Eigen::VectorXd deriv = Eigen::VectorXd::Zero(mIndices.back() * 2);
-
-    for (unsigned int i = 0; i < getNumSkeletons(); i++)
-    {
+    for (unsigned int i = 0; i < getNumSkeletons(); i++) {
         // skip immobile objects in forward simulation
-        if (mSkeletons[i]->getImmobileState())
+        if (mSkeletons[i]->getImmobileState()) {
             continue;
+        }
+
         int start = mIndices[i] * 2;
         int size = getSkeleton(i)->getNumDofs();
-
-        // TODO:
-        Eigen::VectorXd qddot = mSkeletons[i]->getInvMassMatrix()
-                                * (-mSkeletons[i]->getCombinedVector()
-                                   //+ mSkeletons[i]->getExternalForces()
-                                   + mSkeletons[i]->getInternalForces()
-                                   + mSkeletons[i]->getDampingForces()  // TODO:
-                                   + mCollisionHandle->getTotalConstraintForce(i)
-                                   );
 
         // set velocities
         deriv.segment(start, size) = getSkeleton(i)->get_dq();
 
         // set qddot (accelerations)
-        deriv.segment(start + size, size) = qddot;
+        deriv.segment(start + size, size) = getSkeleton(i)->get_ddq();
     }
 
     return deriv;
@@ -171,8 +171,7 @@ void World::step()
 
     for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
-         ++itrSkeleton)
-    {
+         ++itrSkeleton) {
         (*itrSkeleton)->clearInternalForces();
     }
 
@@ -192,8 +191,7 @@ dynamics::Skeleton* World::getSkeleton(const std::string& _name) const
     for (std::vector<dynamics::Skeleton*>::const_iterator itrSkeleton
          = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
-         ++itrSkeleton)
-    {
+         ++itrSkeleton) {
         if ((*itrSkeleton)->getName() == _name)
             return *itrSkeleton;
     }
@@ -223,12 +221,11 @@ bool World::checkCollision(bool checkAllCollisions)
     return mCollisionHandle->getCollisionChecker()->checkCollision(checkAllCollisions, false);
 }
 
-void World::_computeForwardDynamics()
+void World::computeForwardDynamics()
 {
     for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
-         ++itrSkeleton)
-    {
+         ++itrSkeleton) {
         (*itrSkeleton)->computeForwardDynamicsID(mGravity);
     }
 }

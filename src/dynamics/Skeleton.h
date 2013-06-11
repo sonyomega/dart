@@ -177,9 +177,11 @@ public:
     Eigen::VectorXd getExternalForces() const { return mFext; }
     Eigen::VectorXd getInternalForces() const { return get_tau(); }
     Eigen::VectorXd getDampingForces() const;
+    Eigen::VectorXd getConstraintForces() const { return mFc; }
 
     void setInternalForces(const Eigen::VectorXd& _forces) { set_tau(_forces); }
     void clearInternalForces() { set_tau(Eigen::VectorXd::Zero(getDOF())); }
+    void setConstraintForces(const Eigen::VectorXd& _Fc) { mFc = _Fc; }
 
     /// @brief
     double getKineticEnergy() const;
@@ -237,7 +239,16 @@ public:
 
     /// @brief (q, dq, ddq) --> (tau)
     void computeInverseDynamics(const Eigen::Vector3d& _gravity,
-                                bool _withExternalForces = false);
+                                bool _computeJacobian = true,
+                                bool _computeJacobianDeriv = true,
+                                bool _withExternalForces = false,
+                                bool _withDampingForces = false);
+
+    // TODO: Not implemeted.
+    /// @brief
+    void computeInverseDynamicsWithZeroAcceleration(
+            const Eigen::Vector3d& _gravity,
+            bool _withExternalForces = false);
 
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamics(const Eigen::Vector3d& _gravity,
@@ -276,8 +287,6 @@ protected:
     //--------------------------------------------------------------------------
     // Sub-functions for Recursive Algorithms
     //--------------------------------------------------------------------------
-
-
 
 protected:
     /// @brief
@@ -331,6 +340,7 @@ protected:
     Eigen::VectorXd mCg;   ///< combined coriolis and gravity term == mC*qdot + g
     Eigen::VectorXd mFext; ///< external forces vector for the skeleton
     //Eigen::VectorXd mFint; ///< internal forces vector for the skeleton; computed by an external controller
+    Eigen::VectorXd mFc;
 
     /// @brief
     //std::vector<BodyNodeDynamics*> mDynamicsBodies;
