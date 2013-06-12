@@ -2652,12 +2652,25 @@ inline AInertia::AInertia(double d)
 
 inline AInertia::AInertia(const Inertia& I)
 {
-    _J[0] = I[0];	_J[1] = I[3];	_J[2] = I[4];	_J[3] = SCALAR_0;	_J[4] = -I[8];		_J[5] = I[7];
-                    _J[6] = I[1];	_J[7] = I[5];	_J[8] = I[8];		_J[9] = SCALAR_0;	_J[10] = -I[6];
-                                    _J[11] = I[2];	_J[12] = -I[7];		_J[13] = I[6];		_J[14] = SCALAR_0;
-                                                    _J[15] = I[9];		_J[16] = SCALAR_0;	_J[17] = SCALAR_0;
-                                                                        _J[18] = I[9];		_J[19] = SCALAR_0;
-                                                                                            _J[20] = I[9];
+    // m * r
+    double mr0 = I._I[9] * I._I[6];
+    double mr1 = I._I[9] * I._I[7];
+    double mr2 = I._I[9] * I._I[8];
+
+    // m * [r] * [r]
+    double mr0r0 = mr0 * I._I[6];
+    double mr1r1 = mr1 * I._I[7];
+    double mr2r2 = mr2 * I._I[8];
+    double mr0r1 = mr0 * I._I[7];
+    double mr1r2 = mr1 * I._I[8];
+    double mr2r0 = mr2 * I._I[6];
+
+    _J[0] = I._I[0] + mr1r1 + mr2r2;  _J[1] = I._I[3] - mr0r1;          _J[ 2] = I._I[4] - mr2r0;          _J[ 3] = SCALAR_0;	_J[ 4] = -mr2;		_J[ 5] =  mr1;
+                                      _J[6] = I._I[1] + mr2r2 + mr0r0;  _J[ 7] = I._I[5] - mr1r2;          _J[ 8] =  mr2;		_J[ 9] = SCALAR_0;	_J[10] = -mr0;
+                                                                        _J[11] = I._I[2] + mr0r0 + mr1r1;  _J[12] = -mr1;		_J[13] =  mr0;		_J[14] = SCALAR_0;
+                                                                                                           _J[15] = I._I[9];    _J[16] = SCALAR_0;	_J[17] = SCALAR_0;
+                                                                                                                                _J[18] = I._I[9];   _J[19] = SCALAR_0;
+                                                                                                                                                    _J[20] = I._I[9];
 }
 
 inline AInertia::AInertia(double a0, double a1, double a2,
@@ -2984,7 +2997,7 @@ inline void AInertia::SubtractKroneckerProduct(const dse3& x, const dse3& y)
     _J[20] -= x._m[5] * y._m[5];
 }
 
-inline se3 AInertia::operator % (const dse3& b) const
+inline se3 AInertia::operator%(const dse3& b) const
 {
     double a00 = _J[6] * _J[11] - _J[7] * _J[7];
     double a01 = _J[2] * _J[7] - _J[1] * _J[11];
@@ -3038,6 +3051,7 @@ inline se3 AInertia::operator % (const dse3& b) const
 
 inline AInertia Inv(const Inertia& I)
 {
+    // TODO: Need to check
     double im = SCALAR_1 / I[9];
     double ims = sqrt(im);
     double r0 = ims * I[6];
@@ -3075,7 +3089,7 @@ inline AInertia Inv(const Inertia& I)
     return AInertia(j0, j6, j12, j18, j24, j30, j7, j13, j19, j25, j31, j14, j20, j26, j32, r1 * j20 - r2 * j19 + im, r1 * j26 - r2 * j25, r1 * j32 - r2 * j31, r2 * j24 - r0 * j26 + im, r2 * j30 - r0 * j32, r0 * j31 - r1 * j30 + im);
 }
 
-inline const AInertia& AInertia::operator = (const AInertia& J)
+inline const AInertia& AInertia::operator=(const AInertia& J)
 {
     _J[0] = J[0];	_J[1] = J[1];	_J[2] = J[2];
     _J[3] = J[3];	_J[4] = J[4];	_J[5] = J[5];
@@ -3087,14 +3101,28 @@ inline const AInertia& AInertia::operator = (const AInertia& J)
     return *this;
 }
 
-inline const AInertia& AInertia::operator = (const Inertia& I)
+inline const AInertia& AInertia::operator=(const Inertia& I)
 {
-    _J[0] = I[0];	_J[1] = I[3];	_J[2] = I[4];	_J[3] = SCALAR_0;	_J[4] = -I[8];			_J[5] = I[7];
-                    _J[6] = I[1];	_J[7] = I[5];	_J[8] = I[8];			_J[9] = SCALAR_0;	_J[10] = -I[6];
-                                    _J[11] = I[2];	_J[12] = -I[7];			_J[13] = I[6];			_J[14] = SCALAR_0;
-                                                    _J[15] = I[9];			_J[16] = SCALAR_0;	_J[17] = SCALAR_0;
-                                                                            _J[18] = I[9];			_J[19] = SCALAR_0;
-                                                                                                    _J[20] = I[9];
+    // m * r
+    double mr0 = I._I[9] * I._I[6];
+    double mr1 = I._I[9] * I._I[7];
+    double mr2 = I._I[9] * I._I[8];
+
+    // m * [r] * [r]
+    double mr0r0 = mr0 * I._I[6];
+    double mr1r1 = mr1 * I._I[7];
+    double mr2r2 = mr2 * I._I[8];
+    double mr0r1 = mr0 * I._I[7];
+    double mr1r2 = mr1 * I._I[8];
+    double mr2r0 = mr2 * I._I[6];
+
+    _J[0] = I._I[0] + mr1r1 + mr2r2;  _J[1] = I._I[3] - mr0r1;          _J[ 2] = I._I[4] - mr2r0;          _J[ 3] = SCALAR_0;	_J[ 4] = -mr2;		_J[ 5] =  mr1;
+                                      _J[6] = I._I[1] + mr2r2 + mr0r0;  _J[ 7] = I._I[5] - mr1r2;          _J[ 8] =  mr2;		_J[ 9] = SCALAR_0;	_J[10] = -mr0;
+                                                                        _J[11] = I._I[2] + mr0r0 + mr1r1;  _J[12] = -mr1;		_J[13] =  mr0;		_J[14] = SCALAR_0;
+                                                                                                           _J[15] = I._I[9];    _J[16] = SCALAR_0;	_J[17] = SCALAR_0;
+                                                                                                                                _J[18] = I._I[9];   _J[19] = SCALAR_0;
+                                                                                                                                                    _J[20] = I._I[9];
+
     return *this;
 }
 

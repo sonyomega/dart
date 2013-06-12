@@ -1420,8 +1420,10 @@ public:
     Vec3 getOffset() const;
 
     //--------------------------------------------------------------------------
-    // Friend functions
+    // Friends
     //--------------------------------------------------------------------------
+    friend class AInertia;
+
     friend AInertia Inv(const Inertia& J);
 
 private:
