@@ -1460,10 +1460,10 @@ public:
     // Operators
     //--------------------------------------------------------------------------
     /// @brief
-    double& operator[](int);
+    double& operator[](int i);
 
     /// @brief
-    const double& operator[](int) const;
+    const double& operator[](int i) const;
 
     /// @brief
     const AInertia& operator+() const;
@@ -1488,13 +1488,7 @@ public:
     AInertia operator+(const AInertia& J) const;
 
     /// @brief
-    AInertia operator+(const Inertia& I) const;
-
-    /// @brief
     AInertia operator-(const AInertia& J) const;
-
-    /// @brief
-    AInertia operator-(const Inertia& I) const;
 
     /// @brief
     const AInertia& operator+=(const AInertia& J);
@@ -1503,7 +1497,7 @@ public:
     const AInertia& operator-=(const AInertia& J);
 
     /// @brief
-    se3 operator%(const dse3& ) const;
+    se3 operator%(const dse3& F) const;
 
     /// @brief
     const AInertia& operator=(const AInertia& J);
@@ -1519,13 +1513,16 @@ public:
     // Setters and getters
     //--------------------------------------------------------------------------
     /// @brief
-    void SubtractKroneckerProduct(const dse3& , const dse3& );
+    void SubtractKroneckerProduct(const dse3& F1, const dse3& F2);
 
     /// @brief
-    void AddTransform(const AInertia& , const SE3& );
+    void AddTransform(const AInertia& AI, const SE3& T);
 
     /// @brief
     AInertia Transform(const SE3& T) const;
+
+    /// @brief
+    Eigen::Matrix<double,6,6> getEigenMatrix() const;
 
     /// @brief
     template <class TYPE>

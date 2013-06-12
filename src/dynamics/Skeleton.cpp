@@ -205,8 +205,8 @@ void Skeleton::_updateJointKinematics(bool _firstDerivative,
                                       bool _secondDerivative)
 {
     for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
-         itrJoint != mJoints.end();
-         ++itrJoint) {
+         itrJoint != mJoints.end(); ++itrJoint)
+    {
         (*itrJoint)->updateKinematics(_firstDerivative,
                                       _secondDerivative);
     }
@@ -216,15 +216,18 @@ void Skeleton::_updateBodyForwardKinematics(bool _firstDerivative,
                                             bool _secondDerivative)
 {
     for (std::vector<BodyNode*>::iterator itrBody = mBodies.begin();
-         itrBody != mBodies.end();
-         ++itrBody) {
+         itrBody != mBodies.end(); ++itrBody)
+    {
         (*itrBody)->updateTransformation();
 
         if (_firstDerivative)
             (*itrBody)->updateVelocity();
 
         if (_secondDerivative)
+        {
+            (*itrBody)->updateEta();
             (*itrBody)->updateAcceleration();
+        }
     }
 
     mFrame = mRoot->getTransformationWorld() * math::Inv(mToRootBody);

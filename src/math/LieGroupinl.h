@@ -3115,6 +3115,19 @@ inline const AInertia& AInertia::operator=(
     return *this;
 }
 
+inline Eigen::Matrix<double,6,6> AInertia::getEigenMatrix() const
+{
+    Eigen::Matrix<double,6,6> mat = Eigen::Matrix<double,6,6>::Zero();
+
+    mat(0,0) = _J[0]; mat(0,1) = _J[1]; mat(0,2) = _J[ 2]; mat(0,3) = _J[ 3]; mat(0,4) = _J[ 4]; mat(0,5) = _J[ 5];
+                      mat(1,1) = _J[6]; mat(1,2) = _J[ 7]; mat(1,3) = _J[ 8]; mat(1,4) = _J[ 9]; mat(1,5) = _J[10];
+                                        mat(2,2) = _J[11]; mat(2,3) = _J[12]; mat(2,4) = _J[13]; mat(2,5) = _J[14];
+                                                           mat(3,3) = _J[15]; mat(3,4) = _J[16]; mat(3,5) = _J[17];
+                                                                              mat(4,4) = _J[18]; mat(4,5) = _J[19];
+                                                                                                 mat(5,5) = _J[20];
+    return mat;
+}
+
 inline Axis::Axis()
 {
     _v[0] = _v[1] = _v[2] = 0.0;

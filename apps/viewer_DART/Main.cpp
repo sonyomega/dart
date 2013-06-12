@@ -8,14 +8,14 @@ int main(int argc, char* argv[])
     // create and initialize the world
     dart::simulation::World *myWorld
             = dart::simulation::readSkelFile(
-                  DART_DATA_PATH"/skel/test/single_pendulum.skel");
+                  //DART_DATA_PATH"/skel/test/single_pendulum.skel");
                   //DART_DATA_PATH"/skel/test/double_pendulum.skel");
                   //DART_DATA_PATH"/skel/test/boxes.skel");
                   //DART_DATA_PATH"/skel/test/ball_joints.skel");
                   //DART_DATA_PATH"/skel/test/translational_joints.skel");
                   //DART_DATA_PATH"/skel/test/free_joints.skel");
                   //DART_DATA_PATH"/skel/test/serial_chain.skel");
-                  //DART_DATA_PATH"/skel/test/drop.skel");
+                  DART_DATA_PATH"/skel/test/drop.skel");
                   //DART_DATA_PATH"/skel/test/drop_unrotated_box.skel");
                   //DART_DATA_PATH"/skel/test/SimplePendulum.skel");
     assert(myWorld != NULL);

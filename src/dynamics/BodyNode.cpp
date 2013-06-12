@@ -403,8 +403,13 @@ void BodyNode::updateEta()
 
 void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
 {
-    // dV(i) = Ad(T(i, i-1), dV(i-1)) + ad(V(i), S * dq)
-    //         + dS * dq + S * ddq
+    // dV(i) = Ad(T(i, i-1), dV(i-1))
+    //         + ad(V(i), S * dq) + dS * dq
+    //         + S * ddq
+    //       = Ad(T(i, i-1), dV(i-1))
+    //         + eta
+    //         + S * ddq
+
     if (mParentBody)
     {
         mdV = math::InvAd(mParentJoint->getLocalTransformation(),
@@ -602,11 +607,15 @@ void BodyNode::updatePsi()
     for (int i = 0; i < n; ++i)
     {
         mAI_S.col(i) = (mAI * S[i]).getEigenVector();
-        for (int j = 0; j < n; ++j)
-        {
-            mPsi(i, j) = math::Inner(S[j], mAI * S[i]);
-        }
+//        for (int j = 0; j < n; ++j)
+//        {
+//            mPsi(i, j) = math::Inner(S[j], mAI * S[i]);
+//        }
     }
+
+    mAI_S = mAI.getEigenMatrix() * S.getEigenMatrix();
+
+    mPsi = S.getEigenMatrix().transpose() * mAI_S;
 
     mPsi = mPsi.inverse();
 }
