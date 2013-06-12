@@ -1500,13 +1500,7 @@ public:
     const AInertia& operator+=(const AInertia& J);
 
     /// @brief
-    const AInertia& operator+=(const Inertia& I);
-
-    /// @brief
     const AInertia& operator-=(const AInertia& J);
-
-    /// @brief
-    const AInertia& operator-=(const Inertia& I);
 
     /// @brief
     se3 operator%(const dse3& ) const;
