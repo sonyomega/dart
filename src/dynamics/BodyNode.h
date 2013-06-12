@@ -81,7 +81,12 @@ Runge-Kutta and fourth-order Runge Kutta.
 #include "math/LieGroup.h"
 
 namespace dart {
-namespace renderer { class RenderInterface; }
+namespace renderer {
+class RenderInterface;
+}
+}
+
+namespace dart {
 namespace dynamics {
 
 class GenCoord;
@@ -444,7 +449,13 @@ public:
     void updateBeta();
 
     /// @brief
-    void updateBiasForce();
+    void updateBiasForce(const Eigen::Vector3d& _gravity);
+
+    /// @brief
+    void update_ddq();
+
+    /// @brief
+    void update_F_fs();
 
     /// @brief
     void updateDampingForce();
@@ -542,7 +553,7 @@ protected:
     math::se3 mV;
 
     /// @brief
-    math::se3 m_eta;
+    math::se3 mEta;
 
     /// @brief Generalized body acceleration w.r.t. body frame.
     math::se3 mdV;
@@ -568,9 +579,9 @@ protected:
     math::dse3 mFgravity;
 
     /// @brief
-    Eigen::MatrixXd Psi;
+    Eigen::MatrixXd mPsi;
 
-    Eigen::MatrixXd AI_S;
+    Eigen::MatrixXd mAI_S;
 
     struct BodyState {
         math::SE3 W;

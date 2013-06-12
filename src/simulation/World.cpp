@@ -225,9 +225,17 @@ void World::computeForwardDynamics()
 {
     for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
-         ++itrSkeleton) {
-        (*itrSkeleton)->computeForwardDynamicsID(mGravity);
+         ++itrSkeleton)
+    {
+        //(*itrSkeleton)->computeForwardDynamicsID(mGravity);
+        (*itrSkeleton)->computeForwardDynamicsFS(mGravity);
     }
+
+    for (int i = 0; i < mSkeletons.size(); ++i)
+    {
+        mSkeletons[i]->computeForwardDynamicsFS(mGravity);
+    }
+
 }
 
 

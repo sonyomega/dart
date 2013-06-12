@@ -44,9 +44,6 @@
 #include "dynamics/Skeleton.h"
 #include "dynamics/Skeleton.h"
 
-using namespace std;
-using namespace Eigen;
-
 namespace dart {
 namespace dynamics {
 
@@ -327,6 +324,11 @@ void Skeleton::computeForwardDynamicsID2(
 {
     int n = getNumDofs();
 
+    // skip immobile objects in forward simulation
+    if (getImmobileState() == true || n == 0) {
+        return;
+    }
+
     // Save current tau
     Eigen::VectorXd tau_old = get_tau();
 
@@ -353,9 +355,17 @@ void Skeleton::computeForwardDynamicsID2(
     //
     set_tau(tau_old);
 
-    // TODO:
-    mMInv = mM.inverse();
-    //mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
+    Eigen::VectorXd qddot = this->getInvMassMatrix()
+                            * (-this->getCombinedVector()
+                               + this->getExternalForces()
+                               + this->getInternalForces()
+                               + this->getDampingForces()
+                               + this->getConstraintForces() );
+
+    //mMInv = mM.inverse();
+    mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
+
+    this->set_ddq(qddot);
 
 //    Eigen::VectorXd new_ddq = mMInv * (tau_old - b);
 //    set_ddq(new_ddq);
@@ -364,27 +374,44 @@ void Skeleton::computeForwardDynamicsID2(
 void Skeleton::computeForwardDynamicsFS(
         const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
 {
+    int n = getNumDofs();
+
+    // skip immobile objects in forward simulation
+    if (getImmobileState() == true || n == 0)
+    {
+        return;
+    }
+
     // Forward recursion
     for (std::vector<dynamics::BodyNode*>::iterator itrBody = mBodies.begin();
          itrBody != mBodies.end();
-         ++itrBody) {
+         ++itrBody)
+    {
         (*itrBody)->updateTransformation();
         (*itrBody)->updateVelocity();
+        (*itrBody)->updateEta();
     }
 
     // Backward recursion
     for (std::vector<dynamics::BodyNode*>::reverse_iterator ritrBody
          = mBodies.rbegin();
          ritrBody != mBodies.rend();
-         ++ritrBody) {
-//        (*ritrBody)->updateBodyForce(_gravity, _withExternalForces);
-//        (*ritrBody)->updateGeneralizedForce();
+         ++ritrBody)
+    {
+        (*ritrBody)->updateArticulatedInertia();
+        (*ritrBody)->updateBiasForce(_gravity);
+        (*ritrBody)->updatePsi();
+        (*ritrBody)->updatePi();
+        (*ritrBody)->updateBeta();
     }
 
     for (std::vector<dynamics::BodyNode*>::iterator itrBody = mBodies.begin();
          itrBody != mBodies.end();
-         ++itrBody) {
-//         (*iter_pbody)->fsDynaRecursion_c();
+         ++itrBody)
+    {
+        (*itrBody)->update_ddq();
+        (*itrBody)->updateAcceleration();
+        (*itrBody)->update_F_fs();
      }
 }
 

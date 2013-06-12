@@ -36,11 +36,12 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "dynamics/BodyNode.h"
+
 #include <iostream>
 
 #include "utils/UtilsCode.h"
 #include "renderer/RenderInterface.h"
-#include "dynamics/BodyNode.h"
 #include "dynamics/Joint.h"
 #include "dynamics/Shape.h"
 #include "dynamics/Skeleton.h"
@@ -396,7 +397,8 @@ void BodyNode::updateVelocity(bool _updateJacobian)
 
 void BodyNode::updateEta()
 {
-    m_eta = math::ad(mV, mParentJoint->getLocalVelocity());
+    mEta = math::ad(mV, mParentJoint->mS*mParentJoint->get_dq()) +
+           mParentJoint->mdS*mParentJoint->get_dq();
 }
 
 void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
@@ -407,11 +409,11 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
     {
         mdV = math::InvAd(mParentJoint->getLocalTransformation(),
                           mParentBody->getAcceleration()) +
-              m_eta + mParentJoint->getLocalAcceleration();
+              mEta + mParentJoint->mS*mParentJoint->get_ddq();
     }
     else
     {
-        mdV = m_eta + mParentJoint->getLocalAcceleration();
+        mdV = mEta + mParentJoint->mS*mParentJoint->get_ddq();
     }
 
     if (_updateJacobianDeriv == false)
@@ -556,13 +558,34 @@ void BodyNode::updateGeneralizedForce(bool _withDampingForces)
 void BodyNode::updateArticulatedInertia()
 {
     // TODO: Need code optimization
-    mAI = mI; // aI = AInertia(I);
+    mAI = mI;
 
-    for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
-         itrBody != mChildBodies.end();
-         ++itrBody)
+    for (std::vector<Joint*>::iterator itrJoint = mJointsChild.begin();
+         itrJoint != mJointsChild.end();
+         ++itrJoint)
     {
-        mAI += mPi.Transform(math::Inv(mW));
+        mAI += (*itrJoint)->getChildBody()->mPi.Transform(
+                   math::Inv((*itrJoint)->getLocalTransformation()));
+    }
+}
+
+void BodyNode::updateBiasForce(const Eigen::Vector3d& _gravity)
+{
+    if (mGravityMode == true)
+        mFgravity = mI * math::InvAdR(mW, math::Vec3(_gravity));
+    else
+        mFgravity.setZero();
+
+    mB = -math::dad(mV, mI*mV);
+    mB -= mFext;
+    mB -= mFgravity;
+
+    for (std::vector<Joint*>::iterator itrJoint = mJointsChild.begin();
+         itrJoint != mJointsChild.end();
+         ++itrJoint)
+    {
+        mB += math::InvdAd((*itrJoint)->getLocalTransformation(),
+                           (*itrJoint)->getChildBody()->mBeta);
     }
 }
 
@@ -573,45 +596,83 @@ void BodyNode::updatePsi()
 
     int n = mParentJoint->getDOF();
     const math::Jacobian& S = mParentJoint->mS;
-    AI_S = Eigen::MatrixXd::Zero(6, n);
-    Psi = Eigen::MatrixXd::Zero(n, n);
+    mAI_S = Eigen::MatrixXd::Zero(6, n);
+    mPsi = Eigen::MatrixXd::Zero(n, n);
 
     for (int i = 0; i < n; ++i)
     {
-        AI_S.col(i) = (mAI * S[i]).getEigenVector();
+        mAI_S.col(i) = (mAI * S[i]).getEigenVector();
         for (int j = 0; j < n; ++j)
         {
-            Psi(i, j) = math::Inner(S[i], mAI * S[j]);
+            mPsi(i, j) = math::Inner(S[j], mAI * S[i]);
         }
     }
 
-    Psi = Psi.inverse();
+    mPsi = mPsi.inverse();
 }
 
 void BodyNode::updatePi()
 {
-    mPi = mAI;
-
-    mPi = AI_S * Psi * AI_S.transpose();
+    // TODO:
+    mPi = -(mAI_S * mPsi * mAI_S.transpose());
+    mPi += mAI;
 }
 
 void BodyNode::updateBeta()
 {
-    dterr << "Not implemented.\n";
-    //mBeta = mB + mAI * ()
+    // TODO: Optimization later...
+    //       Mystery code is here...
+    int n = mParentJoint->getDOF();
+    const math::Jacobian& S = mParentJoint->mS;
+    mPsi;
+    mParentJoint->get_tau();
+    Eigen::VectorXd tmp = Eigen::VectorXd::Zero(n);
+    Eigen::VectorXd Psi_tau = Eigen::VectorXd::Zero(n);
+
+    for (int i = 0; i < n; ++i)
+    {
+        tmp[i] = math::Inner(S[i], mAI * mEta + mB);
+    }
+    Psi_tau = mPsi*(mParentJoint->get_tau() - tmp);
+
+    math::se3 newS;
+
+    for (int i = 0; i < n; ++i)
+    {
+        newS += S[i]*Psi_tau[i];
+    }
+
+    mBeta = mB + mAI * (mEta + newS);
 }
 
-void BodyNode::updateBiasForce()
+void BodyNode::update_ddq()
 {
-    mB = -math::dad(mV, mI*mV);
-    mB -= mFext;
+    int n = mParentJoint->getDOF();
+    const math::Jacobian& S = mParentJoint->mS;
+    Eigen::VectorXd tmp2 = Eigen::VectorXd::Zero(n);
+    math::se3 tmp;
 
-    for (std::vector<BodyNode*>::iterator itrBody = mChildBodies.begin();
-         itrBody != mChildBodies.end();
-         ++itrBody)
-    {
-        mB += math::InvdAd(mW, mBeta);
+    if (mParentBody) {
+        tmp = math::InvAd(mParentJoint->getLocalTransformation(),
+                                    mParentBody->getAcceleration() + mEta);
     }
+    else
+    {
+        tmp = math::InvAd(mParentJoint->getLocalTransformation(), mEta);
+    }
+
+    for (int i = 0; i < n; ++i)
+    {
+        tmp2[i] = math::Inner(S[i], mAI*tmp + mB);
+    }
+
+    Eigen::VectorXd ddq = mPsi * (mParentJoint->get_tau() - tmp2);
+    mParentJoint->set_ddq(ddq);
+}
+
+void BodyNode::update_F_fs()
+{
+    mF = mAI*mdV + mB;
 }
 
 void BodyNode::updateDampingForce()
@@ -646,6 +707,7 @@ void BodyNode::clearExternalForces()
     mFext.setZero();
     dterr << "Not implemented.\n";
 }
+
 
 } // namespace dynamics
 } // namespace dart
