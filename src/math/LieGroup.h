@@ -922,6 +922,9 @@ public:
     void setZero();
 
     /// @brief
+    void setEigenVector(const Eigen::Matrix<double,6,1>& vec6);
+
+    /// @brief
     Eigen::Matrix<double,6,1> getEigenVector() const;
 
     /// @brief set itself to be dad(V, F).
@@ -1443,9 +1446,6 @@ public:
 
     /// @brief
     explicit AInertia(const Inertia& I);
-
-    /// @brief
-    explicit AInertia(double);
 
     /// @brief
     explicit AInertia(double, double, double,

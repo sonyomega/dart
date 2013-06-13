@@ -230,12 +230,6 @@ void World::computeForwardDynamics()
         (*itrSkeleton)->computeForwardDynamicsID(mGravity);
         //(*itrSkeleton)->computeForwardDynamicsFS(mGravity);
     }
-
-    for (int i = 0; i < mSkeletons.size(); ++i)
-    {
-        mSkeletons[i]->computeForwardDynamicsFS(mGravity);
-    }
-
 }
 
 

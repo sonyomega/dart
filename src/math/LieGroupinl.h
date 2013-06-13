@@ -1053,10 +1053,22 @@ inline void dse3::setZero()
     _m[0] = _m[1] = _m[2] = _m[3] = _m[4] = _m[5] = 0.0;
 }
 
+inline void dse3::setEigenVector(const Eigen::Matrix<double,6,1>& vec6)
+{
+    _m[0] = vec6[0];
+    _m[1] = vec6[1];
+    _m[2] = vec6[2];
+
+    _m[3] = vec6[3];
+    _m[4] = vec6[4];
+    _m[5] = vec6[5];
+}
+
 inline Eigen::Matrix<double,6,1> dse3::getEigenVector() const
 {
     Eigen::Matrix<double,6,1> ret;
     ret << _m[0], _m[1], _m[2], _m[3], _m[4], _m[5];
+    return ret;
 }
 
 inline dse3 dad(const se3& s, const dse3& t)
@@ -2645,11 +2657,6 @@ inline AInertia::AInertia()
     _J[0] = _J[6] = _J[11] = _J[15] = _J[18] = _J[20] = 1.0;
 }
 
-inline AInertia::AInertia(double d)
-{
-    _J[0] = _J[1] = _J[2] = _J[3] = _J[4] = _J[5] = _J[6] = _J[7] = _J[8] = _J[9] = _J[10] = _J[11] = _J[12] = _J[13] = _J[14] = _J[15] = _J[16] = _J[17] = _J[18] = _J[19] = _J[20] = d;
-}
-
 inline AInertia::AInertia(const Inertia& I)
 {
     // m * r
@@ -3119,12 +3126,14 @@ inline Eigen::Matrix<double,6,6> AInertia::getEigenMatrix() const
 {
     Eigen::Matrix<double,6,6> mat = Eigen::Matrix<double,6,6>::Zero();
 
-    mat(0,0) = _J[0]; mat(0,1) = _J[1]; mat(0,2) = _J[ 2]; mat(0,3) = _J[ 3]; mat(0,4) = _J[ 4]; mat(0,5) = _J[ 5];
-                      mat(1,1) = _J[6]; mat(1,2) = _J[ 7]; mat(1,3) = _J[ 8]; mat(1,4) = _J[ 9]; mat(1,5) = _J[10];
-                                        mat(2,2) = _J[11]; mat(2,3) = _J[12]; mat(2,4) = _J[13]; mat(2,5) = _J[14];
-                                                           mat(3,3) = _J[15]; mat(3,4) = _J[16]; mat(3,5) = _J[17];
-                                                                              mat(4,4) = _J[18]; mat(4,5) = _J[19];
-                                                                                                 mat(5,5) = _J[20];
+    mat(0,0) = _J[0]; mat(0,1) = _J[ 1]; mat(0,2) = _J[ 2]; mat(0,3) = _J[ 3]; mat(0,4) = _J[ 4]; mat(0,5) = _J[ 5];
+    mat(1,0) = _J[1]; mat(1,1) = _J[ 6]; mat(1,2) = _J[ 7]; mat(1,3) = _J[ 8]; mat(1,4) = _J[ 9]; mat(1,5) = _J[10];
+    mat(2,0) = _J[2]; mat(2,1) = _J[ 7]; mat(2,2) = _J[11]; mat(2,3) = _J[12]; mat(2,4) = _J[13]; mat(2,5) = _J[14];
+    mat(3,0) = _J[3]; mat(3,1) = _J[ 8]; mat(3,2) = _J[12]; mat(3,3) = _J[15]; mat(3,4) = _J[16]; mat(3,5) = _J[17];
+    mat(4,0) = _J[4]; mat(4,1) = _J[ 9]; mat(4,2) = _J[13]; mat(4,3) = _J[16]; mat(4,4) = _J[18]; mat(4,5) = _J[19];
+    mat(5,0) = _J[5]; mat(5,1) = _J[10]; mat(5,2) = _J[14]; mat(5,3) = _J[17]; mat(5,4) = _J[19]; mat(5,5) = _J[20];
+
+    //mat.triangularView<Eigen::StrictlyLower>() = mat.transpose();
     return mat;
 }
 
