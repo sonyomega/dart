@@ -127,7 +127,7 @@ TEST(MATH, TRANSFORMATION)
 
     clock_t start = clock();
     for(int i = 0; i < iterations; i++) {
-       S3 = S2 * S1;
+       prod(S2, S1, S3);
     }
     cout << "SE3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
