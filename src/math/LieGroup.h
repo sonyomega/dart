@@ -1002,38 +1002,38 @@ public:
     /// | R[1]	R[4]	R[7] |
     /// | R[2]	R[5]	R[8] |
     /// ,where the left 3X3 matrix is the rotation matrix.
-    const double	&operator [] (int i) const;
-    double			&operator [] (int);
+    const double& operator [] (int i) const;
+    double& operator [] (int);
 
     /// @brief substitution operator.
     const SO3& operator = (const SO3 &);
 
     /// @brief multiplication operator\n
     /// T_this *= T is a fast version of T_this = T_this * T
-    const SO3 & operator *= (const SO3 & R);
+    const SO3& operator*=(const SO3 & R);
 
     /// @brief multiplication operator\n
     /// T_this /= T is a fast version of T_this =  T_this * Inv(T)
-    const SO3 & operator /= (const SO3 & T);
+    const SO3& operator/=(const SO3 & T);
 
     /// @brief multiplication operator\n
     /// T_this \%= T is a fast version of T_this= Inv(T_this) * T
-    const SO3 & operator %= (const SO3 & T);
+    const SO3& operator%=(const SO3 & T);
 
     /// @brief multiplication operator */
-    SO3 operator * (const SO3 & T) const;
+    SO3 operator*(const SO3 & T) const;
 
     /// @brief multiplication operator, T_this / T = T_this * Inv(T) */
-    SO3 operator / (const SO3 & T) const;
+    SO3 operator/(const SO3 & T) const;
 
     /// @brief multiplication operator, T_this \% T = Inv(T_this) * T */
-    SO3 operator % (const SO3 & T) const;
+    SO3 operator%(const SO3 & T) const;
 
     /// @brief
-    Vec3 operator * (const Vec3& q) const;
+    Vec3 operator*(const Vec3& q) const;
 
     /// @brief
-    Vec3 operator % (const Vec3& q) const;
+    Vec3 operator%(const Vec3& q) const;
 
     //--------------------------------------------------------------------------
     // Setters and getters
