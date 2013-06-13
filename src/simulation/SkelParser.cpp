@@ -685,18 +685,18 @@ std::string toString(unsigned int _v)
 
 std::string toString(float _v)
 {
-    if (std::isfinite(_v))
+    //if (std::isfinite(_v))
         return boost::lexical_cast<std::string>(_v);
-    else
-        return std::string("0");
+    //else
+    //    return std::string("0");
 }
 
 std::string toString(double _v)
 {
-    if (std::isfinite(_v))
+    //if (std::isfinite(_v))
         return boost::lexical_cast<std::string>(_v);
-    else
-        return std::string("0");
+    //else
+    //    return std::string("0");
 }
 
 std::string toString(char _v)

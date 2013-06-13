@@ -63,7 +63,7 @@ public:
     //--------------------------------------------------------------------------
 
     // Documentation is inherited.
-    virtual double getPotentialEnergy() const {}
+    virtual double getPotentialEnergy() const { return 0.0; }
 
     //--------------------------------------------------------------------------
     // Structueral Properties
@@ -116,7 +116,7 @@ public:
     //--------------------------------------------------------------------------
 
     // Documentation is inherited.
-    virtual double getPotentialEnergy() const {}
+    virtual double getPotentialEnergy() const { return 0.0; }
 
     //--------------------------------------------------------------------------
     // Structueral Properties

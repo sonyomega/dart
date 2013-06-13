@@ -57,7 +57,7 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
     int v2 = -3;
     unsigned int v3 = 1;
     float v4 = -3.140f;
-    double v5 = 1.4576640d;
+    double v5 = 1.4576640;
     char v6 = 'd';
     Eigen::Vector2d v7 = Eigen::Vector2d::Ones();
     Eigen::Vector3d v8 = Eigen::Vector3d::Ones();
@@ -95,7 +95,9 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
     EXPECT_EQ(f, v4);
     EXPECT_EQ(d, v5);
     EXPECT_EQ(c, v6);
-    EXPECT_EQ(vec2, v7);
+    for(int i = 0; i < 2; i++) {
+        EXPECT_EQ(vec2[i], v7[i]);
+    }
     EXPECT_EQ(vec3, v8);
     EXPECT_EQ(valso3, v9);
     //EXPECT_EQ(valSO3, v10);
