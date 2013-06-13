@@ -722,13 +722,13 @@ inline se3 Ad(const SE3& T, const se3& s)
     // w' = R * w
     // v' = r x R * w + R * v
     //--------------------------------------------------------------------------
-    double tmp[3] = {	T._T[0] * s._w[0] + T._T[3] * s._w[1] + T._T[6] * s._w[2],
-                        T._T[1] * s._w[0] + T._T[4] * s._w[1] + T._T[7] * s._w[2],
-                        T._T[2] * s._w[0] + T._T[5] * s._w[1] + T._T[8] * s._w[2] };
-    return se3(	tmp[0], tmp[1], tmp[2],
-                T._T[10] * tmp[2] - T._T[11] * tmp[1] + T._T[0] * s._w[3] + T._T[3] * s._w[4] + T._T[6] * s._w[5],
-                T._T[11] * tmp[0] - T._T[ 9] * tmp[2] + T._T[1] * s._w[3] + T._T[4] * s._w[4] + T._T[7] * s._w[5],
-                T._T[ 9] * tmp[1] - T._T[10] * tmp[0] + T._T[2] * s._w[3] + T._T[5] * s._w[4] + T._T[8] * s._w[5]);
+    double Rw[3] = { T._T[0] * s._w[0] + T._T[3] * s._w[1] + T._T[6] * s._w[2],
+                     T._T[1] * s._w[0] + T._T[4] * s._w[1] + T._T[7] * s._w[2],
+                     T._T[2] * s._w[0] + T._T[5] * s._w[1] + T._T[8] * s._w[2] };
+    return se3(	Rw[0], Rw[1], Rw[2],
+                T._T[10] * Rw[2] - T._T[11] * Rw[1] + T._T[0] * s._w[3] + T._T[3] * s._w[4] + T._T[6] * s._w[5],
+                T._T[11] * Rw[0] - T._T[ 9] * Rw[2] + T._T[1] * s._w[3] + T._T[4] * s._w[4] + T._T[7] * s._w[5],
+                T._T[ 9] * Rw[1] - T._T[10] * Rw[0] + T._T[2] * s._w[3] + T._T[5] * s._w[4] + T._T[8] * s._w[5]);
 }
 
 inline se3 Ad(const SE3& T, const Axis& s)
@@ -737,13 +737,13 @@ inline se3 Ad(const SE3& T, const Axis& s)
     // w' = R * w
     // v' = r x R * w
     //--------------------------------------------------------------------------
-    double tmp[3] = {	T._T[0] * s._v[0] + T._T[3] * s._v[1] + T._T[6] * s._v[2],
-                        T._T[1] * s._v[0] + T._T[4] * s._v[1] + T._T[7] * s._v[2],
-                        T._T[2] * s._v[0] + T._T[5] * s._v[1] + T._T[8] * s._v[2] };
-    return se3(	tmp[0], tmp[1], tmp[2],
-                T._T[10] * tmp[2] - T._T[11] * tmp[1],
-                T._T[11] * tmp[0] - T._T[9] * tmp[2],
-                T._T[9] * tmp[1] - T._T[10] * tmp[0]);
+    double Rw[3] = { T._T[0] * s._v[0] + T._T[3] * s._v[1] + T._T[6] * s._v[2],
+                     T._T[1] * s._v[0] + T._T[4] * s._v[1] + T._T[7] * s._v[2],
+                     T._T[2] * s._v[0] + T._T[5] * s._v[1] + T._T[8] * s._v[2] };
+    return se3(	Rw[0], Rw[1], Rw[2],
+                T._T[10] * Rw[2] - T._T[11] * Rw[1],
+                T._T[11] * Rw[0] - T._T[9] * Rw[2],
+                T._T[9] * Rw[1] - T._T[10] * Rw[0]);
 }
 
 inline se3 Ad(const SE3& T, const Vec3& v)
@@ -848,6 +848,14 @@ inline se3 InvAdR(const SE3& T, const Vec3& v)
 
 inline se3 ad(const se3& s1, const se3& s2)
 {
+    //--------------------------------------------------------------------------
+    // ad(s1, s2) = | [w1]    0 | | w2 |
+    //              | [v1] [w1] | | v2 |
+    //
+    //            = |          [w1]w2 |
+    //              | [v1]w2 + [w1]v2 |
+    //--------------------------------------------------------------------------
+
     return se3(	s1._w[1] * s2._w[2] - s1._w[2] * s2._w[1],
                 s1._w[2] * s2._w[0] - s1._w[0] * s2._w[2],
                 s1._w[0] * s2._w[1] - s1._w[1] * s2._w[0],
@@ -1876,6 +1884,25 @@ inline void SE3::toDoubleArray(double M[]) const
     M[13] = _T[10];
     M[14] = _T[11];
     M[15] = SCALAR_1;
+}
+
+inline void SE3::setEigenMatrix(const Eigen::Matrix4d& M)
+{
+    _T[0] = M(0,0);
+    _T[1] = M(1,0);
+    _T[2] = M(2,0);
+
+    _T[3] = M(0,1);
+    _T[4] = M(1,1);
+    _T[5] = M(2,1);
+
+    _T[6] = M(0,2);
+    _T[7] = M(1,2);
+    _T[8] = M(2,2);
+
+    _T[9] = M(0,3);
+    _T[10] = M(1,3);
+    _T[11] = M(2,3);
 }
 
 inline Eigen::Matrix4d SE3::getEigenMatrix() const

@@ -1214,6 +1214,7 @@ public:
     void toDoubleArray(double M[]) const;
 
     /// @brief
+    void setEigenMatrix(const Eigen::Matrix4d& mat);
     Eigen::Matrix4d getEigenMatrix() const;
     Eigen::Affine3d getEigenAffine() const;
 

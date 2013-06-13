@@ -68,7 +68,7 @@ public:
         return EigenSE3(mT * T.mT);
     }
 
-    /// @brief multiplication operator@n
+    /// @brief multiplication operator
     inline const EigenSE3& operator*=(const EigenSE3& T)
     {
         mT *= T.mT;
@@ -80,98 +80,183 @@ private:
     Eigen::Matrix4d mT;
 };
 
-/******************************************************************************/
-TEST(MATH, SE3_VS_EIGENMATRIX4D)
+
+
+using namespace Eigen;
+using namespace std;
+
+EIGEN_DONT_INLINE
+void concatenate(const Affine3d& A1, const Affine3d& A2, Affine3d& res) {
+   res(0,0) = A1(0,0) * A2(0,0) + A1(0,1) * A2(1,0) + A1(0,2) * A2(2,0);
+   res(1,0) = A1(1,0) * A2(0,0) + A1(1,1) * A2(1,0) + A1(1,2) * A2(2,0);
+   res(2,0) = A1(2,0) * A2(0,0) + A1(2,1) * A2(1,0) + A1(2,2) * A2(2,0);
+
+   res(0,1) = A1(0,0) * A2(0,1) + A1(0,1) * A2(1,1) + A1(0,2) * A2(2,1);
+   res(1,1) = A1(1,0) * A2(0,1) + A1(1,1) * A2(1,1) + A1(1,2) * A2(2,1);
+   res(2,1) = A1(2,0) * A2(0,1) + A1(2,1) * A2(1,1) + A1(2,2) * A2(2,1);
+
+   res(0,2) = A1(0,0) * A2(0,2) + A1(0,1) * A2(1,2) + A1(0,2) * A2(2,2);
+   res(1,2) = A1(1,0) * A2(0,2) + A1(1,1) * A2(1,2) + A1(1,2) * A2(2,2);
+   res(2,2) = A1(2,0) * A2(0,2) + A1(2,1) * A2(1,2) + A1(2,2) * A2(2,2);
+
+   res(0,3) = A1(0,0) * A2(0,3) + A1(0,1) * A2(1,3) + A1(0,2) * A2(2,3) + A1(0,3);
+   res(1,3) = A1(1,0) * A2(0,3) + A1(1,1) * A2(1,3) + A1(1,2) * A2(2,3) + A1(1,3);
+   res(2,3) = A1(2,0) * A2(0,3) + A1(2,1) * A2(1,3) + A1(2,2) * A2(2,3) + A1(2,3);
+
+   res(3,0) = 0.0;
+   res(3,1) = 0.0;
+   res(3,2) = 0.0;
+   res(3,3) = 1.0;
+}
+
+template<typename T>
+EIGEN_DONT_INLINE
+void prod(const T& a, const T& b, T& c) { c = a*b; }
+
+TEST(MATH, TRANSFORMATION)
 {
-    int n = 10000;
-    double min = -100;
-    double max = 100;
+    const int iterations = 100000000;
 
-    SE3 T1 = Exp(se3(random(min,max), random(min,max), random(min,max),
-                     random(min,max), random(min,max), random(min,max)));
-    SE3 T2 = Exp(se3(random(min,max), random(min,max), random(min,max),
-                     random(min,max), random(min,max), random(min,max)));
-    SE3 T3 = Exp(se3(random(min,max), random(min,max), random(min,max),
-                     random(min,max), random(min,max), random(min,max)));
-    SE3 T4 = Exp(se3(random(min,max), random(min,max), random(min,max),
-                     random(min,max), random(min,max), random(min,max)));
+    Affine3d A1 = Translation3d(0.1, 0.2, 0.3) * AngleAxisd(0.5, Vector3d(1.0 / sqrt(2.0), 1.0 / sqrt(2.0), 0.0));
+    Affine3d A2 = A1, A3;
+    Matrix4d M1 = A1.matrix();
+    Matrix4d M2 = M1, M3;
+    SE3 S1;
+    S1.setEigenMatrix(M1);
+    SE3 S2 = S1, S3;
 
-    Eigen::Matrix4d E1 = T1.getEigenMatrix();
-    Eigen::Matrix4d E2 = T2.getEigenMatrix();
-    Eigen::Matrix4d E3 = T3.getEigenMatrix();
-    Eigen::Matrix4d E4 = T4.getEigenMatrix();
-
-    Eigen::Affine3d A1(E1);
-    Eigen::Affine3d A2(E2);
-    Eigen::Affine3d A3(E3);
-    Eigen::Affine3d A4(E4);
-
-
-    EigenSE3 ESE3_1(E1);
-    EigenSE3 ESE3_2(E2);
-    EigenSE3 ESE3_3(E3);
-    EigenSE3 ESE3_4(E4);
-
-    {
-        Timer SE3Timer("SE3 timer");
-        SE3Timer.startTimer();
-        for (int i = 0; i < n; ++i)
-            for (int j = 0; j < n; ++j)
-                T3 *= T1 * T2;
-        SE3Timer.stopTimer();
+    clock_t start = clock();
+    for(int i = 0; i < iterations; i++) {
+       S3 = S2 * S1;
     }
-    std::cout << T3 << std::endl;
+    cout << "SE3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
-    {
-        Timer EigenTimer("Eigen::Matrix4d timer");
-        EigenTimer.startTimer();
-        for (int i = 0; i < n; ++i)
-            for (int j = 0; j < n; ++j)
-                E3 *= E1 * E2;
-        EigenTimer.stopTimer();
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+       prod( A2 , A1, A3);
     }
-    std::cout << E3 << std::endl;
+    cout << "Affine3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+       prod ( M2 , M1, M3 );
+    }
+    cout << "Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+
+    A2 = A1;
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+       concatenate(A2, A1, A3);
+    }
+    cout << "Hard-coded: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+}
+
+/******************************************************************************/
+//TEST(MATH, SE3_VS_EIGENMATRIX4D)
+//{
+//    int n = 10000;
+//    double min = -100;
+//    double max = 100;
+
+//    SE3 T1 = Exp(se3(random(min,max), random(min,max), random(min,max),
+//                     random(min,max), random(min,max), random(min,max)));
+//    SE3 T2 = Exp(se3(random(min,max), random(min,max), random(min,max),
+//                     random(min,max), random(min,max), random(min,max)));
+//    SE3 T3 = Exp(se3(random(min,max), random(min,max), random(min,max),
+//                     random(min,max), random(min,max), random(min,max)));
+//    SE3 T4 = Exp(se3(random(min,max), random(min,max), random(min,max),
+//                     random(min,max), random(min,max), random(min,max)));
+
+//    Eigen::Matrix4d E1 = T1.getEigenMatrix();
+//    Eigen::Matrix4d E2 = T2.getEigenMatrix();
+//    Eigen::Matrix4d E3 = T3.getEigenMatrix();
+//    Eigen::Matrix4d E4 = T4.getEigenMatrix();
+
+//    Eigen::Affine3d A1(E1);
+//    Eigen::Affine3d A2(E2);
+//    Eigen::Affine3d A3(E3);
+//    Eigen::Affine3d A4(E4);
+
+//    Eigen::Isometry3d I1(E1);
+//    Eigen::Isometry3d I2(E2);
+//    Eigen::Isometry3d I3(E3);
+//    Eigen::Isometry3d I4(E4);
+
+//    EigenSE3 ESE3_1(E1);
+//    EigenSE3 ESE3_2(E2);
+//    EigenSE3 ESE3_3(E3);
+//    EigenSE3 ESE3_4(E4);
 
 //    {
-//        Timer EigenSE3Timer("EigenSE3 timer");
-//        EigenSE3Timer.startTimer();
-//        for (int i = 0; i < n; ++i)
-//            for (int j = 0; j < n; ++j)
-//                ESE3_3 *= ESE3_1 * ESE3_2;
-//        EigenSE3Timer.stopTimer();
-//    }
-//    //std::cout << E3 << std::endl;
-
-    {
-        Timer AffineTimer("Eigen::Affine3d timer");
-        AffineTimer.startTimer();
-        for (int i = 0; i < n; ++i)
-            for (int j = 0; j < n; ++j)
-                A3 = A3 * A1 * A2;
-        AffineTimer.stopTimer();
-    }
-    std::cout << A3.matrix() << std::endl;
-
-//    {
-//        Timer SE3Timer("SE3 inverse timer");
+//        Timer SE3Timer("SE3 timer");
 //        SE3Timer.startTimer();
 //        for (int i = 0; i < n; ++i)
 //            for (int j = 0; j < n; ++j)
-//                T4 *= Inv(T1) * Inv(T2);
+//                T3 = T3 * T2;
 //        SE3Timer.stopTimer();
 //    }
-//    std::cout << T4 << std::endl;
+//    std::cout << T3 << std::endl;
 
 //    {
-//        Timer EigenTimer("Eigen::Matrix4d inverse timer");
+//        Timer EigenTimer("Eigen::Matrix4d timer");
 //        EigenTimer.startTimer();
 //        for (int i = 0; i < n; ++i)
 //            for (int j = 0; j < n; ++j)
-//                E4 *= E1.inverse() * E2.inverse();
+//                E3 = E3 * E2;
 //        EigenTimer.stopTimer();
 //    }
-//    std::cout << E4 << std::endl;
-}
+//    std::cout << E3 << std::endl;
+
+////    {
+////        Timer EigenSE3Timer("EigenSE3 timer");
+////        EigenSE3Timer.startTimer();
+////        for (int i = 0; i < n; ++i)
+////            for (int j = 0; j < n; ++j)
+////                ESE3_3 *= ESE3_1 * ESE3_2;
+////        EigenSE3Timer.stopTimer();
+////    }
+////    //std::cout << E3 << std::endl;
+
+//    {
+//        Timer AffineTimer("Eigen::Affine3d timer");
+//        AffineTimer.startTimer();
+//        for (int i = 0; i < n; ++i)
+//            for (int j = 0; j < n; ++j)
+//                A3 = A3 * A2;
+//        AffineTimer.stopTimer();
+//    }
+//    std::cout << A3.matrix() << std::endl;
+
+//    {
+//        Timer IsometryTimer("Eigen::Isometry3d timer");
+//        IsometryTimer.startTimer();
+//        for (int i = 0; i < n; ++i)
+//            for (int j = 0; j < n; ++j)
+//                I3 = I3 * I2;
+//        IsometryTimer.stopTimer();
+//    }
+//    std::cout << I3.matrix() << std::endl;
+
+////    {
+////        Timer SE3Timer("SE3 inverse timer");
+////        SE3Timer.startTimer();
+////        for (int i = 0; i < n; ++i)
+////            for (int j = 0; j < n; ++j)
+////                T4 *= Inv(T1) * Inv(T2);
+////        SE3Timer.stopTimer();
+////    }
+////    std::cout << T4 << std::endl;
+
+////    {
+////        Timer EigenTimer("Eigen::Matrix4d inverse timer");
+////        EigenTimer.startTimer();
+////        for (int i = 0; i < n; ++i)
+////            for (int j = 0; j < n; ++j)
+////                E4 *= E1.inverse() * E2.inverse();
+////        EigenTimer.stopTimer();
+////    }
+////    std::cout << E4 << std::endl;
+//}
 
 /******************************************************************************/
 //TEST(MATH, SO3)
