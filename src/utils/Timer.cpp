@@ -105,6 +105,10 @@ double Timer::lastElapsed() const {
     return mLastElapsed;
 }
 
+double Timer::total() const {
+    return mTotal;
+}
+
 void Timer::stopTimer() {
     mIsRunning = false;
 #if WIN32

@@ -52,29 +52,49 @@ namespace utils {
 
 class Timer;
 
-/**
-       @brief The implementation of Timer class
-
-       This is a definition of mTimer class.
-       For measure the time, clock() api is used
-    */
+/// @brief The implementation of Timer class
+///
+/// This is a definition of mTimer class.
+/// For measure the time, clock() api is used
 class Timer {
 public:
-    Timer(const char* name); ///< Default constructor. The name can be up to 64
-    ~Timer(); ///< Default destructor
+    /// @brief Default constructor. The name can be up to 64.
+    Timer(const char* name);
 
+    /// @brief Default destructor.
+    ~Timer();
+
+    /// @brief
     void startTimer();
-    double elapsed(); ///< return elapsed time in seconds since startTimer().
-    ///< @see startTimer()
+
+    /// @brief Return elapsed time in seconds since startTimer().
+    /// @see startTimer()
+    double elapsed();
+
+    /// @brief
     double lastElapsed() const;
+
+    /// @brief
+    double total() const;
+
+    /// @brief
     void stopTimer();
+
+    /// @brief
     bool isRunning() const;
+
+    /// @brief
     void printLog();
+
+    /// @brief
     void printScreen();
-    void print( bool _toScreen=true );
+
+    /// @brief
+    void print(bool _toScreen = true);
 
 private:
     int mCount;
+
 #if WIN32
     stopWatch mTimer;
 #else
@@ -90,6 +110,7 @@ private:
     LARGE_INTEGER  mFrequency;
     double LIToSecs( LARGE_INTEGER & L) ;
 #endif
+
 };
 
 } // namespace utils

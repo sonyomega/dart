@@ -48,6 +48,7 @@
 #include <Eigen/Dense>
 
 #include "utils/Deprecated.h"
+#include "utils/Timer.h"
 #include "integration/Integrator.h"
 
 namespace dart {
@@ -208,6 +209,10 @@ protected:
 
     /// @brief The collision handler.
     constraint::ConstraintDynamics* mCollisionHandle;
+
+    utils::Timer mStepTimer;
+    utils::Timer mDynamicsTimer;
+    utils::Timer mCollisionDetectionTimer;
 
 private:
 };
