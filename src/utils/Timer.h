@@ -59,7 +59,7 @@ class Timer;
 class Timer {
 public:
     /// @brief Default constructor. The name can be up to 64.
-    Timer(const char* name);
+    Timer(const char* name = "noname");
 
     /// @brief Default destructor.
     ~Timer();
