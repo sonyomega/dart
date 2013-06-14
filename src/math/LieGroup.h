@@ -835,7 +835,8 @@ public:
     friend se3 Rotate(const SE3& T, const se3& S);
     friend se3 InvRotate(const SE3& T, const se3& S);
 
-private:
+//private:
+public:
     double _w[6];
 };
 
@@ -1265,7 +1266,8 @@ public:
     friend dse3 dAd(const SE3& T, const Vec3& f);
     friend dse3 InvdAd(const SE3& T, const dse3& t);
 
-private:
+//private:
+public:
     double _T[12];
 };
 
@@ -1529,7 +1531,8 @@ public:
     template <class TYPE>
     void ToArray(TYPE []) const;
 
-private:
+//private:
+public:
     double _J[21];
 };
 

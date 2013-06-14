@@ -80,10 +80,12 @@ private:
     Eigen::Matrix4d mT;
 };
 
-
-
 using namespace Eigen;
 using namespace std;
+
+template<typename T>
+EIGEN_DONT_INLINE
+void prod(const T& a, const T& b, T& c) { c = a*b; }
 
 EIGEN_DONT_INLINE
 void concatenate(const Affine3d& A1, const Affine3d& A2, Affine3d& res) {
@@ -109,9 +111,314 @@ void concatenate(const Affine3d& A1, const Affine3d& A2, Affine3d& res) {
    res(3,3) = 1.0;
 }
 
-template<typename T>
 EIGEN_DONT_INLINE
-void prod(const T& a, const T& b, T& c) { c = a*b; }
+void concatenate2(const Affine3d& A1, const Affine3d& A2, Affine3d& res) {
+   res(0,0) = A1(0,0) * A2(0,0) + A1(0,1) * A2(1,0) + A1(0,2) * A2(2,0);
+   res(1,0) = A1(1,0) * A2(0,0) + A1(1,1) * A2(1,0) + A1(1,2) * A2(2,0);
+   res(2,0) = A1(2,0) * A2(0,0) + A1(2,1) * A2(1,0) + A1(2,2) * A2(2,0);
+
+   res(0,1) = A1(0,0) * A2(0,1) + A1(0,1) * A2(1,1) + A1(0,2) * A2(2,1);
+   res(1,1) = A1(1,0) * A2(0,1) + A1(1,1) * A2(1,1) + A1(1,2) * A2(2,1);
+   res(2,1) = A1(2,0) * A2(0,1) + A1(2,1) * A2(1,1) + A1(2,2) * A2(2,1);
+
+   res(0,2) = A1(0,0) * A2(0,2) + A1(0,1) * A2(1,2) + A1(0,2) * A2(2,2);
+   res(1,2) = A1(1,0) * A2(0,2) + A1(1,1) * A2(1,2) + A1(1,2) * A2(2,2);
+   res(2,2) = A1(2,0) * A2(0,2) + A1(2,1) * A2(1,2) + A1(2,2) * A2(2,2);
+
+   res(0,3) = A1(0,0) * A2(0,3) + A1(0,1) * A2(1,3) + A1(0,2) * A2(2,3) + A1(0,3);
+   res(1,3) = A1(1,0) * A2(0,3) + A1(1,1) * A2(1,3) + A1(1,2) * A2(2,3) + A1(1,3);
+   res(2,3) = A1(2,0) * A2(0,3) + A1(2,1) * A2(1,3) + A1(2,2) * A2(2,3) + A1(2,3);
+
+   res(3,0) = 0.0;
+   res(3,1) = 0.0;
+   res(3,2) = 0.0;
+   res(3,3) = 1.0;
+}
+
+EIGEN_DONT_INLINE
+se3 Ad_SE3(const SE3& T, const se3& s)
+{
+    //--------------------------------------------------------------------------
+    // w' = R * w
+    // v' = r x R * w + R * v
+    //--------------------------------------------------------------------------
+    double Rw[3] = { T._T[0] * s._w[0] + T._T[3] * s._w[1] + T._T[6] * s._w[2],
+                     T._T[1] * s._w[0] + T._T[4] * s._w[1] + T._T[7] * s._w[2],
+                     T._T[2] * s._w[0] + T._T[5] * s._w[1] + T._T[8] * s._w[2] };
+    return se3(	Rw[0], Rw[1], Rw[2],
+                T._T[10] * Rw[2] - T._T[11] * Rw[1] + T._T[0] * s._w[3] + T._T[3] * s._w[4] + T._T[6] * s._w[5],
+                T._T[11] * Rw[0] - T._T[ 9] * Rw[2] + T._T[1] * s._w[3] + T._T[4] * s._w[4] + T._T[7] * s._w[5],
+                T._T[ 9] * Rw[1] - T._T[10] * Rw[0] + T._T[2] * s._w[3] + T._T[5] * s._w[4] + T._T[8] * s._w[5]);
+}
+
+EIGEN_DONT_INLINE
+Matrix<double,6,1> Ad_Affine3d_1(const Affine3d& T, const Matrix<double,6,1>& s)
+{
+    //--------------------------------------------------------------------------
+    // w' = R * w
+    // v' = r x R * w + R * v
+    //--------------------------------------------------------------------------
+    double Rw[3] = { T.data()[0] * s.data()[0] + T.data()[4] * s.data()[1] + T.data()[ 8] * s.data()[2],
+                     T.data()[1] * s.data()[0] + T.data()[5] * s.data()[1] + T.data()[ 9] * s.data()[2],
+                     T.data()[2] * s.data()[0] + T.data()[6] * s.data()[1] + T.data()[10] * s.data()[2] };
+
+    Matrix<double,6,1> ret;
+
+    ret << Rw[0], Rw[1], Rw[2],
+            T.data()[13] * Rw[2] - T.data()[14] * Rw[1] + T.data()[0] * s.data()[3] + T.data()[4] * s.data()[4] + T.data()[ 8] * s.data()[5],
+            T.data()[14] * Rw[0] - T.data()[12] * Rw[2] + T.data()[1] * s.data()[3] + T.data()[5] * s.data()[4] + T.data()[ 9] * s.data()[5],
+            T.data()[12] * Rw[1] - T.data()[13] * Rw[0] + T.data()[2] * s.data()[3] + T.data()[6] * s.data()[4] + T.data()[10] * s.data()[5];
+
+    return ret;
+}
+
+EIGEN_DONT_INLINE
+Matrix<double,6,1> Ad_Affine3d_2(const Affine3d& T, const Matrix<double,6,1>& s)
+{
+    //--------------------------------------------------------------------------
+    // w' = R * w
+    // v' = r x R * w + R * v
+    //--------------------------------------------------------------------------
+    double Rw[3] = { T(0,0) * s[0] + T(0,1) * s[1] + T(0,2) * s[2],
+                     T(1,0) * s[0] + T(1,1) * s[1] + T(1,2) * s[2],
+                     T(2,0) * s[0] + T(2,1) * s[1] + T(2,2) * s[2] };
+
+    Matrix<double,6,1> ret;
+
+    ret << Rw[0], Rw[1], Rw[2],
+            T(1,3) * Rw[2] - T(2,3) * Rw[1] + T(0,0) * s[3] + T(0,1) * s[4] + T(0,2) * s[5],
+            T(2,3) * Rw[0] - T(0,3) * Rw[2] + T(1,0) * s[3] + T(1,1) * s[4] + T(1,2) * s[5],
+            T(0,3) * Rw[1] - T(1,3) * Rw[0] + T(2,0) * s[3] + T(2,1) * s[4] + T(2,2) * s[5];
+
+    return ret;
+}
+
+EIGEN_DONT_INLINE
+Matrix<double,6,1> Ad_Affine3d_3(const Affine3d& T, const Matrix<double,6,1>& s)
+{
+    //--------------------------------------------------------------------------
+    // w' = R * w
+    // v' = r x R * w + R * v
+    //--------------------------------------------------------------------------
+
+    Matrix<double,6,1> ret;
+
+    ret.topLeftCorner<3,1>() = T.rotation() * s.topLeftCorner<3,1>();
+    ret.bottomLeftCorner<3,1>() = T.translation().cross(T.rotation() * s.topLeftCorner<3,1>()) + T.rotation() * s.bottomLeftCorner<3,1>();
+
+    return ret;
+}
+
+//EIGEN_DONT_INLINE
+AInertia Transform_SE3(const SE3& T, const AInertia& AI)
+{
+    // operation count: multiplication = 186, addition = 117, subtract = 21
+
+    double d0 = AI._J[ 3] + T._T[11] * AI._J[16] - T._T[10] * AI._J[17];
+    double d1 = AI._J[ 8] - T._T[11] * AI._J[15] + T._T[ 9] * AI._J[17];
+    double d2 = AI._J[12] + T._T[10] * AI._J[15] - T._T[ 9] * AI._J[16];
+    double d3 = AI._J[ 4] + T._T[11] * AI._J[18] - T._T[10] * AI._J[19];
+    double d4 = AI._J[ 9] - T._T[11] * AI._J[16] + T._T[ 9] * AI._J[19];
+    double d5 = AI._J[13] + T._T[10] * AI._J[16] - T._T[ 9] * AI._J[18];
+    double d6 = AI._J[ 5] + T._T[11] * AI._J[19] - T._T[10] * AI._J[20];
+    double d7 = AI._J[10] - T._T[11] * AI._J[17] + T._T[ 9] * AI._J[20];
+    double d8 = AI._J[14] + T._T[10] * AI._J[17] - T._T[ 9] * AI._J[19];
+    double e0 = AI._J[ 0] + T._T[11] * AI._J[ 4] - T._T[10] * AI._J[ 5] + d3 * T._T[11] - d6 * T._T[10];
+    double e3 = AI._J[ 1] + T._T[11] * AI._J[ 9] - T._T[10] * AI._J[10] - d0 * T._T[11] + d6 * T._T[ 9];
+    double e4 = AI._J[ 6] - T._T[11] * AI._J[ 8] + T._T[ 9] * AI._J[10] - d1 * T._T[11] + d7 * T._T[ 9];
+    double e6 = AI._J[ 2] + T._T[11] * AI._J[13] - T._T[10] * AI._J[14] + d0 * T._T[10] - d3 * T._T[ 9];
+    double e7 = AI._J[ 7] - T._T[11] * AI._J[12] + T._T[ 9] * AI._J[14] + d1 * T._T[10] - d4 * T._T[ 9];
+    double e8 = AI._J[11] + T._T[10] * AI._J[12] - T._T[ 9] * AI._J[13] + d2 * T._T[10] - d5 * T._T[ 9];
+    double f0 = T._T[0] * e0 + T._T[1] * e3 + T._T[2] * e6;
+    double f1 = T._T[0] * e3 + T._T[1] * e4 + T._T[2] * e7;
+    double f2 = T._T[0] * e6 + T._T[1] * e7 + T._T[2] * e8;
+    double f3 = T._T[0] * d0 + T._T[1] * d1 + T._T[2] * d2;
+    double f4 = T._T[0] * d3 + T._T[1] * d4 + T._T[2] * d5;
+    double f5 = T._T[0] * d6 + T._T[1] * d7 + T._T[2] * d8;
+    double f6 = T._T[3] * e0 + T._T[4] * e3 + T._T[5] * e6;
+    double f7 = T._T[3] * e3 + T._T[4] * e4 + T._T[5] * e7;
+    double f8 = T._T[3] * e6 + T._T[4] * e7 + T._T[5] * e8;
+    double g0 = T._T[3] * d0 + T._T[4] * d1 + T._T[5] * d2;
+    double g1 = T._T[3] * d3 + T._T[4] * d4 + T._T[5] * d5;
+    double g2 = T._T[3] * d6 + T._T[4] * d7 + T._T[5] * d8;
+    double g3 = T._T[6] * d0 + T._T[7] * d1 + T._T[8] * d2;
+    double g4 = T._T[6] * d3 + T._T[7] * d4 + T._T[8] * d5;
+    double g5 = T._T[6] * d6 + T._T[7] * d7 + T._T[8] * d8;
+    double h0 = T._T[0] * AI._J[15] + T._T[1] * AI._J[16] + T._T[2] * AI._J[17];
+    double h1 = T._T[0] * AI._J[16] + T._T[1] * AI._J[18] + T._T[2] * AI._J[19];
+    double h2 = T._T[0] * AI._J[17] + T._T[1] * AI._J[19] + T._T[2] * AI._J[20];
+    double h3 = T._T[3] * AI._J[15] + T._T[4] * AI._J[16] + T._T[5] * AI._J[17];
+    double h4 = T._T[3] * AI._J[16] + T._T[4] * AI._J[18] + T._T[5] * AI._J[19];
+    double h5 = T._T[3] * AI._J[17] + T._T[4] * AI._J[19] + T._T[5] * AI._J[20];
+
+    return AInertia(f0 * T._T[0] + f1 * T._T[1] + f2 * T._T[2],
+                    f0 * T._T[3] + f1 * T._T[4] + f2 * T._T[5],
+                    f0 * T._T[6] + f1 * T._T[7] + f2 * T._T[8],
+                    f3 * T._T[0] + f4 * T._T[1] + f5 * T._T[2],
+                    f3 * T._T[3] + f4 * T._T[4] + f5 * T._T[5],
+                    f3 * T._T[6] + f4 * T._T[7] + f5 * T._T[8],
+                    f6 * T._T[3] + f7 * T._T[4] + f8 * T._T[5],
+                    f6 * T._T[6] + f7 * T._T[7] + f8 * T._T[8],
+                    g0 * T._T[0] + g1 * T._T[1] + g2 * T._T[2],
+                    g0 * T._T[3] + g1 * T._T[4] + g2 * T._T[5],
+                    g0 * T._T[6] + g1 * T._T[7] + g2 * T._T[8],
+                    (T._T[6] * e0 + T._T[7] * e3 + T._T[8] * e6) * T._T[6] + (T._T[6] * e3 + T._T[7] * e4 + T._T[8] * e7) * T._T[7] + (T._T[6] * e6 + T._T[7] * e7 + T._T[8] * e8) * T._T[8],
+                    g3 * T._T[0] + g4 * T._T[1] + g5 * T._T[2],
+                    g3 * T._T[3] + g4 * T._T[4] + g5 * T._T[5],
+                    g3 * T._T[6] + g4 * T._T[7] + g5 * T._T[8],
+                    h0 * T._T[0] + h1 * T._T[1] + h2 * T._T[2],
+                    h0 * T._T[3] + h1 * T._T[4] + h2 * T._T[5],
+                    h0 * T._T[6] + h1 * T._T[7] + h2 * T._T[8],
+                    h3 * T._T[3] + h4 * T._T[4] + h5 * T._T[5],
+                    h3 * T._T[6] + h4 * T._T[7] + h5 * T._T[8],
+                    (T._T[6] * AI._J[15] + T._T[7] * AI._J[16] + T._T[8] * AI._J[17]) * T._T[6] + (T._T[6] * AI._J[16] + T._T[7] * AI._J[18] + T._T[8] * AI._J[19]) * T._T[7] + (T._T[6] * AI._J[17] + T._T[7] * AI._J[19] + T._T[8] * AI._J[20]) * T._T[8]);
+}
+
+//EIGEN_DONT_INLINE
+Matrix<double,6,6> Transform_Affine3d_1(const Affine3d& T, const Matrix<double,6,6>& AI)
+{
+    // operation count: multiplication = 186, addition = 117, subtract = 21
+
+    Matrix<double,6,6> ret;
+
+    double d0 = AI(0,3) + T(2,3) * AI(3,4) - T(1,3) * AI(3,5);
+    double d1 = AI(1,3) - T(2,3) * AI(3,3) + T(0,3) * AI(3,5);
+    double d2 = AI(2,3) + T(1,3) * AI(3,3) - T(0,3) * AI(3,4);
+    double d3 = AI(0,4) + T(2,3) * AI(4,4) - T(1,3) * AI(4,5);
+    double d4 = AI(1,4) - T(2,3) * AI(3,4) + T(0,3) * AI(4,5);
+    double d5 = AI(2,4) + T(1,3) * AI(3,4) - T(0,3) * AI(4,4);
+    double d6 = AI(0,5) + T(2,3) * AI(4,5) - T(1,3) * AI(5,5);
+    double d7 = AI(1,5) - T(2,3) * AI(3,5) + T(0,3) * AI(5,5);
+    double d8 = AI(2,5) + T(1,3) * AI(3,5) - T(0,3) * AI(4,5);
+    double e0 = AI(0,0) + T(2,3) * AI(0,4) - T(1,3) * AI(0,5) + d3 * T(2,3) - d6 * T(1,3);
+    double e3 = AI(0,1) + T(2,3) * AI(1,4) - T(1,3) * AI(1,5) - d0 * T(2,3) + d6 * T(0,3);
+    double e4 = AI(1,1) - T(2,3) * AI(1,3) + T(0,3) * AI(1,5) - d1 * T(2,3) + d7 * T(0,3);
+    double e6 = AI(0,2) + T(2,3) * AI(2,4) - T(1,3) * AI(2,5) + d0 * T(1,3) - d3 * T(0,3);
+    double e7 = AI(1,2) - T(2,3) * AI(2,3) + T(0,3) * AI(2,5) + d1 * T(1,3) - d4 * T(0,3);
+    double e8 = AI(2,2) + T(1,3) * AI(2,3) - T(0,3) * AI(2,4) + d2 * T(1,3) - d5 * T(0,3);
+    double f0 = T(0,0) * e0 + T(1,0) * e3 + T(2,0) * e6;
+    double f1 = T(0,0) * e3 + T(1,0) * e4 + T(2,0) * e7;
+    double f2 = T(0,0) * e6 + T(1,0) * e7 + T(2,0) * e8;
+    double f3 = T(0,0) * d0 + T(1,0) * d1 + T(2,0) * d2;
+    double f4 = T(0,0) * d3 + T(1,0) * d4 + T(2,0) * d5;
+    double f5 = T(0,0) * d6 + T(1,0) * d7 + T(2,0) * d8;
+    double f6 = T(0,1) * e0 + T(1,1) * e3 + T(2,1) * e6;
+    double f7 = T(0,1) * e3 + T(1,1) * e4 + T(2,1) * e7;
+    double f8 = T(0,1) * e6 + T(1,1) * e7 + T(2,1) * e8;
+    double g0 = T(0,1) * d0 + T(1,1) * d1 + T(2,1) * d2;
+    double g1 = T(0,1) * d3 + T(1,1) * d4 + T(2,1) * d5;
+    double g2 = T(0,1) * d6 + T(1,1) * d7 + T(2,1) * d8;
+    double g3 = T(0,2) * d0 + T(1,2) * d1 + T(2,2) * d2;
+    double g4 = T(0,2) * d3 + T(1,2) * d4 + T(2,2) * d5;
+    double g5 = T(0,2) * d6 + T(1,2) * d7 + T(2,2) * d8;
+    double h0 = T(0,0) * AI(3,3) + T(1,0) * AI(3,4) + T(2,0) * AI(3,5);
+    double h1 = T(0,0) * AI(3,4) + T(1,0) * AI(4,4) + T(2,0) * AI(4,5);
+    double h2 = T(0,0) * AI(3,5) + T(1,0) * AI(4,5) + T(2,0) * AI(5,5);
+    double h3 = T(0,1) * AI(3,3) + T(1,1) * AI(3,4) + T(2,1) * AI(3,5);
+    double h4 = T(0,1) * AI(3,4) + T(1,1) * AI(4,4) + T(2,1) * AI(4,5);
+    double h5 = T(0,1) * AI(3,5) + T(1,1) * AI(4,5) + T(2,1) * AI(5,5);
+
+    ret(0,0) = f0 * T(0,0) + f1 * T(1,0) + f2 * T(2,0);
+    ret(0,1) = f0 * T(0,1) + f1 * T(1,1) + f2 * T(2,1);
+    ret(0,2) = f0 * T(0,2) + f1 * T(1,2) + f2 * T(2,2);
+    ret(0,3) = f3 * T(0,0) + f4 * T(1,0) + f5 * T(2,0);
+    ret(0,4) = f3 * T(0,1) + f4 * T(1,1) + f5 * T(2,1);
+    ret(0,5) = f3 * T(0,2) + f4 * T(1,2) + f5 * T(2,2);
+    ret(1,1) = f6 * T(0,1) + f7 * T(1,1) + f8 * T(2,1);
+    ret(1,2) = f6 * T(0,2) + f7 * T(1,2) + f8 * T(2,2);
+    ret(1,3) = g0 * T(0,0) + g1 * T(1,0) + g2 * T(2,0);
+    ret(1,4) = g0 * T(0,1) + g1 * T(1,1) + g2 * T(2,1);
+    ret(1,5) = g0 * T(0,2) + g1 * T(1,2) + g2 * T(2,2);
+    ret(2,2) = (T(0,2) * e0 + T(1,2) * e3 + T(2,2) * e6) * T(0,2) + (T(0,2) * e3 + T(1,2) * e4 + T(2,2) * e7) * T(1,2) + (T(0,2) * e6 + T(1,2) * e7 + T(2,2) * e8) * T(2,2);
+    ret(2,3) = g3 * T(0,0) + g4 * T(1,0) + g5 * T(2,0);
+    ret(2,4) = g3 * T(0,1) + g4 * T(1,1) + g5 * T(2,1);
+    ret(2,5) = g3 * T(0,2) + g4 * T(1,2) + g5 * T(2,2);
+    ret(3,3) = h0 * T(0,0) + h1 * T(1,0) + h2 * T(2,0);
+    ret(3,4) = h0 * T(0,1) + h1 * T(1,1) + h2 * T(2,1);
+    ret(3,5) = h0 * T(0,2) + h1 * T(1,2) + h2 * T(2,2);
+    ret(4,4) = h3 * T(0,1) + h4 * T(1,1) + h5 * T(2,1);
+    ret(4,5) = h3 * T(0,2) + h4 * T(1,2) + h5 * T(2,2);
+    ret(5,5) = (T(0,2) * AI(3,3) + T(1,2) * AI(3,4) + T(2,2) * AI(3,5)) * T(0,2) + (T(0,2) * AI(3,4) + T(1,2) * AI(4,4) + T(2,2) * AI(4,5)) * T(1,2) + (T(0,2) * AI(3,5) + T(1,2) * AI(4,5) + T(2,2) * AI(5,5)) * T(2,2);
+
+    ret.triangularView<StrictlyLower>() = ret.transpose();
+
+    return ret;
+}
+
+TEST(MATH, ARTICULATED_INERTIA_COMP)
+{
+    const int iterations = 20000000;
+
+    Affine3d A1 = Translation3d(0.1, 0.2, 0.3) * AngleAxisd(0.5, Vector3d(1.0 / sqrt(2.0), 1.0 / sqrt(2.0), 0.0));
+    Matrix<double,6,6> a1 = Matrix<double,6,6>::Identity();
+    Matrix<double,6,6> a2;
+
+    SE3 S1;
+    S1.setEigenMatrix(A1.matrix());
+    AInertia s1;
+    AInertia s2;
+
+    clock_t start = clock();
+    for(int i = 0; i < iterations; i++) {
+        s2 = Transform_SE3(S1, s1);
+    }
+    cout << "Transform_SE3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    //cout << "result: " << s2.getEigenMatrix() << endl;
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+        a2 = Transform_Affine3d_1(A1, a1);
+    }
+    cout << "Transform_Affine3d_1: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    //cout << "result: " << a2 << endl;
+}
+
+TEST(MATH, Ad_COMP)
+{
+    const int iterations = 200000000;
+
+    Affine3d A1 = Translation3d(0.1, 0.2, 0.3) * AngleAxisd(0.5, Vector3d(1.0 / sqrt(2.0), 1.0 / sqrt(2.0), 0.0));
+    Matrix<double,6,1> a1, a2;
+    a1 << 1, 2, 3, 4, 5, 6;
+    Affine3d A2 = Translation3d(0.1, 0.2, 0.3) * AngleAxisd(0.5, Vector3d(1.0 / sqrt(2.0), 1.0 / sqrt(2.0), 0.0));
+    Matrix<double,6,1> a3, a4;
+    a3 << 1, 2, 3, 4, 5, 6;
+    Affine3d A3 = Translation3d(0.1, 0.2, 0.3) * AngleAxisd(0.5, Vector3d(1.0 / sqrt(2.0), 1.0 / sqrt(2.0), 0.0));
+    Matrix<double,6,1> a5, a6;
+    a5 << 1, 2, 3, 4, 5, 6;
+    SE3 S1;
+    S1.setEigenMatrix(A1.matrix());
+    se3 s1(1, 2, 3, 4, 5, 6), s2;
+
+    clock_t start = clock();
+    for(int i = 0; i < iterations; i++) {
+        s2 = Ad_SE3(S1, s1);
+    }
+    cout << "Ad_SE3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    //cout << "result: " << s2 << endl;
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+        a2 = Ad_Affine3d_1(A1, a1);
+    }
+    cout << "Ad_Affine3d_1: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    //cout << "result: " << a2 << endl;
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+        a4 = Ad_Affine3d_2(A2, a3);
+    }
+    cout << "Ad_Affine3d_2: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    //cout << "result: " << a4 << endl;
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+        a6 = Ad_Affine3d_3(A3, a5);
+    }
+    cout << "Ad_Affine3d_3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    //cout << "result: " << a6 << endl;
+}
+
 
 TEST(MATH, TRANSFORMATION)
 {
@@ -124,12 +431,20 @@ TEST(MATH, TRANSFORMATION)
     SE3 S1;
     S1.setEigenMatrix(M1);
     SE3 S2 = S1, S3;
+    EigenSE3 ES1(M1);
+    EigenSE3 ES2(M1), ES3(M1);
 
     clock_t start = clock();
     for(int i = 0; i < iterations; i++) {
        prod(S2, S1, S3);
     }
     cout << "SE3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+       prod(ES2, ES1, ES3);
+    }
+    cout << "EigenSE3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
