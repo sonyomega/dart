@@ -16,6 +16,24 @@ set(PKG_EXTERNAL_DEPS "flann, ccd, fcl")
 message(STATUS "CMAKE_SOURCE_DIR = ${CMAKE_SOURCE_DIR}")
 message(STATUS "CMAKE_BINARY_DIR = ${CMAKE_BINARY_DIR}")
 
+# with -fPIC
+# See: http://www.technovelty.org/c/position-independent-code-and-x86-64-libraries.html
+#      http://www.gentoo.org/proj/en/base/amd64/howtos/?part=1&chap=3
+if(UNIX AND NOT WIN32)
+  set (CMAKE_INSTALL_PREFIX "/usr" CACHE STRING "Install Prefix")
+ find_program(CMAKE_UNAME uname /bin /usr/bin /usr/local/bin )
+ if(CMAKE_UNAME)
+   exec_program(uname ARGS -m OUTPUT_VARIABLE CMAKE_SYSTEM_PROCESSOR)
+   set(CMAKE_SYSTEM_PROCESSOR ${CMAKE_SYSTEM_PROCESSOR} CACHE INTERNAL
+     "processor type (i386 and x86_64)")
+   if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+     ADD_DEFINITIONS(-fPIC)
+   endif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+ endif(CMAKE_UNAME)
+endif()
+
+set (CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
+
 option(BUILD_SNOPT "Build with SNOPT optimizer" OFF)
 option(BUILD_ROBOTICS "Compile with Robotics API" ON)
 
