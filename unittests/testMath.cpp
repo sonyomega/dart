@@ -87,6 +87,50 @@ template<typename T>
 EIGEN_DONT_INLINE
 void prod(const T& a, const T& b, T& c) { c = a*b; }
 
+template<typename T>
+EIGEN_DONT_INLINE
+void inv(const T& a, T& b) { b = a.inverse(); }
+
+template<typename T>
+EIGEN_DONT_INLINE
+void inv_se3(const T& a, T& b) { b = Inv2(a); }
+
+EIGEN_DONT_INLINE
+SE3 Inv2(const SE3& T)
+{
+    return SE3(	T._T[0], T._T[3], T._T[6],
+                T._T[1], T._T[4], T._T[7],
+                T._T[2], T._T[5], T._T[8],
+
+               -T._T[0] * T._T[9] - T._T[1] * T._T[10] - T._T[2] * T._T[11],
+               -T._T[3] * T._T[9] - T._T[4] * T._T[10] - T._T[5] * T._T[11],
+               -T._T[6] * T._T[9] - T._T[7] * T._T[10] - T._T[8] * T._T[11]);
+}
+
+EIGEN_DONT_INLINE
+Eigen::Isometry3d Inv2(const Eigen::Isometry3d& I)
+{
+    Eigen::Isometry3d ret;
+
+    ret(0,0) = I(0,0);
+    ret(1,0) = I(0,1);
+    ret(2,0) = I(0,2);
+
+    ret(0,1) = I(1,0);
+    ret(1,1) = I(1,1);
+    ret(2,1) = I(1,2);
+
+    ret(0,2) = I(2,0);
+    ret(1,2) = I(2,1);
+    ret(2,2) = I(2,2);
+
+    ret(0,0) = -I(0,0) * I(0,3) - I(1,0) * I(1,3) - I(2,0) * I(2,3);
+    ret(0,0) = -I(0,1) * I(0,3) - I(1,1) * I(1,3) - I(2,1) * I(2,3);
+    ret(0,0) = -I(0,2) * I(0,3) - I(1,2) * I(1,3) - I(2,2) * I(2,3);
+
+    return ret;
+}
+
 EIGEN_DONT_INLINE
 void concatenate(const Affine3d& A1, const Affine3d& A2, Affine3d& res) {
    res(0,0) = A1(0,0) * A2(0,0) + A1(0,1) * A2(1,0) + A1(0,2) * A2(2,0);
@@ -713,6 +757,55 @@ TEST(MATH, TRANSFORMATION)
        concatenate(A2, A1, A3);
     }
     cout << "Hard-coded: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+}
+
+TEST(MATH, INVERSION)
+{
+    const int iterations = 100000000;
+
+    Affine3d A1 = Translation3d(0.1, 0.2, 0.3) * AngleAxisd(0.5, Vector3d(1.0 / sqrt(2.0), 1.0 / sqrt(2.0), 0.0));
+    Affine3d A2 = A1, A3;
+
+    Isometry3d I1;
+    I1.matrix() = A1.matrix();
+    Isometry3d I2 = I1, I3;
+
+    Matrix4d M1 = A1.matrix();
+    Matrix4d M2 = M1, M3;
+
+    SE3 S1;
+    S1.setEigenMatrix(A1.matrix());
+    SE3 S2 = S1, S3;
+
+    clock_t start = clock();
+    for(int i = 0; i < iterations; i++) {
+        inv_se3(S1, S2);
+    }
+    cout << "SE3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+        inv(A1, A2);
+    }
+    cout << "Affine3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+        inv(I1, I2);
+    }
+    cout << "Isometry3d_1: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+        inv_se3(I1, I2);
+    }
+    cout << "Isometry3d_2: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+       inv(M1, M2);
+    }
+    cout << "Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 }
 
 /******************************************************************************/
