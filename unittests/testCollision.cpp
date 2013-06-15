@@ -44,11 +44,11 @@
 
 #include "utils/UtilsCode.h"
 #include "math/UtilsMath.h"
-#include "collision/unc/UNCCollisionDetector.h"
+//#include "collision/unc/UNCCollisionDetector.h"
 
 using namespace dart;
 using namespace math;
-using namespace collision;
+//using namespace collision;
 
 class COLLISION : public testing::Test
 {
@@ -452,51 +452,51 @@ TEST_F(COLLISION, FCL_BOX_BOX)
     }
 }
 
-TEST_F(COLLISION, OWN_COLLISION_CODE)
-{
-    double EulerZ = 1;
-    double EulerY = 2;
-    double EulerX = 3;
+//TEST_F(COLLISION, OWN_COLLISION_CODE)
+//{
+//    double EulerZ = 1;
+//    double EulerY = 2;
+//    double EulerX = 3;
 
-    // Collision test setting
-    CollisionInfoArray result;
+//    // Collision test setting
+//    CollisionInfoArray result;
 
-    Vec3 size1(100.0, 100.0, 0.1);
-    SE3 T1(Vec3(0.0, 0.0, -0.05));
+//    Vec3 size1(100.0, 100.0, 0.1);
+//    SE3 T1(Vec3(0.0, 0.0, -0.05));
 
-    Vec3 size2(0.5, 0.5, 0.5);
-    Vec3 pos2(0.0, 0.0, 5.0);
-    SE3 T2;
-    T2 = EulerZYX(Vec3(EulerZ, EulerY, EulerX));
-    T2.setPosition(pos2);
+//    Vec3 size2(0.5, 0.5, 0.5);
+//    Vec3 pos2(0.0, 0.0, 5.0);
+//    SE3 T2;
+//    T2 = EulerZYX(Vec3(EulerZ, EulerY, EulerX));
+//    T2.setPosition(pos2);
 
-    // Let's drop the object until it collide with ground
-    do {
-        T2.setPosition(pos2);
+//    // Let's drop the object until it collide with ground
+//    do {
+//        T2.setPosition(pos2);
 
-        _BoxBox_____________MARK8(size1, T1, size2, T2, result);
+//        _BoxBox_____________MARK8(size1, T1, size2, T2, result);
 
-        pos2[2] -= 0.00001;
-    }
-    while (result.size() == 0);
+//        pos2[2] -= 0.00001;
+//    }
+//    while (result.size() == 0);
 
-    std::cout //<< "Current position of the object: "
-              //<< objectTransf.getTranslation()
-              //<< std::endl
-              << "Number of contacts: "
-              << result.size()
-              << std::endl;
+//    std::cout //<< "Current position of the object: "
+//              //<< objectTransf.getTranslation()
+//              //<< std::endl
+//              << "Number of contacts: "
+//              << result.size()
+//              << std::endl;
 
-    for (int i = 0; i < result.size(); ++i)
-    {
-        std::cout << "----- CONTACT " << i << " --------" << std::endl;
-        std::cout << "contact_points: " << result.at(i).point;
-        std::cout << "penetration_depth: " << result.at(i).penetration << std::endl;
-        std::cout << "normal: " << result.at(i).normal << std::endl;
-    }
+//    for (int i = 0; i < result.size(); ++i)
+//    {
+//        std::cout << "----- CONTACT " << i << " --------" << std::endl;
+//        std::cout << "contact_points: " << result.at(i).point;
+//        std::cout << "penetration_depth: " << result.at(i).penetration << std::endl;
+//        std::cout << "normal: " << result.at(i).normal << std::endl;
+//    }
 
 
-}
+//}
 
 /* ********************************************************************************************* */
 int main(int argc, char* argv[]) {

@@ -54,7 +54,8 @@ Skeleton::Skeleton(const std::string& _name)
       mTotalMass(0.0),
       mImmobile(false),
       mJointLimit(true),
-      mGraph(NULL)
+      mGraph(NULL),
+      mFrame(math::SE3::Identity())
 {
     mGraph = new SkeletonGraph(getNumNodes());
 }
@@ -506,7 +507,7 @@ math::Vec3 Skeleton::getAccelerationCOMGlobal()
 
 math::dse3 Skeleton::getMomentumGlobal()
 {
-    math::dse3 M(0, 0, 0, 0, 0, 0);
+    math::dse3 M = math::dse3::Zero();
 
     // TODO: Not implemented.
 
@@ -515,7 +516,7 @@ math::dse3 Skeleton::getMomentumGlobal()
 
 math::dse3 Skeleton::getMomentumCOM()
 {
-    math::dse3 M(0, 0, 0, 0, 0, 0);
+    math::dse3 M = math::dse3::Zero();
 
     // TODO: Not implemented.
 

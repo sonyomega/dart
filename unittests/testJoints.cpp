@@ -120,17 +120,17 @@ void JOINTS::kinematicsTest(Joint* _joint)
         // Test analytic Jacobian and numerical Jacobian
         // J == numericalJ
         //--------------------------------------------------------------------------
-        Jacobian numericJ(dof);
+        Jacobian numericJ = Jacobian::Zero(6,dof);
         for (int i = 0; i < dof; ++i)
         {
             // a
-            VectorXd q_a = q;
+            Eigen::VectorXd q_a = q;
             _joint->set_q(q_a);
             _joint->updateKinematics();
             SE3 T_a = _joint->getLocalTransformation();
 
             // b
-            VectorXd q_b = q;
+            Eigen::VectorXd q_b = q;
             q_b(i) += dt;
             _joint->set_q(q_b);
             _joint->updateKinematics();
@@ -138,24 +138,29 @@ void JOINTS::kinematicsTest(Joint* _joint)
 
             //
             SE3 Tinv_a = Inv(T_a);
-            Matrix4d Tinv_a_eigen = Tinv_a.getEigenMatrix();
+            Eigen::Matrix4d Tinv_a_eigen = Tinv_a.matrix();
 
             // dTdq
-            Matrix4d T_a_eigen = T_a.getEigenMatrix();
-            Matrix4d T_b_eigen = T_b.getEigenMatrix();
-            Matrix4d dTdq_eigen = (T_b_eigen - T_a_eigen) / dt;
+            Eigen::Matrix4d T_a_eigen = T_a.matrix();
+            Eigen::Matrix4d T_b_eigen = T_b.matrix();
+            Eigen::Matrix4d dTdq_eigen = (T_b_eigen - T_a_eigen) / dt;
             //Matrix4d dTdq_eigen = (T_b_eigen * T_a_eigen.inverse()) / dt;
 
             // J(i)
-            Matrix4d Ji_4x4matrix_eigen = Tinv_a_eigen * dTdq_eigen;
+            Eigen::Matrix4d Ji_4x4matrix_eigen = Tinv_a_eigen * dTdq_eigen;
             se3 Ji;
-            Ji.setFromMatrixForm(Ji_4x4matrix_eigen);
-            numericJ.setColumn(i, Ji);
+            Ji[0] = Ji_4x4matrix_eigen(2,1);
+            Ji[1] = Ji_4x4matrix_eigen(0,2);
+            Ji[2] = Ji_4x4matrix_eigen(1,0);
+            Ji[3] = Ji_4x4matrix_eigen(0,3);
+            Ji[4] = Ji_4x4matrix_eigen(1,3);
+            Ji[5] = Ji_4x4matrix_eigen(2,3);
+            numericJ.col(i) = Ji;
         }
 
         for (int i = 0; i < dof; ++i)
             for (int j = 0; j < 6; ++j)
-                EXPECT_NEAR(J[i](j), numericJ[i](j), JOINT_TOL);
+                EXPECT_NEAR(J.col(i)(j), numericJ.col(i)(j), JOINT_TOL);
     }
 }
 

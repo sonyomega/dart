@@ -54,8 +54,8 @@ FreeJoint::FreeJoint()
     mDofs.push_back(&mCoordinate[3]);
     mDofs.push_back(&mCoordinate[4]);
     mDofs.push_back(&mCoordinate[5]);
-    mS.setSize(6);
-    mdS.setSize(6);
+    mS = Eigen::Matrix<double,6,6>::Zero();
+    mdS = Eigen::Matrix<double,6,6>::Zero();
 
     // TODO: Temporary code
     mDampingCoefficient.resize(6, 0);
@@ -68,15 +68,12 @@ FreeJoint::~FreeJoint()
 void FreeJoint::_updateTransformation()
 {
     // T
-    math::so3 w(mCoordinate[0].get_q(),
-                mCoordinate[1].get_q(),
-                mCoordinate[2].get_q());
-    math::Vec3 v(mCoordinate[3].get_q(),
-                 mCoordinate[4].get_q(),
-                 mCoordinate[5].get_q());
-    mT = mT_ParentBodyToJoint
-         * math::Exp(v) * math::Exp(w)
-         / mT_ChildBodyToJoint;
+    math::se3 s;
+    s << mCoordinate[0].get_q(), mCoordinate[1].get_q(), mCoordinate[2].get_q(),
+         mCoordinate[3].get_q(), mCoordinate[4].get_q(), mCoordinate[5].get_q();
+
+    // TODO: Speed up with / operator
+    mT = mT_ParentBodyToJoint * math::Exp(s) * math::Inv(mT_ChildBodyToJoint);
 }
 
 void FreeJoint::_updateVelocity()
@@ -102,19 +99,26 @@ void FreeJoint::_updateVelocity()
     else
         J = Eigen::Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
 
-    math::se3 J0(J(0,0), J(0,1), J(0,2), 0, 0, 0);
-    math::se3 J1(J(1,0), J(1,1), J(1,2), 0, 0, 0);
-    math::se3 J2(J(2,0), J(2,1), J(2,2), 0, 0, 0);
-    math::se3 J3(0, 0, 0, 1, 0, 0);
-    math::se3 J4(0, 0, 0, 0, 1, 0);
-    math::se3 J5(0, 0, 0, 0, 0, 1);
+    math::se3 J0;
+    math::se3 J1;
+    math::se3 J2;
+    math::se3 J3;
+    math::se3 J4;
+    math::se3 J5;
 
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, J0));
-    mS.setColumn(1, math::Ad(mT_ChildBodyToJoint, J1));
-    mS.setColumn(2, math::Ad(mT_ChildBodyToJoint, J2));
-    mS.setColumn(3, math::Ad(mT_ChildBodyToJoint / Exp(w), J3));
-    mS.setColumn(4, math::Ad(mT_ChildBodyToJoint / Exp(w), J4));
-    mS.setColumn(5, math::Ad(mT_ChildBodyToJoint / Exp(w), J5));
+    J0 << J(0,0), J(0,1), J(0,2), 0, 0, 0;
+    J1 << J(1,0), J(1,1), J(1,2), 0, 0, 0;
+    J2 << J(2,0), J(2,1), J(2,2), 0, 0, 0;
+    J3 << 0, 0, 0, 1, 0, 0;
+    J4 << 0, 0, 0, 0, 1, 0;
+    J5 << 0, 0, 0, 0, 0, 1;
+
+    mS.col(0) = math::AdT(mT_ChildBodyToJoint, J0);
+    mS.col(1) = math::AdT(mT_ChildBodyToJoint, J1);
+    mS.col(2) = math::AdT(mT_ChildBodyToJoint, J2);
+    mS.col(3) = math::AdT(mT_ChildBodyToJoint * math::Inv(math::ExpAngular(w)), J3);
+    mS.col(4) = math::AdT(mT_ChildBodyToJoint * math::Inv(math::ExpAngular(w)), J4);
+    mS.col(5) = math::AdT(mT_ChildBodyToJoint * math::Inv(math::ExpAngular(w)), J5);
 
     // V = S * dq
     mV = mS * get_dq();
@@ -155,19 +159,21 @@ void FreeJoint::_updateAcceleration()
         Jdot += ((theta*st + 2*ct - 2)/t4)*ttdot*qss + ((3*st - theta*ct - 2*theta)/t5)*ttdot*qss2;
     }
 
-    math::se3 dJ0(Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0);
-    math::se3 dJ1(Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0);
-    math::se3 dJ2(Jdot(2,0), Jdot(2,1), Jdot(2,2), 0, 0, 0);
-    math::se3 dJ3(0, 0, 0, 0, 0, 0);
-    math::se3 dJ4(0, 0, 0, 0, 0, 0);
-    math::se3 dJ5(0, 0, 0, 0, 0, 0);
+    mdS = Eigen::Matrix<double,6,6>::Zero();
 
-    mdS.setColumn(0, math::Ad(mT_ChildBodyToJoint, dJ0));
-    mdS.setColumn(1, math::Ad(mT_ChildBodyToJoint, dJ1));
-    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ2));
-    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ3));
-    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ4));
-    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ5));
+    math::se3 dJ0;
+    dJ0 << Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0;
+    math::se3 dJ1;
+    dJ1 << Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0;
+    math::se3 dJ2;
+    dJ2 << Jdot(2,0), Jdot(2,1), Jdot(2,2), 0, 0, 0;
+    //math::se3 dJ3 = math::se3::Zero();
+    //math::se3 dJ4 = math::se3::Zero();
+    //math::se3 dJ5 = math::se3::Zero();
+
+    mdS.col(0) = math::AdT(mT_ChildBodyToJoint, dJ0);
+    mdS.col(1) = math::AdT(mT_ChildBodyToJoint, dJ1);
+    mdS.col(2) = math::AdT(mT_ChildBodyToJoint, dJ2);
 
     // dV = dS * dq + S * ddq
     mdV = mdS * get_dq() + mS * get_ddq();

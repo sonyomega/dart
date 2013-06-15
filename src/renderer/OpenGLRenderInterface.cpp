@@ -470,7 +470,7 @@ void OpenGLRenderInterface::draw(dynamics::BodyNode *_node, bool _vizCol, bool _
 
     // Get world transform
     Affine3d pose;
-    pose.matrix() = _node->getTransformationWorld().getEigenMatrix();
+    pose.matrix() = _node->getTransformationWorld().matrix();
 
     // GL calls
     if(_vizCol && _node->getColliding()) {

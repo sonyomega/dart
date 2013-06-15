@@ -110,7 +110,7 @@ FCLCollisionNode::~FCLCollisionNode() {
 
 fcl::Transform3f FCLCollisionNode::getFCLTransform() const {
     Eigen::Matrix4d worldTrans
-            = mBodyNode->getTransformationWorld().getEigenMatrix()
+            = mBodyNode->getTransformationWorld()
               * mBodyNode->getCollisionShape()->getTransform().matrix();
 
     return fcl::Transform3f(fcl::Matrix3f(worldTrans(0,0), worldTrans(0,1), worldTrans(0,2),

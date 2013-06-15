@@ -52,8 +52,8 @@ PrismaticJoint::PrismaticJoint(const Vec3& axis)
 {
     mJointType = REVOLUTE;
     mDofs.push_back(&mCoordinate);
-    mS.setSize(1);
-    mdS.setSize(1);
+    mS = Eigen::Matrix<double,6,1>::Zero();
+    mdS = Eigen::Matrix<double,6,1>::Zero();
 
     // TODO: Temporary code
     mDampingCoefficient.resize(1, 0);
@@ -61,6 +61,12 @@ PrismaticJoint::PrismaticJoint(const Vec3& axis)
 
 PrismaticJoint::~PrismaticJoint()
 {
+}
+
+void PrismaticJoint::setAxis(const Vec3& _axis)
+{
+    assert(_axis.norm() == 1.0);
+    mDirectionVector = _axis;
 }
 
 Vec3 PrismaticJoint::getAxisGlobal() const
@@ -77,17 +83,17 @@ void PrismaticJoint::_updateTransformation()
 {
     // T
     mT = mT_ParentBodyToJoint
-         * Exp(mDirectionVector * mCoordinate.get_q())
+         * math::ExpLinear(mDirectionVector * mCoordinate.get_q())
          * Inv(mT_ChildBodyToJoint);
 }
 
 void PrismaticJoint::_updateVelocity()
 {
     // S
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(mDirectionVector)));
+    mS.noalias() = math::AdTLinear(mT_ChildBodyToJoint, mDirectionVector);
 
     // V = S * dq
-    mV = mS * get_dq();
+    mV.noalias() = mS * get_dq();
     //mV.setAngular(mAxis * mCoordinate.get_q());
 }
 

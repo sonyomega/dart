@@ -49,13 +49,13 @@ Joint::Joint(const std::string& _name)
       mJointType(UNKNOWN),
       mParentBody(NULL),
       mChildBody(NULL),
-      mT_ParentBodyToJoint(math::SE3()),
-      mT_ChildBodyToJoint(math::SE3()),
-      mT(math::SE3()),
-      mV(math::se3()),
-      mS(math::Jacobian()),
-      mdV(math::se3()),
-      mdS(math::Jacobian())
+      mT_ParentBodyToJoint(math::SE3::Identity()),
+      mT_ChildBodyToJoint(math::SE3::Identity()),
+      mT(math::SE3::Identity()),
+      mV(math::se3::Zero()),
+      mS(math::Jacobian::Zero(6,0)),
+      mdV(math::se3::Zero()),
+      mdS(math::Jacobian::Zero(6,0))
 {
 }
 
@@ -128,7 +128,7 @@ void Joint::updateKinematics(bool _firstDerivative,
 void Joint::applyGLTransform(renderer::RenderInterface* _ri)
 {
     Eigen::Affine3d affine;
-    affine.matrix() = mT.getEigenMatrix();
+    affine.matrix() = mT.matrix();
     _ri->transform(affine);
 }
 

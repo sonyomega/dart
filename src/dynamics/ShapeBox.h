@@ -57,9 +57,6 @@ public:
     // Documentation inherited.
     virtual Eigen::Matrix3d computeInertia(double _mass) const;
 
-    // Documentation inherited.
-    virtual math::Inertia computeInertia2(double _mass) const;
-
 private:
     // Documentation inherited.
     void computeVolume();

@@ -101,10 +101,6 @@ public:
     { return Eigen::Matrix3d::Zero(); }
 
     /// @brief
-    virtual math::Inertia computeInertia2(double _mass) const
-    { return math::Inertia(); }
-
-    /// @brief
     void setVolume(double _v) { mVolume = _v; }
 
     /// @brief
