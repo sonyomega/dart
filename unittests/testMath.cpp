@@ -108,7 +108,7 @@ SE3 Inv2(const SE3& T)
 }
 
 EIGEN_DONT_INLINE
-Eigen::Isometry3d Inv2(const Eigen::Isometry3d& I)
+Isometry3d Inv2(const Isometry3d& I)
 {
     Eigen::Isometry3d ret;
 
@@ -502,6 +502,173 @@ Matrix<double,6,6> Transform_Isometry3d(const Isometry3d& T, const Matrix<double
     return ret;
 }
 
+EIGEN_DONT_INLINE
+Matrix<double,6,6> Transform_Isometry3d_2(const Isometry3d& T, const Matrix<double,6,6>& AI)
+{
+    // operation count: multiplication = 186, addition = 117, subtract = 21
+
+    Matrix<double,6,6> ret;
+
+    double d0 = AI(0,3) + T(2,3) * AI(3,4) - T(1,3) * AI(3,5);
+    double d1 = AI(1,3) - T(2,3) * AI(3,3) + T(0,3) * AI(3,5);
+    double d2 = AI(2,3) + T(1,3) * AI(3,3) - T(0,3) * AI(3,4);
+    double d3 = AI(0,4) + T(2,3) * AI(4,4) - T(1,3) * AI(4,5);
+    double d4 = AI(1,4) - T(2,3) * AI(3,4) + T(0,3) * AI(4,5);
+    double d5 = AI(2,4) + T(1,3) * AI(3,4) - T(0,3) * AI(4,4);
+    double d6 = AI(0,5) + T(2,3) * AI(4,5) - T(1,3) * AI(5,5);
+    double d7 = AI(1,5) - T(2,3) * AI(3,5) + T(0,3) * AI(5,5);
+    double d8 = AI(2,5) + T(1,3) * AI(3,5) - T(0,3) * AI(4,5);
+    double e0 = AI(0,0) + T(2,3) * AI(0,4) - T(1,3) * AI(0,5) + d3 * T(2,3) - d6 * T(1,3);
+    double e3 = AI(0,1) + T(2,3) * AI(1,4) - T(1,3) * AI(1,5) - d0 * T(2,3) + d6 * T(0,3);
+    double e4 = AI(1,1) - T(2,3) * AI(1,3) + T(0,3) * AI(1,5) - d1 * T(2,3) + d7 * T(0,3);
+    double e6 = AI(0,2) + T(2,3) * AI(2,4) - T(1,3) * AI(2,5) + d0 * T(1,3) - d3 * T(0,3);
+    double e7 = AI(1,2) - T(2,3) * AI(2,3) + T(0,3) * AI(2,5) + d1 * T(1,3) - d4 * T(0,3);
+    double e8 = AI(2,2) + T(1,3) * AI(2,3) - T(0,3) * AI(2,4) + d2 * T(1,3) - d5 * T(0,3);
+    double f0 = T(0,0) * e0 + T(1,0) * e3 + T(2,0) * e6;
+    double f1 = T(0,0) * e3 + T(1,0) * e4 + T(2,0) * e7;
+    double f2 = T(0,0) * e6 + T(1,0) * e7 + T(2,0) * e8;
+    double f3 = T(0,0) * d0 + T(1,0) * d1 + T(2,0) * d2;
+    double f4 = T(0,0) * d3 + T(1,0) * d4 + T(2,0) * d5;
+    double f5 = T(0,0) * d6 + T(1,0) * d7 + T(2,0) * d8;
+    double f6 = T(0,1) * e0 + T(1,1) * e3 + T(2,1) * e6;
+    double f7 = T(0,1) * e3 + T(1,1) * e4 + T(2,1) * e7;
+    double f8 = T(0,1) * e6 + T(1,1) * e7 + T(2,1) * e8;
+    double g0 = T(0,1) * d0 + T(1,1) * d1 + T(2,1) * d2;
+    double g1 = T(0,1) * d3 + T(1,1) * d4 + T(2,1) * d5;
+    double g2 = T(0,1) * d6 + T(1,1) * d7 + T(2,1) * d8;
+    double g3 = T(0,2) * d0 + T(1,2) * d1 + T(2,2) * d2;
+    double g4 = T(0,2) * d3 + T(1,2) * d4 + T(2,2) * d5;
+    double g5 = T(0,2) * d6 + T(1,2) * d7 + T(2,2) * d8;
+    double h0 = T(0,0) * AI(3,3) + T(1,0) * AI(3,4) + T(2,0) * AI(3,5);
+    double h1 = T(0,0) * AI(3,4) + T(1,0) * AI(4,4) + T(2,0) * AI(4,5);
+    double h2 = T(0,0) * AI(3,5) + T(1,0) * AI(4,5) + T(2,0) * AI(5,5);
+    double h3 = T(0,1) * AI(3,3) + T(1,1) * AI(3,4) + T(2,1) * AI(3,5);
+    double h4 = T(0,1) * AI(3,4) + T(1,1) * AI(4,4) + T(2,1) * AI(4,5);
+    double h5 = T(0,1) * AI(3,5) + T(1,1) * AI(4,5) + T(2,1) * AI(5,5);
+
+    ret(0,0) = f0 * T(0,0) + f1 * T(1,0) + f2 * T(2,0);
+    ret(0,1) = f0 * T(0,1) + f1 * T(1,1) + f2 * T(2,1);
+    ret(0,2) = f0 * T(0,2) + f1 * T(1,2) + f2 * T(2,2);
+    ret(0,3) = f3 * T(0,0) + f4 * T(1,0) + f5 * T(2,0);
+    ret(0,4) = f3 * T(0,1) + f4 * T(1,1) + f5 * T(2,1);
+    ret(0,5) = f3 * T(0,2) + f4 * T(1,2) + f5 * T(2,2);
+    ret(1,0) = ret(0,1);
+    ret(1,1) = f6 * T(0,1) + f7 * T(1,1) + f8 * T(2,1);
+    ret(1,2) = f6 * T(0,2) + f7 * T(1,2) + f8 * T(2,2);
+    ret(1,3) = g0 * T(0,0) + g1 * T(1,0) + g2 * T(2,0);
+    ret(1,4) = g0 * T(0,1) + g1 * T(1,1) + g2 * T(2,1);
+    ret(1,5) = g0 * T(0,2) + g1 * T(1,2) + g2 * T(2,2);
+    ret(2,0) = ret(0,2);
+    ret(2,1) = ret(1,2);
+    ret(2,2) = (T(0,2) * e0 + T(1,2) * e3 + T(2,2) * e6) * T(0,2) + (T(0,2) * e3 + T(1,2) * e4 + T(2,2) * e7) * T(1,2) + (T(0,2) * e6 + T(1,2) * e7 + T(2,2) * e8) * T(2,2);
+    ret(2,3) = g3 * T(0,0) + g4 * T(1,0) + g5 * T(2,0);
+    ret(2,4) = g3 * T(0,1) + g4 * T(1,1) + g5 * T(2,1);
+    ret(2,5) = g3 * T(0,2) + g4 * T(1,2) + g5 * T(2,2);
+    ret(3,0) = ret(0,3);
+    ret(3,1) = ret(1,3);
+    ret(3,2) = ret(2,3);
+    ret(3,3) = h0 * T(0,0) + h1 * T(1,0) + h2 * T(2,0);
+    ret(3,4) = h0 * T(0,1) + h1 * T(1,1) + h2 * T(2,1);
+    ret(3,5) = h0 * T(0,2) + h1 * T(1,2) + h2 * T(2,2);
+    ret(4,0) = ret(0,4);
+    ret(4,1) = ret(1,4);
+    ret(4,2) = ret(2,4);
+    ret(4,3) = ret(3,4);
+    ret(4,4) = h3 * T(0,1) + h4 * T(1,1) + h5 * T(2,1);
+    ret(4,5) = h3 * T(0,2) + h4 * T(1,2) + h5 * T(2,2);
+    ret(5,0) = ret(0,5);
+    ret(5,1) = ret(1,5);
+    ret(5,2) = ret(2,5);
+    ret(5,3) = ret(3,5);
+    ret(5,4) = ret(4,5);
+    ret(5,5) = (T(0,2) * AI(3,3) + T(1,2) * AI(3,4) + T(2,2) * AI(3,5)) * T(0,2) + (T(0,2) * AI(3,4) + T(1,2) * AI(4,4) + T(2,2) * AI(4,5)) * T(1,2) + (T(0,2) * AI(3,5) + T(1,2) * AI(4,5) + T(2,2) * AI(5,5)) * T(2,2);
+
+    return ret;
+}
+
+EIGEN_DONT_INLINE
+Matrix<double,6,6> Transform_Isometry3d_3(const Isometry3d& T, const Matrix<double,6,6>& AI)
+{
+    // operation count: multiplication = 186, addition = 117, subtract = 21
+
+    Matrix<double,6,6> ret;
+
+    double d0 = AI(0,3) + T(2,3) * AI(3,4) - T(1,3) * AI(3,5);
+    double d1 = AI(1,3) - T(2,3) * AI(3,3) + T(0,3) * AI(3,5);
+    double d2 = AI(2,3) + T(1,3) * AI(3,3) - T(0,3) * AI(3,4);
+    double d3 = AI(0,4) + T(2,3) * AI(4,4) - T(1,3) * AI(4,5);
+    double d4 = AI(1,4) - T(2,3) * AI(3,4) + T(0,3) * AI(4,5);
+    double d5 = AI(2,4) + T(1,3) * AI(3,4) - T(0,3) * AI(4,4);
+    double d6 = AI(0,5) + T(2,3) * AI(4,5) - T(1,3) * AI(5,5);
+    double d7 = AI(1,5) - T(2,3) * AI(3,5) + T(0,3) * AI(5,5);
+    double d8 = AI(2,5) + T(1,3) * AI(3,5) - T(0,3) * AI(4,5);
+    double e0 = AI(0,0) + T(2,3) * AI(0,4) - T(1,3) * AI(0,5) + d3 * T(2,3) - d6 * T(1,3);
+    double e3 = AI(0,1) + T(2,3) * AI(1,4) - T(1,3) * AI(1,5) - d0 * T(2,3) + d6 * T(0,3);
+    double e4 = AI(1,1) - T(2,3) * AI(1,3) + T(0,3) * AI(1,5) - d1 * T(2,3) + d7 * T(0,3);
+    double e6 = AI(0,2) + T(2,3) * AI(2,4) - T(1,3) * AI(2,5) + d0 * T(1,3) - d3 * T(0,3);
+    double e7 = AI(1,2) - T(2,3) * AI(2,3) + T(0,3) * AI(2,5) + d1 * T(1,3) - d4 * T(0,3);
+    double e8 = AI(2,2) + T(1,3) * AI(2,3) - T(0,3) * AI(2,4) + d2 * T(1,3) - d5 * T(0,3);
+    double f0 = T(0,0) * e0 + T(1,0) * e3 + T(2,0) * e6;
+    double f1 = T(0,0) * e3 + T(1,0) * e4 + T(2,0) * e7;
+    double f2 = T(0,0) * e6 + T(1,0) * e7 + T(2,0) * e8;
+    double f3 = T(0,0) * d0 + T(1,0) * d1 + T(2,0) * d2;
+    double f4 = T(0,0) * d3 + T(1,0) * d4 + T(2,0) * d5;
+    double f5 = T(0,0) * d6 + T(1,0) * d7 + T(2,0) * d8;
+    double f6 = T(0,1) * e0 + T(1,1) * e3 + T(2,1) * e6;
+    double f7 = T(0,1) * e3 + T(1,1) * e4 + T(2,1) * e7;
+    double f8 = T(0,1) * e6 + T(1,1) * e7 + T(2,1) * e8;
+    double g0 = T(0,1) * d0 + T(1,1) * d1 + T(2,1) * d2;
+    double g1 = T(0,1) * d3 + T(1,1) * d4 + T(2,1) * d5;
+    double g2 = T(0,1) * d6 + T(1,1) * d7 + T(2,1) * d8;
+    double g3 = T(0,2) * d0 + T(1,2) * d1 + T(2,2) * d2;
+    double g4 = T(0,2) * d3 + T(1,2) * d4 + T(2,2) * d5;
+    double g5 = T(0,2) * d6 + T(1,2) * d7 + T(2,2) * d8;
+    double h0 = T(0,0) * AI(3,3) + T(1,0) * AI(3,4) + T(2,0) * AI(3,5);
+    double h1 = T(0,0) * AI(3,4) + T(1,0) * AI(4,4) + T(2,0) * AI(4,5);
+    double h2 = T(0,0) * AI(3,5) + T(1,0) * AI(4,5) + T(2,0) * AI(5,5);
+    double h3 = T(0,1) * AI(3,3) + T(1,1) * AI(3,4) + T(2,1) * AI(3,5);
+    double h4 = T(0,1) * AI(3,4) + T(1,1) * AI(4,4) + T(2,1) * AI(4,5);
+    double h5 = T(0,1) * AI(3,5) + T(1,1) * AI(4,5) + T(2,1) * AI(5,5);
+
+    ret << f0 * T(0,0) + f1 * T(1,0) + f2 * T(2,0),
+            f0 * T(0,1) + f1 * T(1,1) + f2 * T(2,1),
+            f0 * T(0,2) + f1 * T(1,2) + f2 * T(2,2),
+            f3 * T(0,0) + f4 * T(1,0) + f5 * T(2,0),
+            f3 * T(0,1) + f4 * T(1,1) + f5 * T(2,1),
+            f3 * T(0,2) + f4 * T(1,2) + f5 * T(2,2),
+            ret(0,1),
+            f6 * T(0,1) + f7 * T(1,1) + f8 * T(2,1),
+            f6 * T(0,2) + f7 * T(1,2) + f8 * T(2,2),
+            g0 * T(0,0) + g1 * T(1,0) + g2 * T(2,0),
+            g0 * T(0,1) + g1 * T(1,1) + g2 * T(2,1),
+            g0 * T(0,2) + g1 * T(1,2) + g2 * T(2,2),
+            ret(0,2),
+            ret(1,2),
+            (T(0,2) * e0 + T(1,2) * e3 + T(2,2) * e6) * T(0,2) + (T(0,2) * e3 + T(1,2) * e4 + T(2,2) * e7) * T(1,2) + (T(0,2) * e6 + T(1,2) * e7 + T(2,2) * e8) * T(2,2),
+            g3 * T(0,0) + g4 * T(1,0) + g5 * T(2,0),
+            g3 * T(0,1) + g4 * T(1,1) + g5 * T(2,1),
+            g3 * T(0,2) + g4 * T(1,2) + g5 * T(2,2),
+            ret(0,3),
+            ret(1,3),
+            ret(2,3),
+            h0 * T(0,0) + h1 * T(1,0) + h2 * T(2,0),
+            h0 * T(0,1) + h1 * T(1,1) + h2 * T(2,1),
+            h0 * T(0,2) + h1 * T(1,2) + h2 * T(2,2),
+            ret(0,4),
+            ret(1,4),
+            ret(2,4),
+            ret(3,4),
+            h3 * T(0,1) + h4 * T(1,1) + h5 * T(2,1),
+            h3 * T(0,2) + h4 * T(1,2) + h5 * T(2,2),
+            ret(0,5),
+            ret(1,5),
+            ret(2,5),
+            ret(3,5),
+            ret(4,5),
+            (T(0,2) * AI(3,3) + T(1,2) * AI(3,4) + T(2,2) * AI(3,5)) * T(0,2) + (T(0,2) * AI(3,4) + T(1,2) * AI(4,4) + T(2,2) * AI(4,5)) * T(1,2) + (T(0,2) * AI(3,5) + T(1,2) * AI(4,5) + T(2,2) * AI(5,5)) * T(2,2);
+
+    return ret;
+}
 
 EIGEN_DONT_INLINE
 Matrix<double,6,6> Transform_Matrix4d(const Matrix4d& T, const Matrix<double,6,6>& AI)
@@ -576,7 +743,7 @@ Matrix<double,6,6> Transform_Matrix4d(const Matrix4d& T, const Matrix<double,6,6
 
 TEST(MATH, ARTICULATED_INERTIA_TRANSFORM)
 {
-    const int iterations = 20000000;
+    const int iterations = 50000000;
 
     Affine3d A1 = Translation3d(0.1, 0.2, 0.3) * AngleAxisd(0.5, Vector3d(1.0 / sqrt(2.0), 1.0 / sqrt(2.0), 0.0));
     Matrix<double,6,6> a1 = Matrix<double,6,6>::Identity();
@@ -616,6 +783,20 @@ TEST(MATH, ARTICULATED_INERTIA_TRANSFORM)
         i2 = Transform_Isometry3d(I1, i1);
     }
     cout << "Transform_Isometry3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    //cout << "result: " << i2 << endl;
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+        i2 = Transform_Isometry3d_2(I1, i1);
+    }
+    cout << "Transform_Isometry3d_2: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    //cout << "result: " << i2 << endl;
+
+    start = clock();
+    for(int i = 0; i < iterations; i++) {
+        i2 = Transform_Isometry3d_3(I1, i1);
+    }
+    cout << "Transform_Isometry3d_3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << i2 << endl;
 
     start = clock();
@@ -807,6 +988,7 @@ TEST(MATH, INVERSION)
     }
     cout << "Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 }
+
 
 /******************************************************************************/
 //TEST(MATH, SE3_VS_EIGENMATRIX4D)
