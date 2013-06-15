@@ -37,8 +37,283 @@
 #define M_DEGREE	 57.2957795130823208768		// = pi / 180
 #define SCALAR_MAX	 DBL_MAX
 
+namespace Eigen {
+typedef Eigen::Matrix<double,6,1> Vector6d;
+typedef Eigen::Matrix<double,6,6> Matrix6d;
+}
+
 namespace dart {
 namespace math {
+
+typedef Eigen::Vector3d Eigen_Vec3;
+typedef Eigen::Vector3d Eigen_Axis;
+typedef Eigen::Matrix3d Eigen_SO;
+typedef Eigen::Matrix4d Eigen_SE3;
+typedef Eigen::Vector6d Eigen_se3;
+typedef Eigen::Vector6d Eigen_dse3;
+typedef Eigen::Matrix6d Eigen_Inertia;
+typedef Eigen::Matrix6d Eigen_AInertia;
+typedef Eigen::MatrixXd Eigen_Jacobian;
+
+/// @brief Compute geometric distance on SE(3) manifold.
+/// Norm(Log(Inv(T1) * T2)).
+double Distance(const Eigen_SE3& T1, const Eigen_SE3& T2);
+
+//------------------------------------------------------------------------------
+
+/// @brief Get a transformation matrix given by the Euler XYZ angle,
+/// where the positional part is set to be zero.
+Eigen_SE3 EulerXYZ(const Eigen_Vec3& angle);
+
+/// @brief get a transformation matrix given by the Euler XYZ angle and
+/// position.
+Eigen_SE3 EulerXYZ(const Eigen_Vec3& angle, const Eigen_Vec3& position);
+
+/// @brief get a transformation matrix given by the Euler ZYX angle,
+/// where the positional part is set to be zero.
+/// singularity : x[1] = -+ 0.5*PI
+/// @sa SE3::iEulerZYX
+Eigen_SE3 EulerZYX(const Eigen_Vec3& angle);
+
+/// @brief get a transformation matrix given by the Euler ZYX angle and
+/// position.
+/// singularity : x[1] = -+ 0.5*PI
+Eigen_SE3 EulerZYX(const Eigen_Vec3& angle, const Eigen_Vec3& position);
+
+/// @brief Get a transformation matrix given by the Euler ZYZ angle,
+/// where the positional part is set to be zero.
+/// singularity : x[1] = 0, PI
+/// @sa SE3::iEulerZYZ
+Eigen_SE3 EulerZYZ(const Eigen_Vec3& angle);
+
+/// @brief get a transformation matrix given by the Euler ZYZ angle and
+/// position.
+/// singularity : x[1] = 0, PI
+Eigen_SE3 EulerZYZ(const Eigen_Vec3& angle, const Eigen_Vec3& position);
+
+/// @brief get the Euler ZYX angle from T
+////// @sa Eigen_Vec3::EulerXYZ
+Eigen_Vec3 iEulerXYZ(const Eigen_SE3& T);
+
+/// @brief get the Euler ZYX angle from T
+/// @sa Eigen_Vec3::EulerZYX
+Eigen_Vec3 iEulerZYX(const Eigen_SE3& T);
+
+/// @brief get the Euler ZYZ angle from T
+/// @sa Eigen_Vec3::EulerZYZ
+Eigen_Vec3 iEulerZYZ(const Eigen_SE3& T);
+
+/// @brief get the Euler ZYZ angle from T
+/// @sa Eigen_Vec3::EulerZXY
+Eigen_Vec3 iEulerZXY(const Eigen_SE3 &T);
+
+//------------------------------------------------------------------------------
+
+/// @brief fast version of se3(Rotate(T, Eigen_Vec3(S[0], S[1], S[2])), Rotate(T, Eigen_Vec3(S[3], S[4], S[5])))
+Eigen_se3 Rotate(const Eigen_SE3& T, const Eigen_se3& S);
+
+/// @brief rotate q by T.
+/// @return @f$R q@f$, where @f$T=(R,p)@f$.
+Eigen_Vec3 Rotate(const Eigen_SE3& T, const Eigen_Vec3& q);
+
+/// @brief
+Eigen_Axis Rotate(const Eigen_SE3& T, const Eigen_Axis& v);
+
+/// @brief rotate q by Inv(T).
+Eigen_Vec3 InvRotate(const Eigen_SE3& T, const Eigen_Vec3& q);
+
+
+/// @brief fast version of se3(Rotate(Inv(T), Eigen_Vec3(S[0], S[1], S[2])), Rotate(Inv(T), Eigen_Vec3(S[3], S[4], S[5])))
+Eigen_se3 InvRotate(const Eigen_SE3& T, const Eigen_se3& S);
+
+//------------------------------------------------------------------------------
+
+/// @brief reparameterize such as ||s'|| < M_PI and Exp(s) == Epx(s')
+Eigen_Axis Reparameterize(const Eigen_Axis& s);
+
+/// @brief Exponential mapping
+Eigen_SE3 Exp(const Eigen_se3& );
+
+/// @brief fast version of Exp(se3(s, 0))
+Eigen_SE3 Exp(const Eigen_Axis& s);
+
+/// @brief fast version of Exp(se3(0, v))
+Eigen_SE3 Exp(const Eigen_Vec3& v);
+
+/// @brief fast version of Exp(t * s), when |s| = 1
+Eigen_SE3 Exp(const Eigen_Axis& s, double t);
+
+/// @brief Log mapping
+Eigen_se3 Log(const Eigen_SE3& );
+
+/// @brief Log mapping of rotation part only
+/// @note When @f$|LogR(T)| = @pi@f$, Exp(LogR(T) = Exp(-LogR(T)).
+/// The implementation returns only the positive one.
+Eigen_Axis LogR(const Eigen_SE3& T);
+
+//------------------------------------------------------------------------------
+
+/// @brief get inversion of T
+/// @note @f$T^{-1} = (R^T, -R^T p), where T=(R,p)@in SE(3)@f$.
+Eigen_SE3 Inv(const Eigen_SE3& T);
+
+//------------------------------------------------------------------------------
+
+/// @brief get rotation matrix rotated along x-Eigen_Axis by theta angle.
+/// @note theta is represented in radian.
+Eigen_SE3 RotX(double angle);
+
+/// @brief get rotation matrix rotated along y-Eigen_Axis by theta angle.
+Eigen_SE3 RotY(double angle);
+
+/// @brief get rotation matrix rotated along z-Eigen_Axis by theta angle.
+Eigen_SE3 RotZ(double angle);
+
+//------------------------------------------------------------------------------
+
+/// @brief get the first order approximation of T.
+/// @note If T is near to an identity, Linearize(T) ~= Log(T).
+/// Since it is cheaper than Log, it is recommended to use Linearize
+/// rather than Log near identity.
+Eigen_se3 Linearize(const Eigen_SE3& T);
+
+//------------------------------------------------------------------------------
+/// @brief Rectify the rotation part so as that it satifies the orthogonality
+/// condition.
+///
+/// It is one step of @f$R_{i_1}=1/2(R_i + R_i^{-T})@f$.
+/// Hence by calling this function iterativley, you can make the rotation part
+/// closer to SO(3).
+Eigen_SE3 Normalize(const Eigen_SE3& T);
+
+//------------------------------------------------------------------------------
+
+/// @brief convert unit quaternion to SE3
+/// @note The first element of q[] is a real part and the last three are
+/// imaginary parts. Make sure that q[] is unit quaternion, that is,
+/// @f$@sum_i q_i^2 = 1@f$.
+Eigen_SE3 Quaternion2SE3(const double q[4]);
+
+/// @brief convert unit quaternion to SE3
+/// @note The w is a real part and the last three (x, y, z) are
+/// imaginary parts. Make sure that (w, x, y, z) is unit quaternion, that is,
+/// @f$@w^2 + y^2 + y^2 + z^2 = 1@f$.
+Eigen_SE3 Quaternion2SE3(double w, double x, double y, double z);
+
+//------------------------------------------------------------------------------
+
+/// @brief get inverse of J.
+Eigen_AInertia Inv(const Eigen_Inertia& J);
+
+//------------------------------------------------------------------------------
+
+/// @brief get an inertia of box shaped geometry.
+/// @param d desity of the geometry
+/// @param sz size of the box
+Eigen_Inertia BoxInertia(double d, const Eigen_Vec3& sz);
+
+/// @brief get an inertia of sphere shaped geometry.
+/// @param d desity of the geometry
+/// @param r radius of the sphere
+Eigen_Inertia SphereInertia(double d, double r);
+
+/// @brief get an inertia of cylindrical geometry.
+/// @param d desity of the geometry
+/// @param r radius of the cylinder
+/// @param h height of the cylinder
+Eigen_Inertia CylinderInertia(double d, double r, double h);
+
+/// @brief get an inertia of torus geometry.
+/// @param d desity of the geometry
+/// @param r1 ring radius of the torus
+/// @param r2 tube radius of the torus
+Eigen_Inertia TorusInertia(double d, double r1, double r2);
+
+/// @brief The Kronecker product
+Eigen_AInertia KroneckerProduct(const Eigen_dse3& , const Eigen_dse3& );
+
+//------------------------------------------------------------------------------
+
+/// @brief adjoint mapping
+/// @note @f$Ad_TV = ( Rw@,, ~p @times Rw + Rv)@f$,
+/// where @f$T=(R,p)@in SE(3), @quad V=(w,v)@in se(3) @f$.
+Eigen_se3 Ad(const Eigen_SE3& T, const Eigen_se3& V);
+
+/// @brief fast version of Ad(T, se3(w, Eigen_Vec3(0))
+Eigen_se3 Ad(const Eigen_SE3& T, const Eigen_Axis& w);
+
+/// @brief fast version of Ad(T, se3(Eigen_Axis(0), v)
+Eigen_se3 Ad(const Eigen_SE3& T, const Eigen_Vec3& v);
+
+/// @brief fast version of Ad([R 0; 0 1], V)
+Eigen_se3 AdR(const Eigen_SE3& T, const Eigen_se3& V);
+//se3 Ad(const Eigen_SO3& R, const se3& V);
+
+/// @brief fast version of Ad([I p; 0 1], V)
+Eigen_se3 Ad(const Eigen_Vec3& p, const Eigen_se3& s);
+
+/// @brief
+Eigen_Jacobian Ad(const Eigen_SE3& T, const Eigen_Jacobian& J);
+
+/// @brief fast version of Ad([R 0; 0 1], J)
+Eigen_Jacobian AdR(const Eigen_SE3& T, const Eigen_Jacobian& J);
+
+/// @brief fast version of Ad(Inv(T), V)
+Eigen_se3 InvAd(const Eigen_SE3& T, const Eigen_se3& V);
+
+/// @brief fast version of Ad(Inv(T), se3(Eigen_Vec3(0), v))
+Eigen_Vec3 InvAd(const Eigen_SE3& T, const Eigen_Vec3& v);
+
+/// @brief fast version of Ad(Inv(T), se3(w, Eigen_Vec3(0)))
+Eigen_Axis InvAd(const Eigen_SE3& T, const Eigen_Axis& w);
+
+/// @brief Fast version of Ad(Inv([R 0; 0 1]), V)
+Eigen_se3 InvAdR(const Eigen_SE3& T, const Eigen_se3& V);
+
+/// @brief Fast version of Ad(Inv([R 0; 0 1]), se3(Eigen_Vec3(0), v))
+Eigen_se3 InvAdR(const Eigen_SE3& T, const Eigen_Vec3& V);
+
+/// @brief get a linear part of Ad(SE3(-p), V).
+Eigen_Vec3 MinusLinearAd(const Eigen_Vec3& p, const Eigen_se3& V);
+
+/// @brief dual adjoint mapping
+/// @note @f$Ad^{@,*}_TF = ( R^T (m - p@times f)@,,~ R^T f)@f$, where @f$T=(R,p)@in SE(3), F=(m,f)@in se(3)^*@f$.
+Eigen_dse3 dAd(const Eigen_SE3& T, const Eigen_dse3& F);
+
+/// @brief fast version of Ad(Inv(T), dse3(Eigen_Vec3(0), F))
+Eigen_dse3 dAd(const Eigen_SE3& T, const Eigen_Vec3& F);
+
+/// @brief fast version of dAd(Inv(T), F)
+Eigen_dse3 InvdAd(const Eigen_SE3& T, const Eigen_dse3& F);
+
+/// @brief fast version of dAd(Inv(SE3(p)), dse3(Eigen_Vec3(0), F))
+Eigen_dse3 InvdAd(const Eigen_Vec3& p, const Eigen_Vec3& F);
+
+/// @brief adjoint mapping
+/// @note @f$ad_X Y = ( w_X @times w_Y@,,~w_X @times v_Y - w_Y @times v_X),@f$,
+/// where @f$X=(w_X,v_X)@in se(3), @quad Y=(w_Y,v_Y)@in se(3) @f$.
+Eigen_se3 ad(const Eigen_se3& X, const Eigen_se3& Y);
+
+/// @brief fast version of ad(se3(Eigen_Vec3(0), v), S)
+Eigen_Vec3 ad(const Eigen_Vec3& v, const Eigen_se3& S);
+
+/// @brief fast version of ad(se3(w, 0), se3(v, 0))	-> check
+Eigen_Axis ad(const Eigen_Axis& w, const Eigen_Axis& v);
+
+/// @brief dual adjoint mapping
+/// @note @f$ad^{@,*}_V F = (m @times w + f @times v@,,~ f @times w),@f$
+/// , where @f$F=(m,f)@in se^{@,*}(3), @quad V=(w,v)@in se(3) @f$.
+Eigen_dse3 dad(const Eigen_se3& V, const Eigen_dse3& F);
+
+
+
+
+
+
+
+
+
+
 
 class Vec3;
 class Axis;
