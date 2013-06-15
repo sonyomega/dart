@@ -560,8 +560,8 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     // transformation
     tinyxml2::XMLElement* transformationElement = NULL;
     transformationElement = _jointElement->FirstChildElement("transformation");
-    math::SE3 parentWorld;
-    math::SE3 childToJoint;
+    math::SE3 parentWorld = math::SE3::Identity();
+    math::SE3 childToJoint = math::SE3::Identity();
     math::SE3 childWorld = childBody->getTransformationWorld();
     if (parentBody)
          parentWorld = parentBody->getTransformationWorld();

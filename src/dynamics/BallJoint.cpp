@@ -144,7 +144,7 @@ inline void BallJoint::_updateAcceleration()
         Jdot += ((theta*st + 2*ct - 2)/t4)*ttdot*qss + ((3*st - theta*ct - 2*theta)/t5)*ttdot*qss2;
     }
 
-    mdS = Eigen::Matrix<double,6,6>::Zero();
+    mdS = Eigen::Matrix<double,6,3>::Zero();
 
     math::se3 dJ0;
     dJ0 << Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0;

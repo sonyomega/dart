@@ -54,7 +54,8 @@ Skeleton::Skeleton(const std::string& _name)
       mTotalMass(0.0),
       mImmobile(false),
       mJointLimit(true),
-      mGraph(NULL)
+      mGraph(NULL),
+      mFrame(math::SE3::Identity())
 {
     mGraph = new SkeletonGraph(getNumNodes());
 }

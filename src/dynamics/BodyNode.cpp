@@ -464,8 +464,8 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
     // Parent Jacobian
     if (mParentBody != NULL)
     {
-        assert(mParentBody->mBodyJacobianDeriv.getSize() + getNumLocalDofs()
-               == mBodyJacobianDeriv.getSize());
+        assert(mParentBody->mBodyJacobianDeriv.cols() + getNumLocalDofs()
+               == mBodyJacobianDeriv.cols());
 
         for (int i = 0; i < numParentDOFs; ++i)
         {
