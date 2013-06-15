@@ -44,49 +44,41 @@ using namespace Eigen;
 namespace dart {
 namespace dynamics {
 
-    ShapeCylinder::ShapeCylinder(double _radius, double _height)
-    	: Shape(P_CYLINDER),
-    	  mRadius(_radius),
-    	  mHeight(_height)
-    {
-        initMeshes();
-        if (mRadius > 0.0 && mHeight > 0.0) {
-            computeVolume();
-        }
+ShapeCylinder::ShapeCylinder(double _radius, double _height)
+    : Shape(P_CYLINDER),
+      mRadius(_radius),
+      mHeight(_height)
+{
+    initMeshes();
+    if (mRadius > 0.0 && mHeight > 0.0) {
+        computeVolume();
     }
+}
 
-    void ShapeCylinder::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
-    	if (!_ri) return;
-		if (!_useDefaultColor)
-			_ri->setPenColor(_color);
-		else
-			_ri->setPenColor(mColor);
-		_ri->pushMatrix();
-		_ri->transform(mTransform);
-		_ri->drawCylinder(mRadius, mHeight);
-		_ri->popMatrix();
-    }
+void ShapeCylinder::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
+    if (!_ri) return;
+    if (!_useDefaultColor)
+        _ri->setPenColor(_color);
+    else
+        _ri->setPenColor(mColor);
+    _ri->pushMatrix();
+    _ri->transform(mTransform);
+    _ri->drawCylinder(mRadius, mHeight);
+    _ri->popMatrix();
+}
 
-    void ShapeCylinder::computeVolume() {
-        mVolume = M_PI * mRadius * mRadius * mHeight;
-    }
+void ShapeCylinder::computeVolume() {
+    mVolume = M_PI * mRadius * mRadius * mHeight;
+}
 
-    Matrix3d ShapeCylinder::computeInertia(double _mass) {
-        Matrix3d inertia = Matrix3d::Zero();
-        inertia(0, 0) = _mass * (3.0 * mRadius * mRadius + mHeight * mHeight) / 12.0;
-        inertia(1, 1) = inertia(0, 0);
-        inertia(2, 2) = 0.5 * _mass * mRadius * mRadius;
+Matrix3d ShapeCylinder::computeInertia(double _mass) {
+    Matrix3d inertia = Matrix3d::Zero();
+    inertia(0, 0) = _mass * (3.0 * mRadius * mRadius + mHeight * mHeight) / 12.0;
+    inertia(1, 1) = inertia(0, 0);
+    inertia(2, 2) = 0.5 * _mass * mRadius * mRadius;
 
-        return inertia;
-    }
-
-    math::Inertia ShapeCylinder::computeInertia2(double _mass) const
-    {
-        return math::Inertia(_mass,
-                             _mass * (3.0 * mRadius * mRadius + mHeight * mHeight) / 12.0,
-                             _mass * (3.0 * mRadius * mRadius + mHeight * mHeight) / 12.0,
-                             0.5 * _mass * mRadius * mRadius);
-    }
+    return inertia;
+}
 
 } // namespace dynamics
 } // namespace dart

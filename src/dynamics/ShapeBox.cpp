@@ -74,14 +74,6 @@ Matrix3d ShapeBox::computeInertia(double _mass) const {
     return inertia;
 }
 
-math::Inertia ShapeBox::computeInertia2(double _mass) const
-{
-    return math::Inertia(_mass,
-                         _mass / 12.0 * (mDim(1) * mDim(1) + mDim(2) * mDim(2)),
-                         _mass / 12.0 * (mDim(0) * mDim(0) + mDim(2) * mDim(2)),
-                         _mass / 12.0 * (mDim(0) * mDim(0) + mDim(1) * mDim(1)));
-}
-
 void ShapeBox::computeVolume() {
     mVolume = mDim(0) * mDim(1) * mDim(2); // a * b * c
 }

@@ -62,7 +62,7 @@ public:
     // Kinematical Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setAxis(const math::Vec3& _axis) { assert(math::Norm(_axis) == 1); mDirectionVector = _axis; }
+    void setAxis(const math::Vec3& _axis);
 
     /// @brief
     const math::Vec3& getAxis() const { return mDirectionVector; }

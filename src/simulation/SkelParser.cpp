@@ -385,7 +385,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
         {
             math::SE3 W = getValueSE3(vizElement, "transformation");
             Eigen::Affine3d AF;
-            AF.matrix() = W.getEigenMatrix();
+            AF.matrix() = W.matrix();
             shape->setTransform(AF);
         }
 
@@ -441,7 +441,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
         {
             math::SE3 W = getValueSE3(colElement, "transformation");
             Eigen::Affine3d AF;
-            AF.matrix() = W.getEigenMatrix();
+            AF.matrix() = W.matrix();
             shape->setTransform(AF);
         }
     }
@@ -452,11 +452,9 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
     {
         tinyxml2::XMLElement* inertiaElement = getElement(_bodyElement, "inertia");
 
-        math::Inertia I;
-
         // mass
         double mass = getValueDouble(inertiaElement, "mass");
-        I.setMass(mass);
+        newBody->setMass(mass);
 
         // moment of inertia
         if (hasElement(inertiaElement, "moment_of_inertia")) {
@@ -471,18 +469,18 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
             double ixz = getValueDouble(moiElement, "ixz");
             double iyz = getValueDouble(moiElement, "iyz");
 
-            I.setAngularMomentDiag   (ixx, iyy, izz);
-            I.setAngularMomentOffDiag(ixy, ixz, iyz);
+            newBody->setMomentOfInertia(ixx, iyy, izz, ixy, ixz, iyz);
         }
         else if (newBody->getVisualizationShape() != 0) {
-            I = newBody->getVisualizationShape()->computeInertia2(mass);
+            Eigen::Matrix3d Ic = newBody->getVisualizationShape()->computeInertia(mass);
+
+            newBody->setMomentOfInertia(Ic(0,0), Ic(1,1), Ic(2,2),
+                                        Ic(0,1), Ic(0,2), Ic(1,2));
         }
 
         // offset
         math::Vec3 offset = getValueVec3(inertiaElement, "offset");
-        I.setOffset(offset);
-
-        newBody->setInertia(I);
+        newBody->setCenterOfMass(offset);
     }
 
     return newBody;
@@ -611,7 +609,7 @@ dynamics::RevoluteJoint*readRevoluteJoint(
     tinyxml2::XMLElement* xyzElement = axisElement->FirstChildElement("xyz");
     assert(xyzElement != NULL);
     std::string strXYZ = xyzElement->GetText();
-    math::so3 axis = toso3(strXYZ);
+    math::so3 axis = toVector3d(strXYZ);
     newRevoluteJoint->setAxis(axis);
 
     return newRevoluteJoint;
@@ -718,26 +716,6 @@ std::string toString(const Eigen::Vector3d& _v)
     return boost::lexical_cast<std::string>(rowVector3d);
 }
 
-std::string toString(const math::Vec3& _v)
-{
-    std::ostringstream ostr;
-    ostr.precision(6);
-
-    ostr << _v[0] << " " << _v[1] << " " << _v[2];
-
-    return ostr.str();
-}
-
-std::string toString(const math::so3& _v)
-{
-    std::ostringstream ostr;
-    ostr.precision(6);
-
-    ostr << _v(0) << " " << _v(1) << " " << _v(2);
-
-    return ostr.str();
-}
-
 //std::string toString(const math::SO3& _v)
 //{
 //    return boost::lexical_cast<std::string>(_v);
@@ -749,9 +727,8 @@ std::string toString(const math::SE3& _v)
     ostr.precision(6);
 
     math::Vec3 XYZ = math::iEulerXYZ(_v);
-    math::Vec3 position = _v.getPosition();
 
-    ostr << position[0] << " " << position[1] << " " << position[2];
+    ostr << _v(0,3) << " " << _v(1,3) << " " << _v(2,3);
     ostr << " ";
     ostr << XYZ[0] << " " << XYZ[1] << " " << XYZ[2];
 
@@ -857,79 +834,6 @@ Eigen::Vector3d toVector3d(const std::string& _str)
 
     return ret;
 }
-
-math::Vec3 toVec3(const std::string& _str)
-{
-    math::Vec3 ret;
-
-    std::vector<double> elements;
-    std::vector<std::string> pieces;
-    boost::split(pieces, _str, boost::is_any_of(" "));
-    assert(pieces.size() == 3);
-
-    for (int i = 0; i < pieces.size(); ++i)
-    {
-        if (pieces[i] != "")
-        {
-            try
-            {
-                elements.push_back(boost::lexical_cast<double>(pieces[i].c_str()));
-            }
-            catch(boost::bad_lexical_cast& e)
-            {
-                std::cerr << "value ["
-                          << pieces[i]
-                          << "] is not a valid double for Eigen::Vector3d["
-                          << i
-                          << "]"
-                          << std::endl;
-            }
-        }
-    }
-
-    ret[0] = elements[0];
-    ret[1] = elements[1];
-    ret[2] = elements[2];
-
-    return ret;
-}
-
-math::so3 toso3(const std::string& _str)
-{
-    math::so3 ret;
-
-    std::vector<double> elements;
-    std::vector<std::string> pieces;
-    boost::split(pieces, _str, boost::is_any_of(" "));
-    assert(pieces.size() == 3);
-
-    for (int i = 0; i < pieces.size(); ++i)
-    {
-        if (pieces[i] != "")
-        {
-            try
-            {
-                elements.push_back(boost::lexical_cast<double>(pieces[i].c_str()));
-            }
-            catch(boost::bad_lexical_cast& e)
-            {
-                std::cerr << "value ["
-                          << pieces[i]
-                          << "] is not a valid double for so3["
-                          << i
-                          << "]"
-                          << std::endl;
-            }
-        }
-    }
-
-    ret(0) = elements[0];
-    ret(1) = elements[1];
-    ret(2) = elements[2];
-
-    return ret;
-}
-
 
 //math::SO3 toSO3(const std::string& _str)
 //{
@@ -1099,7 +1003,7 @@ math::Vec3 getValueVec3(tinyxml2::XMLElement* _parentElement, const std::string&
 
     std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
 
-    return toVec3(str);
+    return toVector3d(str);
 }
 
 math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
@@ -1109,7 +1013,7 @@ math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const std::string& _
 
     std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
 
-    return toso3(str);
+    return toVector3d(str);
 }
 
 //math::SO3 getValueSO3(tinyxml2::XMLElement* _parentElement, const string& _name)

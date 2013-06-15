@@ -85,7 +85,7 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
     char c = toChar(str6);
     Eigen::Vector2d vec2 = toVector2d(str7);
     Eigen::Vector3d vec3 = toVector3d(str8);
-    math::so3 valso3 = toso3(str9);
+    math::so3 valso3 = toVector3d(str9);
     //math::SO3 valSO3 = toSO3(str10);
     math::SE3 valSE3 = toSE3(str11);
 
@@ -101,7 +101,9 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
     EXPECT_EQ(vec3, v8);
     EXPECT_EQ(valso3, v9);
     //EXPECT_EQ(valSO3, v10);
-    EXPECT_EQ(valSE3, v11);
+    for (int i = 0; i < 4; ++i)
+        for (int j = 0; j < 4; ++j)
+            EXPECT_EQ(valSE3(i,j), v11(i,j));
 }
 
 TEST(PARSER, PARSER_DART_EMPTY)

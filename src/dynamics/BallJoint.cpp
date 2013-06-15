@@ -51,8 +51,8 @@ BallJoint::BallJoint()
     mDofs.push_back(&mCoordinate[0]);
     mDofs.push_back(&mCoordinate[1]);
     mDofs.push_back(&mCoordinate[2]);
-    mS.setSize(3);
-    mdS.setSize(3);
+    mS = Eigen::Matrix<double,6,3>::Zero();
+    mdS = Eigen::Matrix<double,6,3>::Zero();
 
     // TODO: Temporary code
     mDampingCoefficient.resize(3, 0);
@@ -69,8 +69,8 @@ inline void BallJoint::_updateTransformation()
             mCoordinate[1].get_q(),
             mCoordinate[2].get_q());
     mT = mT_ParentBodyToJoint
-         * math::Exp(w)
-         / mT_ChildBodyToJoint;
+         * math::ExpAngular(w)
+         * mT_ChildBodyToJoint.inverse();
 }
 
 inline void BallJoint::_updateVelocity()
@@ -92,13 +92,18 @@ inline void BallJoint::_updateVelocity()
     else
         J = Eigen::Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
 
-    math::se3 J0(J(0,0), J(0,1), J(0,2), 0, 0, 0);
-    math::se3 J1(J(1,0), J(1,1), J(1,2), 0, 0, 0);
-    math::se3 J2(J(2,0), J(2,1), J(2,2), 0, 0, 0);
+    mS.setZero();
 
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, J0));
-    mS.setColumn(1, math::Ad(mT_ChildBodyToJoint, J1));
-    mS.setColumn(2, math::Ad(mT_ChildBodyToJoint, J2));
+    math::se3 J0;
+    J0 << J(0,0), J(0,1), J(0,2), 0, 0, 0;
+    math::se3 J1;
+    J1 << J(1,0), J(1,1), J(1,2), 0, 0, 0;
+    math::se3 J2;
+    J2 << J(2,0), J(2,1), J(2,2), 0, 0, 0;
+
+    mS.col(0) = math::AdT(mT_ChildBodyToJoint, J0);
+    mS.col(1) = math::AdT(mT_ChildBodyToJoint, J1);
+    mS.col(2) = math::AdT(mT_ChildBodyToJoint, J2);
 
     // V = S * dq
     mV = mS * get_dq();
@@ -139,13 +144,19 @@ inline void BallJoint::_updateAcceleration()
         Jdot += ((theta*st + 2*ct - 2)/t4)*ttdot*qss + ((3*st - theta*ct - 2*theta)/t5)*ttdot*qss2;
     }
 
-    math::se3 dJ0(Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0);
-    math::se3 dJ1(Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0);
-    math::se3 dJ2(Jdot(2,0), Jdot(2,1), Jdot(2,2), 0, 0, 0);
+    mdS = Eigen::Matrix<double,6,6>::Zero();
 
-    mdS.setColumn(0, math::Ad(mT_ChildBodyToJoint, dJ0));
-    mdS.setColumn(1, math::Ad(mT_ChildBodyToJoint, dJ1));
-    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ2));
+    math::se3 dJ0;
+    dJ0 << Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0;
+    math::se3 dJ1;
+    dJ1 << Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0;
+    math::se3 dJ2;
+    dJ2 << Jdot(2,0), Jdot(2,1), Jdot(2,2), 0, 0, 0;
+
+    mdS.col(0) = math::AdT(mT_ChildBodyToJoint, dJ0);
+    mdS.col(1) = math::AdT(mT_ChildBodyToJoint, dJ1);
+    mdS.col(2) = math::AdT(mT_ChildBodyToJoint, dJ2);
+
 
     // dV = dS * dq + S * ddq
     mdV = mdS * get_dq() + mS * get_ddq();
@@ -159,8 +170,8 @@ EulerXYZJoint::EulerXYZJoint()
     mDofs.push_back(&mCoordinate[0]);
     mDofs.push_back(&mCoordinate[1]);
     mDofs.push_back(&mCoordinate[2]);
-    mS.setSize(3);
-    mdS.setSize(3);
+    mS = Eigen::Matrix<double,6,3>::Zero();
+    mdS = Eigen::Matrix<double,6,3>::Zero();
 
     // TODO: Temporary code
     mDampingCoefficient.resize(3, 0);
@@ -176,12 +187,21 @@ inline void EulerXYZJoint::_updateTransformation()
     mT = mT_ParentBodyToJoint *
          math::EulerXYZ(math::Vec3(mCoordinate[0].get_q(),
                                    mCoordinate[1].get_q(),
-                                   mCoordinate[2].get_q())) /
-         mT_ChildBodyToJoint;
+                                   mCoordinate[2].get_q())) *
+         math::Inv(mT_ChildBodyToJoint);
 }
 
 inline void EulerXYZJoint::_updateVelocity()
 {
+    //--------------------------------------------------------------------------
+    // S = [    c1*c2, s2,  0
+    //       -(c1*s2), c2,  0
+    //             s1,  0,  1
+    //              0,  0,  0
+    //              0,  0,  0
+    //              0,  0,  0 ];
+    //--------------------------------------------------------------------------
+
     // S
     double q0 = mCoordinate[0].get_q();
     double q1 = mCoordinate[1].get_q();
@@ -195,19 +215,16 @@ inline void EulerXYZJoint::_updateVelocity()
     double s1 = sin(q1);
     double s2 = sin(q2);
 
-    // S = [    c1*c2, s2,  0
-    //       -(c1*s2), c2,  0
-    //             s1,  0,  1
-    //              0,  0,  0
-    //              0,  0,  0
-    //              0,  0,  0 ];
-    math::se3 J0(c1*c2, -(c1*s2),  s1, 0.0, 0.0, 0.0);
-    math::se3 J1(   s2,       c2, 0.0, 0.0, 0.0, 0.0);
-    math::se3 J2(  0.0,      0.0, 1.0, 0.0, 0.0, 0.0);
+    math::se3 J0;
+    J0 << c1*c2, -(c1*s2),  s1, 0.0, 0.0, 0.0;
+    math::se3 J1;
+    J1 << s2,       c2, 0.0, 0.0, 0.0, 0.0;
+    math::se3 J2;
+    J2 << 0.0,      0.0, 1.0, 0.0, 0.0, 0.0;
 
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, J0));
-    mS.setColumn(1, math::Ad(mT_ChildBodyToJoint, J1));
-    mS.setColumn(2, math::Ad(mT_ChildBodyToJoint, J2));
+    mS.col(0) = math::AdT(mT_ChildBodyToJoint, J0);
+    mS.col(1) = math::AdT(mT_ChildBodyToJoint, J1);
+    mS.col(2) = math::AdT(mT_ChildBodyToJoint, J2);
 
     // V = S * dq
     mV = mS * get_dq();
@@ -215,37 +232,42 @@ inline void EulerXYZJoint::_updateVelocity()
 
 inline void EulerXYZJoint::_updateAcceleration()
 {
-    // dS
-    double q0 = mCoordinate[0].get_q();
-    double q1 = mCoordinate[1].get_q();
-    double q2 = mCoordinate[2].get_q();
-
-    double dq0 = mCoordinate[0].get_dq();
-    double dq1 = mCoordinate[1].get_dq();
-    double dq2 = mCoordinate[2].get_dq();
-
-    double c0 = cos(q0);
-    double c1 = cos(q1);
-    double c2 = cos(q2);
-
-    double s0 = sin(q0);
-    double s1 = sin(q1);
-    double s2 = sin(q2);
-
+    //--------------------------------------------------------------------------
     // dS = [  -(dq1*c2*s1) - dq2*c1*s2,    dq2*c2,  0
     //         -(dq2*c1*c2) + dq1*s1*s2, -(dq2*s2),  0
     //                           dq1*c1,         0,  0
     //                                0,         0,  0
     //                                0,         0,  0
     //                                0,         0,  0 ];
+    //--------------------------------------------------------------------------
 
-    math::se3 dJ0(-(dq1*c2*s1) - dq2*c1*s2, -(dq2*c1*c2) + dq1*s1*s2, dq1*c1, 0, 0, 0);
-    math::se3 dJ1(                  dq2*c2,                -(dq2*s2),    0.0, 0.0, 0.0, 0.0);
-    math::se3 dJ2(0.0);
+    // dS
+    //double q0 = mCoordinate[0].get_q();
+    double q1 = mCoordinate[1].get_q();
+    double q2 = mCoordinate[2].get_q();
 
-    mdS.setColumn(0, math::Ad(mT_ChildBodyToJoint, dJ0));
-    mdS.setColumn(1, math::Ad(mT_ChildBodyToJoint, dJ1));
-    mdS.setColumn(2, math::Ad(mT_ChildBodyToJoint, dJ2));
+    //double dq0 = mCoordinate[0].get_dq();
+    double dq1 = mCoordinate[1].get_dq();
+    double dq2 = mCoordinate[2].get_dq();
+
+    //double c0 = cos(q0);
+    double c1 = cos(q1);
+    double c2 = cos(q2);
+
+    //double s0 = sin(q0);
+    double s1 = sin(q1);
+    double s2 = sin(q2);
+
+    math::se3 dJ0;
+    dJ0 << -(dq1*c2*s1) - dq2*c1*s2, -(dq2*c1*c2) + dq1*s1*s2, dq1*c1, 0, 0, 0;
+    math::se3 dJ1;
+    dJ1 << dq2*c2,                -(dq2*s2),    0.0, 0.0, 0.0, 0.0;
+    math::se3 dJ2;
+    dJ2.setConstant(0.0);
+
+    mdS.col(0) = math::AdT(mT_ChildBodyToJoint, dJ0);
+    mdS.col(1) = math::AdT(mT_ChildBodyToJoint, dJ1);
+    mdS.col(2) = math::AdT(mT_ChildBodyToJoint, dJ2);
 
     // dV = dS * dq + S * ddq
     mdV = mdS * get_dq() + mS * get_ddq();

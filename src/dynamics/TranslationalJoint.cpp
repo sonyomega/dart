@@ -49,8 +49,8 @@ TranslationalJoint::TranslationalJoint()
     mDofs.push_back(&mCoordinate[0]);
     mDofs.push_back(&mCoordinate[1]);
     mDofs.push_back(&mCoordinate[2]);
-    mS.setSize(3);
-    mdS.setSize(3);
+    mS = Eigen::Matrix<double,6,3>::Zero();
+    mdS = Eigen::Matrix<double,6,3>::Zero();
 
     // TODO: Temporary code
     mDampingCoefficient.resize(3, 0);
@@ -68,16 +68,15 @@ void TranslationalJoint::_updateTransformation()
             mCoordinate[2].get_q());
 
     mT = mT_ParentBodyToJoint
-         * math::Exp(math::se3(math::Axis(0.0, 0.0, 0.0), v))
+         * math::ExpLinear(v)
          * math::Inv(mT_ChildBodyToJoint);
 }
 
 void TranslationalJoint::_updateVelocity()
 {
     // S
-    mS.setColumn(0, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 1, 0, 0)));
-    mS.setColumn(1, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 0, 1, 0)));
-    mS.setColumn(2, math::Ad(mT_ChildBodyToJoint, math::se3(0, 0, 0, 0, 0, 1)));
+    mS = Eigen::Matrix<double,6,3>::Zero();
+    mS.bottomRows<3>() = Eigen::Matrix3d::Identity();
 
     // V = S * dq
     mV = mS * get_dq();

@@ -48,8 +48,8 @@ WeldJoint::WeldJoint()
     : Joint("Weld joint")
 {
     mJointType = WELD;
-    mS.setSize(0);
-    mdS.setSize(0);
+    mS = Eigen::Matrix<double,6,0>::Zero();
+    mdS = Eigen::Matrix<double,6,0>::Zero();
 }
 
 WeldJoint::~WeldJoint()
@@ -59,7 +59,7 @@ WeldJoint::~WeldJoint()
 void WeldJoint::_updateTransformation()
 {
     // T
-    mT = mT_ParentBodyToJoint / mT_ChildBodyToJoint;
+    mT = mT_ParentBodyToJoint*math::Inv(mT_ChildBodyToJoint);
 }
 
 void WeldJoint::_updateVelocity()

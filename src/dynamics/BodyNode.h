@@ -143,10 +143,10 @@ public:
     void setCollideState(bool _c) { mCollidable = _c; }
 
     /// @brief
-    void setMass(double _mass) { mI.setMass(_mass); }
+    void setMass(double _mass);
 
     /// @brief
-    double getMass() const { return mI.getMass(); }
+    double getMass() const;
 
     /// @brief
     DEPRECATED void setLocalInertia(double _Ixx, double _Iyy, double _Izz,
@@ -171,12 +171,12 @@ public:
     /// @brief
     DEPRECATED void setLocalCOM(const Eigen::Vector3d& _off)
     { setCenterOfMass(math::Vec3(_off[0], _off[1], _off[2])); }
-    void setCenterOfMass(const math::Vec3& _com)
-    { mI.setOffset(_com); }
+    void setCenterOfMass(const math::Vec3& _com);
+
 
     /// @brief
     DEPRECATED Eigen::Vector3d getLocalCOM() const { return getCenterOfMass(); }
-    Eigen::Vector3d getCenterOfMass() const { return mI.getOffset().getEigenVector(); }
+    Eigen::Vector3d getCenterOfMass() const;
 
     //DEPRECATED Eigen::Vector3d getWorldCOM() { return evalWorldPos(mCOMLocal); }
 
@@ -389,7 +389,7 @@ public:
     const math::dse3& getBodyForce() const { return mF; }
 
     /// @brief
-    double getKineticEnergy() const { return 0.5 * math::Inner(mV, mI * mV); }
+    double getKineticEnergy() const { return 0.5 * mV.dot(mI * mV); }
 
     // TODO: Not implemented.
     /// @brief
@@ -489,6 +489,16 @@ protected:
 
     /// @brief Generalized inertia.
     math::Inertia mI;
+
+    /// @brief Generalized inertia at center of mass.
+    Eigen::Vector3d mCenterOfMass;
+    double mIxx;
+    double mIyy;
+    double mIzz;
+    double mIxy;
+    double mIxz;
+    double mIyz;
+    double mMass;
 
     /// @brief
     //std::vector<Shape*> mVizShapes;
@@ -606,6 +616,7 @@ protected:
     Eigen::MatrixXd mM;
 
 private:
+    void _updateGeralizedInertia();
 
 };
 

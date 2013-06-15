@@ -128,7 +128,7 @@ void Joint::updateKinematics(bool _firstDerivative,
 void Joint::applyGLTransform(renderer::RenderInterface* _ri)
 {
     Eigen::Affine3d affine;
-    affine.matrix() = mT.getEigenMatrix();
+    affine.matrix() = mT.matrix();
     _ri->transform(affine);
 }
 
