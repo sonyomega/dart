@@ -275,6 +275,14 @@ public:
     void computeHybridDynamicsFS(const Eigen::Vector3d& _gravity,
                                  bool _equationsOfMotion = true);
 
+    /// @brief
+    void computeImpuseBasedForwardDynamics(const Eigen::Vector3d& _gravity,
+                                           bool _equationsOfMotion = true);
+
+    /// @brief
+    void computeImpuseBasedHybridDynamics(const Eigen::Vector3d& _gravity,
+                                           bool _equationsOfMotion = true);
+
     /// @brief (q, dq) --> M, C, G
     void computeEquationsOfMotionID(const Eigen::Vector3d& _gravity);
 

@@ -642,9 +642,6 @@ void BodyNode::updateBiasForce(const Eigen::Vector3d& _gravity)
         mB += math::dAdInvT((*itrJoint)->getLocalTransformation(),
                                     (*itrJoint)->getChildBody()->mBeta);
     }
-
-    for (int i = 0; i < 6; ++i)
-        assert(mB(i) == mB(i));
 }
 
 void BodyNode::updatePsi()
@@ -653,37 +650,15 @@ void BodyNode::updatePsi()
     assert(mParentJoint != NULL);
 
     int n = mParentJoint->getDOF();
-    const math::Jacobian& S = mParentJoint->mS;
     mAI_S = Eigen::MatrixXd::Zero(6, n);
     mPsi = Eigen::MatrixXd::Zero(n, n);
 
-    mAI_S = mAI * S;
-
-    Eigen::MatrixXd Psi = S.transpose() * mAI_S;
-
-    Eigen::MatrixXd PsiInv = Psi.inverse();
-
-//    if (Psi.determinant() < 1e-18)
-//        return;
-
-//    for (int i = 0; i < n; ++i)
-//    {
-//        for (int j = 0; j < n; ++j)
-//        {
-//            if (PsiInv(i,j) != PsiInv(i,j))
-//                return;
-//        }
-//    }
-
-    mPsi = PsiInv;
+    mAI_S = mAI * mParentJoint->mS;
+    mPsi = (mParentJoint->mS.transpose() * mAI_S).inverse();
 }
 
 void BodyNode::updatePi()
 {
-    // TODO:
-    //mPi = -(mAI_S * mPsi * mAI_S.transpose());
-    //mPi += mAI;
-
     mPi = mAI - mAI_S*mPsi*mAI_S.transpose();
 }
 
@@ -691,40 +666,7 @@ void BodyNode::updateBeta()
 {
     // TODO: Optimization later...
     //       Mystery code is here...
-    int n = mParentJoint->getDOF();
-//    const math::Jacobian& S = mParentJoint->mS;
-//    mPsi;
-//    mParentJoint->get_tau();
-//    Eigen::VectorXd tmp = Eigen::VectorXd::Zero(n);
-//    Eigen::VectorXd Psi_tau = Eigen::VectorXd::Zero(n);
-
-//    for (int i = 0; i < n; ++i)
-//    {
-//        tmp[i] = math::Inner(S[i], mAI * mEta + mB);
-//    }
-//    Psi_tau = mPsi*(mParentJoint->get_tau() - tmp);
-
-//    math::se3 newS;
-
-//    for (int i = 0; i < n; ++i)
-//    {
-//        newS += S[i]*Psi_tau[i];
-//    }
-
-//    mBeta = mB + mAI * (mEta + newS);
-
-
-    Eigen::VectorXd tau = mParentJoint->get_tau();
-    Eigen::MatrixXd S = mParentJoint->mS;
-    Eigen::MatrixXd AI = mAI;
-    Eigen::VectorXd eta = mEta;
-    Eigen::VectorXd B = mB;
-    Eigen::MatrixXd Psi = mPsi;
-
-    mBeta = B + AI*(eta + S*Psi*(tau - S.transpose()*(AI*eta + B)));
-
-    for (int i = 0; i < 6; ++i)
-        assert(mBeta(i) == mBeta(i));
+    mBeta.noalias() = mB + mAI*(mEta + mParentJoint->mS*mPsi*(mParentJoint->get_tau() - mParentJoint->mS.transpose()*(mAI*mEta + mB)));
 }
 
 void BodyNode::update_ddq()

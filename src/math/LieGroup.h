@@ -68,8 +68,8 @@ typedef Eigen::Isometry3d SE3;
 typedef Eigen::Vector6d se3;
 typedef Eigen::Vector6d dse3;
 typedef Eigen::Matrix6d Inertia;
-typedef Eigen::Matrix6d AInertia;
-typedef Eigen::MatrixXd Jacobian;
+//typedef Eigen::Matrix6d Inertia;
+typedef Eigen::Matrix<double,6,Eigen::Dynamic> Jacobian;
 
 /// @brief Compute geometric distance on SE(3) manifold.
 /// Norm(Log(Inv(T1) * T2)).
@@ -203,7 +203,7 @@ SE3 Quaternion2SE3(double w, double x, double y, double z);
 //------------------------------------------------------------------------------
 
 /// @brief The Kronecker product
-AInertia KroneckerProduct(const dse3& , const dse3& );
+Inertia KroneckerProduct(const dse3& , const dse3& );
 
 //------------------------------------------------------------------------------
 
@@ -274,8 +274,9 @@ se3 ad(const se3& X, const se3& Y);
 /// , where @f$F=(m,f)@in se^{@,*}(3), @quad V=(w,v)@in se(3) @f$.
 dse3 dad(const se3& V, const dse3& F);
 
-AInertia Transform(const SE3& T, const AInertia& AI);
+Inertia Transform(const SE3& T, const Inertia& AI);
 
+#include "math/LieGroupinl.h"
 
 } // namespace math
 } // namespace dart

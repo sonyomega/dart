@@ -572,9 +572,9 @@ protected:
     math::dse3 mF;
 
     /// @brief Articulated inertia
-    math::AInertia mAI;
+    math::Inertia mAI;
 
-    math::AInertia mPi;
+    math::Inertia mPi;
 
     /// @brief Bias force
     math::dse3 mB;

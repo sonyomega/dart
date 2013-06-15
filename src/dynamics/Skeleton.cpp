@@ -281,7 +281,8 @@ void Skeleton::computeForwardDynamicsID(
     int n = getNumDofs();
 
     // skip immobile objects in forward simulation
-    if (getImmobileState() == true || n == 0) {
+    if (getImmobileState() == true || n == 0)
+    {
         return;
     }
 
@@ -297,7 +298,8 @@ void Skeleton::computeForwardDynamicsID(
 
     // Calcualtion mass matrix, M
     mM = Eigen::MatrixXd::Zero(n,n);
-    for (int i = 0; i < getNumNodes(); i++) {
+    for (int i = 0; i < getNumNodes(); i++)
+    {
         BodyNode *nodei = static_cast<BodyNode*>(getNode(i));
         nodei->updateMassMatrix();
         nodei->aggregateMass(mM);
@@ -318,9 +320,6 @@ void Skeleton::computeForwardDynamicsID(
                                + this->getConstraintForces() );
 
     this->set_ddq(qddot);
-
-//    Eigen::VectorXd new_ddq = mMInv * (tau_old - b);
-//    set_ddq(new_ddq);
 }
 
 void Skeleton::computeForwardDynamicsID2(
@@ -329,7 +328,8 @@ void Skeleton::computeForwardDynamicsID2(
     int n = getNumDofs();
 
     // skip immobile objects in forward simulation
-    if (getImmobileState() == true || n == 0) {
+    if (getImmobileState() == true || n == 0)
+    {
         return;
     }
 
@@ -348,7 +348,8 @@ void Skeleton::computeForwardDynamicsID2(
     mCg = b;
 
     // Calcualtion M column by column
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
         Eigen::VectorXd basis = Eigen::VectorXd::Zero(n);
         basis(i) = 1;
         set_ddq(basis);
@@ -370,9 +371,6 @@ void Skeleton::computeForwardDynamicsID2(
     mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
 
     this->set_ddq(qddot);
-
-//    Eigen::VectorXd new_ddq = mMInv * (tau_old - b);
-//    set_ddq(new_ddq);
 }
 
 void Skeleton::computeForwardDynamicsFS(
@@ -422,6 +420,18 @@ void Skeleton::computeForwardDynamicsFS(
 void Skeleton::computeHybridDynamicsFS(
         const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
 {
+}
+
+void Skeleton::computeImpuseBasedForwardDynamics(const Eigen::Vector3d& _gravity,
+                                                 bool _equationsOfMotion)
+{
+
+}
+
+void Skeleton::computeImpuseBasedHybridDynamics(const Eigen::Vector3d& _gravity,
+                                                bool _equationsOfMotion)
+{
+
 }
 
 void Skeleton::computeEquationsOfMotionID(
