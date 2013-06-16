@@ -21,7 +21,7 @@
 
 //	// Create the world
 //	const double l1 = 1.5, l2 = 1.0;
-//	SkeletonDynamics* robot = createTwoLinkRobot(Vector3d(0.3, 0.3, l1), DOF_YAW, Vector3d(0.3, 0.3, l2),
+//	Skeleton* robot = createTwoLinkRobot(Vector3d(0.3, 0.3, l1), DOF_YAW, Vector3d(0.3, 0.3, l2),
 //		DOF_ROLL);
 
 //	// Set the test cases with the joint values and the expected end-effector positions
@@ -51,7 +51,7 @@
 
 //	// Create the world
 //	const double link1 = 1.5, link2 = 1.0;
-//	SkeletonDynamics* robot = createTwoLinkRobot(Vector3d(0.3, 0.3, link1), DOF_ROLL, Vector3d(0.3, 0.3, link2),
+//	Skeleton* robot = createTwoLinkRobot(Vector3d(0.3, 0.3, link1), DOF_ROLL, Vector3d(0.3, 0.3, link2),
 //		DOF_ROLL);
 
 //	// Set the test cases with the joint values and the expected end-effector positions

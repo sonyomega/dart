@@ -361,7 +361,7 @@ protected:
     Eigen::VectorXd mFc;
 
     /// @brief
-    //std::vector<BodyNodeDynamics*> mDynamicsBodies;
+    //std::vector<BodyNode*> mDynamicsBodies;
 
     SkeletonGraph* mGraph;
 

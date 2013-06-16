@@ -1,3 +1,5 @@
+#include "constraint/ConstraintDynamics.h"
+
 #include "utils/Timer.h"
 #include "utils/UtilsCode.h"
 #include "math/UtilsMath.h"
@@ -7,7 +9,6 @@
 #include "dynamics/BodyNode.h"
 #include "dynamics/Dof.h"
 #include "dynamics/Skeleton.h"
-#include "constraint/ConstraintDynamics.h"
 
 using namespace Eigen;
 using namespace dart;
@@ -469,7 +470,7 @@ MatrixXd ConstraintDynamics::getJacobian(dynamics::BodyNode* node, const Vector3
     MatrixXd Jt = MatrixXd::Zero(nDofs, 3);
 
     MatrixXd JtBody
-            = node->getJacobianWorldAtPoint_LinearPartOnly(math::Vec3(p)).transpose();
+            = node->getJacobianWorldAtPoint_LinearPartOnly(p).transpose();
 
     for(int dofIndex = 0; dofIndex < node->getNumDependentDofs(); dofIndex++)
     {

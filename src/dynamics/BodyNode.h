@@ -276,8 +276,7 @@ public:
 
     /// @brief Transformation from the local coordinates of this body node to
     /// the world coordinates.
-//    DEPRECATED Eigen::Matrix4d getWorldTransform() const
-//    { return mW.getMatrix(); }
+    DEPRECATED const math::SE3& getWorldTransform() const { return mW; }
     const math::SE3& getTransformationWorld() const { return mW; }
 
     /// @brief Transformation from the world coordinates to the local
@@ -366,7 +365,7 @@ public:
     /// @brief Clean up structures that store external forces: mContacts, mFext,
     /// mExtForceBody and mExtTorqueBody.
     ///
-    /// Called from @SkeletonDynamics::clearExternalForces.
+    /// Called from @Skeleton::clearExternalForces.
     void clearExternalForces();
 
     /// @brief

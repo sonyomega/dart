@@ -35,78 +35,74 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DYNAMICS_CONSTRAINT_DYNAMICS_H
-#define DYNAMICS_CONSTRAINT_DYNAMICS_H
+#ifndef DART_CONSTRAINT_CONTACT_DYNAMICS_H
+#define DART_CONSTRAINT_CONTACT_DYNAMICS_H
 
 #include <vector>
 #include <Eigen/Dense>
-
-#include "utils/Deprecated.h"
-#include "constraint/Constraint.h"
-#include "collision/CollisionDetector.h"
 
 namespace dart {
 
 namespace dynamics {
 class BodyNode;
 class Skeleton;
-class BodyNode;
 } // namespace dynamics
 
+namespace collision {
+class CollisionDetector;
+} // namespace collision
+
+namespace lcpsolver {
+class LCPSolver;
+} //namespace lcpsolver
+
+/*
+  // Sample Usage
+  dynamics::ContactDynamics contacts(skels, dt);
+  contacts.applyContactForces();
+ */
 namespace constraint {
 
-class ConstraintDynamics {
+class ContactDynamics {
 public:
-    ConstraintDynamics(const std::vector<dynamics::Skeleton*>& _skels, double _dt, double _mu = 1.0, int _d = 4);
-    virtual ~ConstraintDynamics();
-
+    ContactDynamics(const std::vector<dynamics::Skeleton*>& _skels, double _dt, double _mu = 1.0, int _d = 4);
+    virtual ~ContactDynamics();
+    inline void setTimeStep(double _timeStep) { mDt = _timeStep; }
+    void applyContactForces();
     void reset();
-    void computeConstraintForces();
-    void addConstraint(Constraint *_constr);
-    void deleteConstraint(int _index);
     void addSkeleton(dynamics::Skeleton* _newSkel);
-    void setTimeStep(double _timeStep) { mDt = _timeStep; }
-    double getTimeStep() const { return mDt; }
-
-    inline Eigen::VectorXd getTotalConstraintForce(int _skelIndex) const {
-        return mTotalConstrForces[_skelIndex];
-    }
-
-    inline Eigen::VectorXd getContactForce(int _skelIndex) const {
-        return mContactForces[_skelIndex];
-    }
-
-    inline collision::CollisionDetector* getCollisionChecker() const {
-        return mCollisionChecker;
-    }
-
-    inline int getNumContacts() const {
-        return mCollisionChecker->getNumContacts();
-    }
-
-    inline Constraint* getConstraint(int _index) const { return mConstraints[_index]; }
+    inline Eigen::VectorXd getConstraintForce(int _skelIndex) const { return mConstrForces[_skelIndex]; }
+    inline collision::CollisionDetector* getCollisionChecker() const {return mCollisionChecker; }
+    int getNumContacts() const;
 
 
 private:
     void initialize();
     void destroy();
 
-    void computeConstraintWithoutContact();
+    void updateTauStar();
+
     void fillMatrices();
     bool solve();
     void applySolution();
 
-    void updateMassMat();
-    void updateTauStar();
-    void updateNBMatrices();
+    inline int getNumSkels() const { return mSkels.size(); }
+    inline int getNumTotalDofs() const { return mIndices.back(); }
+    inline int getNumContactDirections() const { return mNumDir; }
+
     Eigen::MatrixXd getJacobian(dynamics::BodyNode* node, const Eigen::Vector3d& p);
+
+    // Helper functions to compute all of the matrices
+    // Notation is similar to that used in derivation:
+    // Mqddot + Cqdot + kq = tau + (J^T)(f_n)N + (J^T)D(f_d) -> Mqdot = tau* + N(f_n) + B(f_d)
+    //        inline Eigen::MatrixXd getMassMatrix() const { return mM; } // M matrix
+    //        inline Eigen::VectorXd getTauStarVector() const { return mTauStar; } // T* vector (not T)
+    //        void updateNormalMatrix(); // N matrix
+    //        void updateBasisMatrix() ; // B matrix
+    void updateNBMatrices();
     Eigen::MatrixXd getTangentBasisMatrix(const Eigen::Vector3d& p, const Eigen::Vector3d& n) ; // gets a matrix of tangent dirs.
     Eigen::MatrixXd getContactMatrix() const; // E matrix
     Eigen::MatrixXd getMuMatrix() const; // mu matrix
-    void updateConstraintTerms();
-
-    inline int getTotalNumDofs() const { return mIndices[mIndices.size() - 1]; }
-
 
     std::vector<dynamics::Skeleton*> mSkels;
     std::vector<int> mBodyIndexToSkelIndex;
@@ -117,7 +113,6 @@ private:
     int mNumDir; // number of basis directions
 
     // Cached (aggregated) mass/tau matrices
-    Eigen::MatrixXd mMInv;
     Eigen::VectorXd mTauStar;
     Eigen::MatrixXd mN;
     Eigen::MatrixXd mB;
@@ -126,26 +121,11 @@ private:
     Eigen::MatrixXd mA;
     Eigen::VectorXd mQBar;
     Eigen::VectorXd mX;
-
-    std::vector<Eigen::VectorXd> mContactForces;
-    std::vector<Eigen::VectorXd> mTotalConstrForces; // solved constraint force in generalized coordinates; mTotalConstrForces[i] is the constraint force for the ith skeleton
-    // constraints
-    std::vector<Constraint*> mConstraints;
-    int mTotalRows;
-
-    Eigen::MatrixXd mZ; // N x N, symmetric (only lower triangle filled)
-    Eigen::VectorXd mTauHat; // M x 1
-    Eigen::MatrixXd mGInv; // M x M, symmetric (only lower triangle filled)
-    std::vector<Eigen::MatrixXd> mJMInv; // M x N
-    std::vector<Eigen::MatrixXd> mJ; // M x N
-    std::vector<Eigen::MatrixXd> mPreJ; // M x N
-    Eigen::VectorXd mC; // M * 1
-    Eigen::VectorXd mCDot; // M * 1
-    std::vector<int> mLimitingDofIndex; // if dof i hits upper limit, we store this information as mLimitingDofIndex.push_back(i+1), if dof i hits lower limite, mLimitingDofIndex.push_back(-(i+1));
+    std::vector<Eigen::VectorXd> mConstrForces; // solved constraint force in generalized coordinates; mConstrForces[i] is the constraint force for the ith skeleton
 };
 
-} // namespace constraint
-} // namepsace dart
+} // namespace dynamics
+} // namespace dart
 
-#endif // #ifndef DYNAMICS_CONSTRAINT_DYNAMICS_H
+#endif // #ifndef DART_CONSTRAINT_CONTACT_DYNAMICS_H
 

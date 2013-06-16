@@ -35,7 +35,7 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <gtest/gtest.h>
-//#include "dynamics/BodyNodeDynamics.h"
+//#include "dynamics/BodyNode.h"
 //#include "dynamics/Skeleton.h"
 //#include "dynamics/FileInfoSkel.hpp"
 //#include "dynamics/FileInfoDof.h"
@@ -47,7 +47,7 @@
 //using namespace std;
 
 ///* ********************************************************************************************* */
-//dart::dynamics::SkeletonDynamics* prepareSkeleton( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
+//dart::dynamics::Skeleton* prepareSkeleton( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
@@ -56,11 +56,11 @@
 
 //    // load skeleton
 //    const char* skelfilename = DART_DATA_PATH"skel/Yuting.vsk";
-//    FileInfoSkel<SkeletonDynamics>* skelFile = new FileInfoSkel<SkeletonDynamics>;
+//    FileInfoSkel<Skeleton>* skelFile = new FileInfoSkel<Skeleton>;
 //    bool loadModelResult = skelFile->loadFile(skelfilename);
 //    assert(loadModelResult);
 
-//    SkeletonDynamics *skelDyn = static_cast<SkeletonDynamics*>(skelFile->getSkel());
+//    Skeleton *skelDyn = static_cast<Skeleton*>(skelFile->getSkel());
 //    assert(skelDyn != NULL);
 
 //    // generate a random state
@@ -74,7 +74,7 @@
 //    return skelDyn; }
 
 ///* ********************************************************************************************* */
-//dart::dynamics::SkeletonDynamics* prepareSkeletonChain( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
+//dart::dynamics::Skeleton* prepareSkeletonChain( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
 //	using namespace std;
 //	using namespace Eigen;
 //	using namespace dart;
@@ -83,11 +83,11 @@
 
 //	// load skeleton
 //	const char* skelfilename = DART_DATA_PATH"skel/chainwhipa.skel";
-//	FileInfoSkel<SkeletonDynamics>* skelFile = new FileInfoSkel<SkeletonDynamics>;
+//	FileInfoSkel<Skeleton>* skelFile = new FileInfoSkel<Skeleton>;
 //	bool loadModelResult = skelFile->loadFile(skelfilename);
 //	assert(loadModelResult);
 
-//	SkeletonDynamics *skelDyn = static_cast<SkeletonDynamics*>(skelFile->getSkel());
+//	Skeleton *skelDyn = static_cast<Skeleton*>(skelFile->getSkel());
 //	assert(skelDyn != NULL);
 
 //	// generate a random state
@@ -99,28 +99,28 @@
 //}
 
 ///* ********************************************************************************************* */
-//void addExternalForces(dart::dynamics::SkeletonDynamics* skelDyn) {
+//void addExternalForces(dart::dynamics::Skeleton* skelDyn) {
 //    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
 //    using namespace dynamics;
 
-//    ((BodyNodeDynamics*)skelDyn->getNode(7))->addExtForce(Vector3d(0.1,0.2,0.3), Vector3d(30,40,50), true, false );
-//    ((BodyNodeDynamics*)skelDyn->getNode(7))->addExtForce(Vector3d(0.5,0.5,0.5), -Vector3d(20,4,5), true, false );
-//    ((BodyNodeDynamics*)skelDyn->getNode(13))->addExtForce(Vector3d(0,0,0), Vector3d(30,20,10), true, false );
-//    ((BodyNodeDynamics*)skelDyn->getNode(2))->addExtTorque(Vector3d(30,20,10), false );
+//    ((BodyNode*)skelDyn->getNode(7))->addExtForce(Vector3d(0.1,0.2,0.3), Vector3d(30,40,50), true, false );
+//    ((BodyNode*)skelDyn->getNode(7))->addExtForce(Vector3d(0.5,0.5,0.5), -Vector3d(20,4,5), true, false );
+//    ((BodyNode*)skelDyn->getNode(13))->addExtForce(Vector3d(0,0,0), Vector3d(30,20,10), true, false );
+//    ((BodyNode*)skelDyn->getNode(2))->addExtTorque(Vector3d(30,20,10), false );
 //}
 
 ///* ********************************************************************************************* */
-//void addExternalForcesChain(dart::dynamics::SkeletonDynamics* skelDyn) {
+//void addExternalForcesChain(dart::dynamics::Skeleton* skelDyn) {
 //	using namespace std;
 //	using namespace Eigen;
 //	using namespace dart;
 //	using namespace dynamics;
 //	using namespace dynamics;
 
-//	((BodyNodeDynamics*)skelDyn->getNode(2))->addExtForce(skelDyn->getNode(2)->getLocalCOM(), Vector3d(0,19.6,0), true, false );
+//	((BodyNode*)skelDyn->getNode(2))->addExtForce(skelDyn->getNode(2)->getLocalCOM(), Vector3d(0,19.6,0), true, false );
 //}
 
 ///* ********************************************************************************************* */
@@ -135,13 +135,13 @@
 //    Vector3d gravity(0.0, -9.81, 0.0);
    
 //    VectorXd q, qdot;
-//    SkeletonDynamics *skelDyn = prepareSkeleton(q,qdot);
+//    Skeleton *skelDyn = prepareSkeleton(q,qdot);
 //    skelDyn->setPose(q, false, false);
 
 //    // test the velocities computed by the two methods
 //    skelDyn->computeInverseDynamicsLinear(gravity, &qdot);
 //    for(int i=0; i<skelDyn->getNumNodes(); i++){
-//        BodyNodeDynamics *nodei = static_cast<BodyNodeDynamics*>(skelDyn->getNode(i));
+//        BodyNode *nodei = static_cast<BodyNode*>(skelDyn->getNode(i));
 //        EXPECT_TRUE(nodei != NULL);
 //        // compute velocities using regular method
 //        nodei->updateTransform();
@@ -193,14 +193,14 @@
 //    double TOLERANCE_APPROX = 1.1e-3;
     
 //    VectorXd q, qdot;
-//    SkeletonDynamics* skelDyn = prepareSkeleton(q, qdot);
+//    Skeleton* skelDyn = prepareSkeleton(q, qdot);
 //    skelDyn->setPose(q, false, false);
     
 //    double dt = 1.0e-6;
 //    VectorXd origq = q;
 //    VectorXd newq = q + qdot*dt;
 //    for(int i=0; i<skelDyn->getNumNodes(); i++){
-//        BodyNodeDynamics *nodei = static_cast<BodyNodeDynamics*>(skelDyn->getNode(i));
+//        BodyNode *nodei = static_cast<BodyNode*>(skelDyn->getNode(i));
 //        EXPECT_TRUE(nodei != NULL);
 
 //        skelDyn->setPose(origq);
@@ -248,7 +248,7 @@
 //    Vector3d gravity(0.0, -9.81, 0.0);
 
 //    VectorXd q, qdot;
-//    SkeletonDynamics* skelDyn = prepareSkeleton(q, qdot);
+//    Skeleton* skelDyn = prepareSkeleton(q, qdot);
 //    skelDyn->setPose(q, false, false);
 
 //    // test/compare the dynamics result for both methods
@@ -272,7 +272,7 @@
 //    Vector3d gravity(0.0, -9.81, 0.0);
 
 //    VectorXd q, qdot;
-//    SkeletonDynamics* skelDyn = prepareSkeleton(q, qdot);
+//    Skeleton* skelDyn = prepareSkeleton(q, qdot);
 //    skelDyn->setPose(q, false, false);
 
 //    // test/compare the dynamics result for both methods
@@ -302,7 +302,7 @@
 //    Vector3d gravity(0.0, -9.81, 0.0);
 
 //    VectorXd q, qdot;
-//    SkeletonDynamics* skelDyn = prepareSkeleton(q, qdot);
+//    Skeleton* skelDyn = prepareSkeleton(q, qdot);
 //    skelDyn->setPose(q, true, true);
     
 //    addExternalForces(skelDyn); // adding external force may require transformations to be computed to convert points and forces to local coordinates
@@ -332,7 +332,7 @@
 //    Vector3d gravity(0.0, -9.81, 0.0);
 
 //    VectorXd q, qdot;
-//    SkeletonDynamics* skelDyn = prepareSkeleton(q, qdot);
+//    Skeleton* skelDyn = prepareSkeleton(q, qdot);
 //    skelDyn->setPose(q, true, true);
     
 //    addExternalForces(skelDyn);
@@ -366,7 +366,7 @@
 //	Vector3d gravity(0.0, -9.8, 0.0);
 
 //	VectorXd q, qdot;
-//	SkeletonDynamics* skelDyn = prepareSkeletonChain(q, qdot);
+//	Skeleton* skelDyn = prepareSkeletonChain(q, qdot);
 //	skelDyn->setPose(q, true, true);
 
 //	addExternalForcesChain(skelDyn);
