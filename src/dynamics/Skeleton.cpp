@@ -533,5 +533,37 @@ math::dse3 Skeleton::getMomentumCOM()
     return M;
 }
 
+Eigen::VectorXd Skeleton::getConfig(std::vector<int> _id)
+{
+    Eigen::VectorXd dofs(_id.size());
+
+    for(unsigned int i = 0; i < _id.size(); i++)
+        dofs[i] = mDofs[_id[i]]->get_q();
+
+    return dofs;
+}
+
+void Skeleton::setConfig(std::vector<int> _id, Eigen::VectorXd _vals,
+                         bool _calcTrans, bool _calcDeriv)
+{
+    for( unsigned int i = 0; i < _id.size(); i++ )
+        mDofs[_id[i]]->set_q(_vals(i));
+
+    // TODO: Only do the necessary updates
+    if (_calcTrans)
+        for (int i = 0; i < getNumNodes(); i++)
+            mBodies.at(i)->updateTransformation();
+
+    if (_calcDeriv)
+    {
+        for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
+             itrJoint != mJoints.end(); ++itrJoint)
+            (*itrJoint)->updateKinematics(true, false);
+
+        for (int i = 0; i < getNumNodes(); i++)
+            mBodies.at(i)->updateVelocity();
+    }
+}
+
 } // namespace dynamics
 } // namespace dart

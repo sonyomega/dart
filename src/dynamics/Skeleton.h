@@ -153,6 +153,11 @@ public:
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)
     //--------------------------------------------------------------------------
+    Eigen::VectorXd getConfig(std::vector<int> _id);
+
+    void setConfig(std::vector<int> _id, Eigen::VectorXd _vals,
+                   bool _calcTrans = true, bool _calcDeriv = true);
+
     /// @brief
     /// @todo Use set_q(const Eigen::VectorXd& _state) instead.
     DEPRECATED void setPose(const Eigen::VectorXd& _pose,
