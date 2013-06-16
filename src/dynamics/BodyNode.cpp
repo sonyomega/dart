@@ -94,6 +94,7 @@ void BodyNode::setMass(double _mass)
 {
     assert(_mass >= 0.0 && "Negative mass is not proper.");
     mMass = _mass;
+    _updateGeralizedInertia();
 }
 
 double BodyNode::getMass() const
