@@ -631,52 +631,52 @@ void BodyNode::updateBiasForce(const Eigen::Vector3d& _gravity)
     else
         mFgravity.setZero();
 
-    mB = -math::dad(mV, mI*mV);
-    mB -= mFext;
-    mB -= mFgravity;
+    mB = -math::dad(mV, mI*mV) - mFext - mFgravity;
 
     for (std::vector<Joint*>::iterator itrJoint = mJointsChild.begin();
          itrJoint != mJointsChild.end();
          ++itrJoint)
     {
         mB += math::dAdInvT((*itrJoint)->getLocalTransformation(),
-                                    (*itrJoint)->getChildBody()->mBeta);
+                            (*itrJoint)->getChildBody()->mBeta);
     }
 }
 
 void BodyNode::updatePsi()
 {
-    // TODO: Need code optimization
     assert(mParentJoint != NULL);
 
     int n = mParentJoint->getDOF();
     mAI_S = Eigen::MatrixXd::Zero(6, n);
-    mPsi = Eigen::MatrixXd::Zero(n, n);
+    //mPsi = Eigen::MatrixXd::Zero(n, n);
 
-    mAI_S = mAI * mParentJoint->mS;
+    mAI_S.noalias() = mAI * mParentJoint->mS;
     mPsi = (mParentJoint->mS.transpose() * mAI_S).inverse();
 }
 
 void BodyNode::updatePi()
 {
-    mPi = mAI - mAI_S*mPsi*mAI_S.transpose();
+    mPi            = mAI;
+    mPi.noalias() -= mAI_S*mPsi*mAI_S.transpose();
 }
 
 void BodyNode::updateBeta()
 {
-    // TODO: Optimization later...
-    //       Mystery code is here...
-    mBeta.noalias() = mB + mAI*(mEta + mParentJoint->mS*mPsi*(mParentJoint->get_tau() - mParentJoint->mS.transpose()*(mAI*mEta + mB)));
+    mBeta            = mB;
+    mBeta.noalias() += mAI*(mEta +
+                  mParentJoint->mS*mPsi*(
+                      mParentJoint->get_tau() -
+                      mParentJoint->mS.transpose()*(mAI*mEta + mB)
+                      )
+                  );
 }
 
 void BodyNode::update_ddq()
 {
-    int n = mParentJoint->getDOF();
-    const math::Jacobian& S = mParentJoint->mS;
-    Eigen::VectorXd tmp2 = Eigen::VectorXd::Zero(n);
     math::se3 tmp;
 
-    if (mParentBody) {
+    if (mParentBody)
+    {
         tmp = math::AdInvT(mParentJoint->getLocalTransformation(),
                                   mParentBody->getAcceleration() + mEta);
     }
@@ -685,18 +685,15 @@ void BodyNode::update_ddq()
         tmp = math::AdInvT(mParentJoint->getLocalTransformation(), mEta);
     }
 
-    for (int i = 0; i < n; ++i)
-    {
-        tmp2[i] = S.col(i).dot(mAI*tmp + mB);
-    }
-
-    Eigen::VectorXd ddq = mPsi * (mParentJoint->get_tau() - tmp2);
+    Eigen::VectorXd ddq = mPsi*(mParentJoint->get_tau() -
+                                mParentJoint->mS.transpose()*(mAI*tmp + mB));
     mParentJoint->set_ddq(ddq);
 }
 
 void BodyNode::update_F_fs()
 {
-    mF = mAI*mdV + mB;
+    mF.noalias() = mAI*mdV;
+    mF          += mB;
 }
 
 void BodyNode::updateDampingForce()
@@ -706,7 +703,9 @@ void BodyNode::updateDampingForce()
 
 void BodyNode::updateMassMatrix()
 {
-    mM.triangularView<Eigen::Upper>() = mBodyJacobian.transpose() * mI * mBodyJacobian;
+    mM.triangularView<Eigen::Upper>() = mBodyJacobian.transpose() *
+                                        mI *
+                                        mBodyJacobian;
     mM.triangularView<Eigen::StrictlyLower>() = mM.transpose();
 }
 
@@ -739,12 +738,12 @@ void BodyNode::_updateGeralizedInertia()
     double mr1r2 = mr1 * mCenterOfMass[2];
     double mr2r0 = mr2 * mCenterOfMass[0];
 
-    mI(0,0) =  mIxx + mr1r1 + mr2r2;   mI(0,1) =  mIxy - mr0r1;   mI(0,2) =  mIxz - mr2r0;   assert(mI(0,3) == 0.0);   mI(0,4) = -mr2;   mI(0,5) =  mr1;
-    mI(1,1) =  mIyy + mr2r2 + mr0r0;   mI(1,2) =  mIyz - mr1r2;   mI(1,3) =  mr2;            assert(mI(1,4) == 0.0);   mI(1,5) = -mr0;
-    mI(2,2) =  mIzz + mr0r0 + mr1r1;   mI(2,3) = -mr1;            mI(2,4) =  mr0;            assert(mI(2,5) == 0.0);
-    mI(3,3) =  mMass;                  assert(mI(3,4) == 0.0);    assert(mI(3,5) == 0.0);
-    mI(4,4) =  mMass;                  assert(mI(4,5) == 0.0);
-    mI(5,5) =  mMass;
+    mI(0,0) =  mIxx + mr1r1 + mr2r2;   mI(0,1) =  mIxy - mr0r1;           mI(0,2) =  mIxz - mr2r0;           assert(mI(0,3) == 0.0);   mI(0,4) = -mr2;           mI(0,5) =  mr1;
+                                       mI(1,1) =  mIyy + mr2r2 + mr0r0;   mI(1,2) =  mIyz - mr1r2;           mI(1,3) =  mr2;           assert(mI(1,4) == 0.0);   mI(1,5) = -mr0;
+                                                                          mI(2,2) =  mIzz + mr0r0 + mr1r1;   mI(2,3) = -mr1;           mI(2,4) =  mr0;           assert(mI(2,5) == 0.0);
+                                                                                                             mI(3,3) =  mMass;         assert(mI(3,4) == 0.0);   assert(mI(3,5) == 0.0);
+                                                                                                                                       mI(4,4) =  mMass;         assert(mI(4,5) == 0.0);
+                                                                                                                                                                 mI(5,5) =  mMass;
 
     mI.triangularView<Eigen::StrictlyLower>() = mI.transpose();
 }
@@ -759,7 +758,6 @@ void BodyNode::clearExternalForces()
     mFext.setZero();
     dterr << "Not implemented.\n";
 }
-
 
 } // namespace dynamics
 } // namespace dart

@@ -68,9 +68,9 @@ inline void BallJoint::_updateTransformation()
     math::so3 w(mCoordinate[0].get_q(),
             mCoordinate[1].get_q(),
             mCoordinate[2].get_q());
-    mT = mT_ParentBodyToJoint
-         * math::ExpAngular(w)
-         * mT_ChildBodyToJoint.inverse();
+    mT = mT_ParentBodyToJoint *
+         math::ExpAngular(w) *
+         mT_ChildBodyToJoint.inverse();
 }
 
 inline void BallJoint::_updateVelocity()
@@ -156,7 +156,6 @@ inline void BallJoint::_updateAcceleration()
     mdS.col(0) = math::AdT(mT_ChildBodyToJoint, dJ0);
     mdS.col(1) = math::AdT(mT_ChildBodyToJoint, dJ1);
     mdS.col(2) = math::AdT(mT_ChildBodyToJoint, dJ2);
-
 
     // dV = dS * dq + S * ddq
     mdV = mdS * get_dq() + mS * get_ddq();

@@ -68,7 +68,6 @@ typedef Eigen::Isometry3d SE3;
 typedef Eigen::Vector6d se3;
 typedef Eigen::Vector6d dse3;
 typedef Eigen::Matrix6d Inertia;
-//typedef Eigen::Matrix6d Inertia;
 typedef Eigen::Matrix<double,6,Eigen::Dynamic> Jacobian;
 
 /// @brief Compute geometric distance on SE(3) manifold.
