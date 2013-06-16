@@ -519,60 +519,65 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
 
     //--------------------------------------------------------------------------
     // parent
-    tinyxml2::XMLElement* parentElement = NULL;
-    parentElement = _jointElement->FirstChildElement("parent");
-    assert(parentElement != NULL);
-    std::string strParent = parentElement->GetText();
     dynamics::BodyNode* parentBody = NULL;
-
-    if (strParent == std::string("world"))
+    if (hasElement(_jointElement, "parent"))
     {
-        newJoint->setParentBody(NULL);
+        std::string strParent = getValueString(_jointElement, "parent");
+
+        if (strParent == std::string("world"))
+        {
+            newJoint->setParentBody(NULL);
+        }
+        else
+        {
+            parentBody = _skeleton->findBody(strParent);
+            if (parentBody == NULL)
+            {
+                dterr << "Can't find the parent body, "
+                  << strParent
+                  << ", of the joint, "
+                  << newJoint->getName()
+                  << ", in the skeleton, "
+                  << _skeleton->getName()
+                  << ". " << std::endl;
+                assert(parentBody != NULL);
+            }
+            newJoint->setParentBody(parentBody);
+        }
     }
     else
     {
-        parentBody = _skeleton->findBody(strParent);
-        if (parentBody == NULL)
-        {
-            dterr << "Can't find the parent body, "
-              << strParent
-              << ", of the joint, "
-              << newJoint->getName()
-              << ", in the skeleton, "
-              << _skeleton->getName()
-              << ". " << std::endl;
-            assert(parentBody != NULL);
-        }
-        newJoint->setParentBody(parentBody);
+        dterr << "No parent body.\n";
+        assert(0);
     }
 
     //--------------------------------------------------------------------------
     // child
-    tinyxml2::XMLElement* childElement = NULL;
-    childElement = _jointElement->FirstChildElement("child");
-    assert(childElement != NULL);
-    std::string strChild = childElement->GetText();
-    dynamics::BodyNode* childBody = _skeleton->findBody(strChild);
-    assert(childBody != NULL && "Dart cannot find child body.");
-    newJoint->setChildBody(childBody);
+    dynamics::BodyNode* childBody = NULL;
+    if (hasElement(_jointElement, "child"))
+    {
+        std::string strChild = getValueString(_jointElement, "child");
+        childBody = _skeleton->findBody(strChild);
+        assert(childBody != NULL && "Dart cannot find child body.");
+        newJoint->setChildBody(childBody);
+    }
+    else
+    {
+        dterr << "No child body.\n";
+        assert(0);
+    }
 
     //--------------------------------------------------------------------------
     // transformation
-    tinyxml2::XMLElement* transformationElement = NULL;
-    transformationElement = _jointElement->FirstChildElement("transformation");
     math::SE3 parentWorld = math::SE3::Identity();
     math::SE3 childToJoint = math::SE3::Identity();
+    assert(childBody != NULL);
     math::SE3 childWorld = childBody->getTransformationWorld();
     if (parentBody)
          parentWorld = parentBody->getTransformationWorld();
-    if (transformationElement != NULL)
-    {
-        std::string strTransformation = transformationElement->GetText();
-        childToJoint = toSE3(strTransformation);
-    }
-    math::SE3 parentToJoint = math::Inv(parentWorld)
-                              * childWorld
-                              * childToJoint;
+    if (hasElement(_jointElement, "transformation"))
+        childToJoint = getValueSE3(_jointElement, "transformation");
+    math::SE3 parentToJoint = math::Inv(parentWorld)*childWorld*childToJoint;
     newJoint->setLocalTransformFromChildBody(childToJoint);
     newJoint->setLocalTransformFromParentBody(parentToJoint);
 
@@ -586,8 +591,7 @@ dynamics::WeldJoint*readWeldJoint(
     assert(_weldJointElement != NULL);
     assert(_skeleton != NULL);
 
-    dynamics::WeldJoint* newWeldJoint
-            = new dynamics::WeldJoint;
+    dynamics::WeldJoint* newWeldJoint = new dynamics::WeldJoint;
 
     return newWeldJoint;
 }
@@ -603,14 +607,19 @@ dynamics::RevoluteJoint*readRevoluteJoint(
 
     //--------------------------------------------------------------------------
     // axis
-    tinyxml2::XMLElement* axisElement = NULL;
-    axisElement = _revoluteJointElement->FirstChildElement("axis");
-    assert(axisElement != NULL);
-    tinyxml2::XMLElement* xyzElement = axisElement->FirstChildElement("xyz");
-    assert(xyzElement != NULL);
-    std::string strXYZ = xyzElement->GetText();
-    math::so3 axis = toVector3d(strXYZ);
-    newRevoluteJoint->setAxis(axis);
+    if (hasElement(_revoluteJointElement, "axis"))
+    {
+        tinyxml2::XMLElement* axisElement
+                = getElement(_revoluteJointElement, "axis");
+
+        // mass
+        Eigen::Vector3d xyz = getValueVector3d(axisElement, "xyz");
+        newRevoluteJoint->setAxis(xyz);
+    }
+    else
+    {
+        assert(0);
+    }
 
     return newRevoluteJoint;
 }
@@ -660,8 +669,7 @@ dynamics::FreeJoint*readFreeJoint(
     assert(_freeJointElement != NULL);
     assert(_skeleton != NULL);
 
-    dynamics::FreeJoint* newFreeJoint
-            = new dynamics::FreeJoint;
+    dynamics::FreeJoint* newFreeJoint = new dynamics::FreeJoint;
 
     return newFreeJoint;
 }
