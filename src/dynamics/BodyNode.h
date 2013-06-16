@@ -571,29 +571,14 @@ protected:
     /// @brief Generalized body force w.r.t. body frame.
     math::dse3 mF;
 
-    /// @brief Articulated inertia
-    math::Inertia mAI;
-
-    math::Inertia mPi;
-
-    /// @brief Bias force
-    math::dse3 mB;
-
-    /// @brief
-    math::dse3 mBeta;
-
     /// @brief
     math::dse3 mFext;
 
     /// @brief
     math::dse3 mFgravity;
 
-    /// @brief
-    Eigen::MatrixXd mPsi;
-
-    Eigen::MatrixXd mAI_S;
-
-    struct BodyState {
+    struct BodyState
+    {
         math::SE3 W;
         math::se3 V;
         math::se3 dV;
@@ -602,15 +587,22 @@ protected:
         math::dse3 Fext;
     };
 
-    struct ForwardDynamicsCacheData {
-        // AI
-        // B
-        // Beta
-        // Pi
-        // Psi
+    struct ForwardDynamicsCacheData
+    {
+        math::Inertia mAI;      ///< Articulated inertia
+        math::dse3 mB;          ///< Bias force
+        Eigen::MatrixXd mAI_S;
+        Eigen::MatrixXd mPsi;
+        math::Inertia mPi;
+        math::dse3 mBeta;
     };
-
-    ForwardDynamicsCacheData mCache;
+    //ForwardDynamicsCacheData mFwdDynData;
+    math::Inertia mAI;      ///< Articulated inertia
+    math::dse3 mB;          ///< Bias force
+    Eigen::MatrixXd mAI_S;
+    Eigen::MatrixXd mPsi;
+    math::Inertia mPi;
+    math::dse3 mBeta;
 
     /// @brief
     Eigen::MatrixXd mM;

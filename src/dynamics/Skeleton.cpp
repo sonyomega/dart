@@ -293,7 +293,7 @@ void Skeleton::computeForwardDynamicsID(
     set_ddq(Eigen::VectorXd::Zero(n));
 
     // M(q) * ddq + b(q,dq) = tau
-    computeInverseDynamics(_gravity);
+    computeInverseDynamics(_gravity, true);
     mCg = get_tau();
 
     // Calcualtion mass matrix, M
