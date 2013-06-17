@@ -38,18 +38,12 @@
 #define SCALAR_MAX	 DBL_MAX
 
 // TODO:
-//   1. copy constructors
-//   2. explicit check
 //   3. naming check
-//   4. add Eigen helpers
 //   5. remove wired functions
-//   6. add missing parameter names
 //   7. License!
-//   8. default constructer (member variable initialization)
 //   9. check if Inertia * se3
-//  10. not use [] operator for SE3, Inertia
 //  11. random setter
-//  12. split LieGroups into multiple files
+//  13. / operator for SE3 * invSE3.
 
 namespace Eigen {
 typedef Eigen::Matrix<double,6,1> Vector6d;
