@@ -187,20 +187,6 @@ SE3 Normalize(const SE3& T);
 
 //------------------------------------------------------------------------------
 
-/// @brief convert unit quaternion to SE3
-/// @note The first element of q[] is a real part and the last three are
-/// imaginary parts. Make sure that q[] is unit quaternion, that is,
-/// @f$@sum_i q_i^2 = 1@f$.
-SE3 Quaternion2SE3(const double q[4]);
-
-/// @brief convert unit quaternion to SE3
-/// @note The w is a real part and the last three (x, y, z) are
-/// imaginary parts. Make sure that (w, x, y, z) is unit quaternion, that is,
-/// @f$@w^2 + y^2 + y^2 + z^2 = 1@f$.
-SE3 Quaternion2SE3(double w, double x, double y, double z);
-
-//------------------------------------------------------------------------------
-
 /// @brief The Kronecker product
 Inertia KroneckerProduct(const dse3& , const dse3& );
 
