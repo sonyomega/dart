@@ -420,8 +420,11 @@ void BodyNode::updateVelocity(bool _updateJacobian)
 
 void BodyNode::updateEta()
 {
-    mEta = math::ad(mV, mParentJoint->mS*mParentJoint->get_dq()) +
+    if (mParentJoint->getDOF() > 0)
+    {
+        mEta = math::ad(mV, mParentJoint->mS*mParentJoint->get_dq()) +
            mParentJoint->mdS*mParentJoint->get_dq();
+    }
 }
 
 void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
@@ -433,15 +436,18 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
     //         + eta
     //         + S * ddq
 
-    if (mParentBody)
+    if (mParentJoint->getDOF() > 0)
     {
-        mdV = math::AdInvT(mParentJoint->getLocalTransformation(),
-                          mParentBody->getAcceleration()) +
-              mEta + mParentJoint->mS*mParentJoint->get_ddq();
-    }
-    else
-    {
-        mdV = mEta + mParentJoint->mS*mParentJoint->get_ddq();
+        if (mParentBody)
+        {
+            mdV = math::AdInvT(mParentJoint->getLocalTransformation(),
+                              mParentBody->getAcceleration()) +
+                  mEta + mParentJoint->mS*mParentJoint->get_ddq();
+        }
+        else
+        {
+            mdV = mEta + mParentJoint->mS*mParentJoint->get_ddq();
+        }
     }
 
     if (_updateJacobianDeriv == false)
