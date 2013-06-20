@@ -42,7 +42,7 @@
 namespace dart {
 namespace dynamics {
 
-#define BJOINT_EPS 1e-6
+#define BJOINT_EPS 1.0e-3
 
 BallJoint::BallJoint()
     : Joint("Ball joint")
@@ -88,7 +88,7 @@ inline void BallJoint::_updateVelocity()
     Eigen::Matrix3d qss2 =  qss*qss;
 
     if(theta < BJOINT_EPS)
-        J = Eigen::Matrix3d::Identity() + 0.5*qss +  (1.0/6.0)*qss2;
+        J = Eigen::Matrix3d::Identity() + 0.5*qss + (1.0/6.0)*qss2;
     else
         J = Eigen::Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
 

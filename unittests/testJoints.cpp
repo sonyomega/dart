@@ -94,6 +94,9 @@ void JOINTS::kinematicsTest(Joint* _joint)
 
         _joint->updateKinematics();
 
+        if (_joint->getDOF() == 0)
+            return;
+
         SE3 T = _joint->getLocalTransformation();
         se3 V = _joint->getLocalVelocity();
         Jacobian J = _joint->getLocalJacobian();
@@ -197,6 +200,14 @@ TEST_F(JOINTS, BALL_JOINT)
 }
 
 // 3-dof joint
+TEST_F(JOINTS, EULER_XYZ_JOINT)
+{
+    EulerXYZJoint eulerXYZJoint;
+
+    kinematicsTest(&eulerXYZJoint);
+}
+
+// 3-dof joint
 TEST_F(JOINTS, TRANSLATIONAL_JOINT)
 {
     TranslationalJoint translationalJoint;
@@ -205,11 +216,56 @@ TEST_F(JOINTS, TRANSLATIONAL_JOINT)
 }
 
 // 6-dof joint
-TEST_F(JOINTS, FREE_JOINT)
-{
-    FreeJoint freeJoint;
+//TEST_F(JOINTS, FREE_JOINT)
+//{
+//    FreeJoint freeJoint;
 
-    kinematicsTest(&freeJoint);
+//    kinematicsTest(&freeJoint);
+//}
+
+TEST_F(JOINTS, BALL_JOINT_JACOBIAN)
+{
+    Eigen::Vector3d q;
+    q << 0, 0, 0;
+    bool isInvertible = true;
+
+    do
+    {
+        q = Eigen::Vector3d::Random();
+        double theta = q.norm();
+
+        Eigen::Matrix3d J = Eigen::Matrix3d::Zero();
+        Eigen::Matrix3d qss = math::makeSkewSymmetric(q);
+        Eigen::Matrix3d qss2 =  qss*qss;
+
+        if(theta < 1e-6)
+            J = Eigen::Matrix3d::Identity() + 0.5*qss +  (1.0/6.0)*qss2;
+        else
+            J = Eigen::Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
+
+        Eigen::MatrixXd S(6,3);
+
+        S.col(0) << J(0,0), J(0,1), J(0,2), 0, 0, 0;
+        S.col(1) << J(1,0), J(1,1), J(1,2), 0, 0, 0;
+        S.col(2) << J(2,0), J(2,1), J(2,2), 0, 0, 0;
+
+        Eigen::MatrixXd Psi = S.transpose() * S;
+
+        Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(Psi);
+        isInvertible = lu_decomp.isInvertible();
+
+        Eigen::MatrixXd invPsi = Psi.inverse();
+
+//        for (int i = 0; i < 3; ++i)
+//            for (int j = 0; j < 3; ++j)
+//                if (invPsi(i,j) != invPsi(i,j))
+//                    assert(0);
+
+
+        if (lu_decomp.rank() < 3)
+            assert(0);
+
+    } while (1);
 }
 
 /******************************************************************************/

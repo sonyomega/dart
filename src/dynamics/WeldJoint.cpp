@@ -48,8 +48,8 @@ WeldJoint::WeldJoint()
     : Joint("Weld joint")
 {
     mJointType = WELD;
-    mS = Eigen::Matrix<double,6,0>::Zero();
-    mdS = Eigen::Matrix<double,6,0>::Zero();
+    mS = math::Jacobian::Zero(6,0);
+    mdS = math::Jacobian::Zero(6,0);
 }
 
 WeldJoint::~WeldJoint()

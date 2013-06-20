@@ -612,7 +612,6 @@ void BodyNode::updateGeneralizedForce(bool _withDampingForces)
 
 void BodyNode::updateArticulatedInertia()
 {
-    // TODO: Need code optimization
     mAI = mI;
 
     for (std::vector<Joint*>::iterator itrJoint = mJointsChild.begin();
@@ -679,15 +678,16 @@ void BodyNode::update_ddq()
     if (mParentBody)
     {
         tmp = math::AdInvT(mParentJoint->getLocalTransformation(),
-                                  mParentBody->getAcceleration() + mEta);
+                                  mParentBody->getAcceleration())  + mEta;
     }
     else
     {
-        tmp = math::AdInvT(mParentJoint->getLocalTransformation(), mEta);
+        tmp = mEta;
     }
 
     Eigen::VectorXd ddq = mPsi*(mParentJoint->get_tau() -
                                 mParentJoint->mS.transpose()*(mAI*tmp + mB));
+
     mParentJoint->set_ddq(ddq);
 }
 
