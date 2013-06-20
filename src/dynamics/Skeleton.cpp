@@ -81,6 +81,7 @@ void Skeleton::initDynamics()
     initKinematics();
 
     mM = MatrixXd::Zero(getDOF(), getDOF());
+    mMInv = MatrixXd::Zero(getDOF(), getDOF());
     mC = MatrixXd::Zero(getDOF(), getDOF());
     mCvec = VectorXd::Zero(getDOF());
     mG = VectorXd::Zero(getDOF());
