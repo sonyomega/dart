@@ -457,7 +457,8 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
         newBody->setMass(mass);
 
         // moment of inertia
-        if (hasElement(inertiaElement, "moment_of_inertia")) {
+        if (hasElement(inertiaElement, "moment_of_inertia"))
+        {
             tinyxml2::XMLElement* moiElement
                     = getElement(inertiaElement, "moment_of_inertia");
 
@@ -471,7 +472,8 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
 
             newBody->setMomentOfInertia(ixx, iyy, izz, ixy, ixz, iyz);
         }
-        else if (newBody->getVisualizationShape() != 0) {
+        else if (newBody->getVisualizationShape() != 0)
+        {
             Eigen::Matrix3d Ic = newBody->getVisualizationShape()->computeInertia(mass);
 
             newBody->setMomentOfInertia(Ic(0,0), Ic(1,1), Ic(2,2),
@@ -479,8 +481,11 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
         }
 
         // offset
-        math::Vec3 offset = getValueVec3(inertiaElement, "offset");
-        newBody->setCenterOfMass(offset);
+        if (hasElement(inertiaElement, "offset"))
+        {
+            math::Vec3 offset = getValueVec3(inertiaElement, "offset");
+            newBody->setCenterOfMass(offset);
+        }
     }
 
     return newBody;
