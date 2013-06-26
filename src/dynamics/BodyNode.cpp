@@ -652,12 +652,12 @@ void BodyNode::updatePsi()
 {
     assert(mParentJoint != NULL);
 
-    int n = mParentJoint->getDOF();
-    mAI_S = Eigen::MatrixXd::Zero(6, n);
+    //int n = mParentJoint->getDOF();
+    //mAI_S = Eigen::MatrixXd::Zero(6, n);
     //mPsi = Eigen::MatrixXd::Zero(n, n);
 
-    mAI_S.noalias() = mAI * mParentJoint->mS;
-    mPsi = (mParentJoint->mS.transpose() * mAI_S).inverse();
+    mAI_S.noalias() = mAI*mParentJoint->mS;
+    mPsi = (mParentJoint->mS.transpose()*mAI_S).inverse();
 }
 
 void BodyNode::updatePi()
@@ -668,31 +668,28 @@ void BodyNode::updatePi()
 
 void BodyNode::updateBeta()
 {
+    mAlpha           = mParentJoint->get_tau();
+    mAlpha          -= mParentJoint->mS.transpose()*(mAI*mEta + mB);
     mBeta            = mB;
-    mBeta.noalias() += mAI*(mEta +
-                  mParentJoint->mS*mPsi*(
-                      mParentJoint->get_tau() -
-                      mParentJoint->mS.transpose()*(mAI*mEta + mB)
-                      )
-                  );
+    mBeta.noalias() += mAI*(mEta + mParentJoint->mS*mPsi*(mAlpha));
 }
 
 void BodyNode::update_ddq()
 {
-    math::se3 tmp;
-
+    Eigen::VectorXd ddq;
     if (mParentBody)
     {
-        tmp = math::AdInvT(mParentJoint->getLocalTransformation(),
-                                  mParentBody->getAcceleration())  + mEta;
+        ddq.noalias() = mPsi*
+                        (mAlpha -
+                         mParentJoint->mS.transpose()*mAI*
+                         math::AdInvT(mParentJoint->getLocalTransformation(),
+                                      mParentBody->getAcceleration())
+                         );
     }
     else
     {
-        tmp = mEta;
+        ddq.noalias() = mPsi*mAlpha;
     }
-
-    Eigen::VectorXd ddq = mPsi*(mParentJoint->get_tau() -
-                                mParentJoint->mS.transpose()*(mAI*tmp + mB));
 
     mParentJoint->set_ddq(ddq);
 }

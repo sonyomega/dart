@@ -601,6 +601,7 @@ protected:
     Eigen::MatrixXd mAI_S;
     Eigen::MatrixXd mPsi;
     math::Inertia mPi;
+    math::dse3 mAlpha;
     math::dse3 mBeta;
 
     /// @brief
