@@ -180,14 +180,14 @@ GenCoord* BodyNode::getLocalDof(int _idx) const
 
 Eigen::VectorXd BodyNode::getDependDofs() const
 {
-//    Eigen::VectorXd depDofs;
+    Eigen::VectorXd depDofs;
 
-//    for (int i = 0; i < getNumDependentDofs(); ++i)
-//    {
-//        depDofs[i] = mSkeleton->get_q()[getDependentDof(i)];
-//    }
+    for (int i = 0; i < getNumDependentDofs(); ++i)
+    {
+        depDofs[i] = mSkeleton->get_q()[getDependentDof(i)];
+    }
 
-    //    return depDofs;
+    return depDofs;
 }
 
 Eigen::Vector3d BodyNode::evalWorldPos(const Eigen::Vector3d& _lp) const

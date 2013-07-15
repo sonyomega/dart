@@ -258,7 +258,7 @@ public:
 
     // TODO: Check
     /// @brief Return an dof index from the array index (< getNumDependentDofs).
-    int getDependentDof(int _arrayIndex) { return mDependentDofs[_arrayIndex]; }
+    int getDependentDof(int _arrayIndex) const { return mDependentDofs[_arrayIndex]; }
 
     // TODO: Check
     /// @brief
