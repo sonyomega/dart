@@ -136,6 +136,9 @@ public:
     int getNumJoints() const { return mJoints.size(); }
 
     /// @brief
+    BodyNode* getRoot() { return mRoot; }
+
+    /// @brief
     // TODO: rename
     BodyNode* getBody(int _idx) const { return mBodies[_idx]; }
     BodyNode* getNode(int _idx) const { return mBodies[_idx]; }
