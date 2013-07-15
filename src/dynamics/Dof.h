@@ -42,7 +42,7 @@
 #include <cassert>
 #include <string>
 
-#include "utils/Deprecated.h"
+#include "common/Deprecated.h"
 #include "math/LieGroup.h"
 
 namespace dart {

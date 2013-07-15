@@ -35,7 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "utils/UtilsCode.h"
+#include "common/UtilsCode.h"
 #include "integration/RK4Integrator.h"
 
 using namespace Eigen;

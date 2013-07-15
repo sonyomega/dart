@@ -42,7 +42,7 @@
 #include <fcl/shape/geometric_shapes.h>
 #include <fcl/narrowphase/narrowphase.h>
 
-#include "utils/UtilsCode.h"
+#include "common/UtilsCode.h"
 #include "math/UtilsMath.h"
 //#include "collision/unc/UNCCollisionDetector.h"
 

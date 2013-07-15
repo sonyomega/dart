@@ -9,7 +9,7 @@
 
 #include <Eigen/Dense>
 
-#include "utils/UtilsCode.h"
+#include "common/UtilsCode.h"
 
 #define LIE_EPS		 1E-6
 #define SCALAR_0	 0.0

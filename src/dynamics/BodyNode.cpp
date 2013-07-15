@@ -40,7 +40,7 @@
 
 #include <iostream>
 
-#include "utils/UtilsCode.h"
+#include "common/UtilsCode.h"
 #include "renderer/RenderInterface.h"
 #include "dynamics/Joint.h"
 #include "dynamics/Shape.h"

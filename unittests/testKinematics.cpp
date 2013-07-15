@@ -35,7 +35,7 @@
 #include <iostream>
 #include <gtest/gtest.h>
 
-#include "utils/Paths.h"
+#include "common/Paths.h"
 #include "math/UtilsMath.h"
 //#include "dynamics/FileInfoSkel.hpp"
 #include "dynamics/Skeleton.h"
@@ -43,7 +43,7 @@
 //#include "dynamics/FileInfoDof.h"
 //#include "dynamics/FileInfoC3D.h"
 #include "simulation/World.h"
-#include "simulation/SkelParser.h"
+#include "utils/SkelParser.h"
 
 //using namespace std;
 using namespace dart;

@@ -40,7 +40,7 @@
 //#include "dynamics/FileInfoSkel.hpp"
 //#include "dynamics/FileInfoDof.h"
 //#include "dynamics/BodyNode.h"
-//#include "utils/Paths.h"
+//#include "common/Paths.h"
 //#include "math/UtilsRotation.h"
 //#include "math/UtilsMath.h"
 

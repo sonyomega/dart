@@ -43,7 +43,7 @@
 #include <Eigen/Dense>
 
 // Local Files
-#include "utils/UtilsCode.h"
+#include "common/UtilsCode.h"
 #include "dynamics/BodyNode.h"
 #include "dynamics/ShapeBox.h"
 #include "dynamics/ShapeCylinder.h"
@@ -55,7 +55,7 @@
 #include "dynamics/FreeJoint.h"
 #include "dynamics/Skeleton.h"
 #include "simulation/World.h"
-#include "simulation/SkelParser.h"
+#include "utils/SkelParser.h"
 
 namespace dart {
 namespace simulation {

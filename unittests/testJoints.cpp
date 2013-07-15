@@ -39,7 +39,7 @@
 #include <gtest/gtest.h>
 #include "TestHelpers.h"
 
-#include "utils/UtilsCode.h"
+#include "common/UtilsCode.h"
 #include "math/LieGroup.h"
 #include "math/UtilsMath.h"
 #include "dynamics/BallJoint.h"

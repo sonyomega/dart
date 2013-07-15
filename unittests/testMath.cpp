@@ -39,7 +39,7 @@
 #include <gtest/gtest.h>
 #include "TestHelpers.h"
 
-#include "utils/Timer.h"
+#include "common/Timer.h"
 #include "math/LieGroup.h"
 #include "math/UtilsMath.h"
 #include "dynamics/RevoluteJoint.h"

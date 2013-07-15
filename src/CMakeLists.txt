@@ -12,7 +12,7 @@ file(GLOB_RECURSE dart_srcs *.cpp)
 file(GLOB_RECURSE dart_hdrs *.h *.hpp *.inl)
 
 # Setup directory structure for Visual Studio
-set(SUBDIRS collision constraint dynamics integration lcpsolver math optimizer planning renderer robotics simulation utils yui)
+set(SUBDIRS common collision constraint dynamics integration lcpsolver math optimizer planning renderer robotics simulation utils yui)
 foreach(SUBDIR ${SUBDIRS})
     file(GLOB_RECURSE dir_files ${SUBDIR}/*.h ${SUBDIR}/*.hpp ${SUBDIR}/*.inl ${SUBDIR}/*.cpp)
 	source_group(${SUBDIR} FILES ${dir_files})

@@ -45,7 +45,7 @@
 #include <boost/range/irange.hpp>
 #include <boost/pending/indirect_cmp.hpp>
 
-#include "utils/UtilsCode.h"
+#include "common/UtilsCode.h"
 #include "math/LieGroup.h"
 #include "math/UtilsMath.h"
 #include "dynamics/BallJoint.h"

@@ -41,9 +41,9 @@
 
 #include "dynamics/RevoluteJoint.h"
 #include "dynamics/Skeleton.h"
-#include "utils/Paths.h"
+#include "common/Paths.h"
 #include "simulation/World.h"
-#include "simulation/SkelParser.h"
+#include "utils/SkelParser.h"
 
 using namespace dart;
 using namespace math;

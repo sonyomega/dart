@@ -1,6 +1,6 @@
 #include "constraint/ContactDynamics.h"
 
-#include "utils/Timer.h"
+#include "common/Timer.h"
 #include "math/UtilsMath.h"
 #include "collision/fcl/FCLCollisionDetector.h"
 #include "collision/fcl_mesh/FCLMESHCollisionDetector.h"

@@ -77,7 +77,7 @@ Runge-Kutta and fourth-order Runge Kutta.
 
 #include <Eigen/Dense>
 
-#include "utils/Deprecated.h"
+#include "common/Deprecated.h"
 #include "math/LieGroup.h"
 
 namespace dart {

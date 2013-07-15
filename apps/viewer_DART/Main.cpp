@@ -1,5 +1,5 @@
-#include "utils/Paths.h"
-#include "simulation/SkelParser.h"
+#include "common/Paths.h"
+#include "utils/SkelParser.h"
 #include "MyWindow.h"
 
 int main(int argc, char* argv[])

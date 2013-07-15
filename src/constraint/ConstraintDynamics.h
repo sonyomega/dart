@@ -41,7 +41,7 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "utils/Deprecated.h"
+#include "common/Deprecated.h"
 #include "constraint/Constraint.h"
 #include "collision/CollisionDetector.h"
 

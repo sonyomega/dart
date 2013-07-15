@@ -32,7 +32,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "utils/UtilsCode.h"
+#include "common/UtilsCode.h"
 #include "math/UtilsRotation.h"
 #include "math/UtilsMath.h"
 #include <iostream>

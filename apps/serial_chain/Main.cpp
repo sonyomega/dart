@@ -1,6 +1,6 @@
-#include "utils/Paths.h"
+#include "common/Paths.h"
 #include "math/UtilsMath.h"
-#include "simulation/SkelParser.h"
+#include "utils/SkelParser.h"
 #include "dynamics/Skeleton.h"
 #include "MyWindow.h"
 

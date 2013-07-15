@@ -1,7 +1,7 @@
 #include "constraint/ConstraintDynamics.h"
 
-#include "utils/Timer.h"
-#include "utils/UtilsCode.h"
+#include "common/Timer.h"
+#include "common/UtilsCode.h"
 #include "math/UtilsMath.h"
 #include "lcpsolver/LCPSolver.h"
 #include "collision/fcl_mesh/FCLMESHCollisionDetector.h"

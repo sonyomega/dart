@@ -49,7 +49,7 @@
 #include <boost/graph/breadth_first_search.hpp>
 
 #include "math/LieGroup.h"
-#include "utils/Deprecated.h"
+#include "common/Deprecated.h"
 #include "dynamics/System.h"
 
 namespace dart {
