@@ -41,6 +41,7 @@
 #include <iostream>
 
 #include "common/UtilsCode.h"
+#include "math/UtilsMath.h"
 #include "renderer/RenderInterface.h"
 #include "dynamics/Joint.h"
 #include "dynamics/Shape.h"
@@ -187,6 +188,11 @@ Eigen::VectorXd BodyNode::getDependDofs() const
 //    }
 
     //    return depDofs;
+}
+
+Eigen::Vector3d BodyNode::evalWorldPos(const Eigen::Vector3d& _lp) const
+{
+    return math::xformHom(mW.matrix(), _lp);
 }
 
 math::se3 BodyNode::getVelocityWorld() const

@@ -285,6 +285,10 @@ public:
 //    { return mW.getInverse().getMatrix(); }
     math::SE3 getWorldInvTransformation() const { return math::Inv(mW); }
 
+    /// @brief Given a 3D vector lp in the local coordinates of this body node.
+    /// @return The world coordinates of this vector
+    Eigen::Vector3d evalWorldPos(const Eigen::Vector3d& _lp) const;
+
     /// @brief
     const math::se3& getVelocityBody() const { return mV; }
 
