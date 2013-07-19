@@ -614,6 +614,8 @@ protected:
 private:
     void _updateGeralizedInertia();
 
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 } // namespace dynamics
