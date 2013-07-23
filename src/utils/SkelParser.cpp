@@ -485,7 +485,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
         if (hasElement(inertiaElement, "offset"))
         {
             math::Vec3 offset = getValueVec3(inertiaElement, "offset");
-            newBody->setCenterOfMass(offset);
+            newBody->setCOM(offset);
         }
     }
 
