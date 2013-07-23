@@ -372,21 +372,21 @@ public:
     /// Called from @Skeleton::clearExternalForces.
     void clearExternalForces();
 
-    /// @brief
-    void addExternalForceLocal(const math::dse3& _FextLocal);
+    ///// @brief
+    //void addExternalForceLocal(const math::dse3& _FextLocal);
 
-    /// @brief
-    void addExternalForceGlobal(const math::dse3& _FextWorld);
+    ///// @brief
+    //void addExternalForceGlobal(const math::dse3& _FextWorld);
 
-    /// @brief
-    void addExternalForceLocal(const Eigen::Vector3d& _posLocal,
-                               const Eigen::Vector3d& _linearForceGlobal);
+    ///// @brief
+    //void addExternalForceLocal(const Eigen::Vector3d& _posLocal,
+    //                           const Eigen::Vector3d& _linearForceGlobal);
 
-    /// @brief
-    const math::dse3& getExternalForceLocal() const { return mFext; }
+    ///// @brief
+    //const math::dse3& getExternalForceLocal() const { return mFext; }
 
-    /// @brief
-    math::dse3 getExternalForceGlobal() const;
+    ///// @brief
+    //math::dse3 getExternalForceGlobal() const;
 
     /// @brief
     const math::dse3& getBodyForce() const { return mF; }
@@ -394,9 +394,9 @@ public:
     /// @brief
     double getKineticEnergy() const { return 0.5 * mV.dot(mI * mV); }
 
-    // TODO: Not implemented.
-    /// @brief
-    double getPotentialEnergy() const {}
+    //// TODO: Not implemented.
+    ///// @brief
+    //double getPotentialEnergy() const {}
 
 
     //--------------------------------------------------------------------------

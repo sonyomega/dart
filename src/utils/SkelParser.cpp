@@ -109,6 +109,7 @@ ElementEnumerator& ElementEnumerator::operator=(const ElementEnumerator& _rhs)
     this->m_name = _rhs.m_name;
     this->m_parent = _rhs.m_parent;
     this->m_current = _rhs.m_current;
+    return *this;
 }
 
 //==============================================================================

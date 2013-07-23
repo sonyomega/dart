@@ -148,10 +148,10 @@ public:
     //BodyNode* findBody(const std::string& _name) const;
     BodyNode* findBody(const std::string& _name) const;
 
-    /// @brief
-    // TODO: Not implemented.
-    Eigen::VectorXd getDependentConfiguration(BodyNode* _beginBody,
-                                              BodyNode* _endBody) const;
+    ///// @brief
+    //// TODO: Not implemented.
+    //Eigen::VectorXd getDependentConfiguration(BodyNode* _beginBody,
+    //                                          BodyNode* _endBody) const;
 
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)

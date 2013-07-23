@@ -538,21 +538,21 @@ Eigen::Vector3d BodyNode::getCenterOfMass() const
     return mCenterOfMass;
 }
 
-void BodyNode::setExternalForceLocal(const math::dse3& _FextLocal)
-{
-    mFext = _FextLocal;
-}
-
-void BodyNode::setExternalForceGlobal(const math::dse3& _FextWorld)
-{
-    mFext = _FextWorld;
-}
-
-void BodyNode::setExternalForceLocal(
-        const Eigen::Vector3d& _posLocal,
-        const Eigen::Vector3d& _linearForceGlobal)
-{
-}
+//void BodyNode::setExternalForceLocal(const math::dse3& _FextLocal)
+//{
+//    mFext = _FextLocal;
+//}
+//
+//void BodyNode::setExternalForceGlobal(const math::dse3& _FextWorld)
+//{
+//    mFext = _FextWorld;
+//}
+//
+//void BodyNode::setExternalForceLocal(
+//        const Eigen::Vector3d& _posLocal,
+//        const Eigen::Vector3d& _linearForceGlobal)
+//{
+//}
 
 void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
                            const Eigen::Vector3d& _force,
@@ -561,27 +561,27 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
     dterr << "Not implemented.\n";
 }
 
-void BodyNode::addExternalForceLocal(const math::dse3& _FextLocal)
-{
-    mFext += _FextLocal;
-}
-
-void BodyNode::addExternalForceGlobal(const math::dse3& _FextWorld)
-{
-    mFext += _FextWorld;
-}
-
-void BodyNode::addExternalForceLocal(
-        const Eigen::Vector3d& _posLocal,
-        const Eigen::Vector3d& _linearForceGlobal)
-{
-    dterr << "Not implemented.\n";
-}
-
-math::dse3 BodyNode::getExternalForceGlobal() const
-{
-    dterr << "Not implemented.\n";
-}
+//void BodyNode::addExternalForceLocal(const math::dse3& _FextLocal)
+//{
+//    mFext += _FextLocal;
+//}
+//
+//void BodyNode::addExternalForceGlobal(const math::dse3& _FextWorld)
+//{
+//    mFext += _FextWorld;
+//}
+//
+//void BodyNode::addExternalForceLocal(
+//        const Eigen::Vector3d& _posLocal,
+//        const Eigen::Vector3d& _linearForceGlobal)
+//{
+//    dterr << "Not implemented.\n";
+//}
+//
+//math::dse3 BodyNode::getExternalForceGlobal() const
+//{
+//    dterr << "Not implemented.\n";
+//}
 
 void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
                                bool _withExternalForces)

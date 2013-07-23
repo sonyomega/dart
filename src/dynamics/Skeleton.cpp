@@ -145,17 +145,17 @@ BodyNode*Skeleton::findBody(const string& _name) const
     return NULL;
 }
 
-Eigen::VectorXd Skeleton::getDependentConfiguration(BodyNode* _beginBody,
-                                                    BodyNode* _endBody) const
-{
-    assert(_beginBody != NULL);
-    assert(_endBody != NULL);
-
-    int beginBodyID = _beginBody->getSkelIndex();
-    int endBodyID = _endBody->getSkelIndex();
-
-
-}
+//Eigen::VectorXd Skeleton::getDependentConfiguration(BodyNode* _beginBody,
+//                                                    BodyNode* _endBody) const
+//{
+//    assert(_beginBody != NULL);
+//    assert(_endBody != NULL);
+//
+//    int beginBodyID = _beginBody->getSkelIndex();
+//    int endBodyID = _endBody->getSkelIndex();
+//
+//
+//}
 
 void Skeleton::setPose(const Eigen::VectorXd& _pose,
                        bool bCalcTrans,
@@ -478,9 +478,9 @@ double Skeleton::getPotentialEnergy() const
 {
     double potentialEnergy = 0.0;
 
-    // Gravity and Springs on bodies
-    for (int i = 0; i < mBodies.size(); i++)
-        potentialEnergy += mBodies[i]->getPotentialEnergy();
+    //// Gravity and Springs on bodies
+    //for (int i = 0; i < mBodies.size(); i++)
+    //    potentialEnergy += mBodies[i]->getPotentialEnergy();
 
     // Springs on joints
     for (int i = 0; i < mJoints.size(); i++)
