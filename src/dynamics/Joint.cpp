@@ -107,12 +107,12 @@ void Joint::setChildBody(BodyNode* _body)
     }
 }
 
-void Joint::setLocalTransformFromParentBody(const math::SE3& _T)
+void Joint::setTransformFromParentBody(const math::SE3& _T)
 {
     mT_ParentBodyToJoint = _T;
 }
 
-void Joint::setLocalTransformFromChildBody(const math::SE3& _T)
+void Joint::setTransformFromChildBody(const math::SE3& _T)
 {
     mT_ChildBodyToJoint = _T;
 }

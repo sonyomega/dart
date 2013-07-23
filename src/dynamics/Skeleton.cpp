@@ -307,11 +307,12 @@ void Skeleton::computeForwardDynamicsID(
     }
 
     // Inverse of mass matrix
-    //mMInv = mM.inverse();
     mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
 
     // Restore the torque
     set_tau(tau_old);
+
+    // TODO: add evaluation of external forces in generalized coordinate.
 
     Eigen::VectorXd qddot = this->getInvMassMatrix()
                             * (-this->getCombinedVector()
@@ -358,8 +359,10 @@ void Skeleton::computeForwardDynamicsID2(
         mM.col(i) = get_tau() - b;
     }
 
-    //
+    // Restore the torque
     set_tau(tau_old);
+
+    // TODO: add evaluation of external forces in generalized coordinate.
 
     Eigen::VectorXd qddot = this->getInvMassMatrix()
                             * (-this->getCombinedVector()

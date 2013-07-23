@@ -584,8 +584,8 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     if (hasElement(_jointElement, "transformation"))
         childToJoint = getValueSE3(_jointElement, "transformation");
     math::SE3 parentToJoint = math::Inv(parentWorld)*childWorld*childToJoint;
-    newJoint->setLocalTransformFromChildBody(childToJoint);
-    newJoint->setLocalTransformFromParentBody(parentToJoint);
+    newJoint->setTransformFromChildBody(childToJoint);
+    newJoint->setTransformFromParentBody(parentToJoint);
 
     return newJoint;
 }

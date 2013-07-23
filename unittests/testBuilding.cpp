@@ -83,20 +83,20 @@ TEST(BUILDING, BASIC)
 	// Joints
 	joint1.setParentBody(NULL);	// world
 	joint1.setChildBody(&body1);
-	joint1.setLocalTransformFromParentBody(SE3());
-	joint1.setLocalTransformFromChildBody(SE3());
+	joint1.setTransformFromParentBody(SE3());
+	joint1.setTransformFromChildBody(SE3());
 	joint1.setAxis(so3(1.0, 0.0, 0.0));
 
 	joint2.setParentBody(&body1);
 	joint2.setChildBody(&body2);
-	joint2.setLocalTransformFromParentBody(SE3());
-	joint2.setLocalTransformFromChildBody(SE3());
+	joint2.setTransformFromParentBody(SE3());
+	joint2.setTransformFromChildBody(SE3());
 	joint2.setAxis(so3(1.0, 0.0, 0.0));
 
 	joint3.setParentBody(&body1);
 	joint3.setChildBody(&body3);
-	joint3.setLocalTransformFromParentBody(SE3());
-	joint3.setLocalTransformFromChildBody(SE3());
+	joint3.setTransformFromParentBody(SE3());
+	joint3.setTransformFromChildBody(SE3());
 	joint3.setAxis(so3(1.0, 0.0, 0.0));
 
 	// Skeleton
