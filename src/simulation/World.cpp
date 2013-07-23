@@ -227,8 +227,8 @@ void World::computeForwardDynamics()
          itrSkeleton != mSkeletons.end();
          ++itrSkeleton)
     {
-        //(*itrSkeleton)->computeForwardDynamicsID(mGravity);
-        (*itrSkeleton)->computeForwardDynamicsFS(mGravity);
+        (*itrSkeleton)->computeForwardDynamicsID(mGravity);
+        //(*itrSkeleton)->computeForwardDynamicsFS(mGravity);
     }
 }
 
