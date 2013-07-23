@@ -5,10 +5,10 @@ set_property(DIRECTORY PROPERTY EXCLUDE_FROM_DEFAULT_BUILD ON)
 # List of all the subdirectories to include
 foreach(APPDIR
 	#meshCollision
-	#viewer
+    #viewer
 	viewer_DART
 	#forwardSim
-	#cubes
+    cubes
 	#motionAnalysis
 	#pdController
 	#balance
