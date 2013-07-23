@@ -111,15 +111,6 @@ public:
     Eigen::VectorXd get_ddqMax() const;
     Eigen::VectorXd get_tauMax() const;
 
-    //--------------------------------------------------------------------------
-    //
-    //--------------------------------------------------------------------------
-//    /// @brief
-//    void setState(const Eigen::VectorXd& _state);
-
-//    /// @brief
-//    Eigen::VectorXd getState() const;
-
 protected:
     /// @brief Pointers to Dofs.
     std::vector<GenCoord*> mDofs;
