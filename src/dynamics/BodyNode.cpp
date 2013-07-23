@@ -498,12 +498,6 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
     }
 }
 
-void BodyNode::setLocalInertia(double _Ixx, double _Iyy, double _Izz,
-                               double _Ixy, double _Ixz, double _Iyz)
-{
-    setMomentOfInertia(_Ixx, _Iyy, _Izz, _Ixy, _Ixz, _Iyz);
-}
-
 void BodyNode::setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
                                   double _Ixy, double _Ixz, double _Iyz)
 {
@@ -526,14 +520,14 @@ void BodyNode::setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
     _updateGeralizedInertia();
 }
 
-void BodyNode::setCenterOfMass(const math::Vec3& _com)
+void BodyNode::setCOM(const math::Vec3& _com)
 {
     mCenterOfMass = _com;
 
     _updateGeralizedInertia();
 }
 
-Eigen::Vector3d BodyNode::getCenterOfMass() const
+Eigen::Vector3d BodyNode::getCOM() const
 {
     return mCenterOfMass;
 }

@@ -148,37 +148,14 @@ public:
     /// @brief
     double getMass() const;
 
-    /// @brief
-    DEPRECATED void setLocalInertia(double _Ixx, double _Iyy, double _Izz,
-                                    double _Ixy, double _Ixz, double _Iyz);
     void setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
                             double _Ixy, double _Ixz, double _Iyz);
 
     /// @brief
-    void setInertia(const math::Inertia& _I) { mI = _I; }
+    void setCOM(const math::Vec3& _com);
 
     /// @brief
-    const math::Inertia& getInertia() const { return mI; }
-
-    //void setLocalInertia(const Eigen::Matrix3d& _inertia) { mI = _inertia; }
-    //Eigen::Matrix3d getLocalInertia() const { return mI; }
-    //Eigen::Matrix3d getWorldInertia() const { return mIc; }
-    //DEPRECATED Eigen::Matrix3d getInertia() const { return mIc; } ///< Superseded by getWorldInertia()
-    /// @brief Computes the "mass tensor" in lagrangian dynamics from the
-    /// inertia matrix
-    //Eigen::Matrix4d getMassTensor();
-
-    /// @brief
-    DEPRECATED void setLocalCOM(const Eigen::Vector3d& _off)
-    { setCenterOfMass(math::Vec3(_off[0], _off[1], _off[2])); }
-    void setCenterOfMass(const math::Vec3& _com);
-
-
-    /// @brief
-    DEPRECATED Eigen::Vector3d getLocalCOM() const { return getCenterOfMass(); }
-    Eigen::Vector3d getCenterOfMass() const;
-
-    //DEPRECATED Eigen::Vector3d getWorldCOM() { return evalWorldPos(mCOMLocal); }
+    Eigen::Vector3d getCOM() const;
 
     //--------------------------------------------------------------------------
     // Structueral Properties
