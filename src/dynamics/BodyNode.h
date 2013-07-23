@@ -580,26 +580,6 @@ protected:
     /// @brief
     math::dse3 mFgravity;
 
-    struct BodyState
-    {
-        math::SE3 W;
-        math::se3 V;
-        math::se3 dV;
-        math::dse3 Fjoint;
-        math::dse3 Fgravity;
-        math::dse3 Fext;
-    };
-
-    struct ForwardDynamicsCacheData
-    {
-        math::Inertia mAI;      ///< Articulated inertia
-        math::dse3 mB;          ///< Bias force
-        Eigen::MatrixXd mAI_S;
-        Eigen::MatrixXd mPsi;
-        math::Inertia mPi;
-        math::dse3 mBeta;
-    };
-    //ForwardDynamicsCacheData mFwdDynData;
     math::Inertia mAI;      ///< Articulated inertia
     math::dse3 mB;          ///< Bias force
     Eigen::MatrixXd mAI_S;

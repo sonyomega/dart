@@ -291,26 +291,6 @@ Eigen::VectorXd GenCoordSystem::get_tau() const
     return tau;
 }
 
-int SystemConfiguration::getDof() const
-{
-
-}
-
-SystemConfiguration GenCoordSystem::getConfiguration() const
-{
-//    int size = getNumDofs();
-//    Eigen::VectorXd dq = Eigen::VectorXd::Zero(size);
-
-//    SystemConfiguration config;
-
-//    for (int i = 0; i < mGeneralizedCoordinates.size(); ++i) {
-//        mGeneralizedCoordinates[i];
-
-//    }
-
-//    return config;
-}
-
 //void System::setState(const Eigen::VectorXd& _state)
 //{
 //    int n = getNumDofs();

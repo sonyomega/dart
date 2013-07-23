@@ -46,115 +46,6 @@
 namespace dart {
 namespace dynamics {
 
-class GeneralizedCoordinate
-{
-public:
-    GeneralizedCoordinate();
-    virtual ~GeneralizedCoordinate();
-
-protected:
-
-private:
-
-};
-
-class ScalarCoordinate : public GeneralizedCoordinate
-{
-public:
-    ScalarCoordinate();
-    virtual ~ScalarCoordinate();
-
-protected:
-    double q;
-    double dq;
-    double ddq;
-    double tau;
-
-private:
-
-};
-
-class SO3Coordinate
-{
-public:
-    SO3Coordinate();
-    virtual ~SO3Coordinate();
-
-protected:
-    std::vector<math::SO3> R;
-    std::vector<math::so3> w;
-    std::vector<math::so3> dw;
-    std::vector<math::dso3> m;
-
-private:
-
-};
-
-class SE3Coordinate
-{
-public:
-    SE3Coordinate();
-    virtual ~SE3Coordinate();
-
-protected:
-    std::vector<math::SE3> T;
-    std::vector<math::se3> V;
-    std::vector<math::se3> dV;
-    std::vector<math::dse3> F;
-
-private:
-
-};
-
-/// @brief Generalized configuration of a system
-class SystemConfiguration
-{
-public:
-    SystemConfiguration();
-    virtual ~SystemConfiguration();
-
-    int getDof() const;
-
-    std::vector<double> theta;
-    std::vector<math::SO3> R;
-    std::vector<math::SE3> T;
-
-protected:
-
-private:
-};
-
-/// @brief Generalized velocity of a system
-class SystemVelocity
-{
-public:
-    SystemVelocity();
-    virtual ~SystemVelocity();
-
-protected:
-    std::vector<double> theta;
-    std::vector<math::so3> w;
-    std::vector<math::se3> V;
-
-private:
-};
-
-typedef SystemVelocity SystemAcceleration;
-
-class SystemForce
-{
-public:
-    SystemForce();
-    virtual ~SystemForce();
-
-protected:
-    std::vector<double> tau;
-    std::vector<math::so3> m;
-    std::vector<math::se3> F;
-
-private:
-};
-
 /// @brief System is a base class for every classes that has Dofs.
 class GenCoordSystem
 {
@@ -229,13 +120,9 @@ public:
 //    /// @brief
 //    Eigen::VectorXd getState() const;
 
-    SystemConfiguration getConfiguration() const;
-
 protected:
     /// @brief Pointers to Dofs.
     std::vector<GenCoord*> mDofs;
-
-    std::vector<GeneralizedCoordinate*> mGeneralizedCoordinates;
 
 private:
 
