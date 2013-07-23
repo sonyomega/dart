@@ -1,7 +1,7 @@
 #include "MyWindow.h"
+#include "common/Paths.h"
 #include "dynamics/Skeleton.h"
 #include "utils/SkelParser.h"
-#include "utils/Paths.h"
 
 using namespace dart;
 using namespace dynamics;
