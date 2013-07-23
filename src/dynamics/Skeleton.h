@@ -257,6 +257,20 @@ public:
                                 bool _withExternalForces = false,
                                 bool _withDampingForces = false);
 
+    /// @brief Evaluate external forces to generalized torques.
+    /// Similarly to the inverse dynamics computation, when _useRecursive is
+    /// true, a recursive algorithm is used; else the jacobian is used to do the
+    /// conversion: tau = J^{T}F. Highly recommand to use this function after
+    /// the respective (recursive or nonrecursive) dynamics computation because
+    /// the necessary Jacobians will be ready. Extra care is needed to make sure
+    /// the required quantities are up-to-date when using this function alone.
+    void evalExternalForces();
+
+    /// @brief Clear all the contacts of external forces.
+    /// Automatically called after each (forward/inverse) dynamics computation,
+    /// which marks the end of a cycle.
+    void clearExternalForces();
+
     // TODO: Not implemeted.
     /// @brief
     void computeInverseDynamicsWithZeroAcceleration(

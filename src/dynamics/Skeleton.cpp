@@ -265,6 +265,28 @@ void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity,
     }
 }
 
+void Skeleton::evalExternalForces()
+{
+    mFext.setZero();
+    int nNodes = getNumNodes();
+
+    // recursive from child to parent
+    for (int i = nNodes-1; i >= 0; i--)
+    {
+        BodyNode* nodei = getNode(i);
+
+        nodei->evalExternalForcesRecursive(mFext);
+    }
+}
+
+void Skeleton::clearExternalForces()
+{
+    int nNodes = getNumNodes();
+
+    for (int i = 0; i < nNodes; i++)
+        mBodies.at(i)->clearExternalForces();
+}
+
 void Skeleton::computeInverseDynamicsWithZeroAcceleration(
         const Eigen::Vector3d& _gravity, bool _withExternalForces)
 {
@@ -313,6 +335,7 @@ void Skeleton::computeForwardDynamicsID(
     set_tau(tau_old);
 
     // TODO: add evaluation of external forces in generalized coordinate.
+    evalExternalForces();
 
     Eigen::VectorXd qddot = this->getInvMassMatrix()
                             * (-this->getCombinedVector()
@@ -363,6 +386,7 @@ void Skeleton::computeForwardDynamicsID2(
     set_tau(tau_old);
 
     // TODO: add evaluation of external forces in generalized coordinate.
+    evalExternalForces();
 
     Eigen::VectorXd qddot = this->getInvMassMatrix()
                             * (-this->getCombinedVector()
