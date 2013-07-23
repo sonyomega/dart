@@ -291,26 +291,5 @@ Eigen::VectorXd GenCoordSystem::get_tau() const
     return tau;
 }
 
-//void System::setState(const Eigen::VectorXd& _state)
-//{
-//    int n = getNumDofs();
-
-//    assert(_state.size() == n * 2);
-
-//    set_q(_state.segment(0, n));
-//    set_dq(_state.segment(n, n));
-//}
-
-//Eigen::VectorXd System::getState() const
-//{
-//    int n = getNumDofs();
-//    Eigen::VectorXd state = Eigen::VectorXd::Zero(n * 2);
-
-//    state.segment(0, n) = get_q();
-//    state.segment(n, n) = get_dq();
-
-//    return state;
-//}
-
 } // namespace dynamics
 } // namespace dart
