@@ -136,10 +136,10 @@ public:
     void setChildBody(BodyNode* _body);
 
     /// @brief
-    void setLocalTransformFromParentBody(const math::SE3& _T);
+    void setTransformFromParentBody(const math::SE3& _T);
 
     /// @brief
-    void setLocalTransformFromChildBody(const math::SE3& _T);
+    void setTransformFromChildBody(const math::SE3& _T);
 
     /// @brief
     DEPRECATED BodyNode* getParentNode() const { return mParentBody; }
