@@ -37,7 +37,8 @@
  */
 
 #include "Win3D.h"
-#include "Jitter.h"
+
+#include "dart/yui/Jitter.h"
 
 using namespace Eigen;
 

@@ -40,7 +40,7 @@
 
 #include <vector>
 #include <Eigen/Dense>
-#include "OptimizerArrayTypes.h"
+#include "dart/optimizer/OptimizerArrayTypes.h"
 
 namespace dart {
 namespace optimizer {

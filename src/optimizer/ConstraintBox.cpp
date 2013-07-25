@@ -36,7 +36,7 @@
  */
 
 #include "ConstraintBox.h"
-#include "Constraint.h"
+#include "dart/optimizer/Constraint.h"
 
 #include <Eigen/Dense>
 using namespace Eigen;

@@ -1,6 +1,6 @@
 #include <iomanip>
 
-#include "math/LieGroup.h"
+#include "dart/math/LieGroup.h"
 
 namespace dart {
 namespace math {

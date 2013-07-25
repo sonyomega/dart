@@ -48,9 +48,9 @@
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/breadth_first_search.hpp>
 
-#include "math/LieGroup.h"
-#include "common/Deprecated.h"
-#include "dynamics/System.h"
+#include "dart/math/LieGroup.h"
+#include "dart/common/Deprecated.h"
+#include "dart/dynamics/System.h"
 
 namespace dart {
 

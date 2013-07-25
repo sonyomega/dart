@@ -38,7 +38,7 @@
 #ifndef KINEMATICS_SHAPE_CUBE_H
 #define KINEMATICS_SHAPE_CUBE_H
 
-#include "Shape.h"
+#include "dart/dynamics/Shape.h"
 
 namespace dart {
 namespace dynamics {

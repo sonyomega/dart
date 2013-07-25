@@ -36,8 +36,8 @@
  */
 
 #include "Solver.h"
-#include "Var.h"
-#include "Problem.h"
+#include "dart/optimizer/Var.h"
+#include "dart/optimizer/Problem.h"
 using namespace Eigen;
 
 namespace dart {

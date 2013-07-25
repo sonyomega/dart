@@ -38,8 +38,8 @@
 #ifndef YUI_WIN3D_H
 #define YUI_WIN3D_H
 
-#include "GlutWindow.h"
-#include "Trackball.h"
+#include "dart/yui/GlutWindow.h"
+#include "dart/yui/Trackball.h"
 #include <Eigen/Eigen>
 
 namespace dart {

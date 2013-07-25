@@ -38,7 +38,7 @@
 #ifndef RENDERER_LIGHT_H
 #define RENDERER_LIGHT_H
 
-#include "Eigen/Core"
+#include "dart/Eigen/Core"
 
 namespace dart {
 namespace renderer {

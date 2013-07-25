@@ -35,15 +35,15 @@
 #include <iostream>
 #include <gtest/gtest.h>
 
-#include "common/Paths.h"
-#include "math/UtilsMath.h"
-//#include "dynamics/FileInfoSkel.hpp"
-#include "dynamics/Skeleton.h"
-#include "dynamics/BodyNode.h"
-//#include "dynamics/FileInfoDof.h"
-//#include "dynamics/FileInfoC3D.h"
-#include "simulation/World.h"
-#include "utils/SkelParser.h"
+#include "dart/common/Paths.h"
+#include "dart/math/UtilsMath.h"
+//#include "dart/dynamics/FileInfoSkel.hpp"
+#include "dart/dynamics/Skeleton.h"
+#include "dart/dynamics/BodyNode.h"
+//#include "dart/dynamics/FileInfoDof.h"
+//#include "dart/dynamics/FileInfoC3D.h"
+#include "dart/simulation/World.h"
+#include "dart/utils/SkelParser.h"
 
 //using namespace std;
 using namespace dart;

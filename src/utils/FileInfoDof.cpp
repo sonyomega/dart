@@ -39,9 +39,9 @@
 #include <fstream>
 #include <iostream>
 
-#include "dynamics/Skeleton.h"
-#include "dynamics/Dof.h"
-#include "utils/FileInfoDof.h"
+#include "dart/dynamics/Skeleton.h"
+#include "dart/dynamics/Dof.h"
+#include "dart/utils/FileInfoDof.h"
 
 using namespace std;
 

@@ -35,9 +35,9 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "math/UtilsMath.h"
-#include "math/LieGroup.h"
-#include "dynamics/FreeJoint.h"
+#include "dart/math/UtilsMath.h"
+#include "dart/math/LieGroup.h"
+#include "dart/dynamics/FreeJoint.h"
 
 namespace dart {
 namespace dynamics {

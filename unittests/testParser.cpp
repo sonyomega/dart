@@ -39,11 +39,11 @@
 #include <gtest/gtest.h>
 #include "TestHelpers.h"
 
-#include "dynamics/RevoluteJoint.h"
-#include "dynamics/Skeleton.h"
-#include "common/Paths.h"
-#include "simulation/World.h"
-#include "utils/SkelParser.h"
+#include "dart/dynamics/RevoluteJoint.h"
+#include "dart/dynamics/Skeleton.h"
+#include "dart/common/Paths.h"
+#include "dart/simulation/World.h"
+#include "dart/utils/SkelParser.h"
 
 using namespace dart;
 using namespace math;

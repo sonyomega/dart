@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dynamics/System.h"
-#include "integration/EulerIntegrator.h"
+#include "dart/dynamics/System.h"
+#include "dart/integration/EulerIntegrator.h"
 
 using namespace Eigen;
 

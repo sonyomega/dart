@@ -36,16 +36,16 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dynamics/BodyNode.h"
+#include "dart/dynamics/BodyNode.h"
 
 #include <iostream>
 
-#include "common/UtilsCode.h"
-#include "math/UtilsMath.h"
-#include "renderer/RenderInterface.h"
-#include "dynamics/Joint.h"
-#include "dynamics/Shape.h"
-#include "dynamics/Skeleton.h"
+#include "dart/common/UtilsCode.h"
+#include "dart/math/UtilsMath.h"
+#include "dart/renderer/RenderInterface.h"
+#include "dart/dynamics/Joint.h"
+#include "dart/dynamics/Shape.h"
+#include "dart/dynamics/Skeleton.h"
 
 namespace dart {
 namespace dynamics {

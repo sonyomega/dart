@@ -39,7 +39,6 @@
 #include <limits>
 
 #include "Dof.h"
-//#include "Transformation.h"
 
 namespace dart {
 namespace dynamics {

@@ -40,7 +40,7 @@
 
 #include <vector>
 #include <Eigen/Dense>
-#include "dynamics/System.h"
+#include "dart/dynamics/System.h"
 
 namespace dart {
 namespace dynamics { class GenCoordSystem; }

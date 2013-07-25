@@ -20,9 +20,9 @@
  *                                                                       *
  *************************************************************************/
 
-#include "common.h"
+#include "dart/lcpsolver/common.h"
 #include "matrix.h"
-//#include "config.h"
+//#include "dart/config.h"
 #ifdef __APPLE__
 	#include <malloc/malloc.h>
 #else

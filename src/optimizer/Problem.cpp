@@ -40,10 +40,10 @@
 #include <iostream>
 using namespace std;
 
-#include "Var.h"
-#include "Constraint.h"
-#include "ConstraintBox.h"
-#include "ObjectiveBox.h"
+#include "dart/optimizer/Var.h"
+#include "dart/optimizer/Constraint.h"
+#include "dart/optimizer/ConstraintBox.h"
+#include "dart/optimizer/ObjectiveBox.h"
 
 namespace dart {
 namespace optimizer {

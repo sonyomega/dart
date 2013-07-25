@@ -36,7 +36,7 @@
  */
 
 #include "ShapeCylinder.h"
-#include "renderer/RenderInterface.h"
+#include "dart/renderer/RenderInterface.h"
 
 using namespace std;
 using namespace Eigen;

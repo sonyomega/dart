@@ -12,8 +12,8 @@
 #include <limits>
 #include <list>
 #include <vector>
-#include "simulation/World.h"
-#include "RRT.h"
+#include "dart/simulation/World.h"
+#include "dart/RRT.h"
 
 namespace dart {
 namespace planning {

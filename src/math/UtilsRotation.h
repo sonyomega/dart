@@ -41,7 +41,7 @@
 // External Libraries
 #include <Eigen/Dense>
 // Local Headers
-#include "common/Misc.h"
+#include "dart/common/Misc.h"
 
 namespace dart {
 namespace math {

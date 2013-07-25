@@ -32,9 +32,9 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "common/UtilsCode.h"
-#include "math/UtilsRotation.h"
-#include "math/UtilsMath.h"
+#include "dart/common/UtilsCode.h"
+#include "dart/math/UtilsRotation.h"
+#include "dart/math/UtilsMath.h"
 #include <iostream>
 #include <gtest/gtest.h>
 #include <Eigen/Dense>

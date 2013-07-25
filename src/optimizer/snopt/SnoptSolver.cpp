@@ -13,11 +13,11 @@
 using namespace std;
 using namespace Eigen;
 
-#include "optimizer/Problem.h"
-#include "optimizer/Var.h"
-#include "optimizer/Constraint.h"
-#include "optimizer/ConstraintBox.h"
-#include "optimizer/ObjectiveBox.h"
+#include "dart/optimizer/Problem.h"
+#include "dart/optimizer/Var.h"
+#include "dart/optimizer/Constraint.h"
+#include "dart/optimizer/ConstraintBox.h"
+#include "dart/optimizer/ObjectiveBox.h"
 
 namespace dart {
 namespace optimizer {

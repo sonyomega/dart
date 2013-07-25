@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "GLFuncs.h"
-#include "renderer/LoadOpengl.h"
+#include "dart/yui/GLFuncs.h"
+#include "dart/renderer/LoadOpengl.h"
 #include <string>
 #include <iostream>
 #include <Eigen/Eigen>

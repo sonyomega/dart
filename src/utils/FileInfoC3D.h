@@ -41,7 +41,7 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "math/EigenHelper.h"
+#include "dart/math/EigenHelper.h"
 
 namespace dart {
 namespace utils {

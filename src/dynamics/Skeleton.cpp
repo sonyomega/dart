@@ -36,13 +36,13 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "math/LieGroup.h"
-#include "math/UtilsMath.h"
-#include "dynamics/BodyNode.h"
-#include "dynamics/Dof.h"
-#include "dynamics/Joint.h"
-#include "dynamics/Skeleton.h"
-#include "dynamics/Skeleton.h"
+#include "dart/math/LieGroup.h"
+#include "dart/math/UtilsMath.h"
+#include "dart/dynamics/BodyNode.h"
+#include "dart/dynamics/Dof.h"
+#include "dart/dynamics/Joint.h"
+#include "dart/dynamics/Skeleton.h"
+#include "dart/dynamics/Skeleton.h"
 
 namespace dart {
 namespace dynamics {

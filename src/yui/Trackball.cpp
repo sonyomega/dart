@@ -36,7 +36,7 @@
  */
 
 #include "Trackball.h"
-#include "renderer/LoadOpengl.h"
+#include "dart/renderer/LoadOpengl.h"
 
 using namespace Eigen;
 

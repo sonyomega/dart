@@ -38,7 +38,7 @@
 #ifndef RENDERER_CAMERA_H
 #define RENDERER_CAMERA_H
 
-#include "Eigen/Core"
+#include "dart/Eigen/Core"
 
 namespace dart {
 namespace renderer {

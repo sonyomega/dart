@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "common/UtilsCode.h"
-#include "integration/RK4Integrator.h"
+#include "dart/common/UtilsCode.h"
+#include "dart/integration/RK4Integrator.h"
 
 using namespace Eigen;
 

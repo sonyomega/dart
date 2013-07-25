@@ -38,7 +38,7 @@
 #ifndef DART_CONSTRAINT_CLOSEDLOOP_CONSTRAINT_H
 #define DART_CONSTRAINT_CLOSEDLOOP_CONSTRAINT_H
 
-#include "Constraint.h"
+#include "dart/constraint/Constraint.h"
 
 namespace dart {
 

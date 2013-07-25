@@ -36,7 +36,7 @@
  */
 
 #include "ObjectiveBox.h"
-#include "Constraint.h"
+#include "dart/optimizer/Constraint.h"
 using namespace Eigen;
 #include <iostream>
 using namespace std;

@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "math/LieGroup.h"
-#include "dynamics/TranslationalJoint.h"
+#include "dart/math/LieGroup.h"
+#include "dart/dynamics/TranslationalJoint.h"
 
 namespace dart {
 namespace dynamics {

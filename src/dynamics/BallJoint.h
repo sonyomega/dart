@@ -40,8 +40,8 @@
 
 #include <Eigen/Dense>
 
-#include "dynamics/Dof.h"
-#include "dynamics/Joint.h"
+#include "dart/dynamics/Dof.h"
+#include "dart/dynamics/Joint.h"
 
 namespace dart {
 namespace dynamics {

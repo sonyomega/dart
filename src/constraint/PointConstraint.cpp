@@ -1,9 +1,9 @@
-#include "constraint/PointConstraint.h"
+#include "dart/constraint/PointConstraint.h"
 
-#include "math/UtilsMath.h"
-#include "dynamics/BodyNode.h"
-#include "dynamics/Skeleton.h"
-#include "dynamics/BodyNode.h"
+#include "dart/math/UtilsMath.h"
+#include "dart/dynamics/BodyNode.h"
+#include "dart/dynamics/Skeleton.h"
+#include "dart/dynamics/BodyNode.h"
 
 using namespace Eigen;
 using namespace dart;

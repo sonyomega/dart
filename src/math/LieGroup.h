@@ -9,7 +9,7 @@
 
 #include <Eigen/Dense>
 
-#include "common/UtilsCode.h"
+#include "dart/common/UtilsCode.h"
 
 #define LIE_EPS		 1E-6
 #define SCALAR_0	 0.0
@@ -255,7 +255,7 @@ dse3 dad(const se3& V, const dse3& F);
 
 Inertia Transform(const SE3& T, const Inertia& AI);
 
-#include "math/LieGroupinl.h"
+#include "dart/math/LieGroupinl.h"
 
 } // namespace math
 } // namespace dart

@@ -1,13 +1,13 @@
-#include "constraint/ContactDynamics.h"
+#include "dart/constraint/ContactDynamics.h"
 
-#include "common/Timer.h"
-#include "math/UtilsMath.h"
-#include "collision/fcl/FCLCollisionDetector.h"
-#include "collision/fcl_mesh/FCLMESHCollisionDetector.h"
-#include "lcpsolver/LCPSolver.h"
-#include "dynamics/BodyNode.h"
-#include "dynamics/Shape.h"
-#include "dynamics/Skeleton.h"
+#include "dart/common/Timer.h"
+#include "dart/math/UtilsMath.h"
+#include "dart/collision/fcl/FCLCollisionDetector.h"
+#include "dart/collision/fcl_mesh/FCLMESHCollisionDetector.h"
+#include "dart/lcpsolver/LCPSolver.h"
+#include "dart/dynamics/BodyNode.h"
+#include "dart/dynamics/Shape.h"
+#include "dart/dynamics/Skeleton.h"
 
 using namespace Eigen;
 using namespace dart;

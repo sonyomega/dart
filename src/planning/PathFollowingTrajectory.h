@@ -39,8 +39,8 @@
 #pragma once
 
 #include <Eigen/Core>
-#include "Path.h"
-#include "Trajectory.h"
+#include "dart/planning/Path.h"
+#include "dart/planning/Trajectory.h"
 
 namespace dart {
 namespace planning {

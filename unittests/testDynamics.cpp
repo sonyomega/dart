@@ -35,14 +35,14 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <gtest/gtest.h>
-//#include "dynamics/BodyNode.h"
-//#include "dynamics/Skeleton.h"
-//#include "dynamics/FileInfoSkel.hpp"
-//#include "dynamics/FileInfoDof.h"
-//#include "dynamics/BodyNode.h"
-//#include "common/Paths.h"
-//#include "math/UtilsRotation.h"
-//#include "math/UtilsMath.h"
+//#include "dart/dynamics/BodyNode.h"
+//#include "dart/dynamics/Skeleton.h"
+//#include "dart/dynamics/FileInfoSkel.hpp"
+//#include "dart/dynamics/FileInfoDof.h"
+//#include "dart/dynamics/BodyNode.h"
+//#include "dart/common/Paths.h"
+//#include "dart/math/UtilsRotation.h"
+//#include "dart/math/UtilsMath.h"
 
 //using namespace std;
 

@@ -44,8 +44,8 @@
 #include <iostream>
 using namespace std;
 #include "GlutWindow.h"
-#include "yui/GLFuncs.h"
-#include "renderer/OpenGLRenderInterface.h"
+#include "dart/yui/GLFuncs.h"
+#include "dart/renderer/OpenGLRenderInterface.h"
 
 namespace dart {
 namespace yui {

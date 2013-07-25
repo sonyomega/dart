@@ -41,17 +41,17 @@
 #include <fcl/shape/geometric_shapes.h>
 #include <fcl/BVH/BVH_model.h>
 
-#include "dynamics/BodyNode.h"
-#include "dynamics/Shape.h"
-#include "dynamics/ShapeMesh.h"
-#include "dynamics/ShapeCylinder.h"
-#include "dynamics/BodyNode.h"
+#include "dart/dynamics/BodyNode.h"
+#include "dart/dynamics/Shape.h"
+#include "dart/dynamics/ShapeMesh.h"
+#include "dart/dynamics/ShapeCylinder.h"
+#include "dart/dynamics/BodyNode.h"
 
-#include "renderer/LoadOpengl.h"
+#include "dart/renderer/LoadOpengl.h"
 
-#include "collision/fcl_mesh/CollisionShapes.h"
-#include "collision/fcl_mesh/FCLMESHCollisionDetector.h"
-#include "collision/fcl_mesh/FCLMESHCollisionNode.h"
+#include "dart/collision/fcl_mesh/CollisionShapes.h"
+#include "dart/collision/fcl_mesh/FCLMESHCollisionDetector.h"
+#include "dart/collision/fcl_mesh/FCLMESHCollisionNode.h"
 
 namespace dart {
 namespace collision {

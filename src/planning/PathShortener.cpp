@@ -1,9 +1,9 @@
 #include "PathShortener.h"
-#include "simulation/World.h"
-#include "RRT.h"
-#include "constraint/ContactDynamics.h"
-#include "collision/CollisionDetector.h"
-#include "dynamics/Skeleton.h"
+#include "dart/simulation/World.h"
+#include "dart/planning/RRT.h"
+#include "dart/constraint/ContactDynamics.h"
+#include "dart/collision/CollisionDetector.h"
+#include "dart/dynamics/Skeleton.h"
 
 using namespace std;
 using namespace Eigen;

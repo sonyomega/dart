@@ -42,9 +42,9 @@
  */
 
 #include "RRT.h"
-#include "simulation/World.h"
-#include "dynamics/Dof.h"
-#include "dynamics/Skeleton.h"
+#include "dart/simulation/World.h"
+#include "dart/dynamics/Dof.h"
+#include "dart/dynamics/Skeleton.h"
 
 using namespace std;
 using namespace Eigen;

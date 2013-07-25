@@ -40,8 +40,8 @@
 
 #include <list>
 #include <vector>
-#include "RenderInterface.h"
-#include "renderer/LoadOpengl.h"
+#include "dart/RenderInterface.h"
+#include "dart/renderer/LoadOpengl.h"
 
 using namespace std;
 

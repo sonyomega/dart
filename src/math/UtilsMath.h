@@ -52,7 +52,7 @@ using namespace std;
 #include <Eigen/Dense>
 using namespace Eigen;
 // Local Headers
-#include "common/Misc.h"
+#include "dart/common/Misc.h"
 
 namespace dart {
 namespace math {

@@ -45,15 +45,15 @@
 #include <boost/range/irange.hpp>
 #include <boost/pending/indirect_cmp.hpp>
 
-#include "common/UtilsCode.h"
-#include "math/LieGroup.h"
-#include "math/UtilsMath.h"
-#include "dynamics/BallJoint.h"
-#include "dynamics/RevoluteJoint.h"
-#include "dynamics/FreeJoint.h"
-#include "dynamics/TranslationalJoint.h"
-#include "dynamics/Skeleton.h"
-#include "simulation/World.h"
+#include "dart/common/UtilsCode.h"
+#include "dart/math/LieGroup.h"
+#include "dart/math/UtilsMath.h"
+#include "dart/dynamics/BallJoint.h"
+#include "dart/dynamics/RevoluteJoint.h"
+#include "dart/dynamics/FreeJoint.h"
+#include "dart/dynamics/TranslationalJoint.h"
+#include "dart/dynamics/Skeleton.h"
+#include "dart/simulation/World.h"
 
 #include "TestHelpers.h"
 

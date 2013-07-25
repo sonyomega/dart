@@ -42,8 +42,8 @@
 #include <map>
 #include <fcl/BVH/BVH_model.h>
 
-#include "collision/CollisionDetector.h"
-#include "collision/fcl_mesh/tri_tri_intersection_test.h"
+#include "dart/collision/CollisionDetector.h"
+#include "dart/collision/fcl_mesh/tri_tri_intersection_test.h"
 
 namespace fcl { class CollisionResult; }
 

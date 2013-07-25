@@ -44,7 +44,7 @@
 // http://www.grinninglizard.com/tinyxml2/index.html
 #include <tinyxml2.h>
 
-#include "math/LieGroup.h"
+#include "dart/math/LieGroup.h"
 
 namespace dart {
 
