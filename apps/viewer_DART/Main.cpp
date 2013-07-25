@@ -1,6 +1,6 @@
+#include "common/Paths.h"
+#include "utils/SkelParser.h"
 #include "MyWindow.h"
-#include "dart/common/Paths.h"
-#include "dart/utils/SkelParser.h"
 
 int main(int argc, char* argv[])
 {

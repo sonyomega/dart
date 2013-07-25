@@ -38,13 +38,14 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "SimWindow.h"
 #include <cstdio>
-#include "dart/simulation/World.h"
-#include "dart/dynamics/Skeleton.h"
-#include "dart/constraint/ConstraintDynamics.h"
-#include "dart/collision/CollisionDetector.h"
-#include "dart/yui/GLFuncs.h"
+
+#include "SimWindow.h"
+#include "simulation/World.h"
+#include "dynamics/Skeleton.h"
+#include "constraint/ConstraintDynamics.h"
+#include "collision/CollisionDetector.h"
+#include "yui/GLFuncs.h"
 
 using namespace Eigen;
 using namespace std;

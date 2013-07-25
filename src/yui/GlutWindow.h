@@ -39,10 +39,10 @@
 #ifndef YUI_GLUTWINDOW_H
 #define YUI_GLUTWINDOW_H
 
-#include "dart/renderer/LoadOpengl.h"
-#include "dart/renderer/RenderInterface.h"
+#include "renderer/LoadOpengl.h"
+#include "renderer/RenderInterface.h"
 #include <vector>
-#include "dart/yui/lodepng.h"
+#include "lodepng.h"
 
 namespace dart {
 namespace yui {

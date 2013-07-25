@@ -42,11 +42,11 @@
 
 #include <iostream>
 
-#include "dart/integration/EulerIntegrator.h"
-#include "dart/dynamics/Dof.h"
-#include "dart/dynamics/Skeleton.h"
-#include "dart/constraint/ConstraintDynamics.h"
-#include "dart/simulation/World.h"
+#include "integration/EulerIntegrator.h"
+#include "dynamics/Dof.h"
+#include "dynamics/Skeleton.h"
+#include "constraint/ConstraintDynamics.h"
+#include "simulation/World.h"
 
 namespace dart {
 namespace simulation {

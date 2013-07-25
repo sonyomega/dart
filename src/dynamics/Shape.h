@@ -40,7 +40,7 @@
 
 #include <Eigen/Dense>
 
-#include "dart/math/LieGroup.h"
+#include "math/LieGroup.h"
 
 extern "C" { struct aiScene; }
 

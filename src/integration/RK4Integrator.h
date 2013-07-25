@@ -39,7 +39,7 @@
 #define DART_INTEGRATION_RK4_INTEGRATOR_H
 
 #include <Eigen/Dense>
-#include "dart/integration/Integrator.h"
+#include "integration/Integrator.h"
 
 namespace dart {
 namespace integration {

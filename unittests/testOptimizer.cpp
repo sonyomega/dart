@@ -36,11 +36,11 @@
 #include <iostream>
 #include <gtest/gtest.h>
 #include <Eigen/Dense>
-//#include "dart/optimizer/Var.h"
-//#include "dart/optimizer/Constraint.h"
-//#include "dart/optimizer/Problem.h"
-//#include "dart/optimizer/ObjectiveBox.h"
-//#include "dart/optimizer/snopt/SnoptSolver.h"
+//#include "optimizer/Var.h"
+//#include "optimizer/Constraint.h"
+//#include "optimizer/Problem.h"
+//#include "optimizer/ObjectiveBox.h"
+//#include "optimizer/snopt/SnoptSolver.h"
 
 using namespace std;
 using namespace Eigen;

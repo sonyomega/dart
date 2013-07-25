@@ -38,8 +38,8 @@
 #include "Marker.h"
 using namespace Eigen;
 
-#include "dart/dynamics/BodyNode.h"
-#include "dart/renderer/RenderInterface.h"
+#include "dynamics/BodyNode.h"
+#include "renderer/RenderInterface.h"
 
 namespace dart {
 namespace dynamics {

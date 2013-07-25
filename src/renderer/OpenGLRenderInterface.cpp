@@ -38,13 +38,13 @@
 #include <iostream>
 #include <assimp/cimport.h>
 
-#include "dart/dynamics/Skeleton.h"
-#include "dart/dynamics/BodyNode.h"
-#include "dart/dynamics/Shape.h"
-#include "dart/dynamics/ShapeCylinder.h"
-#include "dart/dynamics/ShapeMesh.h"
-#include "dart/renderer/LoadOpengl.h"
-#include "dart/renderer/OpenGLRenderInterface.h"
+#include "dynamics/Skeleton.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/Shape.h"
+#include "dynamics/ShapeCylinder.h"
+#include "dynamics/ShapeMesh.h"
+#include "renderer/LoadOpengl.h"
+#include "renderer/OpenGLRenderInterface.h"
 
 using namespace std;
 using namespace Eigen;

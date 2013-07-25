@@ -41,7 +41,7 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "dart/dynamics/Dof.h"
+#include "dynamics/Dof.h"
 
 namespace dart {
 namespace dynamics {

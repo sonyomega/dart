@@ -35,7 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dart/integration/Integrator.h"
+#include "integration/Integrator.h"
 
 namespace dart {
 namespace integration {

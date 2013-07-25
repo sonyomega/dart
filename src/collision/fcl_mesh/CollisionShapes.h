@@ -9,7 +9,7 @@
 #ifndef COLLISION_SHAPES_H_
 #define COLLISION_SHAPES_H_
 
-#include "dart/fcl/BVH/BVH_model.h"
+#include "fcl/BVH/BVH_model.h"
 #include <assimp/scene.h>
 #include <math.h>
 

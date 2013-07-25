@@ -35,7 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Eigen/Dense>
+#include "Eigen/Dense"
 using namespace Eigen;
 #include <vector>
 using namespace std;

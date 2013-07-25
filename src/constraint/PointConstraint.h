@@ -38,7 +38,7 @@
 #ifndef DART_CONSTRAINT_POINT_CONSTRAINT_H
 #define DART_CONSTRAINT_POINT_CONSTRAINT_H
 
-#include "dart/constraint/Constraint.h"
+#include "constraint/Constraint.h"
 
 namespace dart {
 

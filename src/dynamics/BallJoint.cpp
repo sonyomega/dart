@@ -35,9 +35,9 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dart/math/UtilsMath.h"
-#include "dart/math/LieGroup.h"
-#include "dart/dynamics/BallJoint.h"
+#include "math/UtilsMath.h"
+#include "math/LieGroup.h"
+#include "dynamics/BallJoint.h"
 
 namespace dart {
 namespace dynamics {

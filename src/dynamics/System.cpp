@@ -35,7 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dart/dynamics/System.h"
+#include "dynamics/System.h"
 
 namespace dart {
 namespace dynamics {

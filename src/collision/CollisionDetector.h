@@ -40,7 +40,7 @@
 
 #include <vector>
 #include <Eigen/Dense>
-#include "dart/collision/CollisionNode.h"
+#include "collision/CollisionNode.h"
 
 namespace dart {
 namespace dynamics { class BodyNode; }

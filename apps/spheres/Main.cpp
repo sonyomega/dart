@@ -1,7 +1,7 @@
-#include "dart/common/Paths.h"
-#include "dart/math/UtilsMath.h"
-#include "dart/utils/SkelParser.h"
-#include "dart/dynamics/Skeleton.h"
+#include "common/Paths.h"
+#include "math/UtilsMath.h"
+#include "utils/SkelParser.h"
+#include "dynamics/Skeleton.h"
 #include "MyWindow.h"
 
 int main(int argc, char* argv[])

@@ -42,7 +42,7 @@
 #include <map>
 #include <Eigen/Dense>
 
-#include "dart/collision/CollisionDetector.h"
+#include "collision/CollisionDetector.h"
 
 namespace dart {
 namespace collision {

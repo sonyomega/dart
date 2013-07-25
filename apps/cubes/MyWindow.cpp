@@ -1,7 +1,7 @@
 #include "MyWindow.h"
-#include "dart/simulation/World.h"
-#include "dart/dynamics/BodyNode.h"
-#include "dart/dynamics/Skeleton.h"
+#include "simulation/World.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/Skeleton.h"
 
 using namespace Eigen;
 using namespace dart;

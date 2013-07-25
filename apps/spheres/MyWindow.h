@@ -1,8 +1,8 @@
 #ifndef _MYWINDOW_
 #define _MYWINDOW_
 
-#include "dart/yui/Win3D.h"
-#include "dart/simulation/SimWindow.h"
+#include "yui/Win3D.h"
+#include "simulation/SimWindow.h"
 
 /// @brief
 class MyWindow : public dart::simulation::SimWindow

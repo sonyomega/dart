@@ -36,7 +36,7 @@
  */
 
 #include "ShapeEllipsoid.h"
-#include "dart/renderer/RenderInterface.h"
+#include "renderer/RenderInterface.h"
 
 using namespace Eigen;
 

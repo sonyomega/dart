@@ -36,7 +36,7 @@
  */
 
 #include "ShapeMesh.h"
-#include "dart/renderer/RenderInterface.h"
+#include "renderer/RenderInterface.h"
 #include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>

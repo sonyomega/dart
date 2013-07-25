@@ -43,19 +43,19 @@
 #include <Eigen/Dense>
 
 // Local Files
-#include "dart/common/UtilsCode.h"
-#include "dart/dynamics/BodyNode.h"
-#include "dart/dynamics/ShapeBox.h"
-#include "dart/dynamics/ShapeCylinder.h"
-#include "dart/dynamics/ShapeEllipsoid.h"
-#include "dart/dynamics/WeldJoint.h"
-#include "dart/dynamics/RevoluteJoint.h"
-#include "dart/dynamics/TranslationalJoint.h"
-#include "dart/dynamics/BallJoint.h"
-#include "dart/dynamics/FreeJoint.h"
-#include "dart/dynamics/Skeleton.h"
-#include "dart/simulation/World.h"
-#include "dart/utils/SkelParser.h"
+#include "common/UtilsCode.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/ShapeBox.h"
+#include "dynamics/ShapeCylinder.h"
+#include "dynamics/ShapeEllipsoid.h"
+#include "dynamics/WeldJoint.h"
+#include "dynamics/RevoluteJoint.h"
+#include "dynamics/TranslationalJoint.h"
+#include "dynamics/BallJoint.h"
+#include "dynamics/FreeJoint.h"
+#include "dynamics/Skeleton.h"
+#include "simulation/World.h"
+#include "utils/SkelParser.h"
 
 namespace dart {
 namespace simulation {

@@ -39,17 +39,17 @@
 #include <gtest/gtest.h>
 #include "TestHelpers.h"
 
-#include "dart/common/UtilsCode.h"
-#include "dart/math/LieGroup.h"
-#include "dart/math/UtilsMath.h"
-#include "dart/dynamics/BallJoint.h"
-#include "dart/dynamics/RevoluteJoint.h"
-#include "dart/dynamics/PrismaticJoint.h"
-#include "dart/dynamics/FreeJoint.h"
-#include "dart/dynamics/WeldJoint.h"
-#include "dart/dynamics/TranslationalJoint.h"
-#include "dart/dynamics/Skeleton.h"
-#include "dart/simulation/World.h"
+#include "common/UtilsCode.h"
+#include "math/LieGroup.h"
+#include "math/UtilsMath.h"
+#include "dynamics/BallJoint.h"
+#include "dynamics/RevoluteJoint.h"
+#include "dynamics/PrismaticJoint.h"
+#include "dynamics/FreeJoint.h"
+#include "dynamics/WeldJoint.h"
+#include "dynamics/TranslationalJoint.h"
+#include "dynamics/Skeleton.h"
+#include "simulation/World.h"
 
 using namespace dart;
 using namespace math;

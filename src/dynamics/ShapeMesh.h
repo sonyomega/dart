@@ -38,7 +38,7 @@
 #ifndef KINEMATICS_SHAPE_MESH_H
 #define KINEMATICS_SHAPE_MESH_H
 
-#include "dart/dynamics/Shape.h"
+#include "Shape.h"
 
 namespace dart {
 namespace dynamics {

@@ -20,7 +20,7 @@
  *                                                                       *
  *************************************************************************/
 
-#include "dart/lcpsolver/odeconfig.h"
+#include "odeconfig.h"
 #include "error.h"
 
 
@@ -126,7 +126,7 @@ extern "C" void dMessage (int num, const char *msg, ...)
 #endif
 
 
-#include "dart/windows.h"
+#include "windows.h"
 
 
 extern "C" void dError (int num, const char *msg, ...)

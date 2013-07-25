@@ -1446,7 +1446,7 @@ examples can be found on the LodePNG website.
 10.1. decoder C++ example
 -------------------------
 
-#include "dart/lodepng.h"
+#include "lodepng.h"
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -1467,7 +1467,7 @@ int main(int argc, char *argv[])
 10.2. decoder C example
 -----------------------
 
-#include "dart/lodepng.h"
+#include "lodepng.h"
 
 int main(int argc, char *argv[])
 {

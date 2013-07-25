@@ -2,15 +2,15 @@
 #include <cmath>
 #include <fcl/collision.h>
 
-#include "dart/renderer/LoadOpengl.h"
-#include "dart/math/UtilsMath.h"
+#include "renderer/LoadOpengl.h"
+#include "math/UtilsMath.h"
 
-#include "dart/dynamics/BodyNode.h"
+#include "dynamics/BodyNode.h"
 
-#include "dart/collision/CollisionNode.h"
-#include "dart/collision/fcl_mesh/CollisionShapes.h"
-#include "dart/collision/fcl_mesh/FCLMESHCollisionNode.h"
-#include "dart/collision/fcl_mesh/FCLMESHCollisionDetector.h"
+#include "collision/CollisionNode.h"
+#include "collision/fcl_mesh/CollisionShapes.h"
+#include "collision/fcl_mesh/FCLMESHCollisionNode.h"
+#include "collision/fcl_mesh/FCLMESHCollisionDetector.h"
 
 using namespace std;
 using namespace Eigen;

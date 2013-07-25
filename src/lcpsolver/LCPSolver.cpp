@@ -1,8 +1,8 @@
 #include "LCPSolver.h"
+#include "Lemke.h"
 #include <cstdio>
-#include "dart/lcpsolver/Lemke.h"
-#include "dart/lcpsolver/lcp.h"
-#include "dart/lcpsolver/misc.h"
+#include "lcp.h"
+#include "misc.h"
 
 namespace dart {
 namespace lcpsolver {

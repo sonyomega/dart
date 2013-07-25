@@ -39,7 +39,7 @@
 #ifndef _LCP_SOLVER
 #define _LCP_SOLVER
 
-#include <Eigen/Dense>
+#include "Eigen/Dense"
 using namespace Eigen;
 
 #include <vector>

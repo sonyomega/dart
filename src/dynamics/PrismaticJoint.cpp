@@ -35,9 +35,9 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dart/math/LieGroup.h"
-#include "dart/dynamics/BodyNode.h"
-#include "dart/dynamics/PrismaticJoint.h"
+#include "math/LieGroup.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/PrismaticJoint.h"
 
 namespace dart {
 

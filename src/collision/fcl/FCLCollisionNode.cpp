@@ -38,12 +38,12 @@
 #include <assimp/scene.h>
 #include <fcl/shape/geometric_shapes.h>
 
-#include "dart/dynamics/BodyNode.h"
-#include "dart/dynamics/ShapeEllipsoid.h"
-#include "dart/dynamics/ShapeCylinder.h"
-#include "dart/dynamics/ShapeMesh.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/ShapeEllipsoid.h"
+#include "dynamics/ShapeCylinder.h"
+#include "dynamics/ShapeMesh.h"
 
-#include "dart/collision/fcl/FCLCollisionNode.h"
+#include "collision/fcl/FCLCollisionNode.h"
 
 namespace dart {
 namespace collision {

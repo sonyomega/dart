@@ -39,7 +39,7 @@
 #define YUI_GLFUNCS_H
 
 #include <Eigen/Eigen>
-//#include "dart/FreeImage.h"
+//#include "FreeImage.h"
 
 namespace dart {
 namespace yui {

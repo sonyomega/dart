@@ -39,8 +39,8 @@
 #define RENDERER_RENDERINTERFACE_H
 
 #include <vector>
-#include "dart/renderer/Light.h"
-#include "dart/renderer/Camera.h"
+#include "Light.h"
+#include "Camera.h"
 #include <assimp/scene.h>
 #include <Eigen/Dense>
 

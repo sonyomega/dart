@@ -35,9 +35,9 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dart/math/LieGroup.h"
-#include "dart/dynamics/BodyNode.h"
-#include "dart/dynamics/RevoluteJoint.h"
+#include "math/LieGroup.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/RevoluteJoint.h"
 
 namespace dart {
 namespace dynamics {

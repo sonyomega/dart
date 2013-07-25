@@ -37,7 +37,6 @@
  */
 
 #include "UtilsCode.h"
-
 using namespace std;
 
 namespace dart {

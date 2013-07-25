@@ -41,7 +41,7 @@
 #include <vector>
 #include <ctime>
 #include <Eigen/Dense>
-#include "dart/math/EigenHelper.h"
+#include "math/EigenHelper.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  C3D file reader and writer

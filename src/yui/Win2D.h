@@ -38,7 +38,7 @@
 #ifndef YUI_WIN2D_H
 #define YUI_WIN2D_H
 
-#include "dart/yui/GlutWindow.h"
+#include "GlutWindow.h"
 
 namespace dart {
 namespace yui {

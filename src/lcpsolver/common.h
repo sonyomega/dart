@@ -22,8 +22,8 @@
 
 #ifndef _ODE_COMMON_H_
 #define _ODE_COMMON_H_
-#include "dart/odeconfig.h"
-#include "dart/error.h"
+#include "odeconfig.h"
+#include "error.h"
 #include <math.h>
 
 #ifdef __cplusplus

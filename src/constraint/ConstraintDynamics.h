@@ -41,9 +41,9 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "dart/common/Deprecated.h"
-#include "dart/constraint/Constraint.h"
-#include "dart/collision/CollisionDetector.h"
+#include "common/Deprecated.h"
+#include "constraint/Constraint.h"
+#include "collision/CollisionDetector.h"
 
 namespace dart {
 

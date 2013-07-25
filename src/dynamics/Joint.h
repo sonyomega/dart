@@ -39,8 +39,8 @@
 #ifndef DART_KINEMATICS_JOINT_H
 #define DART_KINEMATICS_JOINT_H
 
-#include "dart/math/LieGroup.h"
-#include "dart/dynamics/System.h"
+#include "math/LieGroup.h"
+#include "dynamics/System.h"
 
 namespace dart {
 namespace renderer { class RenderInterface; }

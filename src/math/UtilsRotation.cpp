@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dart/math/UtilsRotation.h"
-#include "dart/math/UtilsMath.h"
+#include "math/UtilsRotation.h"
+#include "math/UtilsMath.h"
 
 // Standard Libraries
 #include <cstdio>

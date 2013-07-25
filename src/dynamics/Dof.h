@@ -42,8 +42,8 @@
 #include <cassert>
 #include <string>
 
-#include "dart/common/Deprecated.h"
-#include "dart/math/LieGroup.h"
+#include "common/Deprecated.h"
+#include "math/LieGroup.h"
 
 namespace dart {
 namespace dynamics {
