@@ -38,7 +38,7 @@
 #ifndef RENDERER_CAMERA_H
 #define RENDERER_CAMERA_H
 
-#include "Eigen/Core"
+#include <Eigen/Core>
 
 namespace dart {
 namespace renderer {
@@ -55,7 +55,7 @@ enum AXIS {
 class Camera {
 public:
     Camera() {}
-    virtual ~Camera() {};
+    virtual ~Camera() {}
     virtual void set(const Eigen::Vector3d& _eye, const Eigen::Vector3d& _look, const Eigen::Vector3d& _up);
     virtual void slide(double _delX, double _delY, double _delZ, bool _bLocal = false);
     virtual void setFrustum(float _vAng, float _asp, float _nearD, float _farD);

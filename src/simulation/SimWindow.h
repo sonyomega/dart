@@ -58,7 +58,7 @@ public:
     SimWindow();
 
     /// @brief
-    ~SimWindow();
+    virtual ~SimWindow();
 
     /// @brief
     virtual void timeStepping() { mWorld->step(); }

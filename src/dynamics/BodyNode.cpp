@@ -553,30 +553,69 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
                            const Eigen::Vector3d& _force,
                            bool _isOffsetLocal, bool _isForceLocal)
 {
-    dterr << "Not implemented.\n";
+    Vector3d pos = _offset;
+    Vector3d force = _force;
+
+    if (!_isOffsetLocal)
+        // TODO: not to use matrix()
+        pos = math::xformHom(getWorldInvTransformation().matrix(), _offset);
+
+    if (!_isForceLocal)
+        // TODO: not to use matrix()
+        force.noalias() = mW.matrix().topLeftCorner<3,3>().transpose() * _force;
+
+    mContacts.push_back(pair<Vector3d, Vector3d>(pos, force));
 }
 
-//void BodyNode::addExternalForceLocal(const math::dse3& _FextLocal)
-//{
-//    mFext += _FextLocal;
-//}
-//
-//void BodyNode::addExternalForceGlobal(const math::dse3& _FextWorld)
-//{
-//    mFext += _FextWorld;
-//}
-//
-//void BodyNode::addExternalForceLocal(
-//        const Eigen::Vector3d& _posLocal,
-//        const Eigen::Vector3d& _linearForceGlobal)
-//{
-//    dterr << "Not implemented.\n";
-//}
-//
-//math::dse3 BodyNode::getExternalForceGlobal() const
-//{
-//    dterr << "Not implemented.\n";
-//}
+void BodyNode::addExternalForceLocal(const math::dse3& _FextLocal)
+{
+    mFext += _FextLocal;
+}
+
+void BodyNode::addExternalForceGlobal(const math::dse3& _FextWorld)
+{
+    mFext += math::dAdT(mW, _FextWorld);
+}
+
+void BodyNode::addExternalForceLocal(
+        const Eigen::Vector3d& _offset,
+        const Eigen::Vector3d& _linearForce,
+        bool _isOffsetLocal,
+        bool _isLinearForceLocal)
+{
+    Vector3d offset = _offset;
+    Vector3d linearForce = _linearForce;
+
+    if (!_isOffsetLocal)
+        // TODO: not to use matrix()
+        offset = math::xformHom(getWorldInvTransformation().matrix(), _offset);
+
+    if (!_isLinearForceLocal)
+        // TODO: not to use matrix()
+        linearForce.noalias()
+                = mW.matrix().topLeftCorner<3,3>().transpose() * _linearForce;
+
+    math::dse3 contactForce;
+    contactForce.head<3>() = offset.cross(linearForce);
+    contactForce.tail<3>() = linearForce;
+
+    if (linearForce != Eigen::Vector3d::Zero())
+    {
+        int a = 10;
+    }
+
+    mFext += contactForce;
+}
+
+const math::dse3& BodyNode::getExternalForceLocal() const
+{
+    return mFext;
+}
+
+math::dse3 BodyNode::getExternalForceGlobal() const
+{
+    return math::dAdInvT(mW, mFext);
+}
 
 void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
                                bool _withExternalForces)
@@ -715,6 +754,18 @@ void BodyNode::updateMassMatrix()
     mM.triangularView<Eigen::StrictlyLower>() = mM.transpose();
 }
 
+void BodyNode::evalExternalForcesRecursive(Eigen::VectorXd& _extForce)
+{
+//    assert(mParentJoint != NULL);
+
+//    const math::Jacobian& J = mParentJoint->getLocalJacobian();
+
+//    Eigen::VectorXd localForce = J.transpose()*mFext;
+
+//    for(int i = 0; i < getNumDependentDofs(); i++)
+//        _extForce(mDependentDofs[i]) += mFext(i);
+}
+
 void BodyNode::aggregateMass(Eigen::MatrixXd& _M)
 {
     for(int i=0; i<getNumDependentDofs(); i++)
@@ -761,8 +812,10 @@ void BodyNode::addExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
 
 void BodyNode::clearExternalForces()
 {
+    mContacts.clear();
     mFext.setZero();
-    dterr << "Not implemented.\n";
+    //mExtForceBody.setZero();
+    //mExtTorqueBody.setZero();
 }
 
 } // namespace dynamics

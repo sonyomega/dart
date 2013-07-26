@@ -340,9 +340,9 @@ public:
     /// Coordinate transformations are applied when needed. The point of
     /// application and the force in local coordinates are stored in mContacts.
     /// When conversion is needed, make sure the transformations are avaialble.
-    void addExtForce(const Eigen::Vector3d& _offset,
+    DEPRECATED void addExtForce(const Eigen::Vector3d& _offset,
                      const Eigen::Vector3d& _force,
-                     bool _isOffsetLocal = true, bool _isForceLocal = false );
+                     bool _isOffsetLocal = true, bool _isForceLocal = false);
 
     /// @brief apply Cartesian torque to the node.
     ///
@@ -355,21 +355,29 @@ public:
     /// Called from @Skeleton::clearExternalForces.
     void clearExternalForces();
 
-    ///// @brief
-    //void addExternalForceLocal(const math::dse3& _FextLocal);
+    /// @brief
+    void addExternalForceLocal(const math::dse3& _FextLocal);
 
-    ///// @brief
-    //void addExternalForceGlobal(const math::dse3& _FextWorld);
+    /// @brief
+    void addExternalForceGlobal(const math::dse3& _FextWorld);
 
-    ///// @brief
-    //void addExternalForceLocal(const Eigen::Vector3d& _posLocal,
-    //                           const Eigen::Vector3d& _linearForceGlobal);
+    /// @brief apply linear Cartesian forces to this node.
+    ///
+    /// A force is defined by a point of application and a force vector. The
+    /// last two parameters specify frames of the first two parameters.
+    /// Coordinate transformations are applied when needed. The point of
+    /// application and the force in local coordinates are stored in mContacts.
+    /// When conversion is needed, make sure the transformations are avaialble.
+    void addExternalForceLocal(const Eigen::Vector3d& _offset,
+                               const Eigen::Vector3d& _linearForce,
+                               bool _isOffsetLocal = true,
+                               bool _isLinearForceLocal = false);
 
-    ///// @brief
-    //const math::dse3& getExternalForceLocal() const { return mFext; }
+    /// @brief
+    const math::dse3& getExternalForceLocal() const;
 
-    ///// @brief
-    //math::dse3 getExternalForceGlobal() const;
+    /// @brief
+    math::dse3 getExternalForceGlobal() const;
 
     /// @brief
     const math::dse3& getBodyForce() const { return mF; }
@@ -448,6 +456,10 @@ public:
 
     /// @brief
     void updateMassMatrix();
+
+    /// @brief Evaluates the external forces mFext in the generalized
+    /// coordinates recursively.
+    void evalExternalForcesRecursive(Eigen::VectorXd& _extForce);
 
     /// @brief
     void aggregateMass(Eigen::MatrixXd& M);
@@ -571,6 +583,11 @@ protected:
 
     /// @brief
     Eigen::MatrixXd mM;
+
+    /// @brief List of contact points where external forces are applied.
+    /// contact points are a pair of (local point offset, Cartesian force in
+    /// local coordinates).
+    DEPRECATED std::vector< std::pair<Eigen::Vector3d, Eigen::Vector3d> > mContacts;
 
 private:
     void _updateGeralizedInertia();
