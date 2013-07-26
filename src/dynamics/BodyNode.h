@@ -167,16 +167,22 @@ public:
     int getSkelIndex() const { return mSkelIndex; }
 
     /// @brief
-    void setVisualizationShape(Shape* _shape) { mVizShape = _shape; }
+    void addVisualizationShape(Shape *_p) { mVizShapes.push_back(_p); }
 
     /// @brief
-    Shape* getVisualizationShape() const { return mVizShape; }
+    int getNumVisualizationShapes() const { return mVizShapes.size(); }
 
     /// @brief
-    void setCollisionShape(Shape* _shape) { mColShape = _shape; }
+    Shape* getVisualizationShape(int _idx) const { return mVizShapes[_idx]; }
 
     /// @brief
-    Shape* getCollisionShape() const { return mColShape; }
+    void addCollisionShape(Shape *_p) { mColShapes.push_back(_p); }
+
+    /// @brief
+    int getNumCollisionShapes() const { return mColShapes.size(); }
+
+    /// @brief
+    Shape* getCollisionShape(int _idx) const { return mColShapes[_idx]; }
 
     /// @brief
     DEPRECATED void setSkel(Skeleton* _skel) { mSkeleton = _skel; }
@@ -481,12 +487,10 @@ protected:
     double mMass;
 
     /// @brief
-    //std::vector<Shape*> mVizShapes;
-    Shape* mVizShape;
+    std::vector<Shape*> mVizShapes;
 
     /// @brief
-    //std::vector<Shape*> mColShapes;
-    Shape* mColShape;
+    std::vector<Shape*> mColShapes;
 
     /// @brief Indicating whether this node is collidable.
     bool mCollidable;

@@ -1,7 +1,6 @@
 #include "PathShortener.h"
 #include "simulation/World.h"
 #include "RRT.h"
-#include "constraint/ContactDynamics.h"
 #include "collision/CollisionDetector.h"
 #include "dynamics/Skeleton.h"
 

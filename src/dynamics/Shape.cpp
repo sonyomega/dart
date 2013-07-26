@@ -50,7 +50,7 @@ Shape::Shape(ShapeType _type) :
     mID(mCounter++),
     mColor(0.5, 0.5, 1.0),
     mOffset(0, 0, 0),
-    mTransform(Affine3d::Identity())
+    mTransform(Isometry3d::Identity())
 {
 }
 

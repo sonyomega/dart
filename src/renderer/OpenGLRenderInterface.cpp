@@ -152,7 +152,7 @@ void OpenGLRenderInterface::rotate(const Vector3d& _axis, double _rad) {
     glRotated(_rad, _axis[0], _axis[1], _axis[2]);
 }
 
-void OpenGLRenderInterface::transform(const Affine3d& _transform) {
+void OpenGLRenderInterface::transform(const Isometry3d& _transform) {
     glMultMatrixd(_transform.data());
 }
 
@@ -409,8 +409,10 @@ void OpenGLRenderInterface::compileList(dynamics::BodyNode *_node) {
     if(_node == 0)
         return;
 
-    compileList(_node->getVisualizationShape());
-    compileList(_node->getCollisionShape());
+    for(int i = 0; i < _node->getNumVisualizationShapes(); i++)
+        compileList(_node->getVisualizationShape(i));
+    for(int i = 0; i < _node->getNumCollisionShapes(); i++)
+        compileList(_node->getCollisionShape(i));
 }
 
 //FIXME: Use polymorphism instead of switch statements
@@ -469,7 +471,7 @@ void OpenGLRenderInterface::draw(dynamics::BodyNode *_node, bool _vizCol, bool _
         return;
 
     // Get world transform
-    Affine3d pose;
+    Isometry3d pose;
     pose.matrix() = _node->getTransformationWorld().matrix();
 
     // GL calls
@@ -482,8 +484,14 @@ void OpenGLRenderInterface::draw(dynamics::BodyNode *_node, bool _vizCol, bool _
     glPushMatrix();
     glMultMatrixd(pose.data());
 
-    dynamics::Shape *shape = _colMesh ? _node->getCollisionShape() : _node->getVisualizationShape();
-    draw(shape, _colMesh);
+    if(_colMesh) {
+        for(int i = 0; i < _node->getNumCollisionShapes(); i++)
+            draw(_node->getCollisionShape(i));
+    }
+    else {
+        for(int i = 0; i < _node->getNumVisualizationShapes(); i++)
+            draw(_node->getVisualizationShape(i));
+    }
 
     glColor3f(1.0f,1.0f,1.0f);
     glEnable( GL_TEXTURE_2D );
@@ -492,11 +500,11 @@ void OpenGLRenderInterface::draw(dynamics::BodyNode *_node, bool _vizCol, bool _
 }
 
 //FIXME: Refactor this to use polymorphism.
-void OpenGLRenderInterface::draw(dynamics::Shape *_shape, bool _colMesh) {
+void OpenGLRenderInterface::draw(dynamics::Shape *_shape) {
     if(_shape == 0)
         return;
 
-    Affine3d pose = _shape->getTransform();
+    Isometry3d pose = _shape->getTransform();
     Vector3d color = _shape->getColor();
 
     glPushMatrix();

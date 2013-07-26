@@ -73,52 +73,22 @@ class FCLMESHCollisionDetector : public CollisionDetector
 {
 public:
     /// @brief
-    FCLMESHCollisionDetector() { mNumTriIntersection = 0; }
+    FCLMESHCollisionDetector() {}
 
     /// @brief
     virtual ~FCLMESHCollisionDetector();
 
-    // Documentation inherited
-    virtual void addCollisionSkeletonNode(dynamics::BodyNode *_bd, bool _bRecursive = false);
-
     virtual CollisionNode* createCollisionNode(dynamics::BodyNode* _bodyNode);
-
-    /// @brief
-    inline void clearAllCollisionSkeletonNode() {mCollisionNodes.clear();}
-
-    /// @brief
-    inline int getNumTriangleIntersection(){return mNumTriIntersection;}
 
     // Documentation inherited
     virtual bool checkCollision(bool _checkAllCollisions, bool _calculateContactPoints);
 
+    virtual bool checkCollision(CollisionNode* _node1,
+                                CollisionNode* _node2,
+                                bool _calculateContactPoints);
+
     /// @brief
     void draw();
-
-    /// @brief
-    FCLMESHCollisionNode* getCollisionSkeletonNode(const dynamics::BodyNode *_bodyNode)
-    {
-        if(mBodyCollisionMap.find(_bodyNode)!=mBodyCollisionMap.end())
-            return mBodyCollisionMap[_bodyNode];
-        else
-            return NULL;
-    }
-
-    /// @brief
-    void activatePair(const dynamics::BodyNode* node1, const dynamics::BodyNode* node2);
-
-    /// @brief
-    void deactivatePair(const dynamics::BodyNode* node1, const dynamics::BodyNode* node2);
-
-public:
-    /// @brief
-    int mNumTriIntersection;
-
-    /// @brief
-    std::map<const dynamics::BodyNode*, FCLMESHCollisionNode*> mBodyCollisionMap;
-
-    /// @brief
-    std::vector<std::vector<bool> > mActiveMatrix;
 };
 
 

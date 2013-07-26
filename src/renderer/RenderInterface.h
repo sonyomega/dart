@@ -99,7 +99,7 @@ public:
 
     virtual void translate(const Eigen::Vector3d& _offset); //glTranslate
     virtual void rotate(const Eigen::Vector3d& _axis, double _rad); //glRotate
-    virtual void transform(const Eigen::Affine3d& _transform); //glMultMatrix
+    virtual void transform(const Eigen::Isometry3d& _transform); //glMultMatrix
     virtual void scale(const Eigen::Vector3d& _scale); //glScale
 
     virtual void drawEllipsoid(const Eigen::Vector3d& _size);

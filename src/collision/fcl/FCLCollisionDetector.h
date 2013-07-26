@@ -41,7 +41,7 @@
 #include <vector>
 #include <map>
 #include <Eigen/Dense>
-
+#include <fcl/collision.h>
 #include "collision/CollisionDetector.h"
 
 namespace dart {
@@ -71,7 +71,13 @@ public:
     /// @brief
     void setNumMaxContacts(int _num) { mNumMaxContacts = _num; }
 
+    CollisionNode* findCollisionNode(
+            const fcl::CollisionGeometry* _fclCollGeom) const;
+
 protected:
+    virtual bool checkCollision(CollisionNode* _node1,
+                                CollisionNode* _node2,
+                                bool _calculateContactPoints);
 
 private:
     /// @brief

@@ -123,7 +123,7 @@ void RenderInterface::rotate(const Vector3d& _axis, double _rad)
 {
 }
 
-void RenderInterface::transform(const Affine3d& _transform)
+void RenderInterface::transform(const Isometry3d& _transform)
 {
 }
 

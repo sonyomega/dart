@@ -82,11 +82,11 @@ public:
     Eigen::Vector3d getDim() const { return mDim; }
 
     /// @brief
-    void setTransform(const Eigen::Affine3d& _Transform )
+    void setTransform(const Eigen::Isometry3d& _Transform )
     { mTransform = _Transform; }
 
     /// @brief
-    Eigen::Affine3d getTransform() const { return mTransform; }
+    Eigen::Isometry3d getTransform() const { return mTransform; }
 
     /// @brief
     void setOffset(Eigen::Vector3d _offset)
@@ -143,7 +143,7 @@ protected:
     Eigen::Vector3d mOffset;
 
     /// @brief Local Geometric transformation of the Shape w.r.t. parent frame.
-    Eigen::Affine3d mTransform;
+    Eigen::Isometry3d mTransform;
 
     /// @brief
     static int mCounter;

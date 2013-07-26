@@ -37,6 +37,7 @@
 
 #include <assimp/scene.h>
 #include <fcl/shape/geometric_shapes.h>
+#include <fcl/shape/geometric_shape_to_BVH_model.h>
 
 #include "dynamics/BodyNode.h"
 #include "dynamics/ShapeEllipsoid.h"
@@ -51,56 +52,56 @@ namespace collision {
 FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
     : CollisionNode(_bodyNode)
 {
-    dynamics::Shape* shape = _bodyNode->getCollisionShape();
+    for(int i = 0; i < _bodyNode->getNumCollisionShapes(); i++) {
 
-    switch (shape->getShapeType())
-    {
-        case dynamics::Shape::P_BOX:
-        {
-            mCollisionGeometry = new fcl::Box(shape->getDim()[0],
-                                              shape->getDim()[1],
-                                              shape->getDim()[2]);
-            break;
-        }
-        case dynamics::Shape::P_ELLIPSOID:
-        {
-            dynamics::ShapeEllipsoid* ellipsoid
-                    = dynamic_cast<dynamics::ShapeEllipsoid*>(shape);
+        dynamics::Shape* shape = _bodyNode->getCollisionShape(i);
 
-            if (ellipsoid->isSphere())
-                mCollisionGeometry = new fcl::Sphere(ellipsoid->getDim()[0] * 0.5);
-            else
-                mCollisionGeometry = createEllipsoid<fcl::OBBRSS>(ellipsoid->getDim()[0],
-                                                                  ellipsoid->getDim()[1],
-                                                                  ellipsoid->getDim()[2]);
-            break;
-        }
-        case dynamics::Shape::P_CYLINDER:
-        {
-            dynamics::ShapeCylinder* cylinder
-                    = dynamic_cast<dynamics::ShapeCylinder*>(shape);
-            mCollisionGeometry = new fcl::Cylinder(cylinder->getRadius(),
-                                                   cylinder->getHeight());
-            break;
-        }
-        case dynamics::Shape::P_MESH:
-        {
-            dynamics::ShapeMesh *shapeMesh
-                    = dynamic_cast<dynamics::ShapeMesh *>(shape);
+        switch (shape->getShapeType()) {
+            case dynamics::Shape::P_BOX:
+                mCollisionGeometries.push_back(new fcl::Box(shape->getDim()[0],
+                                                            shape->getDim()[1],
+                                                            shape->getDim()[2]));
+                break;
+            case dynamics::Shape::P_ELLIPSOID:
+            {
+                dynamics::ShapeEllipsoid* ellipsoid
+                        = dynamic_cast<dynamics::ShapeEllipsoid*>(shape);
 
-            if(shapeMesh)
-                mCollisionGeometry = createMesh<fcl::OBBRSS>(shape->getDim()[0],
-                                                             shape->getDim()[1],
-                                                             shape->getDim()[2],
-                                                             shapeMesh->getMesh());
-            break;
-        }
-        default:
-        {
-            std::cout << "ERROR: Collision checking does not support "
-                      << _bodyNode->getName()
-                      << "'s Shape type\n";
-            break;
+                if (ellipsoid->isSphere())
+                    mCollisionGeometries.push_back(new fcl::Sphere(ellipsoid->getDim()[0] * 0.5));
+                else
+                    mCollisionGeometries.push_back(createEllipsoid<fcl::OBBRSS>(ellipsoid->getDim()[0],
+                                                                                ellipsoid->getDim()[1],
+                                                                                ellipsoid->getDim()[2]));
+                break;
+            }
+            case dynamics::Shape::P_CYLINDER:
+            {
+                dynamics::ShapeCylinder* cylinder
+                        = dynamic_cast<dynamics::ShapeCylinder*>(shape);
+                mCollisionGeometries.push_back(new fcl::Cylinder(cylinder->getRadius(),
+                                                                 cylinder->getHeight()));
+                break;
+            }
+            case dynamics::Shape::P_MESH:
+            {
+                dynamics::ShapeMesh *shapeMesh
+                        = dynamic_cast<dynamics::ShapeMesh *>(shape);
+
+                if(shapeMesh)
+                    mCollisionGeometries.push_back(createMesh<fcl::OBBRSS>(shape->getDim()[0],
+                                                                           shape->getDim()[1],
+                                                                           shape->getDim()[2],
+                                                                           shapeMesh->getMesh()));
+                break;
+            }
+            default:
+            {
+                std::cout << "ERROR: Collision checking does not support "
+                          << _bodyNode->getName()
+                          << "'s Shape type\n";
+                break;
+            }
         }
     }
 }
@@ -108,10 +109,9 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
 FCLCollisionNode::~FCLCollisionNode() {
 }
 
-fcl::Transform3f FCLCollisionNode::getFCLTransform() const {
-    Eigen::Matrix4d worldTrans
-            = mBodyNode->getTransformationWorld()
-              * mBodyNode->getCollisionShape()->getTransform().matrix();
+fcl::Transform3f FCLCollisionNode::getFCLTransform(int _idx) const {
+    Eigen::Matrix4d worldTrans = mBodyNode->getWorldTransform()
+                                 * mShapes[_idx]->getTransform().matrix();
 
     return fcl::Transform3f(fcl::Matrix3f(worldTrans(0,0), worldTrans(0,1), worldTrans(0,2),
                                           worldTrans(1,0), worldTrans(1,1), worldTrans(1,2),

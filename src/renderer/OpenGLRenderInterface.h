@@ -88,7 +88,7 @@ public:
 
     virtual void translate(const Eigen::Vector3d& _offset); //glTranslate
     virtual void rotate(const Eigen::Vector3d& _axis, double _rad); //glRotate
-    virtual void transform(const Eigen::Affine3d& _transform); //glMultMatrix
+    virtual void transform(const Eigen::Isometry3d& _transform); //glMultMatrix
     virtual void scale(const Eigen::Vector3d& _scale); //glScale
 
     void compileList(dynamics::Skeleton *_skel);
@@ -98,7 +98,7 @@ public:
 
     virtual void draw(dynamics::Skeleton *_skel, bool _vizCol = false, bool _colMesh = false);
     virtual void draw(dynamics::BodyNode *_node, bool _vizCol = false, bool _colMesh = false);
-    virtual void draw(dynamics::Shape *_shape, bool _colMesh = false);
+    virtual void draw(dynamics::Shape *_shape);
 
     virtual void drawEllipsoid(const Eigen::Vector3d& _size);
     virtual void drawCube(const Eigen::Vector3d& _size);

@@ -55,10 +55,6 @@ int BodyNode::msBodyNodeCount = 0;
 BodyNode::BodyNode(const std::string& _name)
     : mSkelIndex(-1),
       mName(_name),
-      //mVizShapes(std::vector<Shape*>(1, static_cast<Shape*>(NULL))),
-      mVizShape(NULL),
-      //mColShapes(std::vector<Shape*>(1, static_cast<Shape*>(NULL))),
-      mColShape(NULL),
       mColliding(true),
       mSkeleton(NULL),
       mParentJoint(NULL),
@@ -80,6 +76,11 @@ BodyNode::BodyNode(const std::string& _name)
 
 BodyNode::~BodyNode()
 {
+    for(int i = 0; i < mVizShapes.size(); i++)
+        delete mVizShapes[i];
+    for(int i = 0; i < mColShapes.size(); i++)
+        if(mColShapes[i] != mVizShapes[i])
+            delete mColShapes[i];
 }
 
 void BodyNode::setName(const std::string& _name)
@@ -333,14 +334,14 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
     // render the self geometry
     mParentJoint->applyGLTransform(_ri);
 
-    if (mVizShape != NULL)
+    _ri->pushName((unsigned)mID);
+    for(int i = 0; i < mVizShapes.size(); i++)
     {
-        _ri->pushName((unsigned)mID);
         _ri->pushMatrix();
-        mVizShape->draw(_ri, _color, _useDefaultColor);
+        mVizShapes[i]->draw(_ri, _color, _useDefaultColor);
         _ri->popMatrix();
-        _ri->popName();
     }
+    _ri->popName();
 
     // render the subtree
     for (unsigned int i = 0; i < mJointsChild.size(); i++)

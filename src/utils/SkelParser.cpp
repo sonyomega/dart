@@ -379,15 +379,13 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
             dterr << "Unknown visualization shape.\n";
             assert(0);
         }
-        newBody->setVisualizationShape(shape);
+        newBody->addVisualizationShape(shape);
 
         // transformation
         if (hasElement(vizElement, "transformation"))
         {
             math::SE3 W = getValueSE3(vizElement, "transformation");
-            Eigen::Affine3d AF;
-            AF.matrix() = W.matrix();
-            shape->setTransform(AF);
+            shape->setTransform(W);
         }
 
     }
@@ -435,15 +433,13 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
             dterr << "Unknown visualization shape.\n";
             assert(0);
         }
-        newBody->setCollisionShape(shape);
+        newBody->addCollisionShape(shape);
 
         // transformation
         if (hasElement(colElement, "transformation"))
         {
             math::SE3 W = getValueSE3(colElement, "transformation");
-            Eigen::Affine3d AF;
-            AF.matrix() = W.matrix();
-            shape->setTransform(AF);
+            shape->setTransform(W);
         }
     }
 
@@ -473,9 +469,9 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
 
             newBody->setMomentOfInertia(ixx, iyy, izz, ixy, ixz, iyz);
         }
-        else if (newBody->getVisualizationShape() != 0)
+        else if (newBody->getVisualizationShape(0) != 0)
         {
-            Eigen::Matrix3d Ic = newBody->getVisualizationShape()->computeInertia(mass);
+            Eigen::Matrix3d Ic = newBody->getVisualizationShape(0)->computeInertia(mass);
 
             newBody->setMomentOfInertia(Ic(0,0), Ic(1,1), Ic(2,2),
                                         Ic(0,1), Ic(0,2), Ic(1,2));
@@ -485,7 +481,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
         if (hasElement(inertiaElement, "offset"))
         {
             math::Vec3 offset = getValueVec3(inertiaElement, "offset");
-            newBody->setCenterOfMass(offset);
+            newBody->setCOM(offset);
         }
     }
 
