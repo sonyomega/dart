@@ -1,7 +1,7 @@
 # Find DART Externals
 #
 # This sets the following variables:
-# DARTExt_FOUND - If all the Dart externals were found or not
+# DARTExt_FOUND_2 - If all the Dart externals were found or not
 # DARTExt_INCLUDEDIR - Directories containing the DART external include files.
 # DARTExt_LIBRARIES - Libraries needed to use DART External.
 # DARTExt_DEFINITIONS - Compiler flags for DART External.
@@ -9,7 +9,7 @@
 
 set(SYS_INSTALL_PREFIX @CMAKE_INSTALL_PREFIX@)
 
-set(DARTExt_FOUND TRUE)
+set(DARTExt_FOUND_2 TRUE)
 
 find_package(PkgConfig QUIET)
 set(DARTExt_INCLUDEDIR ${SYS_INSTALL_PREFIX}/include)
@@ -26,13 +26,13 @@ endif()
 
 if(NOT EXISTS ${EIGEN3_INCLUDEDIR}/Eigen/Core)
     message(STATUS "Could not find Eigen3")
-    set(DARTExt_FOUND FALSE)
+    set(DARTExt_FOUND_2 FALSE)
 endif()
 message(STATUS "EIGEN3_INCLUDEDIR = ${EIGEN3_INCLUDEDIR}")
 
 # OpenGL
 find_package(OpenGL REQUIRED)
-set(DARTExt_FOUND ${OPENGL_FOUND})
+set(DARTExt_FOUND_2 ${OPENGL_FOUND})
 
 # GLUT
 if(WIN32 AND NOT CYGWIN)
@@ -49,7 +49,7 @@ endif()
 # Boost and Assimp Boost Workaround
 find_package(Boost REQUIRED system filesystem)
 set(Boost_INCLUDEDIR ${Boost_INCLUDE_DIRS})
-set(DARTExt_FOUND ${Boost_FOUND})
+set(DARTExt_FOUND_2 ${Boost_FOUND})
 
 if(MSVC OR MSVC90 OR MSVC10)
     add_definitions(-DBOOST_ALL_NO_LIB)
@@ -70,7 +70,7 @@ if(NOT EXISTS ${FLANN_INCLUDEDIR}/flann/flann.h)
  
     if(NOT EXISTS ${FLANN_INCLUDEDIR}/flann/flann.h)
         message(STATUS "Could not find flann")
-        set(DARTExt_FOUND FALSE)
+        set(DARTExt_FOUND_2 FALSE)
     else()
         if(UNIX)
            set(FLANN_LIBRARIES ${PC_FLANN_LIBRARIES})
@@ -89,7 +89,7 @@ if(NOT EXISTS ${CCD_INCLUDEDIR}/ccd/ccd.h)
     
     if(NOT EXISTS ${CCD_INCLUDEDIR}/ccd/ccd.h)
         message(STATUS "Could not find ccd")
-        set(DARTExt_FOUND FALSE)
+        set(DARTExt_FOUND_2 FALSE)
     endif()
 endif()
 message(STATUS "CCD_INCLUDEDIR = ${CCD_INCLUDEDIR}")
@@ -105,7 +105,7 @@ if(NOT EXISTS ${FCL_INCLUDEDIR}/fcl/collision.h)
     
     if(NOT EXISTS ${FCL_INCLUDEDIR}/fcl/collision.h)
         message(STATUS "Could not find fcl")
-        set(DARTExt_FOUND FALSE)
+        set(DARTExt_FOUND_2 FALSE)
     endif()
 endif()
 message(STATUS "FCL_INCLUDEDIR = ${FCL_INCLUDEDIR}")
@@ -121,7 +121,7 @@ if(NOT EXISTS ${ASSIMP_INCLUDEDIR}/assimp/scene.h)
 
     if(NOT EXISTS ${ASSIMP_INCLUDEDIR}/assimp/scene.h)
         message(STATUS "Could not find assimp")
-        set(DARTExt_FOUND FALSE)
+        set(DARTExt_FOUND_2 FALSE)
     endif()
 endif()
 message(STATUS "ASSIMP_INCLUDEDIR = ${ASSIMP_INCLUDEDIR}")
@@ -136,7 +136,7 @@ if(NOT EXISTS ${TINYXML_INCLUDEDIR}/tinyxml.h)
 
     if(NOT EXISTS ${TINYXML_INCLUDEDIR}/tinyxml.h)
         message(STATUS "Could not find tinyxml")
-        set(DARTExt_FOUND FALSE)
+        set(DARTExt_FOUND_2 FALSE)
     endif()
 endif()
 set(TINYXML_LIBRARIES tinyxml)
@@ -151,7 +151,7 @@ if(NOT EXISTS ${TINYXML2_INCLUDEDIR}/tinyxml2.h)
 
     if(NOT EXISTS ${TINYXML2_INCLUDEDIR}/tinyxml2.h)
         message(STATUS "Could not find tinyxml2")
-        set(DARTExt_FOUND FALSE)
+        set(DARTExt_FOUND_2 FALSE)
     endif()
 endif()
 set(TINYXML2_LIBRARIES tinyxml2)
@@ -180,6 +180,6 @@ set(DARTExt_INCLUDEDIR ${EIGEN3_INCLUDEDIR} ${FLANN_INCLUDEDIR} ${CCD_INCLUDEDIR
         ${GLUT_INCLUDEDIR} ${OPENGL_INCLUDEDIR} ${ASSIMP_INCLUDEDIR} ${TINYXML_INCLUDEDIR} ${TINYXML2_INCLUDEDIR})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(DARTExt DEFAULT_MSG DARTExt_FOUND)
+find_package_handle_standard_args(DARTExt DEFAULT_MSG DARTExt_FOUND_2)
 
 mark_as_advanced(DARTExt_LIBRARY_DIRS DARTExt_INCLUDEDIR DARTExt_LIBRARIES FLANN_LIBRARIES CCD_LIBRARIES FCL_LIBRARIES Boost_LIBRARIES)
