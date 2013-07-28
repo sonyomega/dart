@@ -47,6 +47,9 @@
 #include "dynamics/Shape.h"
 #include "dynamics/Skeleton.h"
 
+using namespace std;
+using namespace Eigen;
+
 namespace dart {
 namespace dynamics {
 

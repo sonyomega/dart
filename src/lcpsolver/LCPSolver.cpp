@@ -4,6 +4,8 @@
 #include "lcp.h"
 #include "misc.h"
 
+using namespace Eigen;
+
 namespace dart {
 namespace lcpsolver {
 

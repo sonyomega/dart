@@ -44,6 +44,9 @@
 #include "dynamics/Skeleton.h"
 #include "dynamics/Skeleton.h"
 
+using namespace std;
+using namespace Eigen;
+
 namespace dart {
 namespace dynamics {
 
@@ -111,7 +114,7 @@ void Skeleton::addBody(BodyNode* _body, bool _addParentJoint)
 
 void Skeleton::addJoint(Joint* _joint)
 {
-    assert(_joint != NULL);
+    assert(_joint);
 
     mJoints.push_back(_joint);
     _joint->setSkelIndex(mJoints.size() - 1);

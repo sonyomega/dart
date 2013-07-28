@@ -47,10 +47,8 @@
 #include <iostream>
 #include <boost/math/special_functions/round.hpp>
 
-using namespace std;
 // External Libraries
 #include <Eigen/Dense>
-using namespace Eigen;
 // Local Headers
 #include "common/Misc.h"
 
@@ -58,11 +56,11 @@ namespace dart {
 namespace math {
 
 // TODO: Is here right place?
-typedef Matrix<double, 6, 1> Vector6d;
+typedef Eigen::Matrix<double, 6, 1> Vector6d;
 
 // a cross b = (CR*a) dot b
 /* const Matd CR(2,2,0.0,-1.0,1.0,0.0); */
-const Matrix2d CR( (Matrix2d() << 0.0, -1.0, 1.0, 0.0).finished() );
+const Eigen::Matrix2d CR( (Eigen::Matrix2d() << 0.0, -1.0, 1.0, 0.0).finished() );
 
 inline int delta(int i, int j) {
     if(i == j) return 1;
@@ -160,19 +158,19 @@ inline unsigned seedRand(){
 //    return ret;
 //}
 
-inline Vector3d xformHom(const Matrix4d& _W, const Vector3d& _x) { ///< homogeneous transformation of the vector _v with the last value treated a 1
+inline Eigen::Vector3d xformHom(const Eigen::Matrix4d& _W, const Eigen::Vector3d& _x) { ///< homogeneous transformation of the vector _v with the last value treated a 1
     //Vector4d x(_x(0), _x(1), _x(2), 1.0);
     //Vector4d y = _W * x;
     //return Vector3d(y(0), y(1), y(2));
     return _W.topLeftCorner<3,3>() * _x + _W.topRightCorner<3,1>();
 }
 
-inline Vector3d xformHomDir(const Matrix4d& _W, const Vector3d& _v) { ///< homogeneous transformation of the vector _v treated as a direction: last value 0
+inline Eigen::Vector3d xformHomDir(const Eigen::Matrix4d& _W, const Eigen::Vector3d& _v) { ///< homogeneous transformation of the vector _v treated as a direction: last value 0
     return _W.topLeftCorner<3,3>() * _v;
 }
 
-inline Matrix3d makeSkewSymmetric(const Vector3d& v){
-	Matrix3d result = Matrix3d::Zero();
+inline Eigen::Matrix3d makeSkewSymmetric(const Eigen::Vector3d& v){
+	Eigen::Matrix3d result = Eigen::Matrix3d::Zero();
 
 	result(0, 1) = -v(2);
 	result(1, 0) =  v(2);
@@ -184,21 +182,21 @@ inline Matrix3d makeSkewSymmetric(const Vector3d& v){
 	return result;
 }
 
-inline Vector3d fromSkewSymmetric(const Matrix3d& m) {
+inline Eigen::Vector3d fromSkewSymmetric(const Eigen::Matrix3d& m) {
 #if _DEBUG
     if (fabs(m(0, 0)) > M_EPSILON || fabs(m(1, 1)) > M_EPSILON || fabs(m(2, 2)) > M_EPSILON) {
-        cout << "Not skew symmetric matrix" << endl;
-        cerr << m <<endl;
-        return Vector3d::Zero();
+        std::cout << "Not skew symmetric matrix" << std::endl;
+        std::cerr << m << std::endl;
+        return Eigen::Vector3d::Zero();
     }
 #endif
-    Vector3d ret;
+    Eigen::Vector3d ret;
     ret << m(2,1), m(0,2), m(1,0);
     return ret;
 }
 
-inline Vector3d crossOperator(const MatrixXd & m) {
-    Vector3d ret = Vector3d::Zero();
+inline Eigen::Vector3d crossOperator(const Eigen::MatrixXd & m) {
+    Eigen::Vector3d ret = Eigen::Vector3d::Zero();
     ret[0] = m(1, 2) - m(2, 1);
     ret[1] = m(2, 0) - m(0, 2);
     ret[2] = m(0, 1) - m(1, 0);

@@ -40,10 +40,6 @@
 #define _LCP_SOLVER
 
 #include "Eigen/Dense"
-using namespace Eigen;
-
-#include <vector>
-using namespace std;
 
 namespace dart {
 namespace lcpsolver {
@@ -54,11 +50,11 @@ public:
     LCPSolver();
     ~LCPSolver();
 
-    bool Solve(const MatrixXd& _A, const VectorXd& _b, VectorXd& _x, int numContacts, double mu = 0, int numDir = 0, bool bUseODESolver = false);
+    bool Solve(const Eigen::MatrixXd& _A, const Eigen::VectorXd& _b, Eigen::VectorXd& _x, int numContacts, double mu = 0, int numDir = 0, bool bUseODESolver = false);
 private:
-    void transferToODEFormulation(const MatrixXd& _A, const VectorXd& _b, MatrixXd& _AOut, VectorXd& _bOut, int _numDir, int _numContacts);
-    void transferSolFromODEFormulation(const VectorXd& _x, VectorXd& _xOut, int _numDir, int _numContacts);
-    bool checkIfSolution(const MatrixXd& _A, const VectorXd& _b, const VectorXd& _x);
+    void transferToODEFormulation(const Eigen::MatrixXd& _A, const Eigen::VectorXd& _b, Eigen::MatrixXd& _AOut, Eigen::VectorXd& _bOut, int _numDir, int _numContacts);
+    void transferSolFromODEFormulation(const Eigen::VectorXd& _x, Eigen::VectorXd& _xOut, int _numDir, int _numContacts);
+    bool checkIfSolution(const Eigen::MatrixXd& _A, const Eigen::VectorXd& _b, const Eigen::VectorXd& _x);
 };
 
 } // namespace lcpsolver

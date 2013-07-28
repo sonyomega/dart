@@ -39,6 +39,8 @@
 #include "math/LieGroup.h"
 #include "dynamics/BallJoint.h"
 
+using namespace Eigen;
+
 namespace dart {
 namespace dynamics {
 

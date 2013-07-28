@@ -136,10 +136,10 @@ void FreeJoint::_updateAcceleration()
     dq << mCoordinate[0].get_dq(), mCoordinate[1].get_dq(), mCoordinate[2].get_dq();
     double theta = q.norm();
 
-    Matrix3d Jdot = Matrix3d::Zero();
-    Matrix3d qss =  math::makeSkewSymmetric(q);
-    Matrix3d qss2 =  qss*qss;
-    Matrix3d qdss = math::makeSkewSymmetric(dq);
+    Eigen::Matrix3d Jdot = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d qss =  math::makeSkewSymmetric(q);
+    Eigen::Matrix3d qss2 =  qss*qss;
+    Eigen::Matrix3d qdss = math::makeSkewSymmetric(dq);
     double ttdot = q.dot(dq);   // theta*thetaDot
     double st = sin(theta);
     double ct = cos(theta);

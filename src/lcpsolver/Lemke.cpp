@@ -2,8 +2,10 @@
 #include <iostream>
 #include <cmath>
 #include <math.h>
+#include <vector>
 
 using namespace std;
+using namespace Eigen;
 
 #ifndef isnan
 # define isnan(x) \
