@@ -223,7 +223,7 @@ void DartLoader::createSkeletonRecursive(dynamics::Skeleton* _skel, boost::share
 std::string  DartLoader::readFileToString(std::string _xmlFile) {
   
   std::string xml_string;
-  std::ifstream xml_file(_xmlFile);
+  std::ifstream xml_file(_xmlFile.c_str());
   
   // Read xml
   while(xml_file.good()) {
