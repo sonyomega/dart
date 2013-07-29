@@ -179,7 +179,7 @@ public:
 //}
 
 
-void KINEMATICS::JacobianTest(const string& dartFileName)
+void KINEMATICS::JacobianTest(const std::string& dartFileName)
 {
     World* world = readSkelFile(dartFileName);
     EXPECT_TRUE(world != NULL);
