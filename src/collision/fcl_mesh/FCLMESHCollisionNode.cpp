@@ -112,7 +112,7 @@ FCLMESHCollisionNode::FCLMESHCollisionNode(dynamics::BodyNode* _bodyNode)
 
 FCLMESHCollisionNode::~FCLMESHCollisionNode()
 {
-    for(int i = 0; mMeshes.size(); i++)
+    for(int i = 0; i < mMeshes.size(); i++)
         delete mMeshes[i];
 }
 
