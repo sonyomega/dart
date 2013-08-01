@@ -255,6 +255,8 @@ dse3 dad(const se3& V, const dse3& F);
 
 Inertia Transform(const SE3& T, const Inertia& AI);
 
+bool VerifySE3(const SE3& _T);
+
 #include "math/LieGroupinl.h"
 
 } // namespace math

@@ -784,3 +784,23 @@ inline Inertia Transform(const SE3& T, const Inertia& AI)
 
     return ret;
 }
+
+inline bool VerifySE3(const SE3& _T)
+{
+    if (_T(3,0) != 0.0)
+        return false;
+
+    if (_T(3,1) != 0.0)
+        return false;
+
+    if (_T(3,2) != 0.0)
+        return false;
+
+    if (_T(3,3) != 1.0)
+        return false;
+
+    if (fabs(fabs(_T.matrix().topLeftCorner<3,3>().determinant()) - 1.0) > 0.001)
+        return false;
+
+    return true;
+}
