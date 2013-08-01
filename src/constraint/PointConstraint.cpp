@@ -17,7 +17,7 @@ PointConstraint::PointConstraint(dynamics::BodyNode *_body, Vector3d _offset, Ve
     mOffset = _offset;
     mTarget = _target;
     mSkelIndex = _skelIndex;
-    mJ = MatrixXd::Zero(3, mBody->getSkel()->getNumDofs());
+    mJ = MatrixXd::Zero(3, mBody->getSkel()->getDOF());
     mNumRows = 3;
 }
 
@@ -27,7 +27,7 @@ PointConstraint::~PointConstraint() {
 void PointConstraint::updateDynamics(std::vector<Eigen::MatrixXd> & _J, Eigen::VectorXd & _C, Eigen::VectorXd & _CDot, int _rowIndex) {
     getJacobian();
     dynamics::Skeleton *skel = (dynamics::Skeleton*)mBody->getSkel();
-    _J[mSkelIndex].block(_rowIndex, 0, 3, skel->getNumDofs()) = mJ;
+    _J[mSkelIndex].block(_rowIndex, 0, 3, skel->getDOF()) = mJ;
     Vector3d worldP = math::xformHom(mBody->getWorldTransform().matrix(), mOffset);
     VectorXd qDot = skel->get_dq();
     _C.segment(_rowIndex, 3) = worldP - mTarget;

@@ -176,7 +176,7 @@ void BodyNode::setDependDofList()
 
 int BodyNode::getNumLocalDofs() const
 {
-    return mParentJoint->getNumDofs();
+    return mParentJoint->getDOF();
 }
 
 GenCoord* BodyNode::getLocalDof(int _idx) const

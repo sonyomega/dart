@@ -50,157 +50,157 @@ GenCoordSystem::~GenCoordSystem()
 
 GenCoord* GenCoordSystem::getDof(int _idx) const
 {
-    assert(0 <= _idx && _idx < getNumDofs());
+    assert(0 <= _idx && _idx < getDOF());
 
-    return mDofs[_idx];
+    return mGenCoords[_idx];
 }
 
 GenCoord* GenCoordSystem::getDof(const std::string& _name) const
 {
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        if (mDofs[i]->getName() == _name)
-            return mDofs[i];
+        if (mGenCoords[i]->getName() == _name)
+            return mGenCoords[i];
 
     return NULL;
 }
 
 void GenCoordSystem::backupInitState()
 {
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->backupInitState();
+        mGenCoords[i]->backupInitState();
 }
 
 void GenCoordSystem::restoreInitState()
 {
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->restoreInitState();
+        mGenCoords[i]->restoreInitState();
 }
 
 void GenCoordSystem::set_q(const Eigen::VectorXd& _q)
 {
-    assert(_q.size() == getNumDofs());
+    assert(_q.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_q(_q[i]);
+        mGenCoords[i]->set_q(_q[i]);
 }
 
 void GenCoordSystem::set_dq(const Eigen::VectorXd& _dq)
 {
-    assert(_dq.size() == getNumDofs());
+    assert(_dq.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_dq(_dq[i]);
+        mGenCoords[i]->set_dq(_dq[i]);
 }
 
 void GenCoordSystem::set_ddq(const Eigen::VectorXd& _ddq)
 {
-    assert(_ddq.size() == getNumDofs());
+    assert(_ddq.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_ddq(_ddq[i]);
+        mGenCoords[i]->set_ddq(_ddq[i]);
 }
 
 void GenCoordSystem::set_tau(const Eigen::VectorXd& _tau)
 {
-    assert(_tau.size() == getNumDofs());
+    assert(_tau.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_tau(_tau[i]);
+        mGenCoords[i]->set_tau(_tau[i]);
 }
 
 void GenCoordSystem::set_qMin(const Eigen::VectorXd& _qMin)
 {
-    assert(_qMin.size() == getNumDofs());
+    assert(_qMin.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_qMin(_qMin[i]);
+        mGenCoords[i]->set_qMin(_qMin[i]);
 }
 
 void GenCoordSystem::set_dqMin(const Eigen::VectorXd& _dqMin)
 {
-    assert(_dqMin.size() == getNumDofs());
+    assert(_dqMin.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_dqMin(_dqMin[i]);
+        mGenCoords[i]->set_dqMin(_dqMin[i]);
 }
 
 void GenCoordSystem::set_ddqMin(const Eigen::VectorXd& _ddqMin)
 {
-    assert(_ddqMin.size() == getNumDofs());
+    assert(_ddqMin.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_ddqMin(_ddqMin[i]);
+        mGenCoords[i]->set_ddqMin(_ddqMin[i]);
 }
 
 void GenCoordSystem::set_tauMin(const Eigen::VectorXd& _tauMin)
 {
-    assert(_tauMin.size() == getNumDofs());
+    assert(_tauMin.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_tauMin(_tauMin[i]);
+        mGenCoords[i]->set_tauMin(_tauMin[i]);
 }
 
 
 void GenCoordSystem::set_qMax(const Eigen::VectorXd& _qMax)
 {
-    assert(_qMax.size() == getNumDofs());
+    assert(_qMax.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_qMax(_qMax[i]);
+        mGenCoords[i]->set_qMax(_qMax[i]);
 }
 
 void GenCoordSystem::set_dqMax(const Eigen::VectorXd& _dqMax)
 {
-    assert(_dqMax.size() == getNumDofs());
+    assert(_dqMax.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_dqMax(_dqMax[i]);
+        mGenCoords[i]->set_dqMax(_dqMax[i]);
 }
 
 void GenCoordSystem::set_ddqMax(const Eigen::VectorXd& _ddqMax)
 {
-    assert(_ddqMax.size() == getNumDofs());
+    assert(_ddqMax.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_ddqMax(_ddqMax[i]);
+        mGenCoords[i]->set_ddqMax(_ddqMax[i]);
 }
 
 void GenCoordSystem::set_tauMax(const Eigen::VectorXd& _tauMax)
 {
-    assert(_tauMax.size() == getNumDofs());
+    assert(_tauMax.size() == getDOF());
 
-    int size = getNumDofs();
+    int size = getDOF();
 
     for (int i = 0; i < size; ++i)
-        mDofs[i]->set_tauMax(_tauMax[i]);
+        mGenCoords[i]->set_tauMax(_tauMax[i]);
 }
 
 //void System::set_DqDp(const Eigen::VectorXd& _DqDp)
@@ -245,11 +245,11 @@ void GenCoordSystem::set_tauMax(const Eigen::VectorXd& _tauMax)
 
 Eigen::VectorXd GenCoordSystem::get_q() const
 {
-    int size = getNumDofs();
+    int size = getDOF();
     Eigen::VectorXd q = Eigen::VectorXd::Zero(size);
 
     for (int i = 0; i < size; ++i) {
-        q(i) = mDofs[i]->get_q();
+        q(i) = mGenCoords[i]->get_q();
     }
 
     return q;
@@ -257,11 +257,11 @@ Eigen::VectorXd GenCoordSystem::get_q() const
 
 Eigen::VectorXd GenCoordSystem::get_dq() const
 {
-    int size = getNumDofs();
+    int size = getDOF();
     Eigen::VectorXd dq = Eigen::VectorXd::Zero(size);
 
     for (int i = 0; i < size; ++i) {
-        dq(i) = mDofs[i]->get_dq();
+        dq(i) = mGenCoords[i]->get_dq();
     }
 
     return dq;
@@ -269,11 +269,11 @@ Eigen::VectorXd GenCoordSystem::get_dq() const
 
 Eigen::VectorXd GenCoordSystem::get_ddq() const
 {
-    int size = getNumDofs();
+    int size = getDOF();
     Eigen::VectorXd ddq = Eigen::VectorXd::Zero(size);
 
     for (int i = 0; i < size; ++i) {
-        ddq(i) = mDofs[i]->get_ddq();
+        ddq(i) = mGenCoords[i]->get_ddq();
     }
 
     return ddq;
@@ -281,11 +281,11 @@ Eigen::VectorXd GenCoordSystem::get_ddq() const
 
 Eigen::VectorXd GenCoordSystem::get_tau() const
 {
-    int size = getNumDofs();
+    int size = getDOF();
     Eigen::VectorXd tau = Eigen::VectorXd::Zero(size);
 
     for (int i = 0; i < size; ++i) {
-        tau(i) = mDofs[i]->get_tau();
+        tau(i) = mGenCoords[i]->get_tau();
     }
 
     return tau;

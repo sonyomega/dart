@@ -51,7 +51,7 @@ PrismaticJoint::PrismaticJoint(const Vec3& axis)
       //mDampingCoefficient(0.0)
 {
     mJointType = REVOLUTE;
-    mDofs.push_back(&mCoordinate);
+    mGenCoords.push_back(&mCoordinate);
     mS = Eigen::Matrix<double,6,1>::Zero();
     mdS = Eigen::Matrix<double,6,1>::Zero();
 

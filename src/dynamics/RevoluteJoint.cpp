@@ -48,7 +48,7 @@ RevoluteJoint::RevoluteJoint(const math::Axis& axis)
       //mDampingCoefficient(0.0)
 {
     mJointType = REVOLUTE;
-    mDofs.push_back(&mCoordinate);
+    mGenCoords.push_back(&mCoordinate);
 
     mS = Eigen::Matrix<double,6,1>::Zero();
     mdS = Eigen::Matrix<double,6,1>::Zero();
@@ -83,6 +83,8 @@ void RevoluteJoint::_updateTransformation()
     mT = mT_ParentBodyToJoint
          * math::ExpAngular(mAxis * mCoordinate.get_q())
          * math::Inv(mT_ChildBodyToJoint);
+
+    assert(math::VerifySE3(mT));
 }
 
 void RevoluteJoint::_updateVelocity()

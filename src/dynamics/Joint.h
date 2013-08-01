@@ -253,7 +253,7 @@ public:
     /// @brief
     void setDampingCoefficient(int _idx, double _d)
     {
-        assert(0 <= _idx && _idx < getNumDofs());
+        assert(0 <= _idx && _idx < getDOF());
         assert(_d >= 0.0);
 
         mDampingCoefficient[_idx] = _d;
@@ -262,7 +262,7 @@ public:
     /// @brief
     double getDampingCoefficient(int _idx) const
     {
-        assert(0 <= _idx && _idx < getNumDofs());
+        assert(0 <= _idx && _idx < getDOF());
 
         return mDampingCoefficient[_idx];
     }
@@ -270,7 +270,7 @@ public:
 
     Eigen::VectorXd getDampingForce() const
     {
-        int numDofs = getNumDofs();
+        int numDofs = getDOF();
         Eigen::VectorXd dampingForce(numDofs);
 
         for (int i = 0; i < numDofs; ++i)

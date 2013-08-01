@@ -76,7 +76,7 @@ Eigen::VectorXd World::getState() const
 
     for (unsigned int i = 0; i < getNumSkeletons(); i++) {
         int start = mIndices[i] * 2;
-        int size = getSkeleton(i)->getNumDofs();
+        int size = getSkeleton(i)->getDOF();
         state.segment(start, size) = getSkeleton(i)->get_q();
         state.segment(start + size, size) = getSkeleton(i)->get_dq();
     }
@@ -88,7 +88,7 @@ void World::setState(const Eigen::VectorXd& _newState)
 {
     for (int i = 0; i < getNumSkeletons(); i++) {
         int start = mIndices[i] * 2;
-        int size = getSkeleton(i)->getNumDofs();
+        int size = getSkeleton(i)->getDOF();
 
         Eigen::VectorXd q = _newState.segment(start, size);
         Eigen::VectorXd dq = _newState.segment(start + size, size);
@@ -134,7 +134,7 @@ Eigen::VectorXd World::evalDeriv()
         }
 
         int start = mIndices[i] * 2;
-        int size = getSkeleton(i)->getNumDofs();
+        int size = getSkeleton(i)->getDOF();
 
         // set velocities
         deriv.segment(start, size) = getSkeleton(i)->get_dq();
@@ -211,7 +211,7 @@ void World::addSkeleton(dynamics::Skeleton* _skeleton)
     _skeleton->updateForwardKinematics();
     _skeleton->backupInitState();
 
-    mIndices.push_back(mIndices.back() + _skeleton->getNumDofs());
+    mIndices.push_back(mIndices.back() + _skeleton->getDOF());
 
     mCollisionHandle->addSkeleton(_skeleton);
 }

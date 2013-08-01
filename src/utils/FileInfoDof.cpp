@@ -76,7 +76,7 @@ bool FileInfoDof::loadFile(const char* _fName)
     inFile >> buffer;
     inFile >> nDof;
 
-    if (mSkel == NULL || mSkel->getNumDofs()!=nDof)
+    if (mSkel == NULL || mSkel->getDOF()!=nDof)
         return false;
 
     mDofs.resize(mNumFrames);
@@ -117,14 +117,14 @@ bool FileInfoDof::saveFile( const char* _fName, int _start, int _end, double _sa
     int last = _end<mNumFrames?_end:mNumFrames-1;
 
     outFile.precision(20);
-    outFile << "frames = " << last-first+1 << " dofs = " << mSkel->getNumDofs() << endl;
+    outFile << "frames = " << last-first+1 << " dofs = " << mSkel->getDOF() << endl;
 
-    for (int i = 0; i < mSkel->getNumDofs(); i++)
+    for (int i = 0; i < mSkel->getDOF(); i++)
         outFile << mSkel->getDof(i)->getName() << ' ';
     outFile << endl;
 
     for (int i = first; i <= last; i++){
-        for (int j = 0; j < mSkel->getNumDofs(); j++){
+        for (int j = 0; j < mSkel->getDOF(); j++){
             outFile << mDofs[i][j] << ' ';
         }
         outFile << endl;

@@ -50,9 +50,9 @@ BallJoint::BallJoint()
     : Joint("Ball joint")
 {
     mJointType = BALL;
-    mDofs.push_back(&mCoordinate[0]);
-    mDofs.push_back(&mCoordinate[1]);
-    mDofs.push_back(&mCoordinate[2]);
+    mGenCoords.push_back(&mCoordinate[0]);
+    mGenCoords.push_back(&mCoordinate[1]);
+    mGenCoords.push_back(&mCoordinate[2]);
     mS = Eigen::Matrix<double,6,3>::Zero();
     mdS = Eigen::Matrix<double,6,3>::Zero();
 
@@ -168,9 +168,9 @@ EulerXYZJoint::EulerXYZJoint()
     : Joint("EulerXYZ joint")
 {
     mJointType = EULER_XYZ;
-    mDofs.push_back(&mCoordinate[0]);
-    mDofs.push_back(&mCoordinate[1]);
-    mDofs.push_back(&mCoordinate[2]);
+    mGenCoords.push_back(&mCoordinate[0]);
+    mGenCoords.push_back(&mCoordinate[1]);
+    mGenCoords.push_back(&mCoordinate[2]);
     mS = Eigen::Matrix<double,6,3>::Zero();
     mdS = Eigen::Matrix<double,6,3>::Zero();
 

@@ -90,8 +90,8 @@ void Skeleton::initDynamics()
     mG = VectorXd::Zero(getDOF());
     mCg = VectorXd::Zero(getDOF());
     set_tau(VectorXd::Zero(getDOF()));
-    mFext = VectorXd::Zero(getNumDofs());
-    mFc = VectorXd::Zero(getNumDofs());
+    mFext = VectorXd::Zero(getDOF());
+    mFc = VectorXd::Zero(getDOF());
 
     // calculate mass
     // init the dependsOnDof stucture for each bodylink
@@ -119,12 +119,12 @@ void Skeleton::addJoint(Joint* _joint)
     mJoints.push_back(_joint);
     _joint->setSkelIndex(mJoints.size() - 1);
 
-    const std::vector<GenCoord*>& dofs = _joint->getDofs();
+    const std::vector<GenCoord*>& dofs = _joint->getGenCoords();
     for (std::vector<GenCoord*>::const_iterator itrDof = dofs.begin();
          itrDof != dofs.end();
          ++itrDof) {
-        mDofs.push_back((*itrDof));
-        (*itrDof)->setSkelIndex(mDofs.size() - 1);
+        mGenCoords.push_back((*itrDof));
+        (*itrDof)->setSkelIndex(mGenCoords.size() - 1);
     }
 
     if (_joint->getParentBody() != NULL && _joint->getChildBody() != NULL) {
@@ -164,8 +164,8 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
                        bool bCalcTrans,
                        bool bCalcDeriv)
 {
-    for (int i = 0; i < getNumDofs(); i++)
-        mDofs.at(i)->set_q(_pose[i]);
+    for (int i = 0; i < getDOF(); i++)
+        mGenCoords.at(i)->set_q(_pose[i]);
 
     if (bCalcTrans) {
         if (bCalcDeriv)
@@ -304,7 +304,7 @@ void Skeleton::computeForwardDynamics(
 void Skeleton::computeForwardDynamicsID(
         const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
 {
-    int n = getNumDofs();
+    int n = getDOF();
 
     // skip immobile objects in forward simulation
     if (getImmobileState() == true || n == 0)
@@ -353,7 +353,7 @@ void Skeleton::computeForwardDynamicsID(
 void Skeleton::computeForwardDynamicsID2(
         const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
 {
-    int n = getNumDofs();
+    int n = getDOF();
 
     // skip immobile objects in forward simulation
     if (getImmobileState() == true || n == 0)
@@ -407,7 +407,7 @@ void Skeleton::computeForwardDynamicsID2(
 void Skeleton::computeForwardDynamicsFS(
         const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
 {
-    int n = getNumDofs();
+    int n = getDOF();
 
     // skip immobile objects in forward simulation
     if (getImmobileState() == true || n == 0)
@@ -477,7 +477,7 @@ void Skeleton::computeEquationsOfMotionRecursive(
 
 Eigen::VectorXd Skeleton::getDampingForces() const
 {
-    Eigen::VectorXd dampingForce = Eigen::VectorXd(getNumDofs());
+    Eigen::VectorXd dampingForce = Eigen::VectorXd(getDOF());
 
     int idx = 0;
     int numJoints = mJoints.size();
@@ -569,7 +569,7 @@ Eigen::VectorXd Skeleton::getConfig(std::vector<int> _id)
     Eigen::VectorXd dofs(_id.size());
 
     for(unsigned int i = 0; i < _id.size(); i++)
-        dofs[i] = mDofs[_id[i]]->get_q();
+        dofs[i] = mGenCoords[_id[i]]->get_q();
 
     return dofs;
 }
@@ -578,7 +578,7 @@ void Skeleton::setConfig(std::vector<int> _id, Eigen::VectorXd _vals,
                          bool _calcTrans, bool _calcDeriv)
 {
     for( unsigned int i = 0; i < _id.size(); i++ )
-        mDofs[_id[i]]->set_q(_vals(i));
+        mGenCoords[_id[i]]->set_q(_vals(i));
 
     // TODO: Only do the necessary updates
     if (_calcTrans)

@@ -48,12 +48,12 @@ FreeJoint::FreeJoint()
     : Joint("Free joint")
 {
     mJointType = FREE;
-    mDofs.push_back(&mCoordinate[0]);
-    mDofs.push_back(&mCoordinate[1]);
-    mDofs.push_back(&mCoordinate[2]);
-    mDofs.push_back(&mCoordinate[3]);
-    mDofs.push_back(&mCoordinate[4]);
-    mDofs.push_back(&mCoordinate[5]);
+    mGenCoords.push_back(&mCoordinate[0]);
+    mGenCoords.push_back(&mCoordinate[1]);
+    mGenCoords.push_back(&mCoordinate[2]);
+    mGenCoords.push_back(&mCoordinate[3]);
+    mGenCoords.push_back(&mCoordinate[4]);
+    mGenCoords.push_back(&mCoordinate[5]);
     mS = Eigen::Matrix<double,6,6>::Zero();
     mdS = Eigen::Matrix<double,6,6>::Zero();
 
@@ -74,6 +74,8 @@ void FreeJoint::_updateTransformation()
 
     // TODO: Speed up with / operator
     mT = mT_ParentBodyToJoint * math::Exp(s) * math::Inv(mT_ChildBodyToJoint);
+
+    assert(math::VerifySE3(mT));
 }
 
 void FreeJoint::_updateVelocity()

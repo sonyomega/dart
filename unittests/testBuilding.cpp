@@ -134,7 +134,7 @@ TEST(BUILDING, BASIC)
 
     EXPECT_TRUE(skel1.getNumNodes() == 3);
 	EXPECT_TRUE(skel1.getNumJoints() == 3);
-	EXPECT_TRUE(skel1.getNumDofs() == 3);
+	EXPECT_TRUE(skel1.getDOF() == 3);
 
 	EXPECT_TRUE(world.getNumSkeletons() == 1);
 
