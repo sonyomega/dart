@@ -211,20 +211,19 @@ public:
     int getNumChildJoints() const { return mJointsChild.size(); }
 
     /// @brief
-    void setParentBody(BodyNode* _body) { mParentBody = _body; }
+    void setParentBody(BodyNode* _body) { mParentBodyNode = _body; }
 
     /// @brief
-    BodyNode* getParentBody() const { return mParentBody; }
+    BodyNode* getParentBody() const { return mParentBodyNode; }
 
     /// @brief
     void addChildBody(BodyNode* _body);
 
     /// @brief
-    DEPRECATED BodyNode* getChildNode(int _idx) const;
-    BodyNode* getChildBody(int _idx) const;
+    BodyNode* getChildBodyNode(int _idx) const;
 
     /// @brief
-    const std::vector<BodyNode*>& getChildBodies() const { return mChildBodies; }
+    const std::vector<BodyNode*>& getChildBodies() const { return mChildBodyNodes; }
 
     // TODO: Check
     void setDependDofList();
@@ -255,18 +254,15 @@ public:
     /// This function should be called only in modeling process. The
     /// transformation of this link will be updating by dynamics algorithms
     /// automatically.
-    void setWorldTransformation(const math::SE3& _W) { mW = _W; }
+    void setWorldTransform(const math::SE3& _W) { mW = _W; }
 
     /// @brief Transformation from the local coordinates of this body node to
     /// the world coordinates.
-    DEPRECATED const math::SE3& getWorldTransform() const { return mW; }
-    const math::SE3& getTransformationWorld() const { return mW; }
+    const math::SE3& getWorldTransform() const { return mW; }
 
     /// @brief Transformation from the world coordinates to the local
     /// coordinates of this body node.
-//    DEPRECATED Eigen::Matrix4d getWorldInvTransform() const
-//    { return mW.getInverse().getMatrix(); }
-    math::SE3 getWorldInvTransformation() const { return math::Inv(mW); }
+    math::SE3 getWorldInvTransform() const { return math::Inv(mW); }
 
     /// @brief Given a 3D vector lp in the local coordinates of this body node.
     /// @return The world coordinates of this vector
@@ -535,10 +531,10 @@ protected:
     std::vector<Joint*> mJointsChild;
 
     /// @brief
-    BodyNode* mParentBody;
+    BodyNode* mParentBodyNode;
 
     /// @brief
-    std::vector<BodyNode*> mChildBodies;
+    std::vector<BodyNode*> mChildBodyNodes;
 
     /// @brief A list of dependent dof indices
     std::vector<int> mDependentDofs;

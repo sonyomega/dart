@@ -120,10 +120,10 @@ void ConstraintDynamics::addSkeleton(dynamics::Skeleton* _newSkel)
     mSkels.push_back(_newSkel);
 
     int nSkels = mSkels.size();
-    int nNodes = _newSkel->getNumNodes();
+    int nNodes = _newSkel->getNumBodyNodes();
 
     for (int j = 0; j < nNodes; j++) {
-        mCollisionChecker->addCollisionSkeletonNode(_newSkel->getNode(j));
+        mCollisionChecker->addCollisionSkeletonNode(_newSkel->getBodyNode(j));
         mBodyIndexToSkelIndex.push_back(nSkels-1);
     }
 
@@ -175,10 +175,10 @@ void ConstraintDynamics::initialize() {
     int cols = 0;
     for (int i = 0; i < mSkels.size(); i++) {
         dynamics::Skeleton* skel = mSkels[i];
-        int nNodes = skel->getNumNodes();
+        int nNodes = skel->getNumBodyNodes();
 
         for (int j = 0; j < nNodes; j++) {
-            dynamics::BodyNode* node = skel->getNode(j);
+            dynamics::BodyNode* node = skel->getBodyNode(j);
             if(node->getCollideState()) {
                 mCollisionChecker->addCollisionSkeletonNode(node);
                 mBodyIndexToSkelIndex.push_back(i);

@@ -119,7 +119,7 @@ public:
     const math::SE3& getWorldTransformation() const { return mFrame; }
 
     /// @brief
-    void addBody(BodyNode* _body, bool _addParentJoint = true);
+    void addBodyNode(BodyNode* _body, bool _addParentJoint = true);
 
     /// @brief
     void addJoint(Joint* _joint);
@@ -128,9 +128,7 @@ public:
     //void setRootBody(BodyNode* _body) { mRootBody = _body; }
 
     /// @brief
-    // TODO: rename
-    int getNumBodies() const { return mBodies.size(); }
-    int getNumNodes() const { return mBodies.size(); }
+    int getNumBodyNodes() const { return mBodies.size(); }
 
     /// @brief
     int getNumJoints() const { return mJoints.size(); }
@@ -139,14 +137,10 @@ public:
     BodyNode* getRoot() { return mRoot; }
 
     /// @brief
-    // TODO: rename
-    BodyNode* getBody(int _idx) const { return mBodies[_idx]; }
-    BodyNode* getNode(int _idx) const { return mBodies[_idx]; }
+    BodyNode* getBodyNode(int _idx) const { return mBodies[_idx]; }
 
     /// @brief
-    // TODO: rename
-    //BodyNode* findBody(const std::string& _name) const;
-    BodyNode* findBody(const std::string& _name) const;
+    BodyNode* findBodyNode(const std::string& _name) const;
 
     ///// @brief
     //// TODO: Not implemented.

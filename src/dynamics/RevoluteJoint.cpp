@@ -72,7 +72,7 @@ math::so3 RevoluteJoint::getAxisGlobal() const
     math::SE3 parentTransf;
 
     if (this->mParentBody != NULL)
-        parentTransf = mParentBody->getTransformationWorld();
+        parentTransf = mParentBody->getWorldTransform();
 
     return math::Rotate(parentTransf * mT_ParentBodyToJoint, mAxis);
 }

@@ -63,7 +63,7 @@ void CollisionDetector::addCollisionSkeletonNode(dynamics::BodyNode* _bodyNode,
 
     if(_recursive) {
         for (int i = 0; i < _bodyNode->getNumChildJoints(); i++)
-            addCollisionSkeletonNode(_bodyNode->getChildNode(i), true);
+            addCollisionSkeletonNode(_bodyNode->getChildBodyNode(i), true);
     }
 }
 

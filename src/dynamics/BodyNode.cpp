@@ -63,8 +63,8 @@ BodyNode::BodyNode(const std::string& _name)
       mSkeleton(NULL),
       mParentJoint(NULL),
       mJointsChild(std::vector<Joint*>(0)),
-      mParentBody(NULL),
-      mChildBodies(std::vector<BodyNode*>(0)),
+      mParentBodyNode(NULL),
+      mChildBodyNodes(std::vector<BodyNode*>(0)),
       mGravityMode(true),
       mRestitutionCoeff(0.5),
       mFrictionCoeff(0.4)
@@ -127,31 +127,24 @@ void BodyNode::addChildBody(BodyNode* _body)
 {
     assert(_body != NULL);
 
-    mChildBodies.push_back(_body);
+    mChildBodyNodes.push_back(_body);
 }
 
-BodyNode*BodyNode::getChildNode(int _idx) const
+BodyNode* BodyNode::getChildBodyNode(int _idx) const
 {
-    assert(0 <= _idx && _idx < mChildBodies.size());
+    assert(0 <= _idx && _idx < mChildBodyNodes.size());
 
-    return mChildBodies[_idx];
-}
-
-BodyNode*BodyNode::getChildBody(int _idx) const
-{
-    assert(0 <= _idx && _idx < mChildBodies.size());
-
-    return mChildBodies[_idx];
+    return mChildBodyNodes[_idx];
 }
 
 void BodyNode::setDependDofList()
 {
     mDependentDofs.clear();
-    if (mParentBody != NULL)
+    if (mParentBodyNode != NULL)
     {
         mDependentDofs.insert(mDependentDofs.end(),
-                              mParentBody->mDependentDofs.begin(),
-                              mParentBody->mDependentDofs.end());
+                              mParentBodyNode->mDependentDofs.begin(),
+                              mParentBodyNode->mDependentDofs.end());
     }
 
     for (int i = 0; i < getNumLocalDofs(); i++)
@@ -358,9 +351,9 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
 
 void BodyNode::updateTransformation()
 {
-    if (mParentBody)
+    if (mParentBodyNode)
     {
-        mW = mParentBody->getTransformationWorld()
+        mW = mParentBodyNode->getWorldTransform()
              * mParentJoint->getLocalTransformation();
     }
     else
@@ -377,11 +370,11 @@ void BodyNode::updateVelocity(bool _updateJacobian)
     // V(i) = Ad(T(i, i-1), V(i-1)) + S * dq
     //--------------------------------------------------------------------------
 
-    if (mParentBody)
+    if (mParentBodyNode)
     {
         mV.noalias() = math::AdInvT(
                            mParentJoint->getLocalTransformation(),
-                           mParentBody->getVelocityBody()) +
+                           mParentBodyNode->getVelocityBody()) +
                        mParentJoint->getLocalVelocity();
     }
     else
@@ -408,9 +401,9 @@ void BodyNode::updateVelocity(bool _updateJacobian)
     const int numParentDOFs = getNumDependentDofs()-numLocalDOFs;
 
     // Parent Jacobian
-    if (mParentBody != NULL)
+    if (mParentBodyNode != NULL)
     {
-        assert(mParentBody->mBodyJacobian.cols() + getNumLocalDofs()
+        assert(mParentBodyNode->mBodyJacobian.cols() + getNumLocalDofs()
                == mBodyJacobian.cols());
 
         for (int i = 0; i < numParentDOFs; ++i)
@@ -418,7 +411,7 @@ void BodyNode::updateVelocity(bool _updateJacobian)
             assert(mParentJoint);
             mBodyJacobian.col(i) = math::AdInvT(
                                        mParentJoint->getLocalTransformation(),
-                                       mParentBody->mBodyJacobian.col(i));
+                                       mParentBodyNode->mBodyJacobian.col(i));
         }
     }
 
@@ -450,10 +443,10 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
 
     if (mParentJoint->getDOF() > 0)
     {
-        if (mParentBody)
+        if (mParentBodyNode)
         {
             mdV = math::AdInvT(mParentJoint->getLocalTransformation(),
-                              mParentBody->getAcceleration()) +
+                              mParentBodyNode->getAcceleration()) +
                   mEta + mParentJoint->mS*mParentJoint->get_ddq();
         }
         else
@@ -481,16 +474,16 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
     const int numParentDOFs = getNumDependentDofs() - numLocalDOFs;
 
     // Parent Jacobian
-    if (mParentBody != NULL)
+    if (mParentBodyNode != NULL)
     {
-        assert(mParentBody->mBodyJacobianDeriv.cols() + getNumLocalDofs()
+        assert(mParentBodyNode->mBodyJacobianDeriv.cols() + getNumLocalDofs()
                == mBodyJacobianDeriv.cols());
 
         for (int i = 0; i < numParentDOFs; ++i)
         {
             assert(mParentJoint);
             math::se3 dJi = math::AdInvT(mParentJoint->getLocalTransformation(),
-                                                mParentBody->mBodyJacobianDeriv.col(i));
+                                                mParentBodyNode->mBodyJacobianDeriv.col(i));
             mBodyJacobianDeriv.col(i) = dJi;
         }
     }
@@ -562,7 +555,7 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
 
     if (!_isOffsetLocal)
         // TODO: not to use matrix()
-        pos = math::xformHom(getWorldInvTransformation().matrix(), _offset);
+        pos = math::xformHom(getWorldInvTransform().matrix(), _offset);
 
     if (!_isForceLocal)
         // TODO: not to use matrix()
@@ -592,7 +585,7 @@ void BodyNode::addExternalForceLocal(
 
     if (!_isOffsetLocal)
         // TODO: not to use matrix()
-        offset = math::xformHom(getWorldInvTransformation().matrix(), _offset);
+        offset = math::xformHom(getWorldInvTransform().matrix(), _offset);
 
     if (!_isLinearForceLocal)
         // TODO: not to use matrix()
@@ -635,8 +628,8 @@ void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
     mF -= mFgravity;              // Gravity force
     mF -= math::dad(mV, mI * mV); // Coriolis force
 
-    for (std::vector<BodyNode*>::iterator iChildBody = mChildBodies.begin();
-         iChildBody != mChildBodies.end();
+    for (std::vector<BodyNode*>::iterator iChildBody = mChildBodyNodes.begin();
+         iChildBody != mChildBodyNodes.end();
          ++iChildBody)
     {
         dynamics::Joint* childJoint = (*iChildBody)->getParentJoint();
@@ -722,13 +715,13 @@ void BodyNode::updateBeta()
 void BodyNode::update_ddq()
 {
     Eigen::VectorXd ddq;
-    if (mParentBody)
+    if (mParentBodyNode)
     {
         ddq.noalias() = mPsi*
                         (mAlpha -
                          mParentJoint->mS.transpose()*mAI*
                          math::AdInvT(mParentJoint->getLocalTransformation(),
-                                      mParentBody->getAcceleration())
+                                      mParentBodyNode->getAcceleration())
                          );
     }
     else

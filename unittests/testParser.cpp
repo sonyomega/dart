@@ -137,7 +137,7 @@ TEST(PARSER, PARSER_DART_SINGLE_PENDULUM)
 
     Skeleton* skel1 = world->getSkeleton("skeleton 1");
 
-    EXPECT_EQ(skel1->getNumNodes(), 1);
+    EXPECT_EQ(skel1->getNumBodyNodes(), 1);
     EXPECT_EQ(skel1->getNumJoints(), 1);
 
     world->step();
@@ -158,7 +158,7 @@ TEST(PARSER, PARSER_DART_SERIAL_CAHIN)
 
     Skeleton* skel1 = world->getSkeleton("skeleton 1");
 
-    EXPECT_EQ(skel1->getNumNodes(), 10);
+    EXPECT_EQ(skel1->getNumBodyNodes(), 10);
     EXPECT_EQ(skel1->getNumJoints(), 10);
 
     world->step();

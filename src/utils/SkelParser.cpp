@@ -284,7 +284,7 @@ dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
         dynamics::BodyNode* newBody
                 = readBody(bodies.get(), newSkeleton);
 
-        newSkeleton->addBody(newBody, false);
+        newSkeleton->addBodyNode(newBody, false);
     }
 
     //--------------------------------------------------------------------------
@@ -333,7 +333,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
     if (hasElement(_bodyElement, "transformation"))
     {
         math::SE3 W = getValueSE3(_bodyElement, "transformation");
-        newBody->setWorldTransformation(_skeleton->getWorldTransformation() * W);
+        newBody->setWorldTransform(_skeleton->getWorldTransformation() * W);
     }
 
     // visualization_shape
@@ -532,7 +532,7 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
         }
         else
         {
-            parentBody = _skeleton->findBody(strParent);
+            parentBody = _skeleton->findBodyNode(strParent);
             if (parentBody == NULL)
             {
                 dterr << "Can't find the parent body, "
@@ -559,7 +559,7 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     if (hasElement(_jointElement, "child"))
     {
         std::string strChild = getValueString(_jointElement, "child");
-        childBody = _skeleton->findBody(strChild);
+        childBody = _skeleton->findBodyNode(strChild);
         assert(childBody != NULL && "Dart cannot find child body.");
         newJoint->setChildBody(childBody);
     }
@@ -574,9 +574,9 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     math::SE3 parentWorld = math::SE3::Identity();
     math::SE3 childToJoint = math::SE3::Identity();
     assert(childBody != NULL);
-    math::SE3 childWorld = childBody->getTransformationWorld();
+    math::SE3 childWorld = childBody->getWorldTransform();
     if (parentBody)
-         parentWorld = parentBody->getTransformationWorld();
+         parentWorld = parentBody->getWorldTransform();
     if (hasElement(_jointElement, "transformation"))
         childToJoint = getValueSE3(_jointElement, "transformation");
     math::SE3 parentToJoint = math::Inv(parentWorld)*childWorld*childToJoint;

@@ -100,9 +100,9 @@ TEST(BUILDING, BASIC)
 	joint3.setAxis(so3(1.0, 0.0, 0.0));
 
 	// Skeleton
-	skel1.addBody(&body1, false);
-	skel1.addBody(&body2, false);
-	skel1.addBody(&body3, false);
+	skel1.addBodyNode(&body1, false);
+	skel1.addBodyNode(&body2, false);
+	skel1.addBodyNode(&body3, false);
 	skel1.addJoint(&joint1);
 	skel1.addJoint(&joint2);
 	skel1.addJoint(&joint3);
@@ -115,7 +115,7 @@ TEST(BUILDING, BASIC)
 	//--------------------------------------------------------------------------
 	EXPECT_TRUE(body1.getParentBody() == NULL);
 	EXPECT_TRUE(body1.getChildBodies().size() == 2);
-	EXPECT_TRUE(body1.getChildBody(0) == &body2);
+	EXPECT_TRUE(body1.getChildBodyNode(0) == &body2);
 
 	EXPECT_TRUE(body2.getParentBody() == &body1);
 	EXPECT_TRUE(body2.getChildBodies().size() == 0);
@@ -132,7 +132,7 @@ TEST(BUILDING, BASIC)
 	EXPECT_TRUE(joint3.getParentBody() == &body1);
 	EXPECT_TRUE(joint3.getChildBody() == &body3);
 
-    EXPECT_TRUE(skel1.getNumNodes() == 3);
+    EXPECT_TRUE(skel1.getNumBodyNodes() == 3);
 	EXPECT_TRUE(skel1.getNumJoints() == 3);
 	EXPECT_TRUE(skel1.getDOF() == 3);
 

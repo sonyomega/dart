@@ -191,7 +191,7 @@ void KINEMATICS::JacobianTest(const std::string& dartFileName)
     for (int i = 0; i < numSkel; ++i)
     {
         Skeleton* skel = world->getSkeleton(i);
-        BodyNode* body = skel->getBody(skel->getNumBodies() - 1);
+        BodyNode* body = skel->getBodyNode(skel->getNumBodyNodes() - 1);
 
         Jacobian J = body->getJacobianBody();
         se3 J_dq = J * skel->get_dq();
@@ -209,7 +209,7 @@ void KINEMATICS::JacobianTest(const std::string& dartFileName)
     for (int i = 0; i < numSkel; ++i)
     {
         Skeleton* skel = world->getSkeleton(i);
-        BodyNode* body = skel->getBody(skel->getNumBodies() - 1);
+        BodyNode* body = skel->getBodyNode(skel->getNumBodyNodes() - 1);
 
         Jacobian J = body->getJacobianBody();
         se3 J_dq = J * skel->get_dq();

@@ -400,8 +400,8 @@ void OpenGLRenderInterface::compileList(dynamics::Skeleton *_skel) {
     if(_skel == 0)
         return;
 
-    for(int i=0; i < _skel->getNumNodes(); i++) {
-        compileList(_skel->getNode(i));
+    for(int i=0; i < _skel->getNumBodyNodes(); i++) {
+        compileList(_skel->getBodyNode(i));
     }
 }
 
@@ -461,8 +461,8 @@ void OpenGLRenderInterface::draw(dynamics::Skeleton *_skel, bool _vizCol, bool _
     if(_skel == 0)
         return;
 
-    for(int i=0; i < _skel->getNumNodes(); i++) {
-        draw(_skel->getNode(i), _vizCol, _colMesh);
+    for(int i=0; i < _skel->getNumBodyNodes(); i++) {
+        draw(_skel->getBodyNode(i), _vizCol, _colMesh);
     }
 }
 
@@ -472,7 +472,7 @@ void OpenGLRenderInterface::draw(dynamics::BodyNode *_node, bool _vizCol, bool _
 
     // Get world transform
     Isometry3d pose;
-    pose.matrix() = _node->getTransformationWorld().matrix();
+    pose.matrix() = _node->getWorldTransform().matrix();
 
     // GL calls
     if(_vizCol && _node->getColliding()) {

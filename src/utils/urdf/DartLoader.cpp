@@ -208,7 +208,7 @@ void DartLoader::createSkeletonRecursive(dynamics::Skeleton* _skel, boost::share
   dynamics::Joint* joint = createDartJoint(_lk->parent_joint, _parentNode, node);
   node->setParentJoint(joint);
   _parentNode->addChildJoint(joint);
-  _skel->addBody(node);
+  _skel->addBodyNode(node);
   _skel->addJoint(joint);
   
   for(unsigned int i = 0; i < _lk->child_links.size(); i++) {
