@@ -58,7 +58,8 @@ int BodyNode::msBodyNodeCount = 0;
 BodyNode::BodyNode(const std::string& _name)
     : mSkelIndex(-1),
       mName(_name),
-      mColliding(true),
+      mCollidable(true),
+      mColliding(false),
       mSkeleton(NULL),
       mParentJoint(NULL),
       mJointsChild(std::vector<Joint*>(0)),
