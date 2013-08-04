@@ -128,7 +128,7 @@ public:
     //void setRootBody(BodyNode* _body) { mRootBody = _body; }
 
     /// @brief
-    int getNumBodyNodes() const { return mBodies.size(); }
+    int getNumBodyNodes() const { return mBodyNodes.size(); }
 
     /// @brief
     int getNumJoints() const { return mJoints.size(); }
@@ -137,7 +137,7 @@ public:
     BodyNode* getRoot() { return mRoot; }
 
     /// @brief
-    BodyNode* getBodyNode(int _idx) const { return mBodies[_idx]; }
+    BodyNode* getBodyNode(int _idx) const { return mBodyNodes[_idx]; }
 
     /// @brief
     BodyNode* findBodyNode(const std::string& _name) const;
@@ -339,7 +339,7 @@ protected:
     math::SE3 mToRootBody;
 
     /// @brief
-    std::vector<BodyNode*> mBodies;
+    std::vector<BodyNode*> mBodyNodes;
 
     /// @brief
     std::vector<Joint*> mJoints;
