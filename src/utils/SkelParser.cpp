@@ -614,9 +614,16 @@ dynamics::RevoluteJoint*readRevoluteJoint(
         tinyxml2::XMLElement* axisElement
                 = getElement(_revoluteJointElement, "axis");
 
-        // mass
+        // xyz
         Eigen::Vector3d xyz = getValueVector3d(axisElement, "xyz");
         newRevoluteJoint->setAxis(xyz);
+
+        // damping
+        if (hasElement(axisElement, "damping"))
+        {
+            double damping = getValueDouble(axisElement, "damping");
+            newRevoluteJoint->setDampingCoefficient(0, damping);
+        }
     }
     else
     {
