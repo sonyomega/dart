@@ -303,7 +303,7 @@ public:
     void computeEquationsOfMotionID(const Eigen::Vector3d& _gravity);
 
     /// @brief (q, dq) --> M, C, G
-    void computeEquationsOfMotionRecursive(const Eigen::Vector3d& _gravity);
+    void computeEquationsOfMotionFS(const Eigen::Vector3d& _gravity);
 
     //--------------------------------------------------------------------------
     // Rendering

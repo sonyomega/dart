@@ -108,6 +108,15 @@ void World::setControlInput()
 
 Eigen::VectorXd World::evalDeriv()
 {
+    // Calculate M(q), M^{-1}(q)
+    for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
+         itrSkeleton != mSkeletons.end();
+         ++itrSkeleton)
+    {
+        (*itrSkeleton)->computeEquationsOfMotionID(mGravity);
+        //(*itrSkeleton)->computeEquationsOfMotionFS(mGravity);
+    }
+
     // compute constraint (contact/contact, joint limit) forces
     mCollisionHandle->computeConstraintForces();
 
@@ -123,7 +132,13 @@ Eigen::VectorXd World::evalDeriv()
     }
 
     // compute forward dynamics
-    computeForwardDynamics();
+    for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
+         itrSkeleton != mSkeletons.end();
+         ++itrSkeleton)
+    {
+        (*itrSkeleton)->computeForwardDynamicsID(mGravity);
+        //(*itrSkeleton)->computeForwardDynamicsFS(mGravity);
+    }
 
     // compute derivatives for integration
     Eigen::VectorXd deriv = Eigen::VectorXd::Zero(mIndices.back() * 2);
@@ -219,17 +234,6 @@ void World::addSkeleton(dynamics::Skeleton* _skeleton)
 bool World::checkCollision(bool checkAllCollisions)
 {
     return mCollisionHandle->getCollisionChecker()->checkCollision(checkAllCollisions, false);
-}
-
-void World::computeForwardDynamics()
-{
-    for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
-         itrSkeleton != mSkeletons.end();
-         ++itrSkeleton)
-    {
-        (*itrSkeleton)->computeForwardDynamicsID(mGravity);
-        //(*itrSkeleton)->computeForwardDynamicsFS(mGravity);
-    }
 }
 
 } // namespace simulation

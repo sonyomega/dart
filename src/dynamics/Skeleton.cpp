@@ -304,39 +304,6 @@ void Skeleton::computeForwardDynamics(
 void Skeleton::computeForwardDynamicsID(
         const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
 {
-    int n = getDOF();
-
-    // skip immobile objects in forward simulation
-    if (getImmobileState() == true || n == 0)
-    {
-        return;
-    }
-
-    // Save current tau
-    Eigen::VectorXd tau_old = get_tau();
-
-    // Set ddq as zero
-    set_ddq(Eigen::VectorXd::Zero(n));
-
-    // M(q) * ddq + b(q,dq) = tau
-    computeInverseDynamics(_gravity, true);
-    mCg = get_tau();
-
-    // Calcualtion mass matrix, M
-    mM = Eigen::MatrixXd::Zero(n,n);
-    for (int i = 0; i < getNumBodyNodes(); i++)
-    {
-        BodyNode *nodei = static_cast<BodyNode*>(getBodyNode(i));
-        nodei->updateMassMatrix();
-        nodei->aggregateMass(mM);
-    }
-
-    // Inverse of mass matrix
-    mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
-
-    // Restore the torque
-    set_tau(tau_old);
-
     // TODO: add evaluation of external forces in generalized coordinate.
     evalExternalForces();
 
@@ -468,9 +435,41 @@ void Skeleton::computeImpuseBasedHybridDynamics(const Eigen::Vector3d& _gravity,
 void Skeleton::computeEquationsOfMotionID(
         const Eigen::Vector3d& _gravity)
 {
+    int n = getDOF();
+
+    // skip immobile objects in forward simulation
+    if (getImmobileState() == true || n == 0)
+    {
+        return;
+    }
+
+    // Save current tau
+    Eigen::VectorXd tau_old = get_tau();
+
+    // Set ddq as zero
+    set_ddq(Eigen::VectorXd::Zero(n));
+
+    // M(q) * ddq + b(q,dq) = tau
+    computeInverseDynamics(_gravity, true);
+    mCg = get_tau();
+
+    // Calcualtion mass matrix, M
+    mM = Eigen::MatrixXd::Zero(n,n);
+    for (int i = 0; i < getNumBodyNodes(); i++)
+    {
+        BodyNode *nodei = static_cast<BodyNode*>(getBodyNode(i));
+        nodei->updateMassMatrix();
+        nodei->aggregateMass(mM);
+    }
+
+    // Inverse of mass matrix
+    mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
+
+    // Restore the torque
+    set_tau(tau_old);
 }
 
-void Skeleton::computeEquationsOfMotionRecursive(
+void Skeleton::computeEquationsOfMotionFS(
         const Eigen::Vector3d& _gravity)
 {
 }

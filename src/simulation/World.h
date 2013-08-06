@@ -173,10 +173,6 @@ public:
     { return mCollisionHandle; }
 
 protected:
-    /// @brief
-    void computeForwardDynamics();
-
-
     //--------------------------------------------------------------------------
     // Dynamics Algorithms
     //--------------------------------------------------------------------------
