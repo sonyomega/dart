@@ -66,16 +66,15 @@ BodyNode::BodyNode(const std::string& _name)
       mParentBodyNode(NULL),
       mChildBodyNodes(std::vector<BodyNode*>(0)),
       mGravityMode(true),
+      mW(math::SE3::Identity()),
+      mV(math::se3::Zero()),
+      mdV(math::se3::Zero()),
+      mI(Eigen::Matrix6d::Identity()),
+      mF(math::dse3::Zero()),
       mRestitutionCoeff(0.5),
-      mFrictionCoeff(0.4)
+      mFrictionCoeff(0.4),
+      mID(BodyNode::msBodyNodeCount++)
 {
-    mW = math::SE3::Identity();
-    mV = math::se3::Zero();
-    mdV = math::se3::Zero();
-    mI = Eigen::Matrix6d::Identity();
-    mF = math::dse3::Zero();
-
-    mID = BodyNode::msBodyNodeCount++;
 }
 
 BodyNode::~BodyNode()
