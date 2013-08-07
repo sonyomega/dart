@@ -244,7 +244,7 @@ public:
 
     // TODO: Check
     /// @brief
-    Eigen::VectorXd getDependDofs() const;
+    //Eigen::VectorXd getDependDofs() const;
 
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)

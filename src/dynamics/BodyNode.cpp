@@ -98,7 +98,7 @@ const std::string& BodyNode::getName() const
 
 void BodyNode::setMass(double _mass)
 {
-    assert(_mass >= 0.0 && "Negative mass is not proper.");
+    assert(_mass >= 0.0 && "Negative mass is not allowable.");
     mMass = _mass;
     _updateGeralizedInertia();
 }
@@ -174,18 +174,6 @@ int BodyNode::getNumLocalDofs() const
 GenCoord* BodyNode::getLocalDof(int _idx) const
 {
     return mParentJoint->getDof(_idx);
-}
-
-Eigen::VectorXd BodyNode::getDependDofs() const
-{
-    Eigen::VectorXd depDofs;
-
-    for (int i = 0; i < getNumDependentDofs(); ++i)
-    {
-        depDofs[i] = mSkeleton->get_q()[getDependentDof(i)];
-    }
-
-    return depDofs;
 }
 
 Eigen::Vector3d BodyNode::evalWorldPos(const Eigen::Vector3d& _lp) const
