@@ -242,10 +242,6 @@ public:
     /// @brief Return an dof index from the array index (< getNumDependentDofs).
     int getDependentDof(int _arrayIndex) const { return mDependentDofs[_arrayIndex]; }
 
-    // TODO: Check
-    /// @brief
-    //Eigen::VectorXd getDependDofs() const;
-
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)
     //--------------------------------------------------------------------------

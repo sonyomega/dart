@@ -469,7 +469,7 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
         {
             assert(mParentJoint);
             math::se3 dJi = math::AdInvT(mParentJoint->getLocalTransformation(),
-                                                mParentBodyNode->mBodyJacobianDeriv.col(i));
+                                         mParentBodyNode->mBodyJacobianDeriv.col(i));
             mBodyJacobianDeriv.col(i) = dJi;
         }
     }
@@ -619,7 +619,7 @@ void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
         assert(bodyDyn != NULL);
 
         mF += math::dAdInvT(childJoint->getLocalTransformation(),
-                                    bodyDyn->getBodyForce());
+                            bodyDyn->getBodyForce());
     }
 }
 
