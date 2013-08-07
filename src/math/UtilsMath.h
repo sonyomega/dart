@@ -159,14 +159,19 @@ inline unsigned seedRand(){
 //}
 
 inline Eigen::Vector3d xformHom(const Eigen::Matrix4d& _W, const Eigen::Vector3d& _x) { ///< homogeneous transformation of the vector _v with the last value treated a 1
-    //Vector4d x(_x(0), _x(1), _x(2), 1.0);
-    //Vector4d y = _W * x;
-    //return Vector3d(y(0), y(1), y(2));
     return _W.topLeftCorner<3,3>() * _x + _W.topRightCorner<3,1>();
+}
+
+inline Eigen::Vector3d xformHom(const Eigen::Isometry3d& _W, const Eigen::Vector3d& _x) { ///< homogeneous transformation of the vector _v with the last value treated a 1
+    return _W.rotation() * _x + _W.translation();
 }
 
 inline Eigen::Vector3d xformHomDir(const Eigen::Matrix4d& _W, const Eigen::Vector3d& _v) { ///< homogeneous transformation of the vector _v treated as a direction: last value 0
     return _W.topLeftCorner<3,3>() * _v;
+}
+
+inline Eigen::Vector3d xformHomDir(const Eigen::Isometry3d& _W, const Eigen::Vector3d& _v) { ///< homogeneous transformation of the vector _v treated as a direction: last value 0
+    return _W.rotation() * _v;
 }
 
 inline Eigen::Matrix3d makeSkewSymmetric(const Eigen::Vector3d& v){

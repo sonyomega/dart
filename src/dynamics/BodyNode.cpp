@@ -191,7 +191,7 @@ Eigen::VectorXd BodyNode::getDependDofs() const
 
 Eigen::Vector3d BodyNode::evalWorldPos(const Eigen::Vector3d& _lp) const
 {
-    return math::xformHom(mW.matrix(), _lp);
+    return math::xformHom(mW, _lp);
 }
 
 math::se3 BodyNode::getVelocityWorld() const
@@ -555,7 +555,7 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
 
     if (!_isOffsetLocal)
         // TODO: not to use matrix()
-        pos = math::xformHom(getWorldInvTransform().matrix(), _offset);
+        pos = math::xformHom(getWorldInvTransform(), _offset);
 
     if (!_isForceLocal)
         // TODO: not to use matrix()
@@ -585,7 +585,7 @@ void BodyNode::addExternalForceLocal(
 
     if (!_isOffsetLocal)
         // TODO: not to use matrix()
-        offset = math::xformHom(getWorldInvTransform().matrix(), _offset);
+        offset = math::xformHom(getWorldInvTransform(), _offset);
 
     if (!_isLinearForceLocal)
         // TODO: not to use matrix()
