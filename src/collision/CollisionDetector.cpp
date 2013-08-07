@@ -92,8 +92,8 @@ void CollisionDetector::disablePair(dynamics::BodyNode* _node1, dynamics::BodyNo
 
 bool CollisionDetector::isCollidable(const CollisionNode* _node1, const CollisionNode* _node2) {
     return getPairCollidable(_node1, _node2)
-        && _node1->getBodyNode()->getCollideState()
-        && _node2->getBodyNode()->getCollideState()
+        && _node1->getBodyNode()->isCollidable()
+        && _node2->getBodyNode()->isCollidable()
         && (_node1->getBodyNode()->getSkel() != _node2->getBodyNode()->getSkel()
             || _node1->getBodyNode()->getSkel()->getSelfCollidable());
 }

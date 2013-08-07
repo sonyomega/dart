@@ -137,10 +137,10 @@ public:
     bool getGravityMode() const { return mGravityMode; }
 
     /// @brief
-    bool getCollideState() const { return mCollidable; }
+    bool isCollidable() const { return mCollidable; }
 
     /// @brief
-    void setCollideState(bool _c) { mCollidable = _c; }
+    void setCollidability(bool _c) { mCollidable = _c; }
 
     /// @brief
     void setMass(double _mass);

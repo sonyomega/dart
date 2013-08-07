@@ -179,7 +179,7 @@ void ConstraintDynamics::initialize() {
 
         for (int j = 0; j < nNodes; j++) {
             dynamics::BodyNode* node = skel->getBodyNode(j);
-            if(node->getCollideState()) {
+            if(node->isCollidable()) {
                 mCollisionChecker->addCollisionSkeletonNode(node);
                 mBodyIndexToSkelIndex.push_back(i);
             }

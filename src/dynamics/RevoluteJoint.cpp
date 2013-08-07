@@ -90,7 +90,7 @@ void RevoluteJoint::_updateTransformation()
 void RevoluteJoint::_updateVelocity()
 {
     // S
-    mS.noalias() = math::AdTAngular(mT_ChildBodyToJoint, mAxis);
+    mS = math::AdTAngular(mT_ChildBodyToJoint, mAxis);
 
     // V = S * dq
     mV = mS * get_dq();

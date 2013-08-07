@@ -90,7 +90,7 @@ void PrismaticJoint::_updateTransformation()
 void PrismaticJoint::_updateVelocity()
 {
     // S
-    mS.noalias() = math::AdTLinear(mT_ChildBodyToJoint, mDirectionVector);
+    mS = math::AdTLinear(mT_ChildBodyToJoint, mDirectionVector);
 
     // V = S * dq
     mV.noalias() = mS * get_dq();
