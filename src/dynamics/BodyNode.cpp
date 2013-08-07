@@ -372,10 +372,9 @@ void BodyNode::updateVelocity(bool _updateJacobian)
 
     if (mParentBodyNode)
     {
-        mV.noalias() = math::AdInvT(
-                           mParentJoint->getLocalTransformation(),
-                           mParentBodyNode->getVelocityBody()) +
-                       mParentJoint->getLocalVelocity();
+        mV = math::AdInvT(mParentJoint->getLocalTransformation(),
+                          mParentBodyNode->getVelocityBody()) +
+                mParentJoint->getLocalVelocity();
     }
     else
     {
@@ -418,8 +417,8 @@ void BodyNode::updateVelocity(bool _updateJacobian)
     // Local Jacobian
     for(int i = 0; i < numLocalDOFs; i++)
     {
-        mBodyJacobian.col(numParentDOFs + i).noalias()
-                = mParentJoint->getLocalJacobian().col(i);
+        mBodyJacobian.col(numParentDOFs + i) =
+                mParentJoint->getLocalJacobian().col(i);
     }
 }
 
@@ -491,8 +490,8 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
     // Local Jacobian
     for(int i = 0; i < numLocalDOFs; i++)
     {
-        mBodyJacobianDeriv.col(numParentDOFs + i).noalias()
-                = mParentJoint->getLocalJacobianFirstDerivative().col(i);
+        mBodyJacobianDeriv.col(numParentDOFs + i) =
+                mParentJoint->getLocalJacobianFirstDerivative().col(i);
     }
 }
 
