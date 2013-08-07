@@ -61,9 +61,9 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
     char v6 = 'd';
     Eigen::Vector2d v7 = Eigen::Vector2d::Ones();
     Eigen::Vector3d v8 = Eigen::Vector3d::Ones();
-    math::so3 v9;
+    math::so3 v9 = math::so3::Identity();
     //math::SO3 v10;
-    math::SE3 v11;
+    math::SE3 v11 = math::SE3::Identity();
 
     std::string str1 = toString(v1);
     std::string str2 = toString(v2);

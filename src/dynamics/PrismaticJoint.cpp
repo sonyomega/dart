@@ -71,7 +71,7 @@ void PrismaticJoint::setAxis(const Vec3& _axis)
 
 Vec3 PrismaticJoint::getAxisGlobal() const
 {
-    math::SE3 parentTransf;
+    math::SE3 parentTransf = math::SE3::Identity();
 
     if (this->mParentBody != NULL)
         parentTransf = mParentBody->getWorldTransform();

@@ -69,7 +69,7 @@ void RevoluteJoint::setAxis(const math::so3& _axis)
 
 math::so3 RevoluteJoint::getAxisGlobal() const
 {
-    math::SE3 parentTransf;
+    math::SE3 parentTransf = math::SE3::Identity();
 
     if (this->mParentBody != NULL)
         parentTransf = mParentBody->getWorldTransform();
