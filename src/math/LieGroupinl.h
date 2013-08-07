@@ -799,7 +799,7 @@ inline bool VerifySE3(const SE3& _T)
     if (_T(3,3) != 1.0)
         return false;
 
-    if (fabs(fabs(_T.matrix().topLeftCorner<3,3>().determinant()) - 1.0) > 0.001)
+    if (fabs(fabs(_T.rotation().determinant()) - 1.0) > 0.001)
         return false;
 
     return true;

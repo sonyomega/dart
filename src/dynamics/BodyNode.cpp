@@ -554,12 +554,10 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
     Vector3d force = _force;
 
     if (!_isOffsetLocal)
-        // TODO: not to use matrix()
         pos = math::xformHom(getWorldInvTransform(), _offset);
 
     if (!_isForceLocal)
-        // TODO: not to use matrix()
-        force.noalias() = mW.matrix().topLeftCorner<3,3>().transpose() * _force;
+        force = mW.rotation().transpose()*_force;
 
     mContacts.push_back(pair<Vector3d, Vector3d>(pos, force));
 }
@@ -584,13 +582,10 @@ void BodyNode::addExternalForceLocal(
     Vector3d linearForce = _linearForce;
 
     if (!_isOffsetLocal)
-        // TODO: not to use matrix()
         offset = math::xformHom(getWorldInvTransform(), _offset);
 
     if (!_isLinearForceLocal)
-        // TODO: not to use matrix()
-        linearForce.noalias()
-                = mW.matrix().topLeftCorner<3,3>().transpose() * _linearForce;
+        linearForce = mW.rotation().transpose()*_linearForce;
 
     math::dse3 contactForce;
     contactForce.head<3>() = offset.cross(linearForce);

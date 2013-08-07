@@ -472,7 +472,7 @@ void OpenGLRenderInterface::draw(dynamics::BodyNode *_node, bool _vizCol, bool _
 
     // Get world transform
     Isometry3d pose;
-    pose.matrix() = _node->getWorldTransform().matrix();
+    pose = _node->getWorldTransform();
 
     // GL calls
     if(_vizCol && _node->getColliding()) {
