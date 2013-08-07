@@ -188,10 +188,10 @@ se3 AdT(const SE3& T, const se3& V);
 /// @brief Fast version of Ad([R 0; 0 1], V)
 se3 AdR(const SE3& T, const se3& V);
 
-/// @brief fast version of Ad(T, se3(w, Eigen_Vec3(0))
+/// @brief fast version of Ad(T, se3(w, 0))
 se3 AdTAngular(const SE3& T, const Axis& w);
 
-/// @brief fast version of Ad(T, se3(Eigen_Axis(0), v)
+/// @brief fast version of Ad(T, se3(0, v))
 se3 AdTLinear(const SE3& T, const Vec3& v);
 
 ///// @brief fast version of Ad([I p; 0 1], V)
@@ -215,7 +215,7 @@ se3 AdInvT(const SE3& T, const se3& V);
 ///// @brief Fast version of Ad(Inv([R 0; 0 1]), V)
 //se3 AdInvR(const SE3& T, const se3& V);
 
-/// @brief Fast version of Ad(Inv([R 0; 0 1]), se3(Eigen_Vec3(0), v))
+/// @brief Fast version of Ad(Inv([R 0; 0 1]), se3(0, v))
 se3 AdInvRLinear(const SE3& T, const Vec3& V);
 
 /// @brief dual adjoint mapping

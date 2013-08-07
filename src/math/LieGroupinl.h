@@ -173,7 +173,7 @@ inline se3 AdT(const SE3& T, const se3& s)
     // w' = R*w
     // v' = p x R*w + R*v
     //--------------------------------------------------------------------------
-    se3 ret;
+    se3 ret = se3::Zero();
     double Rw[3] = { T(0,0)*s[0] + T(0,1)*s[1] + T(0,2)*s[2],
                      T(1,0)*s[0] + T(1,1)*s[1] + T(1,2)*s[2],
                      T(2,0)*s[0] + T(2,1)*s[1] + T(2,2)*s[2] };
@@ -193,7 +193,7 @@ inline se3 AdR(const SE3& T, const se3& s)
     // w' = R*w
     // v' = R*v
     //--------------------------------------------------------------------------
-    se3 ret;
+    se3 ret = se3::Zero();
 
     ret << T(0,0)*s[0] + T(0,1)*s[1] + T(0,2)*s[2],
            T(1,0)*s[0] + T(1,1)*s[1] + T(1,2)*s[2],
@@ -209,9 +209,9 @@ inline se3 AdTAngular(const SE3& T, const Axis& s)
 {
     //--------------------------------------------------------------------------
     // w' = R*w
-    // v' = r x R*w
+    // v' = p x R*w
     //--------------------------------------------------------------------------
-    se3 ret;
+    se3 ret = se3::Zero();
     double Rw[3] = { T(0,0)*s[0] + T(0,1)*s[1] + T(0,2)*s[2],
                      T(1,0)*s[0] + T(1,1)*s[1] + T(1,2)*s[2],
                      T(2,0)*s[0] + T(2,1)*s[1] + T(2,2)*s[2] };
@@ -231,12 +231,12 @@ inline se3 AdTLinear(const SE3& T, const Vec3& v)
     // w' = 0
     // v' = R*v
     //--------------------------------------------------------------------------
-    se3 ret;
+    se3 ret = se3::Zero();
 
     ret << SCALAR_0, SCALAR_0, SCALAR_0,
-                T(0,0)*v[0] + T(0,1)*v[1] + T(0,2)*v[2],
-                T(1,0)*v[0] + T(1,1)*v[1] + T(1,2)*v[2],
-                T(2,0)*v[0] + T(2,1)*v[1] + T(2,2)*v[2];
+           T(0,0)*v[0] + T(0,1)*v[1] + T(0,2)*v[2],
+           T(1,0)*v[0] + T(1,1)*v[1] + T(1,2)*v[2],
+           T(2,0)*v[0] + T(2,1)*v[1] + T(2,2)*v[2];
 
     return ret;
 }
@@ -247,7 +247,7 @@ inline Jacobian AdTJac(const SE3& T, const Jacobian& J)
 
     for (int i = 0; i < J.cols(); ++i)
     {
-        AdTJ.col(i).noalias() = AdT(T, J.col(i));
+        AdTJ.col(i) = AdT(T, J.col(i));
     }
 
     return AdTJ;
@@ -285,17 +285,17 @@ inline Jacobian AdTJac(const SE3& T, const Jacobian& J)
 // re = Inv(T)*s*T
 inline se3 AdInvT(const SE3& T, const se3& s)
 {
-    se3 ret;
+    se3 ret = se3::Zero();
     double tmp[3] = {	s[3] + s[1]*T(2,3) - s[2]*T(1,3),
-                        s[4] + s[2]*T(0,3)  - s[0]*T(2,3),
+                        s[4] + s[2]*T(0,3) - s[0]*T(2,3),
                         s[5] + s[0]*T(1,3) - s[1]*T(0,3) };
 
     ret << T(0,0)*s[0] + T(1,0)*s[1] + T(2,0)*s[2],
-                T(0,1)*s[0] + T(1,1)*s[1] + T(2,1)*s[2],
-                T(0,2)*s[0] + T(1,2)*s[1] + T(2,2)*s[2],
-                T(0,0)*tmp[0] + T(1,0)*tmp[1] + T(2,0)*tmp[2],
-                T(0,1)*tmp[0] + T(1,1)*tmp[1] + T(2,1)*tmp[2],
-                T(0,2)*tmp[0] + T(1,2)*tmp[1] + T(2,2)*tmp[2];
+           T(0,1)*s[0] + T(1,1)*s[1] + T(2,1)*s[2],
+           T(0,2)*s[0] + T(1,2)*s[1] + T(2,2)*s[2],
+           T(0,0)*tmp[0] + T(1,0)*tmp[1] + T(2,0)*tmp[2],
+           T(0,1)*tmp[0] + T(1,1)*tmp[1] + T(2,1)*tmp[2],
+           T(0,2)*tmp[0] + T(1,2)*tmp[1] + T(2,2)*tmp[2];
 
     return ret;
 }
@@ -316,14 +316,14 @@ inline se3 AdInvT(const SE3& T, const se3& s)
 
 inline se3 AdInvRLinear(const SE3& T, const Vec3& v)
 {
-    se3 ret;
+    se3 ret = se3::Zero();
 
     ret << 0.0,
-                0.0,
-                0.0,
-                T(0,0)*v[0] + T(1,0)*v[1] + T(2,0)*v[2],
-                T(0,1)*v[0] + T(1,1)*v[1] + T(2,1)*v[2],
-                T(0,2)*v[0] + T(1,2)*v[1] + T(2,2)*v[2];
+           0.0,
+           0.0,
+           T(0,0)*v[0] + T(1,0)*v[1] + T(2,0)*v[2],
+           T(0,1)*v[0] + T(1,1)*v[1] + T(2,1)*v[2],
+           T(0,2)*v[0] + T(1,2)*v[1] + T(2,2)*v[2];
 
     return ret;
 }
@@ -337,7 +337,7 @@ inline se3 ad(const se3& s1, const se3& s2)
     //            = |          [w1]w2 |
     //              | [v1]w2 + [w1]v2 |
     //--------------------------------------------------------------------------
-    se3 ret;
+    se3 ret = se3::Zero();
 
     ret << s1[1]*s2[2] - s1[2]*s2[1],
                 s1[2]*s2[0] - s1[0]*s2[2],
@@ -351,17 +351,17 @@ inline se3 ad(const se3& s1, const se3& s2)
 
 inline dse3 dAdT(const SE3& T, const dse3& t)
 {
-    dse3 ret;
+    dse3 ret = dse3::Zero();
 
     double tmp[3] = {	t[0] - T(1,3)*t[5] + T(2,3)*t[4],
                         t[1] - T(2,3)*t[3] + T(0,3)*t[5],
                         t[2] - T(0,3)*t[4] + T(1,3)*t[3] };
     ret << T(0,0)*tmp[0] + T(1,0)*tmp[1] + T(2,0)*tmp[2],
-                T(0,1)*tmp[0] + T(1,1)*tmp[1] + T(2,1)*tmp[2],
-                T(0,2)*tmp[0] + T(1,2)*tmp[1] + T(2,2)*tmp[2],
-                T(0,0)*t[3] + T(1,0)*t[4] + T(2,0)*t[5],
-                T(0,1)*t[3] + T(1,1)*t[4] + T(2,1)*t[5],
-                T(0,2)*t[3] + T(1,2)*t[4] + T(2,2)*t[5];
+           T(0,1)*tmp[0] + T(1,1)*tmp[1] + T(2,1)*tmp[2],
+           T(0,2)*tmp[0] + T(1,2)*tmp[1] + T(2,2)*tmp[2],
+           T(0,0)*t[3] + T(1,0)*t[4] + T(2,0)*t[5],
+           T(0,1)*t[3] + T(1,1)*t[4] + T(2,1)*t[5],
+           T(0,2)*t[3] + T(1,2)*t[4] + T(2,2)*t[5];
 
     return ret;
 }
@@ -384,16 +384,16 @@ inline dse3 dAdT(const SE3& T, const dse3& t)
 
 inline dse3 dAdInvT(const SE3& T, const dse3& t)
 {
-    dse3 ret;
+    dse3 ret = dse3::Zero();
 
-    double tmp[3] = {	T(0,0)*t[3] + T(0,1)*t[4] + T(0,2)*t[5],
-                        T(1,0)*t[3] + T(1,1)*t[4] + T(1,2)*t[5],
-                        T(2,0)*t[3] + T(2,1)*t[4] + T(2,2)*t[5] };
+    double tmp[3] = { T(0,0)*t[3] + T(0,1)*t[4] + T(0,2)*t[5],
+                      T(1,0)*t[3] + T(1,1)*t[4] + T(1,2)*t[5],
+                      T(2,0)*t[3] + T(2,1)*t[4] + T(2,2)*t[5] };
 
     ret << T(1,3)*tmp[2] - T(2,3)*tmp[1] + T(0,0)*t[0] + T(0,1)*t[1] + T(0,2)*t[2],
-                T(2,3)*tmp[0] - T(0,3)*tmp[2] + T(1,0)*t[0] + T(1,1)*t[1] + T(1,2)*t[2],
-                T(0,3)*tmp[1] - T(1,3)*tmp[0] + T(2,0)*t[0] + T(2,1)*t[1] + T(2,2)*t[2],
-                tmp[0], tmp[1], tmp[2];
+           T(2,3)*tmp[0] - T(0,3)*tmp[2] + T(1,0)*t[0] + T(1,1)*t[1] + T(1,2)*t[2],
+           T(0,3)*tmp[1] - T(1,3)*tmp[0] + T(2,0)*t[0] + T(2,1)*t[1] + T(2,2)*t[2],
+           tmp[0], tmp[1], tmp[2];
 
     return ret;
 }
@@ -516,7 +516,7 @@ inline SE3 EulerXYZ(const Vec3& angle, const Vec3& pos)
 // , when S = (w, v), t = |w|
 inline SE3 Exp(const se3& s)
 {
-    SE3 ret;
+    SE3 ret = SE3::Identity();
     double s2[] = { s[0]*s[0], s[1]*s[1], s[2]*s[2] };
     double s3[] = { s[0]*s[1], s[1]*s[2], s[2]*s[0] };
     double theta = sqrt(s2[0] + s2[1] + s2[2]), cos_t = cos(theta), alpha, beta, gamma;
@@ -703,7 +703,7 @@ inline SE3 RotZ(double t)
 
 inline dse3 dad(const se3& s, const dse3& t)
 {
-    dse3 ret;
+    dse3 ret = dse3::Zero();
 
     ret << t[1] * s[2] - t[2] * s[1] + t[4] * s[5] - t[5] * s[4],
            t[2] * s[0] - t[0] * s[2] + t[5] * s[3] - t[3] * s[5],
@@ -719,7 +719,7 @@ inline Inertia Transform(const SE3& T, const Inertia& AI)
 {
     // operation count: multiplication = 186, addition = 117, subtract = 21
 
-    Inertia ret;
+    Inertia ret = Inertia::Identity();
 
     double d0 = AI(0,3) + T(2,3) * AI(3,4) - T(1,3) * AI(3,5);
     double d1 = AI(1,3) - T(2,3) * AI(3,3) + T(0,3) * AI(3,5);
