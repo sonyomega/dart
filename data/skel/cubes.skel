@@ -39,14 +39,6 @@
                 <inertia>
                     <mass>1</mass>
                     <offset>0 0 0</offset>
-                    <moment_of_inertia>
-                        <ixx>0.01</ixx>
-                        <iyy>0.01</iyy>
-                        <izz>0.01</izz>
-                        <ixy>0</ixy>
-                        <ixz>0</ixz>
-                        <iyz>0</iyz>
-                    </moment_of_inertia>
                 </inertia>
                 <visualization_shape>
                     <transformation>0 0 0 0 0 0</transformation>
@@ -79,14 +71,6 @@
                 <inertia>
                     <mass>1</mass>
                     <offset>0 0 0</offset>
-                    <moment_of_inertia>
-                        <ixx>0.01</ixx>
-                        <iyy>0.01</iyy>
-                        <izz>0.01</izz>
-                        <ixy>0</ixy>
-                        <ixz>0</ixz>
-                        <iyz>0</iyz>
-                    </moment_of_inertia>
                 </inertia>
                 <visualization_shape>
                     <transformation>0 0 0 0 0 0</transformation>
@@ -119,14 +103,6 @@
                 <inertia>
                     <mass>1</mass>
                     <offset>0 0 0</offset>
-                    <moment_of_inertia>
-                        <ixx>0.01</ixx>
-                        <iyy>0.01</iyy>
-                        <izz>0.01</izz>
-                        <ixy>0</ixy>
-                        <ixz>0</ixz>
-                        <iyz>0</iyz>
-                    </moment_of_inertia>
                 </inertia>
                 <visualization_shape>
                     <transformation>0 0 0 0 0 0</transformation>
