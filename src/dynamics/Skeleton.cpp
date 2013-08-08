@@ -83,15 +83,17 @@ void Skeleton::initDynamics()
 {
     initKinematics();
 
-    mM = MatrixXd::Zero(getDOF(), getDOF());
-    mMInv = MatrixXd::Zero(getDOF(), getDOF());
-    mC = MatrixXd::Zero(getDOF(), getDOF());
-    mCvec = VectorXd::Zero(getDOF());
-    mG = VectorXd::Zero(getDOF());
-    mCg = VectorXd::Zero(getDOF());
-    set_tau(VectorXd::Zero(getDOF()));
-    mFext = VectorXd::Zero(getDOF());
-    mFc = VectorXd::Zero(getDOF());
+    int DOF = getDOF();
+
+    mM    = MatrixXd::Zero(DOF, DOF);
+    mMInv = MatrixXd::Zero(DOF, DOF);
+    mC    = MatrixXd::Zero(DOF, DOF);
+    mCvec = VectorXd::Zero(DOF);
+    mG    = VectorXd::Zero(DOF);
+    mCg   = VectorXd::Zero(DOF);
+    set_tau(VectorXd::Zero(DOF));
+    mFext = VectorXd::Zero(DOF);
+    mFc   = VectorXd::Zero(DOF);
 
     // calculate mass
     // init the dependsOnDof stucture for each bodylink

@@ -190,20 +190,14 @@ math::se3 BodyNode::getVelocityWorld() const
 math::se3 BodyNode::getVelocityWorldAtCOG() const
 {
     math::SE3 worldFrameAtCOG = mW;
-    Eigen::Vector3d pos = math::Rotate(mW, -mCenterOfMass);
-    worldFrameAtCOG(0,3) = pos[0];
-    worldFrameAtCOG(1,3) = pos[1];
-    worldFrameAtCOG(2,3) = pos[2];
+    worldFrameAtCOG.translation() = math::Rotate(mW, -mCenterOfMass);
     return math::AdT(worldFrameAtCOG, mV);
 }
 
 math::se3 BodyNode::getVelocityWorldAtPoint(const math::Vec3& _pointBody) const
 {
     math::SE3 worldFrameAtPoint = mW;
-    Eigen::Vector3d pos = math::Rotate(mW, -_pointBody);
-    worldFrameAtPoint(0,3) = pos[0];
-    worldFrameAtPoint(1,3) = pos[1];
-    worldFrameAtPoint(2,3) = pos[2];
+    worldFrameAtPoint.translation() = math::Rotate(mW, -_pointBody);
     return math::AdT(worldFrameAtPoint, mV);
 }
 
@@ -221,20 +215,14 @@ math::se3 BodyNode::getAccelerationWorld() const
 math::se3 BodyNode::getAccelerationWorldAtCOG() const
 {
     math::SE3 worldFrameAtCOG = mW;
-    Eigen::Vector3d pos = math::Rotate(mW, -mCenterOfMass);
-    worldFrameAtCOG(0,3) = pos[0];
-    worldFrameAtCOG(1,3) = pos[1];
-    worldFrameAtCOG(2,3) = pos[2];
+    worldFrameAtCOG.translation() = math::Rotate(mW, -mCenterOfMass);
     return math::AdT(worldFrameAtCOG, mdV);
 }
 
 math::se3 BodyNode::getAccelerationWorldAtPoint(const math::Vec3& _pointBody) const
 {
     math::SE3 worldFrameAtPoint = mW;
-    Eigen::Vector3d pos = math::Rotate(mW, -_pointBody);
-    worldFrameAtPoint(0,3) = pos[0];
-    worldFrameAtPoint(1,3) = pos[1];
-    worldFrameAtPoint(2,3) = pos[2];
+    worldFrameAtPoint.translation() = math::Rotate(mW, -_pointBody);
     return math::AdT(worldFrameAtPoint, mdV);
 }
 
@@ -299,10 +287,10 @@ void BodyNode::init()
     assert(mSkeleton != NULL);
 
     const int numDepDofs = getNumDependentDofs();
+
     mBodyJacobian = math::Jacobian::Zero(6,numDepDofs);
     mBodyJacobianDeriv = math::Jacobian::Zero(6,numDepDofs);
-
-    mM = Eigen::MatrixXd::Zero(getNumDependentDofs(), getNumDependentDofs());
+    mM = Eigen::MatrixXd::Zero(numDepDofs, numDepDofs);
 }
 
 void BodyNode::draw(renderer::RenderInterface* _ri,
@@ -432,7 +420,7 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
         if (mParentBodyNode)
         {
             mdV = math::AdInvT(mParentJoint->getLocalTransformation(),
-                              mParentBodyNode->getAcceleration()) +
+                               mParentBodyNode->getAcceleration()) +
                   mEta + mParentJoint->mS*mParentJoint->get_ddq();
         }
         else
@@ -539,13 +527,13 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
     Vector3d pos = _offset;
     Vector3d force = _force;
 
-    if (!_isOffsetLocal)
-        pos = math::xformHom(getWorldInvTransform(), _offset);
+//    if (!_isOffsetLocal)
+//        pos = math::xformHom(getWorldInvTransform(), _offset);
 
-    if (!_isForceLocal)
-        force = mW.rotation().transpose()*_force;
+//    if (!_isForceLocal)
+//        force = mW.rotation().transpose()*_force;
 
-    mContacts.push_back(pair<Vector3d, Vector3d>(pos, force));
+//    mContacts.push_back(pair<Vector3d, Vector3d>(pos, force));
 }
 
 void BodyNode::addExternalForceLocal(const math::dse3& _FextLocal)
@@ -555,7 +543,7 @@ void BodyNode::addExternalForceLocal(const math::dse3& _FextLocal)
 
 void BodyNode::addExternalForceGlobal(const math::dse3& _FextWorld)
 {
-    mFext += math::dAdT(mW, _FextWorld);
+//    mFext += math::dAdT(mW, _FextWorld);
 }
 
 void BodyNode::addExternalForceLocal(
@@ -567,22 +555,22 @@ void BodyNode::addExternalForceLocal(
     Vector3d offset = _offset;
     Vector3d linearForce = _linearForce;
 
-    if (!_isOffsetLocal)
-        offset = math::xformHom(getWorldInvTransform(), _offset);
+//    if (!_isOffsetLocal)
+//        offset = math::xformHom(getWorldInvTransform(), _offset);
 
-    if (!_isLinearForceLocal)
-        linearForce = mW.rotation().transpose()*_linearForce;
+//    if (!_isLinearForceLocal)
+//        linearForce = mW.rotation().transpose()*_linearForce;
 
-    math::dse3 contactForce;
-    contactForce.head<3>() = offset.cross(linearForce);
-    contactForce.tail<3>() = linearForce;
+//    math::dse3 contactForce;
+//    contactForce.head<3>() = offset.cross(linearForce);
+//    contactForce.tail<3>() = linearForce;
 
-    if (linearForce != Eigen::Vector3d::Zero())
-    {
-        int a = 10;
-    }
+//    if (linearForce != Eigen::Vector3d::Zero())
+//    {
+//        int a = 10;
+//    }
 
-    mFext += contactForce;
+//    mFext += contactForce;
 }
 
 const math::dse3& BodyNode::getExternalForceLocal() const
@@ -592,7 +580,8 @@ const math::dse3& BodyNode::getExternalForceLocal() const
 
 math::dse3 BodyNode::getExternalForceGlobal() const
 {
-    return math::dAdInvT(mW, mFext);
+    //return math::dAdInvT(mW, mFext);
+    return math::dse3();
 }
 
 void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
