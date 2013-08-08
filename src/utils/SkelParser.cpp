@@ -624,6 +624,27 @@ dynamics::RevoluteJoint*readRevoluteJoint(
             double damping = getValueDouble(axisElement, "damping");
             newRevoluteJoint->setDampingCoefficient(0, damping);
         }
+
+        // limit
+        if (hasElement(axisElement, "limit"))
+        {
+            tinyxml2::XMLElement* limitElement
+                    = getElement(axisElement, "limit");
+
+            // lower
+            if (hasElement(limitElement, "lower"))
+            {
+                double lower = getValueDouble(limitElement, "lower");
+                newRevoluteJoint->getDof(0)->set_qMin(lower);
+            }
+
+            // upper
+            if (hasElement(limitElement, "upper"))
+            {
+                double upper = getValueDouble(limitElement, "upper");
+                newRevoluteJoint->getDof(0)->set_qMax(upper);
+            }
+        }
     }
     else
     {
