@@ -73,7 +73,8 @@ void FreeJoint::_updateTransformation()
          mCoordinate[3].get_q(), mCoordinate[4].get_q(), mCoordinate[5].get_q();
 
     // TODO: Speed up with / operator
-    mT = mT_ParentBodyToJoint * math::Exp(s) * math::Inv(mT_ChildBodyToJoint);
+    //mT = mT_ParentBodyToJoint * math::Exp(s) * math::Inv(mT_ChildBodyToJoint);
+    mT = mT_ParentBodyToJoint * math::ExpLinear(s.tail<3>()) * math::ExpAngular(s.head<3>()) * math::Inv(mT_ChildBodyToJoint);
 
     assert(math::VerifySE3(mT));
 }
