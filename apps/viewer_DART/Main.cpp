@@ -15,9 +15,11 @@ int main(int argc, char* argv[])
                   //DART_DATA_PATH"/skel/test/translational_joints.skel");
                   //DART_DATA_PATH"/skel/test/free_joints.skel");
                   //DART_DATA_PATH"/skel/test/serial_chain.skel");
-                  DART_DATA_PATH"/skel/test/drop.skel");
+                  //DART_DATA_PATH"/skel/test/drop.skel");
                   //DART_DATA_PATH"/skel/test/drop_unrotated_box.skel");
                   //DART_DATA_PATH"/skel/test/SimplePendulum.skel");
+                  DART_DATA_PATH"/skel/test/gazebo/force_torque_test2.skel");
+                  //DART_DATA_PATH"/skel/test/gazebo/force_torque_test.skel");
     assert(myWorld != NULL);
 
     // create a window and link it to the world
