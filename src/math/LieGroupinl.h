@@ -398,6 +398,20 @@ inline dse3 dAdInvT(const SE3& T, const dse3& t)
     return ret;
 }
 
+inline dse3 dAdInvR(const SE3& T, const dse3& t)
+{
+    dse3 ret = dse3::Zero();
+
+    ret << T(0,0)*t[0] + T(0,1)*t[1] + T(0,2)*t[2],
+           T(1,0)*t[0] + T(1,1)*t[1] + T(1,2)*t[2],
+           T(2,0)*t[0] + T(2,1)*t[1] + T(2,2)*t[2],
+           T(0,0)*t[3] + T(0,1)*t[4] + T(0,2)*t[5],
+           T(1,0)*t[3] + T(1,1)*t[4] + T(1,2)*t[5],
+           T(2,0)*t[3] + T(2,1)*t[4] + T(2,2)*t[5];
+
+    return ret;
+}
+
 //inline dse3 dAdInvPLinear(const Vec3& p, const Vec3& f)
 //{
 //    dse3 ret;

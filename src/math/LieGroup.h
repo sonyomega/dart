@@ -228,6 +228,9 @@ dse3 dAdT(const SE3& T, const dse3& F);
 /// @brief fast version of dAd(Inv(T), F)
 dse3 dAdInvT(const SE3& T, const dse3& F);
 
+/// @brief fast version of dAd(Inv([R 0; 0 1]), F)
+dse3 dAdInvR(const SE3& T, const dse3& F);
+
 ///// @brief fast version of dAd(Inv(SE3(p)), dse3(Eigen_Vec3(0), F))
 //dse3 dAdInvPLinear(const Vec3& p, const Vec3& F);
 
