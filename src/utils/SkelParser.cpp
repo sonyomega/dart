@@ -58,7 +58,7 @@
 #include "utils/SkelParser.h"
 
 namespace dart {
-namespace simulation {
+namespace utils {
 
 //==============================================================================
 //
@@ -245,7 +245,7 @@ simulation::World* readWorld(tinyxml2::XMLElement* _worldElement)
 }
 
 dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
-                                 World* _world)
+                                 simulation::World* _world)
 {
     assert(_skeletonElement != NULL);
     assert(_world != NULL);
@@ -1090,10 +1090,5 @@ tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement,
     return _parentElement->FirstChildElement(_name.c_str());
 }
 
-
-
-
-
-
-} // namespace simulation
+} // namespace utils
 } // namespace dart

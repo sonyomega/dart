@@ -64,8 +64,11 @@ class Skeleton;
 }
 
 namespace simulation {
-
 class World;
+}
+
+namespace utils {
+
 class ElementEnumerator;
 
 #define SDF_OK 0
@@ -158,7 +161,7 @@ simulation::World* readWorld(tinyxml2::XMLElement* _worldElement);
 
 /// @brief
 dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
-                                         World* _world);
+                                 simulation::World* _world);
 
 /// @brief
 dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
@@ -238,7 +241,7 @@ private:
     tinyxml2::XMLElement* m_current;
 };
 
-}
-}
+} // namespace utils
+} // namespace dart
 
 #endif // DART_SIMULATION_SKEL_PARSER_H

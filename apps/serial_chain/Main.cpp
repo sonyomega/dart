@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     // load a skeleton file
     // create and initialize the world
     dart::simulation::World *myWorld
-            = dart::simulation::readSkelFile(
+            = dart::utils::readSkelFile(
                   //DART_DATA_PATH"/skel/test/serial_chain_ball_joint.skel");
                   DART_DATA_PATH"/skel/test/serial_chain_ball_joint_20.skel");
                   //DART_DATA_PATH"/skel/test/serial_chain_eulerxyz_joint.skel");

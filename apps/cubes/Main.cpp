@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 {
     // create and initialize the world
     dart::simulation::World *myWorld
-            = dart::simulation::readSkelFile(
+            = dart::utils::readSkelFile(
                   DART_DATA_PATH"/skel/cubes.skel");
     assert(myWorld != NULL);
     Vector3d gravity(0.0, -9.81, 0.0);
