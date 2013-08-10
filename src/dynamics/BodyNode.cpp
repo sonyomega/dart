@@ -66,6 +66,7 @@ BodyNode::BodyNode(const std::string& _name)
       mParentBodyNode(NULL),
       mChildBodyNodes(std::vector<BodyNode*>(0)),
       mGravityMode(true),
+      mCenterOfMass(math::Vec3::Zero()),
       mW(math::SE3::Identity()),
       mV(math::se3::Zero()),
       mdV(math::se3::Zero()),
