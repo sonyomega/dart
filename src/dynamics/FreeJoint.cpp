@@ -165,18 +165,25 @@ void FreeJoint::_updateAcceleration()
     mdS = Eigen::Matrix<double,6,6>::Zero();
 
     math::se3 dJ0;
-    dJ0 << Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0;
     math::se3 dJ1;
-    dJ1 << Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0;
     math::se3 dJ2;
+    math::se3 J3;
+    math::se3 J4;
+    math::se3 J5;
+
+    dJ0 << Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0;
+    dJ1 << Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0;
     dJ2 << Jdot(2,0), Jdot(2,1), Jdot(2,2), 0, 0, 0;
-    //math::se3 dJ3 = math::se3::Zero();
-    //math::se3 dJ4 = math::se3::Zero();
-    //math::se3 dJ5 = math::se3::Zero();
+    J3 << 0, 0, 0, 1, 0, 0;
+    J4 << 0, 0, 0, 0, 1, 0;
+    J5 << 0, 0, 0, 0, 0, 1;
 
     mdS.col(0) = math::AdT(mT_ChildBodyToJoint, dJ0);
     mdS.col(1) = math::AdT(mT_ChildBodyToJoint, dJ1);
     mdS.col(2) = math::AdT(mT_ChildBodyToJoint, dJ2);
+    mdS.col(3) = -math::ad(mS.leftCols<3>() * get_dq().head<3>(), math::AdT(mT_ChildBodyToJoint, math::AdInvT(math::ExpAngular(q), J3)));
+    mdS.col(4) = -math::ad(mS.leftCols<3>() * get_dq().head<3>(), math::AdT(mT_ChildBodyToJoint, math::AdInvT(math::ExpAngular(q), J4)));
+    mdS.col(5) = -math::ad(mS.leftCols<3>() * get_dq().head<3>(), math::AdT(mT_ChildBodyToJoint, math::AdInvT(math::ExpAngular(q), J5)));
 
     // dV = dS * dq + S * ddq
     mdV = mdS * get_dq() + mS * get_ddq();
