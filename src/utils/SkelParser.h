@@ -164,7 +164,7 @@ dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
                                  simulation::World* _world);
 
 /// @brief
-dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
+dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyElement,
                                      dynamics::Skeleton* _skeleton);
 
 /// @brief

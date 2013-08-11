@@ -134,7 +134,7 @@ public:
     int getNumJoints() const { return mJoints.size(); }
 
     /// @brief
-    BodyNode* getRoot() { return mRoot; }
+    BodyNode* getRoot() { return mRootBodyNode; }
 
     /// @brief
     BodyNode* getBodyNode(int _idx) const { return mBodyNodes[_idx]; }
@@ -328,9 +328,7 @@ protected:
     // Structual Properties
     //--------------------------------------------------------------------------
     /// @brief
-    // TODO: rename
-    //BodyNode* mRootBody;
-    BodyNode* mRoot;
+    BodyNode* mRootBodyNode;
 
     /// @brief
     math::SE3 mFrame;

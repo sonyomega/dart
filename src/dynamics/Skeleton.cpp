@@ -179,8 +179,8 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
 
 void Skeleton::initKinematics()
 {
-    mRoot = mBodyNodes[0];
-    mToRootBody = math::Inv(mFrame) * mRoot->getWorldInvTransform();
+    mRootBodyNode = mBodyNodes[0];
+    mToRootBody = math::Inv(mFrame) * mRootBodyNode->getWorldInvTransform();
 
     // calculate mass
     // init the dependsOnDof stucture for each bodylink
@@ -205,7 +205,7 @@ void Skeleton::draw(renderer::RenderInterface* _ri,
                     const Eigen::Vector4d& _color,
                     bool _useDefaultColor) const
 {
-    mRoot->draw(_ri, _color, _useDefaultColor);
+    mRootBodyNode->draw(_ri, _color, _useDefaultColor);
 }
 
 void Skeleton::_updateJointKinematics(bool _firstDerivative,
@@ -237,7 +237,7 @@ void Skeleton::_updateBodyForwardKinematics(bool _firstDerivative,
         }
     }
 
-    mFrame = mRoot->getWorldTransform() * math::Inv(mToRootBody);
+    mFrame = mRootBodyNode->getWorldTransform() * math::Inv(mToRootBody);
 }
 
 void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity,
