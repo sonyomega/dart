@@ -282,7 +282,7 @@ dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
     while (bodies.next())
     {
         dynamics::BodyNode* newBody
-                = readBody(bodies.get(), newSkeleton);
+                = readBodyNode(bodies.get(), newSkeleton);
 
         newSkeleton->addBodyNode(newBody, false);
     }
@@ -301,24 +301,24 @@ dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
     return newSkeleton;
 }
 
-dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
-                                     dynamics::Skeleton* _skeleton)
+dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
+                                 dynamics::Skeleton* _skeleton)
 {
-    assert(_bodyElement != NULL);
+    assert(_bodyNodeElement != NULL);
     assert(_skeleton != NULL);
 
-    dynamics::BodyNode* newBody = new dynamics::BodyNode;
+    dynamics::BodyNode* newBodyNode = new dynamics::BodyNode;
 
     // Name attribute
-    std::string name = getAttribute(_bodyElement, "name");
-    newBody->setName(name);
+    std::string name = getAttribute(_bodyNodeElement, "name");
+    newBodyNode->setName(name);
 
     //--------------------------------------------------------------------------
     // gravity
-    if (hasElement(_bodyElement, "gravity"))
+    if (hasElement(_bodyNodeElement, "gravity"))
     {
-        bool gravityMode = getValueBool(_bodyElement, "gravity");
-        newBody->setGravityMode(gravityMode);
+        bool gravityMode = getValueBool(_bodyNodeElement, "gravity");
+        newBodyNode->setGravityMode(gravityMode);
     }
 
     //--------------------------------------------------------------------------
@@ -330,17 +330,17 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
 
     //--------------------------------------------------------------------------
     // transformation
-    if (hasElement(_bodyElement, "transformation"))
+    if (hasElement(_bodyNodeElement, "transformation"))
     {
-        math::SE3 W = getValueSE3(_bodyElement, "transformation");
-        newBody->setWorldTransform(_skeleton->getWorldTransformation() * W);
+        math::SE3 W = getValueSE3(_bodyNodeElement, "transformation");
+        newBodyNode->setWorldTransform(_skeleton->getWorldTransformation() * W);
     }
 
     // visualization_shape
-    if (hasElement(_bodyElement, "visualization_shape"))
+    if (hasElement(_bodyNodeElement, "visualization_shape"))
     {
         tinyxml2::XMLElement* vizElement
-                = getElement(_bodyElement, "visualization_shape");
+                = getElement(_bodyNodeElement, "visualization_shape");
 
         dynamics::Shape* shape = NULL;
 
@@ -379,7 +379,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
             dterr << "Unknown visualization shape.\n";
             assert(0);
         }
-        newBody->addVisualizationShape(shape);
+        newBodyNode->addVisualizationShape(shape);
 
         // transformation
         if (hasElement(vizElement, "transformation"))
@@ -391,10 +391,10 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
     }
 
     // collision_shape
-    if (hasElement(_bodyElement, "collision_shape"))
+    if (hasElement(_bodyNodeElement, "collision_shape"))
     {
         tinyxml2::XMLElement* colElement
-                = getElement(_bodyElement, "collision_shape");
+                = getElement(_bodyNodeElement, "collision_shape");
 
         dynamics::Shape* shape = NULL;
 
@@ -433,7 +433,7 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
             dterr << "Unknown visualization shape.\n";
             assert(0);
         }
-        newBody->addCollisionShape(shape);
+        newBodyNode->addCollisionShape(shape);
 
         // transformation
         if (hasElement(colElement, "transformation"))
@@ -445,13 +445,13 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
 
     //--------------------------------------------------------------------------
     // inertia
-    if (hasElement(_bodyElement, "inertia"))
+    if (hasElement(_bodyNodeElement, "inertia"))
     {
-        tinyxml2::XMLElement* inertiaElement = getElement(_bodyElement, "inertia");
+        tinyxml2::XMLElement* inertiaElement = getElement(_bodyNodeElement, "inertia");
 
         // mass
         double mass = getValueDouble(inertiaElement, "mass");
-        newBody->setMass(mass);
+        newBodyNode->setMass(mass);
 
         // moment of inertia
         if (hasElement(inertiaElement, "moment_of_inertia"))
@@ -467,13 +467,13 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
             double ixz = getValueDouble(moiElement, "ixz");
             double iyz = getValueDouble(moiElement, "iyz");
 
-            newBody->setMomentOfInertia(ixx, iyy, izz, ixy, ixz, iyz);
+            newBodyNode->setMomentOfInertia(ixx, iyy, izz, ixy, ixz, iyz);
         }
-        else if (newBody->getVisualizationShape(0) != 0)
+        else if (newBodyNode->getVisualizationShape(0) != 0)
         {
-            Eigen::Matrix3d Ic = newBody->getVisualizationShape(0)->computeInertia(mass);
+            Eigen::Matrix3d Ic = newBodyNode->getVisualizationShape(0)->computeInertia(mass);
 
-            newBody->setMomentOfInertia(Ic(0,0), Ic(1,1), Ic(2,2),
+            newBodyNode->setMomentOfInertia(Ic(0,0), Ic(1,1), Ic(2,2),
                                         Ic(0,1), Ic(0,2), Ic(1,2));
         }
 
@@ -481,11 +481,11 @@ dynamics::BodyNode* readBody(tinyxml2::XMLElement* _bodyElement,
         if (hasElement(inertiaElement, "offset"))
         {
             math::Vec3 offset = getValueVec3(inertiaElement, "offset");
-            newBody->setCOM(offset);
+            newBodyNode->setCOM(offset);
         }
     }
 
-    return newBody;
+    return newBodyNode;
 }
 
 dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
