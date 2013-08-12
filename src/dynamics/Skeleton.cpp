@@ -57,16 +57,12 @@ Skeleton::Skeleton(const std::string& _name)
       mTotalMass(0.0),
       mImmobile(false),
       mJointLimit(true),
-      mGraph(NULL),
       mFrame(math::SE3::Identity())
 {
-    mGraph = new SkeletonGraph(getNumBodyNodes());
 }
 
 Skeleton::~Skeleton()
 {
-    if (mGraph != NULL)
-        delete mGraph;
 }
 
 void Skeleton::setWorldTransformation(const math::SE3& _W, bool _updateChilds)
@@ -127,12 +123,6 @@ void Skeleton::addJoint(Joint* _joint)
          ++itrDof) {
         mGenCoords.push_back((*itrDof));
         (*itrDof)->setSkelIndex(mGenCoords.size() - 1);
-    }
-
-    if (_joint->getParentBody() != NULL && _joint->getChildBody() != NULL) {
-        boost::add_edge(_joint->getParentBody()->getSkelIndex(),
-                        _joint->getChildBody()->getSkelIndex(),
-                        *mGraph);
     }
 }
 

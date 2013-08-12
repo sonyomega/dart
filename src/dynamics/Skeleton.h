@@ -43,11 +43,6 @@
 
 #include <Eigen/Dense>
 
-#include <boost/graph/adjacency_matrix.hpp>
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/graphviz.hpp>
-#include <boost/graph/breadth_first_search.hpp>
-
 #include "math/LieGroup.h"
 #include "common/Deprecated.h"
 #include "dynamics/System.h"
@@ -60,7 +55,6 @@ class RenderInterface;
 
 namespace dynamics {
 
-typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS> SkeletonGraph;
 class BodyNode;
 class Joint;
 
@@ -373,11 +367,6 @@ protected:
     Eigen::VectorXd mFext; ///< external forces vector for the skeleton
     //Eigen::VectorXd mFint; ///< internal forces vector for the skeleton; computed by an external controller
     Eigen::VectorXd mFc;
-
-    /// @brief
-    //std::vector<BodyNode*> mDynamicsBodies;
-
-    SkeletonGraph* mGraph;
 
 private:
 
