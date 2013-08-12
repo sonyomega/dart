@@ -166,9 +166,8 @@ void ConstraintDynamics::addSkeleton(dynamics::Skeleton* _newSkel)
 
 void ConstraintDynamics::initialize() {
     // Allocate the Collision Detection class
-    mCollisionChecker = new FCLMESHCollisionDetector();
     //mCollisionChecker = new FCLCollisionDetector();
-
+    mCollisionChecker = new FCLMESHCollisionDetector();
     mBodyIndexToSkelIndex.clear();
     // Add all body nodes into mCollisionChecker
     int rows = 0;

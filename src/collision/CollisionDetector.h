@@ -118,6 +118,12 @@ public:
     /// @brief
     void clearAllContacts() { mContacts.clear(); }
 
+    /// @brief
+    int getNumMaxContacts() const { return mNumMaxContacts; }
+
+    /// @brief
+    void setNumMaxContacs(int _num) { mNumMaxContacts = _num; }
+
 protected:
     virtual bool checkCollision(CollisionNode* _node1,
                                 CollisionNode* _node2,
@@ -130,6 +136,9 @@ protected:
 
     /// @brief
     std::vector<CollisionNode*> mCollisionNodes;
+
+    /// @brief
+    int mNumMaxContacts;
 
 private:
     std::vector<bool>::reference getPairCollidable(const CollisionNode* _node1, const CollisionNode* _node2);

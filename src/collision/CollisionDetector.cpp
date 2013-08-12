@@ -46,6 +46,7 @@ namespace dart {
 namespace collision {
 
 CollisionDetector::CollisionDetector() {
+    mNumMaxContacts = 100;
 }
 
 CollisionDetector::~CollisionDetector() {
