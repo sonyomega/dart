@@ -53,11 +53,6 @@ class BodyNode;
 class Shape;
 }
 
-namespace robotics {
-class Object;
-class Robot;
-}
-
 namespace renderer {
 class OpenGLRenderInterface : public RenderInterface {
 
