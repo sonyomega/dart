@@ -482,6 +482,12 @@ Eigen::VectorXd Skeleton::getDampingForces() const
         idx += numDofsJoint;
     }
 
+//    if (getDOF() > 0)
+//    for (int i = 0; i < 6; ++i) {
+//        if (dampingForce[i] != 0.0)
+//            int a = 10;
+//    }
+
     return dampingForce;
 }
 

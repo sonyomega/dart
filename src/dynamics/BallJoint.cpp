@@ -68,11 +68,11 @@ inline void BallJoint::_updateTransformation()
 {
     // T
     math::so3 w(mCoordinate[0].get_q(),
-            mCoordinate[1].get_q(),
-            mCoordinate[2].get_q());
+                mCoordinate[1].get_q(),
+                mCoordinate[2].get_q());
     mT = mT_ParentBodyToJoint *
          math::ExpAngular(w) *
-         mT_ChildBodyToJoint.inverse();
+         math::Inv(mT_ChildBodyToJoint);
 }
 
 inline void BallJoint::_updateVelocity()

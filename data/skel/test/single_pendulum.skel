@@ -44,6 +44,7 @@
                 <transformation>-0.1 0 0 0 0 0</transformation>
                 <axis>
                     <xyz>0 0 1</xyz>
+		    <damping>10.0</damping>
                 </axis>
             </joint>
         </skeleton>	
