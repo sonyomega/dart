@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MATH_UTILSROTATION_H
-#define MATH_UTILSROTATION_H
+#ifndef DART_MATH_UTILSROTATION_H
+#define DART_MATH_UTILSROTATION_H
 
 // External Libraries
 #include <Eigen/Dense>
@@ -81,5 +81,5 @@ Eigen::Matrix3d expMapJacDeriv(const Eigen::Vector3d &_expmap, int _qi);    ///<
 } // namespace utils
 } // namespace dart
 
-#endif // #ifndef UTILS_UTILSROTATION_H
+#endif // #ifndef DART_UTILS_UTILSROTATION_H
 

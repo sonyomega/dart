@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef RENDERER_OPENGLCAMERA_H
-#define RENDERER_OPENGLCAMERA_H
+#ifndef DART_RENDERER_OPENGLCAMERA_H
+#define DART_RENDERER_OPENGLCAMERA_H
 
 namespace dart {
 namespace renderer {
@@ -63,4 +63,4 @@ public:
 } // namespace renderer
 } // namespace dart
 
-#endif // #ifndef RENDERER_OPENGLCAMERA_H
+#endif // #ifndef DART_RENDERER_OPENGLCAMERA_H

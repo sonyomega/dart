@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_SIMULATION_SKEL_PARSER_H
-#define DART_SIMULATION_SKEL_PARSER_H
+#ifndef DART_UTILS_SKEL_PARSER_H
+#define DART_UTILS_SKEL_PARSER_H
 
 #include <vector>
 #include <Eigen/Dense>
@@ -244,4 +244,4 @@ private:
 } // namespace utils
 } // namespace dart
 
-#endif // DART_SIMULATION_SKEL_PARSER_H
+#endif // DART_UTILS_SKEL_PARSER_H

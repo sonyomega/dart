@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef INTEGRATION_INTEGRATOR_H
-#define INTEGRATION_INTEGRATOR_H
+#ifndef DART_INTEGRATION_INTEGRATOR_H
+#define DART_INTEGRATION_INTEGRATOR_H
 
 #include <vector>
 #include <Eigen/Dense>
@@ -99,4 +99,4 @@ public:
 } // namespace integration
 } // namespace dart
 
-#endif // INTEGRATION_INTEGRATOR_H
+#endif // DART_INTEGRATION_INTEGRATOR_H

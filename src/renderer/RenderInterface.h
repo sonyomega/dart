@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef RENDERER_RENDERINTERFACE_H
-#define RENDERER_RENDERINTERFACE_H
+#ifndef DART_RENDERER_RENDERINTERFACE_H
+#define DART_RENDERER_RENDERINTERFACE_H
 
 #include <vector>
 #include "Light.h"
@@ -126,4 +126,4 @@ protected:
 } // namespace renderer
 } // namespace dart
 
-#endif // #ifndef RENDERER_RENDERINTERFACE_H
+#endif // #ifndef DART_RENDERER_RENDERINTERFACE_H

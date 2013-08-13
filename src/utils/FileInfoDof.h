@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_KINEMATICS_FILEINFO_DOF_H
-#define DART_KINEMATICS_FILEINFO_DOF_H
+#ifndef DART_UTILS_FILEINFO_DOF_H
+#define DART_UTILS_FILEINFO_DOF_H
 
 #include <vector>
 #include <cassert>
@@ -81,5 +81,5 @@ protected:
 } // namespace utils
 } // namespace dart
 
-#endif // #ifndef DART_KINEMATICS_FILEINFO_DOF_H
+#endif // #ifndef DART_UTILS_FILEINFO_DOF_H
 

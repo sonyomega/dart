@@ -2,8 +2,8 @@
  * @file DartLoader.h
  */
 
-#ifndef DART_LOADER_H
-#define DART_LOADER_H
+#ifndef DART_UTILS_URDF_LOADER_H
+#define DART_UTILS_URDF_LOADER_H
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -64,4 +64,4 @@ private:
 }
 }
 
-#endif /** DART_LOADER_H */
+#endif /** DART_UTILS_URDF_LOADER_H */

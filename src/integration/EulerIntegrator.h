@@ -64,4 +64,4 @@ public:
 } // namespace integration
 } // namespace dart
 
-#endif // EULER_INTEGRATOR_H
+#endif // DART_INTEGRATIONEULER_INTEGRATOR_H

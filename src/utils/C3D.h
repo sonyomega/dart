@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_KINEMATICS_C3D_H
-#define DART_KINEMATICS_C3D_H
+#ifndef DART_UTILS_C3D_H
+#define DART_UTILS_C3D_H
 
 #include <vector>
 #include <ctime>
@@ -97,6 +97,6 @@ double minElem(std::vector<double>& _arr, int& _index);
 } // namespace utils
 } // namespace dart
 
-#endif // #ifndef DART_KINEMATICS_C3D_H
+#endif // #ifndef DART_UTILS_C3D_H
 
 

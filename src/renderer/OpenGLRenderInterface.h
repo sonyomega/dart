@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef RENDERER_OPENGLRENDERINTERFACE_H
-#define RENDERER_OPENGLRENDERINTERFACE_H
+#ifndef DART_RENDERER_OPENGLRENDERINTERFACE_H
+#define DART_RENDERER_OPENGLRENDERINTERFACE_H
 
 #include <list>
 #include <vector>
@@ -117,4 +117,4 @@ public:
 } // namespace renderer
 } // namespace dart
 
-#endif // #ifndef RENDERER_OPENGLRENDERINTERFACE_H
+#endif // #ifndef DART_RENDERER_OPENGLRENDERINTERFACE_H

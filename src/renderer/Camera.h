@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef RENDERER_CAMERA_H
-#define RENDERER_CAMERA_H
+#ifndef DART_RENDERER_CAMERA_H
+#define DART_RENDERER_CAMERA_H
 
 #include <Eigen/Core>
 
@@ -106,4 +106,4 @@ protected:
 } // namespace renderer
 } // namespace dart
 
-#endif // #ifndef RENDERER_CAMERA_H
+#endif // #ifndef DART_RENDERER_CAMERA_H

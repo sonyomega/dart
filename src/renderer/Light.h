@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef RENDERER_LIGHT_H
-#define RENDERER_LIGHT_H
+#ifndef DART_RENDERER_LIGHT_H
+#define DART_RENDERER_LIGHT_H
 
 #include <Eigen/Core>
 
@@ -75,4 +75,4 @@ public:
 } // namespace renderer
 } // namespace dart
 
-#endif // #ifndef RENDERER_LIGHT_H
+#endif // #ifndef DART_RENDERER_LIGHT_H

@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MATH_UTILSMATH_H
-#define MATH_UTILSMATH_H
+#ifndef DART_MATH_UTILSMATH_H
+#define DART_MATH_UTILSMATH_H
 
 // Standard Libraries
 #include <vector>
@@ -221,6 +221,6 @@ inline T precision(const T& _a, const unsigned int& _precision)
 } // namespace utils
 } // namespace dart
 
-#endif // #ifndef UTILS_UTILSMATH_H
+#endif // #ifndef DART_UTILS_UTILSMATH_H
 
 
