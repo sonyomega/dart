@@ -75,8 +75,17 @@ void TranslationalJoint::_updateTransformation()
 void TranslationalJoint::_updateVelocity()
 {
     // S
-    mS = Eigen::Matrix<double,6,3>::Zero();
-    mS.bottomRows<3>() = Eigen::Matrix3d::Identity();
+    math::se3 J0;
+    math::se3 J1;
+    math::se3 J2;
+
+    J0 << 0, 0, 0, 1, 0, 0;
+    J1 << 0, 0, 0, 0, 1, 0;
+    J2 << 0, 0, 0, 0, 0, 1;
+
+    mS.col(0) = math::AdT(mT_ChildBodyToJoint, J0);
+    mS.col(1) = math::AdT(mT_ChildBodyToJoint, J1);
+    mS.col(2) = math::AdT(mT_ChildBodyToJoint, J2);
 
     // V = S * dq
     mV = mS * get_dq();
