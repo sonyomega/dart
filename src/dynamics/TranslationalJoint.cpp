@@ -35,16 +35,16 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "TranslationalJoint.h"
+
 #include "math/LieGroup.h"
-#include "dynamics/TranslationalJoint.h"
 
 namespace dart {
 namespace dynamics {
 
 TranslationalJoint::TranslationalJoint()
-    : Joint()
+    : Joint("Translational joint")
 {
-    mName.assign("Translational joint");
     mJointType = TRANSLATIONAL;
     mGenCoords.push_back(&mCoordinate[0]);
     mGenCoords.push_back(&mCoordinate[1]);
@@ -64,8 +64,8 @@ void TranslationalJoint::_updateTransformation()
 {
     // T
     math::Vec3 v(mCoordinate[0].get_q(),
-            mCoordinate[1].get_q(),
-            mCoordinate[2].get_q());
+                 mCoordinate[1].get_q(),
+                 mCoordinate[2].get_q());
 
     mT = mT_ParentBodyToJoint
          * math::ExpLinear(v)
