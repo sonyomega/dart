@@ -45,10 +45,9 @@
 #include "simulation/World.h"
 
 namespace dart {
+namespace simulation {
 
 class World;
-
-namespace simulation {
 
 /// @brief
 class SimWindow : public yui::Win3D

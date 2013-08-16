@@ -35,14 +35,14 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "FreeJoint.h"
+
 #include "math/UtilsMath.h"
 #include "math/LieGroup.h"
-#include "dynamics/FreeJoint.h"
+#include "math/UtilsRotation.h"
 
 namespace dart {
 namespace dynamics {
-
-#define FJOINT_EPS 1e-6
 
 FreeJoint::FreeJoint()
     : Joint("Free joint")
@@ -68,39 +68,29 @@ FreeJoint::~FreeJoint()
 void FreeJoint::_updateTransformation()
 {
     // T
-    math::se3 s;
-    s << mCoordinate[0].get_q(), mCoordinate[1].get_q(), mCoordinate[2].get_q(),
-         mCoordinate[3].get_q(), mCoordinate[4].get_q(), mCoordinate[5].get_q();
+    math::so3 q1(mCoordinate[0].get_q(),
+                 mCoordinate[1].get_q(),
+                 mCoordinate[2].get_q());
+    math::Vec3 q2(mCoordinate[3].get_q(),
+                  mCoordinate[4].get_q(),
+                  mCoordinate[5].get_q());
 
-    // TODO: Speed up with / operator
-    //mT = mT_ParentBodyToJoint * math::Exp(s) * math::Inv(mT_ChildBodyToJoint);
-    mT = mT_ParentBodyToJoint * math::ExpLinear(s.tail<3>()) * math::ExpAngular(s.head<3>()) * math::Inv(mT_ChildBodyToJoint);
+    mT = mT_ParentBodyToJoint *
+            math::ExpLinear(q2) *
+            math::ExpAngular(q1) *
+            math::Inv(mT_ChildBodyToJoint);
 
     assert(math::VerifySE3(mT));
 }
 
 void FreeJoint::_updateVelocity()
 {
-    // TODO: NEED TO CHECK !!
-    //       NOT FINISHED.
-
     // S
-    math::so3 w(mCoordinate[0].get_q(),
+    math::so3 q(mCoordinate[0].get_q(),
                 mCoordinate[1].get_q(),
                 mCoordinate[2].get_q());
 
-    Eigen::Vector3d q;
-    q << mCoordinate[0].get_q(), mCoordinate[1].get_q(), mCoordinate[2].get_q();
-    double theta = q.norm();
-
-    Eigen::Matrix3d J = Eigen::Matrix3d::Zero();
-    Eigen::Matrix3d qss = math::makeSkewSymmetric(q);
-    Eigen::Matrix3d qss2 =  qss*qss;
-
-    if(theta < FJOINT_EPS)
-        J = Eigen::Matrix3d::Identity() + 0.5*qss +  (1.0/6.0)*qss2;
-    else
-        J = Eigen::Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
+    Eigen::Matrix3d J = math::expMapJac(q);
 
     math::se3 J0;
     math::se3 J1;
@@ -119,9 +109,9 @@ void FreeJoint::_updateVelocity()
     mS.col(0) = math::AdT(mT_ChildBodyToJoint, J0);
     mS.col(1) = math::AdT(mT_ChildBodyToJoint, J1);
     mS.col(2) = math::AdT(mT_ChildBodyToJoint, J2);
-    mS.col(3) = math::AdT(mT_ChildBodyToJoint * math::Inv(math::ExpAngular(w)), J3);
-    mS.col(4) = math::AdT(mT_ChildBodyToJoint * math::Inv(math::ExpAngular(w)), J4);
-    mS.col(5) = math::AdT(mT_ChildBodyToJoint * math::Inv(math::ExpAngular(w)), J5);
+    mS.col(3) = math::AdT(mT_ChildBodyToJoint * math::ExpAngular(-q), J3);
+    mS.col(4) = math::AdT(mT_ChildBodyToJoint * math::ExpAngular(-q), J4);
+    mS.col(5) = math::AdT(mT_ChildBodyToJoint * math::ExpAngular(-q), J5);
 
     // V = S * dq
     mV = mS * get_dq();
@@ -129,40 +119,15 @@ void FreeJoint::_updateVelocity()
 
 void FreeJoint::_updateAcceleration()
 {
-    // TODO: NEED TO CHECK !!
-    //       NOT FINISHED.
-
     // dS
-    Eigen::Vector3d q;
-    Eigen::Vector3d dq;
-    q << mCoordinate[0].get_q(), mCoordinate[1].get_q(), mCoordinate[2].get_q();
-    dq << mCoordinate[0].get_dq(), mCoordinate[1].get_dq(), mCoordinate[2].get_dq();
-    double theta = q.norm();
+    Eigen::Vector3d q(mCoordinate[0].get_q(),
+                      mCoordinate[1].get_q(),
+                      mCoordinate[2].get_q());
+    Eigen::Vector3d dq(mCoordinate[0].get_dq(),
+                       mCoordinate[1].get_dq(),
+                       mCoordinate[2].get_dq());
 
-    Eigen::Matrix3d Jdot = Eigen::Matrix3d::Zero();
-    Eigen::Matrix3d qss =  math::makeSkewSymmetric(q);
-    Eigen::Matrix3d qss2 =  qss*qss;
-    Eigen::Matrix3d qdss = math::makeSkewSymmetric(dq);
-    double ttdot = q.dot(dq);   // theta*thetaDot
-    double st = sin(theta);
-    double ct = cos(theta);
-    double t2 = theta*theta;
-    double t3 = t2*theta;
-    double t4 = t3*theta;
-    double t5 = t4*theta;
-
-    if (theta < FJOINT_EPS)
-    {
-        Jdot = 0.5*qdss + (1.0/6.0)*(qss*qdss + qdss*qss);
-        Jdot += (-1.0/12)*ttdot*qss + (-1.0/60)*ttdot*qss2;
-    }
-    else
-    {
-        Jdot = ((1-ct)/t2)*qdss + ((theta-st)/t3)*(qss*qdss + qdss*qss);
-        Jdot += ((theta*st + 2*ct - 2)/t4)*ttdot*qss + ((3*st - theta*ct - 2*theta)/t5)*ttdot*qss2;
-    }
-
-    mdS = Eigen::Matrix<double,6,6>::Zero();
+    Eigen::Matrix3d dJ = math::expMapJacDot(q, dq);
 
     math::se3 dJ0;
     math::se3 dJ1;
@@ -171,9 +136,9 @@ void FreeJoint::_updateAcceleration()
     math::se3 J4;
     math::se3 J5;
 
-    dJ0 << Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0;
-    dJ1 << Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0;
-    dJ2 << Jdot(2,0), Jdot(2,1), Jdot(2,2), 0, 0, 0;
+    dJ0 << dJ(0,0), dJ(0,1), dJ(0,2), 0, 0, 0;
+    dJ1 << dJ(1,0), dJ(1,1), dJ(1,2), 0, 0, 0;
+    dJ2 << dJ(2,0), dJ(2,1), dJ(2,2), 0, 0, 0;
     J3 << 0, 0, 0, 1, 0, 0;
     J4 << 0, 0, 0, 0, 1, 0;
     J5 << 0, 0, 0, 0, 0, 1;
@@ -181,9 +146,9 @@ void FreeJoint::_updateAcceleration()
     mdS.col(0) = math::AdT(mT_ChildBodyToJoint, dJ0);
     mdS.col(1) = math::AdT(mT_ChildBodyToJoint, dJ1);
     mdS.col(2) = math::AdT(mT_ChildBodyToJoint, dJ2);
-    mdS.col(3) = -math::ad(mS.leftCols<3>() * get_dq().head<3>(), math::AdT(mT_ChildBodyToJoint, math::AdInvT(math::ExpAngular(q), J3)));
-    mdS.col(4) = -math::ad(mS.leftCols<3>() * get_dq().head<3>(), math::AdT(mT_ChildBodyToJoint, math::AdInvT(math::ExpAngular(q), J4)));
-    mdS.col(5) = -math::ad(mS.leftCols<3>() * get_dq().head<3>(), math::AdT(mT_ChildBodyToJoint, math::AdInvT(math::ExpAngular(q), J5)));
+    mdS.col(3) = -math::ad(mS.leftCols<3>() * get_dq().head<3>(), math::AdT(mT_ChildBodyToJoint * math::ExpAngular(-q), J3));
+    mdS.col(4) = -math::ad(mS.leftCols<3>() * get_dq().head<3>(), math::AdT(mT_ChildBodyToJoint * math::ExpAngular(-q), J4));
+    mdS.col(5) = -math::ad(mS.leftCols<3>() * get_dq().head<3>(), math::AdT(mT_ChildBodyToJoint * math::ExpAngular(-q), J5));
 
     // dV = dS * dq + S * ddq
     mdV = mdS * get_dq() + mS * get_ddq();
