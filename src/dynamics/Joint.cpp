@@ -130,6 +130,32 @@ void Joint::applyGLTransform(renderer::RenderInterface* _ri)
     _ri->transform(mT);
 }
 
+void Joint::setDampingCoefficient(int _idx, double _d)
+{
+    assert(0 <= _idx && _idx < getDOF());
+    assert(_d >= 0.0);
+
+    mDampingCoefficient[_idx] = _d;
+}
+
+double Joint::getDampingCoefficient(int _idx) const
+{
+    assert(0 <= _idx && _idx < getDOF());
+
+    return mDampingCoefficient[_idx];
+}
+
+Eigen::VectorXd Joint::getDampingForce() const
+{
+    int numDofs = getDOF();
+    Eigen::VectorXd dampingForce(numDofs);
+
+    for (int i = 0; i < numDofs; ++i)
+        //dampingForce(i) = -mDampingCoefficient[i] * getDof(i)->get_dq();
+
+        return dampingForce;
+}
+
 } // namespace dynamics
 } // namespace dart
 

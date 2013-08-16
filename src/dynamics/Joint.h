@@ -251,33 +251,13 @@ public:
     std::vector<double> mDampingCoefficient;
 
     /// @brief
-    void setDampingCoefficient(int _idx, double _d)
-    {
-        assert(0 <= _idx && _idx < getDOF());
-        assert(_d >= 0.0);
-
-        mDampingCoefficient[_idx] = _d;
-    }
+    void setDampingCoefficient(int _idx, double _d);
 
     /// @brief
-    double getDampingCoefficient(int _idx) const
-    {
-        assert(0 <= _idx && _idx < getDOF());
+    double getDampingCoefficient(int _idx) const;
 
-        return mDampingCoefficient[_idx];
-    }
-
-
-    Eigen::VectorXd getDampingForce() const
-    {
-        int numDofs = getDOF();
-        Eigen::VectorXd dampingForce(numDofs);
-
-        for (int i = 0; i < numDofs; ++i)
-            dampingForce(i) = -mDampingCoefficient[i] * getDof(i)->get_dq();
-
-        return dampingForce;
-    }
+    /// @brief
+    Eigen::VectorXd getDampingForce() const;
 
     /// @brief
     std::vector<double> mSpringStiffness;
