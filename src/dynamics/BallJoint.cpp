@@ -35,16 +35,14 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "BallJoint.h"
+
 #include "math/UtilsMath.h"
 #include "math/LieGroup.h"
-#include "dynamics/BallJoint.h"
-
-using namespace Eigen;
+#include "math/UtilsRotation.h"
 
 namespace dart {
 namespace dynamics {
-
-#define BJOINT_EPS 1.0e-3
 
 BallJoint::BallJoint()
     : Joint("Ball joint")
@@ -67,40 +65,30 @@ BallJoint::~BallJoint()
 inline void BallJoint::_updateTransformation()
 {
     // T
-    math::so3 w(mCoordinate[0].get_q(),
+    math::so3 q(mCoordinate[0].get_q(),
                 mCoordinate[1].get_q(),
                 mCoordinate[2].get_q());
+
     mT = mT_ParentBodyToJoint *
-         math::ExpAngular(w) *
-         math::Inv(mT_ChildBodyToJoint);
+            math::ExpAngular(q) *
+            math::Inv(mT_ChildBodyToJoint);
 }
 
 inline void BallJoint::_updateVelocity()
 {
-    // TODO: NEED TO CHECK !!
-    //       NOT FINISHED.
-
     // S
-    Eigen::Vector3d q;
-    q << mCoordinate[0].get_q(), mCoordinate[1].get_q(), mCoordinate[2].get_q();
-    double theta = q.norm();
+    Eigen::Vector3d q(mCoordinate[0].get_q(),
+                      mCoordinate[1].get_q(),
+                      mCoordinate[2].get_q());
 
-    Eigen::Matrix3d J = Eigen::Matrix3d::Zero();
-    Eigen::Matrix3d qss = math::makeSkewSymmetric(q);
-    Eigen::Matrix3d qss2 =  qss*qss;
-
-    if(theta < BJOINT_EPS)
-        J = Eigen::Matrix3d::Identity() + 0.5*qss + (1.0/6.0)*qss2;
-    else
-        J = Eigen::Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
-
-    mS.setZero();
+    Eigen::Matrix3d J = math::expMapJac(q);
 
     math::se3 J0;
-    J0 << J(0,0), J(0,1), J(0,2), 0, 0, 0;
     math::se3 J1;
-    J1 << J(1,0), J(1,1), J(1,2), 0, 0, 0;
     math::se3 J2;
+
+    J0 << J(0,0), J(0,1), J(0,2), 0, 0, 0;
+    J1 << J(1,0), J(1,1), J(1,2), 0, 0, 0;
     J2 << J(2,0), J(2,1), J(2,2), 0, 0, 0;
 
     mS.col(0) = math::AdT(mT_ChildBodyToJoint, J0);
@@ -113,47 +101,23 @@ inline void BallJoint::_updateVelocity()
 
 inline void BallJoint::_updateAcceleration()
 {
-    // TODO: NEED TO CHECK !!
-    //       NOT FINISHED.
-
     // dS
-    Eigen::Vector3d q;
-    Eigen::Vector3d dq;
-    q << mCoordinate[0].get_q(), mCoordinate[1].get_q(), mCoordinate[2].get_q();
-    dq << mCoordinate[0].get_dq(), mCoordinate[1].get_dq(), mCoordinate[2].get_dq();
-    double theta = q.norm();
+    Eigen::Vector3d q(mCoordinate[0].get_q(),
+                      mCoordinate[1].get_q(),
+                      mCoordinate[2].get_q());
+    Eigen::Vector3d dq(mCoordinate[0].get_dq(),
+                       mCoordinate[1].get_dq(),
+                       mCoordinate[2].get_dq());
 
-    Matrix3d Jdot = Matrix3d::Zero();
-    Matrix3d qss =  math::makeSkewSymmetric(q);
-    Matrix3d qss2 =  qss*qss;
-    Matrix3d qdss = math::makeSkewSymmetric(dq);
-    double ttdot = q.dot(dq);   // theta*thetaDot
-    double st = sin(theta);
-    double ct = cos(theta);
-    double t2 = theta*theta;
-    double t3 = t2*theta;
-    double t4 = t3*theta;
-    double t5 = t4*theta;
-
-    if (theta < BJOINT_EPS)
-    {
-        Jdot = 0.5*qdss + (1.0/6.0)*(qss*qdss + qdss*qss);
-        Jdot += (-1.0/12)*ttdot*qss + (-1.0/60)*ttdot*qss2;
-    }
-    else
-    {
-        Jdot = ((1-ct)/t2)*qdss + ((theta-st)/t3)*(qss*qdss + qdss*qss);
-        Jdot += ((theta*st + 2*ct - 2)/t4)*ttdot*qss + ((3*st - theta*ct - 2*theta)/t5)*ttdot*qss2;
-    }
-
-    mdS = Eigen::Matrix<double,6,3>::Zero();
+    Eigen::Matrix3d dJ = math::expMapJacDot(q, dq);
 
     math::se3 dJ0;
-    dJ0 << Jdot(0,0), Jdot(0,1), Jdot(0,2), 0, 0, 0;
     math::se3 dJ1;
-    dJ1 << Jdot(1,0), Jdot(1,1), Jdot(1,2), 0, 0, 0;
     math::se3 dJ2;
-    dJ2 << Jdot(2,0), Jdot(2,1), Jdot(2,2), 0, 0, 0;
+
+    dJ0 << dJ(0,0), dJ(0,1), dJ(0,2), 0, 0, 0;
+    dJ1 << dJ(1,0), dJ(1,1), dJ(1,2), 0, 0, 0;
+    dJ2 << dJ(2,0), dJ(2,1), dJ(2,2), 0, 0, 0;
 
     mdS.col(0) = math::AdT(mT_ChildBodyToJoint, dJ0);
     mdS.col(1) = math::AdT(mT_ChildBodyToJoint, dJ1);
