@@ -164,6 +164,38 @@ void JOINTS::kinematicsTest(Joint* _joint)
         for (int i = 0; i < dof; ++i)
             for (int j = 0; j < 6; ++j)
                 EXPECT_NEAR(J.col(i)(j), numericJ.col(i)(j), JOINT_TOL);
+
+        //--------------------------------------------------------------------------
+        // Test first time derivative of analytic Jacobian and numerical Jacobian
+        // dJ == numerical_dJ
+        //--------------------------------------------------------------------------
+        Jacobian numeric_dJ = Jacobian::Zero(6,dof);
+        for (int i = 0; i < dof; ++i)
+        {
+
+            // a
+            Eigen::VectorXd q_a = q;
+            _joint->set_q(q_a);
+            _joint->updateKinematics();
+            Jacobian J_a = _joint->getLocalJacobian();
+
+            // b
+            Eigen::VectorXd q_b = q;
+            q_b(i) += dt;
+            _joint->set_q(q_b);
+            _joint->updateKinematics();
+            Jacobian J_b = _joint->getLocalJacobian();
+
+            //
+            Jacobian dJ_dq = (J_b - J_a) / dt;
+
+            // J(i)
+            numeric_dJ += dJ_dq * dq(i);
+        }
+
+        for (int i = 0; i < dof; ++i)
+            for (int j = 0; j < 6; ++j)
+                EXPECT_NEAR(dJ.col(i)(j), numeric_dJ.col(i)(j), JOINT_TOL);
     }
 }
 
@@ -216,56 +248,11 @@ TEST_F(JOINTS, TRANSLATIONAL_JOINT)
 }
 
 // 6-dof joint
-//TEST_F(JOINTS, FREE_JOINT)
-//{
-//    FreeJoint freeJoint;
-
-//    kinematicsTest(&freeJoint);
-//}
-
-TEST_F(JOINTS, BALL_JOINT_JACOBIAN)
+TEST_F(JOINTS, FREE_JOINT)
 {
-    Eigen::Vector3d q;
-    q << 0, 0, 0;
-    bool isInvertible = true;
+    FreeJoint freeJoint;
 
-    do
-    {
-        q = Eigen::Vector3d::Random();
-        double theta = q.norm();
-
-        Eigen::Matrix3d J = Eigen::Matrix3d::Zero();
-        Eigen::Matrix3d qss = math::makeSkewSymmetric(q);
-        Eigen::Matrix3d qss2 =  qss*qss;
-
-        if(theta < 1e-6)
-            J = Eigen::Matrix3d::Identity() + 0.5*qss +  (1.0/6.0)*qss2;
-        else
-            J = Eigen::Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
-
-        Eigen::MatrixXd S(6,3);
-
-        S.col(0) << J(0,0), J(0,1), J(0,2), 0, 0, 0;
-        S.col(1) << J(1,0), J(1,1), J(1,2), 0, 0, 0;
-        S.col(2) << J(2,0), J(2,1), J(2,2), 0, 0, 0;
-
-        Eigen::MatrixXd Psi = S.transpose() * S;
-
-        Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(Psi);
-        isInvertible = lu_decomp.isInvertible();
-
-        Eigen::MatrixXd invPsi = Psi.inverse();
-
-//        for (int i = 0; i < 3; ++i)
-//            for (int j = 0; j < 3; ++j)
-//                if (invPsi(i,j) != invPsi(i,j))
-//                    assert(0);
-
-
-        if (lu_decomp.rank() < 3)
-            assert(0);
-
-    } while (1);
+    kinematicsTest(&freeJoint);
 }
 
 /******************************************************************************/
