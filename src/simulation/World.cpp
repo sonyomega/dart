@@ -123,9 +123,8 @@ Eigen::VectorXd World::evalDeriv()
     // set constraint force
     for (unsigned int i = 0; i < getNumSkeletons(); i++) {
         // skip immobile objects in forward simulation
-        if (mSkeletons[i]->getImmobileState()) {
+        if (mSkeletons[i]->getImmobileState())
             continue;
-        }
 
         mSkeletons[i]->setConstraintForces(
                     mCollisionHandle->getTotalConstraintForce(i));
@@ -142,11 +141,11 @@ Eigen::VectorXd World::evalDeriv()
 
     // compute derivatives for integration
     Eigen::VectorXd deriv = Eigen::VectorXd::Zero(mIndices.back() * 2);
-    for (unsigned int i = 0; i < getNumSkeletons(); i++) {
+    for (unsigned int i = 0; i < getNumSkeletons(); i++)
+    {
         // skip immobile objects in forward simulation
-        if (mSkeletons[i]->getImmobileState()) {
+        if (mSkeletons[i]->getImmobileState())
             continue;
-        }
 
         int start = mIndices[i] * 2;
         int size = getSkeleton(i)->getDOF();
