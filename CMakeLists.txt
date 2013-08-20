@@ -7,7 +7,7 @@ project(dart)
 message(STATUS "Generate makefile/project file for DART")
 
 set(DART_MAJOR_VERSION "2")
-set(DART_MINOR_VERSION "4")
+set(DART_MINOR_VERSION "5")
 set(DART_PATCH_VERSION "0precise")
 set(PKG_DESC "Dynamic Animation and Robotics Toolkit.")
 set(DART_VERSION "${DART_MAJOR_VERSION}.${DART_MINOR_VERSION}.${DART_PATCH_VERSION}")
@@ -62,26 +62,28 @@ endif()
 
 ###############
 # Generate the path header file
-set(PATH_HEADER_DIR ${CMAKE_SOURCE_DIR}/src/common/Paths.h)
-message(STATUS "Generate the path header file to  ${PATH_HEADER_DIR}")
-configure_file(${PATH_HEADER_DIR}.in ${PATH_HEADER_DIR} @ONLY)
+set(PATH_HEADER_IN ${CMAKE_SOURCE_DIR}/src/utils/Paths.h.in)
+set(PATH_HEADER_OUT ${CMAKE_BINARY_DIR}/src/utils/Paths.h)
+message(STATUS "Generate the path header file to ${PATH_HEADER_OUT}")
+configure_file(${PATH_HEADER_IN} ${PATH_HEADER_OUT} @ONLY)
 
 ###############
 # Install Targets
 # Generate the Dart CMake Config file
 file(GLOB cmake_mods "cmake/Modules/*.cmake")
-configure_file(${CMAKE_SOURCE_DIR}/cmake/DARTConfig.cmake.in ${CMAKE_SOURCE_DIR}/cmake/DARTConfig.cmake @ONLY)
-configure_file(${CMAKE_SOURCE_DIR}/cmake/FindDARTExt.cmake.in ${CMAKE_SOURCE_DIR}/cmake/FindDARTExt.cmake @ONLY)
-install(FILES ${CMAKE_SOURCE_DIR}/cmake/DARTConfig.cmake DESTINATION share/dart)
-install(FILES ${CMAKE_SOURCE_DIR}/cmake/FindDARTExt.cmake DESTINATION share/dart)
+configure_file(${CMAKE_SOURCE_DIR}/cmake/DARTConfig.cmake.in ${CMAKE_BINARY_DIR}/cmake/DARTConfig.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/cmake/FindDARTExt.cmake.in ${CMAKE_BINARY_DIR}/cmake/FindDARTExt.cmake @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/cmake/DARTConfig.cmake DESTINATION share/dart)
+install(FILES ${CMAKE_BINARY_DIR}/cmake/FindDARTExt.cmake DESTINATION share/dart)
 
-set(PC_CONFIG ${CMAKE_SOURCE_DIR}/cmake/dart.pc)
-configure_file(${PC_CONFIG}.in ${PC_CONFIG} @only)
-install(FILES ${PC_CONFIG} DESTINATION lib/pkgconfig)
+set(PC_CONFIG_IN ${CMAKE_SOURCE_DIR}/cmake/dart.pc.in)
+set(PC_CONFIG_OUT ${CMAKE_BINARY_DIR}/cmake/dart.pc)
+configure_file(${PC_CONFIG_IN} ${PC_CONFIG_OUT} @only)
+install(FILES ${PC_CONFIG_OUT} DESTINATION lib/pkgconfig)
 
 ###############
 # Find important packages
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/cmake")
 find_package(DARTExt REQUIRED)
 
 find_path( MATHPLOT_INCLUDE_DIR NAMES mathplot2.h )
@@ -90,9 +92,10 @@ message(STATUS "MATHPLOT = ${MATHPLOT_INCLUDE_DIR}")
 message(STATUS "Building DART source")
 # Since you are developing DART
 include_directories(BEFORE src)
+include_directories(${CMAKE_BINARY_DIR}/src)
 include_directories(${DARTExt_INCLUDE_DIRS})
 link_directories(${DARTExt_LIBRARY_DIRS})
-link_directories(${CMAKE_SOURCE_DIR}/lib)
+link_directories(${CMAKE_BINARY_DIR}/lib)
 add_subdirectory(src)
 
 enable_testing()
@@ -135,12 +138,12 @@ endif()
 set(CPACK_PACKAGE_NAME "dart")
 set(CPACK_SYSTEM_NAME "i386")
 if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-    set(CPACK_SYSTEM_NAME "amd64")    
+    set(CPACK_SYSTEM_NAME "amd64")
 endif()
 set(CPACK_PACKAGE_VERSION_MAJOR ${DART_MAJOR_VERSION})
 set(CPACK_PACKAGE_VERSION_MINOR ${DART_MINOR_VERSION})
 set(CPACK_PACKAGE_VERSION_PATCH ${DART_PATCH_VERSION})
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "freeglut3, freeglut3-dev, libboost1.46-all-dev, libflann-dev (>=1.8), libccd (>=1.4.2), fcl (>=0.2.7), libeigen3-dev, libxmu-dev, libxi-dev, libgtest-dev, libtinyxml-dev, libtinyxml2-dev, libassimp3, libassimp-dev")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "freeglut3, freeglut3-dev, libboost1.46-all-dev, libflann-dev (>=1.8), libccd (>=1.4.2), fcl (>=0.2.7), libeigen3-dev, libxmu-dev, libxi-dev, libgtest-dev, libtinyxml-dev, libtinyxml2-dev, libassimp3, libassimp-dev (>=3.0~dfsg-1), urdfdom")
 
 set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}_${CPACK_SYSTEM_NAME}")
@@ -150,3 +153,4 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PKG_DESC}")
 set(CPACK_PACKAGE_VENDOR "Computer Graphics Lab at GT")
 
 include(CPack)
+
