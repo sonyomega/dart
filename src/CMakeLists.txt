@@ -4,7 +4,7 @@ project(dart)
 # We do this here and not in the root folder since the example apps
 # do not have enough source files to benefit from this.
 if(MSVC)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
 # Search all header and source files
@@ -14,8 +14,8 @@ file(GLOB_RECURSE dart_hdrs *.h *.hpp)
 # Setup directory structure for Visual Studio
 set(SUBDIRS collision common dynamics integration kinematics lcpsolver math optimizer planning renderer robotics simulation utils yui)
 foreach(SUBDIR ${SUBDIRS})
-file(GLOB_RECURSE dir_files ${SUBDIR}/*.h ${SUBDIR}/*.hpp ${SUBDIR}/*.cpp)
-source_group(${SUBDIR} FILES ${dir_files})
+        file(GLOB_RECURSE dir_files ${SUBDIR}/*.h ${SUBDIR}/*.hpp ${SUBDIR}/*.cpp)
+        source_group(${SUBDIR} FILES ${dir_files})
 endforeach()
 
 # Library

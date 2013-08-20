@@ -10,3 +10,4 @@ Version: @DART_VERSION@
 Requires: @PKG_EXTERNAL_DEPS@
 Libs: -L${libdir} -ldart
 Cflags: @CMAKE_CXX_FLAGS@
+
