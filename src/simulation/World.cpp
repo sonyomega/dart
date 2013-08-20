@@ -135,8 +135,8 @@ Eigen::VectorXd World::evalDeriv()
          itrSkeleton != mSkeletons.end();
          ++itrSkeleton)
     {
-        (*itrSkeleton)->computeForwardDynamicsID(mGravity);
-        //(*itrSkeleton)->computeForwardDynamicsFS(mGravity);
+        //(*itrSkeleton)->computeForwardDynamicsID(mGravity);
+        (*itrSkeleton)->computeForwardDynamicsFS(mGravity);
     }
 
     // compute derivatives for integration

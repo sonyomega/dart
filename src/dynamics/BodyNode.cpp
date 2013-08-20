@@ -684,6 +684,14 @@ void BodyNode::updateBeta()
 {
     mAlpha           = mParentJoint->get_tau();
     mAlpha          += mParentJoint->getDampingForce();
+
+    // TODO: Need to find more efficient way in architecture
+    // Add constraint force
+    Eigen::VectorXd Fc = Eigen::VectorXd::Zero(mParentJoint->getDOF());
+    for (int i = 0; i < mParentJoint->getDOF(); i++)
+        Fc(i) = mSkeleton->getConstraintForces()[(mParentJoint->getGenCoords()[i])->getSkelIndex()];
+    mAlpha          += Fc;
+
     mAlpha          -= mParentJoint->mS.transpose()*(mAI*mEta + mB);
     mBeta            = mB;
     mBeta.noalias() += mAI*(mEta + mParentJoint->mS*mPsi*(mAlpha));
