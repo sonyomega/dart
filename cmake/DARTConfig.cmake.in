@@ -1,5 +1,5 @@
-# Include this file in CMakeLists.txt with 
-# find_package(DART) 
+# Include this file in CMakeLists.txt with
+# find_package(DART)
 
 ###############################################################################
 # Find DART
@@ -10,11 +10,14 @@
 # DART_LIBRARIES - Libraries needed to use DART.
 # DART_DEFINITIONS - Compiler flags for DART.
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "@CMAKE_INSTALL_PREFIX@/share/dart")
+find_package(DARTExt REQUIRED)
+
 set(DART_FOUND_2 FALSE)
 set(SYS_INSTALL_PREFIX @CMAKE_INSTALL_PREFIX@)
 
 set(DART_INCLUDE_DIRS ${SYS_INSTALL_PREFIX}/include/dart)
-if(EXISTS ${DART_INCLUDE_DIRS}/dynamics/Skeleton.h)
+if(EXISTS ${DART_INCLUDE_DIRS}/kinematics/Skeleton.h)
     set(DART_FOUND_2 TRUE)
 else()
     find_package(PkgConfig QUIET)
@@ -22,25 +25,24 @@ else()
        pkg_check_modules(PC_DART dart)
        set(DART_DEFINITIONS ${PC_DART_CFLAGS_OTHER})
     endif()
-    
+
     unset(DART_INCLUDE_DIRS)
-    find_path(DART_INCLUDE_DIRS dynamics/Skeleton.h
+    find_path(DART_INCLUDE_DIRS kinematics/Skeleton.h
         PATHS ${PC_DART_INCLUDEDIR} ${SYS_INSTALL_PREFIX}/include
-        PATH_SUFFIXES dart)    
+        PATH_SUFFIXES dart)
 endif()
 
-if(EXISTS DART_INCLUDE_DIRS/dynamics/Skeleton.h)
+if(EXISTS DART_INCLUDE_DIRS/kinematics/Skeleton.h)
     set(DART_FOUND_2 TRUE)
 endif()
-   
-set(DART_LIBRARY_DIRS "${SYS_INSTALL_PREFIX}/lib")
 
-set(DART_LIBS dart)
+set(DART_INCLUDE_DIRS ${DARTExt_INCLUDE_DIRS} ${DART_INCLUDE_DIRS})
 
-set(DART_LIBRARIES optimized ${DART_LIBS} debug ${DART_LIBS}d)
+set(DART_LIBRARY_DIRS ${DARTExt_LIBRARY_DIRS} "${SYS_INSTALL_PREFIX}/lib")
+
+set(DART_LIBRARIES optimized dart debug dartd)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(DART DEFAULT_MSG DART_FOUND_2)
 
 mark_as_advanced(DART_FOUND DART_LIBRARY_DIRS DART_INCLUDE_DIRS DART_LIBRARIES)
-

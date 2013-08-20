@@ -54,36 +54,30 @@ set(CMAKE_DEBUG_POSTFIX "d")
 # System Install paths
 if(WIN32)
   set(CMAKE_INSTALL_PREFIX "C:/Golems" CACHE PATH "Install prefix" FORCE)
-elseif(APPLE)
-  set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Install prefix" FORCE)
-else()
-  set(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Install prefix" FORCE)
 endif()
 
 ###############
 # Generate the path header file
-set(PATH_HEADER_IN ${CMAKE_SOURCE_DIR}/src/common/Paths.h.in)
-set(PATH_HEADER_OUT ${CMAKE_BINARY_DIR}/src/common/Paths.h)
-message(STATUS "Generate the path header file to ${PATH_HEADER_OUT}")
-configure_file(${PATH_HEADER_IN} ${PATH_HEADER_OUT} @ONLY)
+set(PATH_HEADER_DIR ${CMAKE_SOURCE_DIR}/src/utils/Paths.h)
+message(STATUS "Generate the path header file to ${PATH_HEADER_DIR}")
+configure_file(${PATH_HEADER_DIR}.in ${PATH_HEADER_DIR} @ONLY)
 
 ###############
 # Install Targets
 # Generate the Dart CMake Config file
 file(GLOB cmake_mods "cmake/Modules/*.cmake")
-configure_file(${CMAKE_SOURCE_DIR}/cmake/DARTConfig.cmake.in ${CMAKE_BINARY_DIR}/cmake/DARTConfig.cmake @ONLY)
-configure_file(${CMAKE_SOURCE_DIR}/cmake/FindDARTExt.cmake.in ${CMAKE_BINARY_DIR}/cmake/FindDARTExt.cmake @ONLY)
-install(FILES ${CMAKE_BINARY_DIR}/cmake/DARTConfig.cmake DESTINATION share/dart)
-install(FILES ${CMAKE_BINARY_DIR}/cmake/FindDARTExt.cmake DESTINATION share/dart)
+configure_file(${CMAKE_SOURCE_DIR}/cmake/DARTConfig.cmake.in ${CMAKE_SOURCE_DIR}/cmake/DARTConfig.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/cmake/FindDARTExt.cmake.in ${CMAKE_SOURCE_DIR}/cmake/FindDARTExt.cmake @ONLY)
+install(FILES ${CMAKE_SOURCE_DIR}/cmake/DARTConfig.cmake DESTINATION share/dart)
+install(FILES ${CMAKE_SOURCE_DIR}/cmake/FindDARTExt.cmake DESTINATION share/dart)
 
-set(PC_CONFIG_IN ${CMAKE_SOURCE_DIR}/cmake/dart.pc.in)
-set(PC_CONFIG_OUT ${CMAKE_BINARY_DIR}/cmake/dart.pc)
-configure_file(${PC_CONFIG_IN} ${PC_CONFIG_OUT} @only)
-install(FILES ${PC_CONFIG_OUT} DESTINATION lib/pkgconfig)
+set(PC_CONFIG ${CMAKE_SOURCE_DIR}/cmake/dart.pc)
+configure_file(${PC_CONFIG}.in ${PC_CONFIG} @only)
+install(FILES ${PC_CONFIG} DESTINATION lib/pkgconfig)
 
 ###############
 # Find important packages
-set(CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(DARTExt REQUIRED)
 
 find_path( MATHPLOT_INCLUDE_DIR NAMES mathplot2.h )
@@ -92,10 +86,9 @@ message(STATUS "MATHPLOT = ${MATHPLOT_INCLUDE_DIR}")
 message(STATUS "Building DART source")
 # Since you are developing DART
 include_directories(BEFORE src)
-include_directories(${CMAKE_BINARY_DIR}/src)
 include_directories(${DARTExt_INCLUDE_DIRS})
 link_directories(${DARTExt_LIBRARY_DIRS})
-link_directories(${CMAKE_BINARY_DIR}/lib)
+link_directories(${CMAKE_SOURCE_DIR}/lib)
 add_subdirectory(src)
 
 enable_testing()
@@ -151,6 +144,6 @@ set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Karen Liu (www.cc.gatech.edu/~karenliu/)")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PKG_DESC}")
 set(CPACK_PACKAGE_VENDOR "Computer Graphics Lab at GT")
+set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 
 include(CPack)
-
