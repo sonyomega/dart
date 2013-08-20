@@ -505,6 +505,11 @@ Eigen::Vector3d BodyNode::getCOM() const
     return mCenterOfMass;
 }
 
+Matrix6d BodyNode::getGeneralizedInertia() const
+{
+    return mI;
+}
+
 //void BodyNode::setExternalForceLocal(const math::dse3& _FextLocal)
 //{
 //    mFext = _FextLocal;
