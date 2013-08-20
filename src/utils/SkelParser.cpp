@@ -49,6 +49,7 @@
 #include "dynamics/ShapeCylinder.h"
 #include "dynamics/ShapeEllipsoid.h"
 #include "dynamics/WeldJoint.h"
+#include "dynamics/PrismaticJoint.h"
 #include "dynamics/RevoluteJoint.h"
 #include "dynamics/TranslationalJoint.h"
 #include "dynamics/BallJoint.h"
@@ -474,7 +475,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
             Eigen::Matrix3d Ic = newBodyNode->getVisualizationShape(0)->computeInertia(mass);
 
             newBodyNode->setMomentOfInertia(Ic(0,0), Ic(1,1), Ic(2,2),
-                                        Ic(0,1), Ic(0,2), Ic(1,2));
+                                            Ic(0,1), Ic(0,2), Ic(1,2));
         }
 
         // offset
@@ -502,6 +503,8 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     assert(!type.empty());
     if (type == std::string("weld"))
         newJoint = readWeldJoint(_jointElement, _skeleton);
+    if (type == std::string("prismatic"))
+        newJoint = readPrismaticJoint(_jointElement, _skeleton);
     if (type == std::string("revolute"))
         newJoint = readRevoluteJoint(_jointElement, _skeleton);
     if (type == std::string("ball"))
@@ -654,6 +657,61 @@ dynamics::RevoluteJoint*readRevoluteJoint(
     return newRevoluteJoint;
 }
 
+dynamics::PrismaticJoint* readPrismaticJoint(
+        tinyxml2::XMLElement* _prismaticJointElement,
+        dynamics::Skeleton* _skeleton)
+{
+    assert(_prismaticJointElement != NULL);
+    assert(_skeleton != NULL);
+
+    dynamics::PrismaticJoint* newPrismaticJoint = new dynamics::PrismaticJoint;
+
+    //--------------------------------------------------------------------------
+    // axis
+    if (hasElement(_prismaticJointElement, "axis"))
+    {
+        tinyxml2::XMLElement* axisElement
+                = getElement(_prismaticJointElement, "axis");
+
+        // xyz
+        Eigen::Vector3d xyz = getValueVector3d(axisElement, "xyz");
+        newPrismaticJoint->setAxis(xyz);
+
+        // damping
+        if (hasElement(axisElement, "damping"))
+        {
+            double damping = getValueDouble(axisElement, "damping");
+            newPrismaticJoint->setDampingCoefficient(0, damping);
+        }
+
+        // limit
+        if (hasElement(axisElement, "limit"))
+        {
+            tinyxml2::XMLElement* limitElement
+                    = getElement(axisElement, "limit");
+
+            // lower
+            if (hasElement(limitElement, "lower"))
+            {
+                double lower = getValueDouble(limitElement, "lower");
+                newPrismaticJoint->getDof(0)->set_qMin(lower);
+            }
+
+            // upper
+            if (hasElement(limitElement, "upper"))
+            {
+                double upper = getValueDouble(limitElement, "upper");
+                newPrismaticJoint->getDof(0)->set_qMax(upper);
+            }
+        }
+    }
+    else
+    {
+        assert(0);
+    }
+
+    return newPrismaticJoint;
+}
 
 dynamics::BallJoint*readBallJoint(
         tinyxml2::XMLElement* _ballJointElement,

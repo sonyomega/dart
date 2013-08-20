@@ -49,8 +49,9 @@
 namespace dart {
 
 namespace dynamics {
-class WeldJoint;
 class Joint;
+class WeldJoint;
+class PrismaticJoint;
 class RevoluteJoint;
 class BallJoint;
 class EulerXYZJoint;
@@ -172,6 +173,10 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
                              dynamics::Skeleton* _skeleton);
 
 /// @brief
+dynamics::PrismaticJoint* readPrismaticJoint(
+        tinyxml2::XMLElement* _prismaticJointElement,
+        dynamics::Skeleton* _skeleton);
+
 dynamics::RevoluteJoint* readRevoluteJoint(
         tinyxml2::XMLElement* _revoluteJointElement,
         dynamics::Skeleton* _skeleton);
