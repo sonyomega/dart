@@ -40,7 +40,6 @@
 
 #include <vector>
 #include <Eigen/Dense>
-#include "dynamics/System.h"
 
 namespace dart {
 namespace dynamics { class GenCoordSystem; }
@@ -68,12 +67,6 @@ public:
 
     /// @brief
     virtual Eigen::VectorXd evalDeriv() = 0;
-
-//    /// @brief
-//    Eigen::VectorXd evalDeriv() { evalDeriv(getState()); }
-
-//    /// @brief
-//    virtual Eigen::VectorXd evalDeriv(const Eigen::VectorXd& _state) = 0;
 };
 
 // TODO (kasiu) Consider templating the class (which currently only works on
@@ -91,9 +84,6 @@ public:
 public:
     /// @brief
     virtual void integrate(IntegrableSystem* system, double dt) const = 0;
-
-    /// @brief
-//    virtual void integrate(dynamics::System* _system, double _dt) const = 0;
 };
 
 } // namespace integration

@@ -69,23 +69,5 @@ void EulerIntegrator::integrate(IntegrableSystem* system, double dt) const
 //    system->setState(newState);
 }
 
-//void EulerIntegrator::integrate(dynamics::System* _system, double _dt) const
-//{
-//    //--------------------------------------------------------------------------
-//    // Explicit Euler Method
-//    _system->set_q(_system->get_q() + _dt * _system->get_q());
-//    _system->set_dq(_system->get_dq() + _dt * _system->get_ddq());
-
-//    //--------------------------------------------------------------------------
-//    // Semi-implicit Euler Method
-//    _system->set_dq(_system->get_dq() + _dt * _system->get_ddq());
-//    _system->set_q(_system->get_q() + _dt * _system->get_dq());
-
-//    //--------------------------------------------------------------------------
-//    // Euler-Verlet Method
-//    _system->set_dq(_system->get_dq() + _dt * _dt * _system->get_ddq());
-//    _system->set_q(_system->get_q() + _system->get_dq());
-//}
-
 } // namespace integration
 } // namespace dart

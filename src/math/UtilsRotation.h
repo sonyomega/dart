@@ -38,10 +38,7 @@
 #ifndef DART_MATH_UTILSROTATION_H
 #define DART_MATH_UTILSROTATION_H
 
-// External Libraries
 #include <Eigen/Dense>
-// Local Headers
-#include "common/Misc.h"
 
 namespace dart {
 namespace math {
