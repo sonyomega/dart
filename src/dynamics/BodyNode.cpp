@@ -487,7 +487,7 @@ void BodyNode::setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
     mIzz = _Izz;
 
     mIxy = _Ixy;
-    mIxz = _Iyz;
+    mIxz = _Ixz;
     mIyz = _Iyz;
 
     _updateGeralizedInertia();
