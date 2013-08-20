@@ -414,7 +414,7 @@ void ConstraintDynamics::updateTauStar() {
         if (mSkels[i]->getImmobileState())
             continue;
 
-        VectorXd tau = mSkels[i]->getExternalForces() + mSkels[i]->getInternalForces();
+        VectorXd tau = mSkels[i]->getExternalForces() + mSkels[i]->getInternalForces() + mSkels[i]->getDampingForces();
         VectorXd tauStar = (mSkels[i]->getMassMatrix() * mSkels[i]->getPoseVelocity()) - (mDt * (mSkels[i]->getCombinedVector() - tau));
         mTauStar.block(startRow, 0, tauStar.rows(), 1) = tauStar;
         startRow += tauStar.rows();
