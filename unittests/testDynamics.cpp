@@ -35,16 +35,45 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <gtest/gtest.h>
-//#include "dynamics/BodyNode.h"
-//#include "dynamics/Skeleton.h"
-//#include "dynamics/FileInfoSkel.hpp"
-//#include "dynamics/FileInfoDof.h"
-//#include "dynamics/BodyNode.h"
-//#include "common/Paths.h"
-//#include "math/UtilsRotation.h"
-//#include "math/UtilsMath.h"
 
-//using namespace std;
+#include "math/UtilsMath.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/Skeleton.h"
+#include "utils/SkelParser.h"
+#include "simulation/World.h"
+
+using namespace dart;
+using namespace math;
+using namespace dynamics;
+using namespace simulation;
+using namespace utils;
+
+#define DYNAMICS_TOL 0.000001
+
+/******************************************************************************/
+dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
+                                          Eigen::VectorXd& _q,
+                                          Eigen::VectorXd& _qdot)
+{
+    // load skeleton
+    World* myWorld = readSkelFile(_fileName);
+
+    Skeleton* skel = myWorld->getSkeleton(0);
+    assert(skel != NULL);
+
+    // generate a random state
+    _q = Eigen::VectorXd::Zero(skel->getDOF());
+    _qdot = Eigen::VectorXd::Zero(skel->getDOF());
+
+    for (int i = 0; i < skel->getDOF(); i++)
+    {
+        _q[i] = random(-1.0, 1.0);
+        _qdot[i] = random(-5.0, 5.0);
+    }
+
+    skel->initDynamics();
+    return skel;
+}
 
 ///* ********************************************************************************************* */
 //dart::dynamics::Skeleton* prepareSkeleton( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
@@ -385,6 +414,56 @@
 ///* ********************************************************************************************* */
 //TEST(DYNAMICS, CONVERSION_FORCES) {
 //}
+
+/******************************************************************************/
+TEST(DYNAMICS, INERTIA)
+{
+    for (int k = 0; k < 100; ++k)
+    {
+        // com, moment of inertia, mass
+        double min = -10;
+        double max = 10;
+        double Ixx = random(0.1,max);
+        double Iyy = random(0.1,max);
+        double Izz = random(0.1,max);
+        double Ixy = random(0.1,max);
+        double Ixz = random(0.1,max);
+        double Iyz = random(0.1,max);
+        math::Vec3 com(random(min,max), random(min,max), random(min,max));
+        double mass = random(0.1,max);
+
+        // G = | I - m * [r] * [r]   m * [r] |
+        //     |          -m * [r]     m * 1 |
+        Eigen::Matrix3d I = Eigen::Matrix3d::Zero();
+        I(0,0) = Ixx;
+        I(1,1) = Iyy;
+        I(2,2) = Izz;
+        I(0,1) = Ixy;
+        I(0,2) = Ixz;
+        I(1,2) = Iyz;
+        I(1,0) = Ixy;
+        I(2,0) = Ixz;
+        I(2,1) = Iyz;
+        Eigen::Matrix6d G = Eigen::Matrix6d::Zero();
+        Eigen::Matrix3d r = math::makeSkewSymmetric(com);
+        G.topLeftCorner<3,3>() = I - mass*r*r;
+        G.topRightCorner<3,3>() = mass*r;
+        G.bottomLeftCorner<3,3>() = -mass*r;
+        G.bottomRightCorner<3,3>() = mass*Eigen::Matrix3d::Identity();
+
+        // G of bodynode
+        dynamics::BodyNode bodyNode;
+        bodyNode.setMass(mass);
+        bodyNode.setCOM(com);
+        bodyNode.setMomentOfInertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz);
+        Eigen::Matrix6d bodyNodeG = bodyNode.getGeneralizedInertia();
+
+        // compare
+        for (int i = 0; i < 6; i++)
+            for (int j = 0; j < 6; j++)
+                EXPECT_NEAR(bodyNodeG(i,j), G(i,j), DYNAMICS_TOL);
+    }
+}
 
 /* ********************************************************************************************* */
 int main(int argc, char* argv[]) {
