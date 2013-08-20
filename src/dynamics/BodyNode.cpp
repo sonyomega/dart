@@ -683,6 +683,7 @@ void BodyNode::updatePi()
 void BodyNode::updateBeta()
 {
     mAlpha           = mParentJoint->get_tau();
+    mAlpha          += mParentJoint->getDampingForce();
     mAlpha          -= mParentJoint->mS.transpose()*(mAI*mEta + mB);
     mBeta            = mB;
     mBeta.noalias() += mAI*(mEta + mParentJoint->mS*mPsi*(mAlpha));
