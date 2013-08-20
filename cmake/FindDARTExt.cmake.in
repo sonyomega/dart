@@ -181,7 +181,6 @@ else()
    set(DARTExt_FOUND FALSE)
 endif()
 set(urdfdom_LIBRARIES urdfdom_sensor urdfdom_model_state urdfdom_model urdfdom_world console_bridge)
-set(DARTExt_LIBRARIES ${DARTExt_LIBRARIES} ${urdfdom_LIBRARIES})
 set(DARTExt_LIBRARY_DIRS ${DARTExt_LIBRARY_DIRS} ${urdfdom_LIBRARY_DIRS})
 
 # console_bridge is required by urdfdom, so it will be asked when you install it.
@@ -217,5 +216,3 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(DARTExt DEFAULT_MSG DARTExt_FOUND)
 
 mark_as_advanced(DARTExt_LIBRARY_DIRS DARTExt_INCLUDE_DIRS DARTExt_LIBRARIES FLANN_LIBRARIES CCD_LIBRARIES FCL_LIBRARIES Boost_LIBRARIES)
-
-
