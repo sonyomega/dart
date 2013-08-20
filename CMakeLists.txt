@@ -58,7 +58,7 @@ endif()
 
 ###############
 # Generate the path header file
-set(PATH_HEADER_DIR ${CMAKE_SOURCE_DIR}/src/utils/Paths.h)
+set(PATH_HEADER_DIR ${CMAKE_SOURCE_DIR}/src/common/Paths.h)
 message(STATUS "Generate the path header file to ${PATH_HEADER_DIR}")
 configure_file(${PATH_HEADER_DIR}.in ${PATH_HEADER_DIR} @ONLY)
 
