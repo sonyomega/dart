@@ -687,13 +687,10 @@ void BodyNode::updateBeta()
 
     // TODO: Need to find more efficient way in architecture
     // Add constraint force
-    if (mParentJoint->getDOF() > 0)
-    {
-        Eigen::VectorXd Fc = Eigen::VectorXd::Zero(mParentJoint->getDOF());
-        for (int i = 0; i < mParentJoint->getDOF(); i++)
-            Fc(i) = mSkeleton->getConstraintForces()[(mParentJoint->getGenCoords()[i])->getSkelIndex()];
-        mAlpha          += Fc;
-    }
+    Eigen::VectorXd Fc = Eigen::VectorXd::Zero(mParentJoint->getDOF());
+    for (int i = 0; i < mParentJoint->getDOF(); i++)
+        Fc(i) = mSkeleton->getConstraintForces()[(mParentJoint->getGenCoords()[i])->getSkelIndex()];
+    mAlpha          += Fc;
 
     mAlpha          -= mParentJoint->mS.transpose()*(mAI*mEta + mB);
     mBeta            = mB;
