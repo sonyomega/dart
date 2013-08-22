@@ -43,18 +43,17 @@
 #include "math/LieGroup.h"
 #include "math/UtilsMath.h"
 #include "dynamics/BallJoint.h"
-#include "dynamics/RevoluteJoint.h"
-#include "dynamics/PrismaticJoint.h"
 #include "dynamics/FreeJoint.h"
-#include "dynamics/WeldJoint.h"
-#include "dynamics/TranslationalJoint.h"
+#include "dynamics/PrismaticJoint.h"
+#include "dynamics/RevoluteJoint.h"
 #include "dynamics/Skeleton.h"
-#include "simulation/World.h"
+#include "dynamics/TranslationalJoint.h"
+#include "dynamics/UniversalJoint.h"
+#include "dynamics/WeldJoint.h"
 
 using namespace dart;
 using namespace math;
 using namespace dynamics;
-using namespace simulation;
 
 #define JOINT_TOL 0.01
 
@@ -221,6 +220,14 @@ TEST_F(JOINTS, PRISMATIC_JOINT)
     PrismaticJoint priJoint;
 
     kinematicsTest(&priJoint);
+}
+
+// 2-dof joint
+TEST_F(JOINTS, UNIVERSAL_JOINT)
+{
+    UniversalJoint univJoint;
+
+    kinematicsTest(&univJoint);
 }
 
 // 3-dof joint
