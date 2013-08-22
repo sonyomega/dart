@@ -177,6 +177,13 @@ GenCoord* BodyNode::getLocalDof(int _idx) const
     return mParentJoint->getDof(_idx);
 }
 
+void BodyNode::setWorldTransform(const math::SE3 &_W)
+{
+    assert(math::VerifySE3(_W));
+
+    mW = _W;
+}
+
 Eigen::Vector3d BodyNode::evalWorldPos(const Eigen::Vector3d& _lp) const
 {
     return math::xformHom(mW, _lp);
@@ -204,6 +211,8 @@ math::se3 BodyNode::getVelocityWorldAtPoint(const math::Vec3& _pointBody) const
 
 math::se3 BodyNode::getVelocityWorldAtFrame(const math::SE3& _T) const
 {
+    assert(math::VerifySE3(_T));
+
     return math::AdT(math::Inv(_T) * mW, mV);
 }
 
@@ -229,6 +238,8 @@ math::se3 BodyNode::getAccelerationWorldAtPoint(const math::Vec3& _pointBody) co
 
 math::se3 BodyNode::getAccelerationWorldAtFrame(const math::SE3& _T) const
 {
+    assert(math::VerifySE3(_T));
+
     return math::AdT(math::Inv(_T) * mW, mdV);
 }
 
@@ -336,6 +347,8 @@ void BodyNode::updateTransformation()
     {
         mW = mParentJoint->getLocalTransformation();
     }
+
+    assert(math::VerifySE3(mW));
 }
 
 void BodyNode::updateVelocity(bool _updateJacobian)
@@ -356,6 +369,8 @@ void BodyNode::updateVelocity(bool _updateJacobian)
     {
         mV = mParentJoint->getLocalVelocity();
     }
+
+    assert(math::Verifyse3(mV));
 
     if (_updateJacobian == false)
         return;

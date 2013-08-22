@@ -109,11 +109,15 @@ void Joint::setChildBody(BodyNode* _body)
 
 void Joint::setTransformFromParentBody(const math::SE3& _T)
 {
+    assert(math::VerifySE3(_T));
+
     mT_ParentBodyToJoint = _T;
 }
 
 void Joint::setTransformFromChildBody(const math::SE3& _T)
 {
+    assert(math::VerifySE3(_T));
+
     mT_ChildBodyToJoint = _T;
 }
 
