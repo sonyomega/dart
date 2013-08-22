@@ -419,6 +419,8 @@ void BodyNode::updateEta()
     {
         mEta = math::ad(mV, mParentJoint->mS*mParentJoint->get_dq()) +
            mParentJoint->mdS*mParentJoint->get_dq();
+
+        assert(math::Verifyse3(mEta));
     }
 }
 
@@ -444,6 +446,8 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
             mdV = mEta + mParentJoint->mS*mParentJoint->get_ddq();
         }
     }
+
+    assert(math::Verifyse3(mdV));
 
     if (_updateJacobianDeriv == false)
         return;
@@ -631,6 +635,8 @@ void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
         mF += math::dAdInvT(childJoint->getLocalTransformation(),
                             bodyDyn->getBodyForce());
     }
+
+    assert(math::Verifyse3(mF));
 }
 
 void BodyNode::updateGeneralizedForce(bool _withDampingForces)
@@ -675,6 +681,8 @@ void BodyNode::updateBiasForce(const Eigen::Vector3d& _gravity)
         mB += math::dAdInvT((*itrJoint)->getLocalTransformation(),
                             (*itrJoint)->getChildBody()->mBeta);
     }
+
+    assert(math::Verifyse3(mB));
 }
 
 void BodyNode::updatePsi()
@@ -713,6 +721,8 @@ void BodyNode::updateBeta()
     mAlpha          -= mParentJoint->mS.transpose()*(mAI*mEta + mB);
     mBeta            = mB;
     mBeta.noalias() += mAI*(mEta + mParentJoint->mS*mPsi*(mAlpha));
+
+    assert(math::Verifyse3(mBeta));
 }
 
 void BodyNode::update_ddq()
@@ -739,6 +749,8 @@ void BodyNode::update_F_fs()
 {
     mF.noalias() = mAI*mdV;
     mF          += mB;
+
+    assert(math::Verifyse3(mF));
 }
 
 void BodyNode::updateDampingForce()
