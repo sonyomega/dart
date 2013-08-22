@@ -524,9 +524,14 @@ void BodyNode::setCOM(const math::Vec3& _com)
     _updateGeralizedInertia();
 }
 
-Eigen::Vector3d BodyNode::getCOM() const
+const Eigen::Vector3d& BodyNode::getLocalCOM() const
 {
     return mCenterOfMass;
+}
+
+Eigen::Vector3d BodyNode::getWorldCOM() const
+{
+    return evalWorldPos(mCenterOfMass);
 }
 
 Matrix6d BodyNode::getGeneralizedInertia() const

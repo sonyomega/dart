@@ -155,7 +155,10 @@ public:
     void setCOM(const math::Vec3& _com);
 
     /// @brief
-    Eigen::Vector3d getCOM() const;
+    Eigen::Vector3d getLocalCOM() const;
+
+    /// @brief
+    Eigen::Vector3d getWorldCOM() const;
 
     /// @brief
     Eigen::Matrix6d getGeneralizedInertia() const;
