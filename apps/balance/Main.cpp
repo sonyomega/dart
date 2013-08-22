@@ -1,0 +1,60 @@
+#include "MyWindow.h"
+
+#include "common/Paths.h"
+#include "dynamics/Skeleton.h"
+#include "simulation/World.h"
+#include "utils/SkelParser.h"
+
+using namespace std;
+using namespace Eigen;
+
+using namespace dart;
+using namespace dynamics;
+using namespace simulation;
+
+int main(int argc, char* argv[])
+{
+    // load a skeleton file
+    // create and initialize the world
+    dart::simulation::World* myWorld
+            = dart::utils::readSkelFile(
+                  DART_DATA_PATH"/skel/apps/balance.skel");
+    assert(myWorld != NULL);
+
+    Vector3d gravity(0.0, -9.81, 0.0);
+    myWorld->setGravity(gravity);
+
+    VectorXd initPose = myWorld->getSkeleton(1)->get_q();
+    initPose[1] = -0.1;
+    initPose[6] = 0.2; // left hip
+    initPose[9] = -0.5; // left knee
+    initPose[10] = 0.3; // left ankle
+    initPose[13] = 0.2; // right hip
+    initPose[16] = -0.5; // right knee
+    initPose[17] = 0.3; // right ankle
+    initPose[21] = -0.1; // lower back
+    myWorld->getSkeleton(1)->setPose(initPose, true);
+
+    // create controller
+    Controller* myController = new Controller(myWorld->getSkeleton(1),
+                                              myWorld->getCollisionHandle(),
+                                              myWorld->getTimeStep());
+
+    // create a window and link it to the world
+    MyWindow window;
+    window.setWorld(myWorld);
+    window.setController(myController);
+
+    cout << "space bar: simulation on/off" << endl;
+    cout << "'p': playback/stop" << endl;
+    cout << "'[' and ']': play one frame backward and forward" << endl;
+    cout << "'v': visualization on/off" << endl;
+    cout << "'1'--'4': programmed interaction" << endl;
+
+    glutInit(&argc, argv);
+    window.initWindow(640, 480, "Balance");
+    glutMainLoop();
+
+    return 0;
+}
+
