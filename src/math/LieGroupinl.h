@@ -830,5 +830,9 @@ inline bool Verifyse3(const se3& _V)
         if (_V(i) != _V(i))
             return false;
 
+//    for (int i = 0; i < 6; ++i)
+//        if (_V(i) > 1000.0)
+//            return false;
+
     return true;
 }
