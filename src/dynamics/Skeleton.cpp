@@ -516,13 +516,20 @@ double Skeleton::getPotentialEnergy() const
     return potentialEnergy;
 }
 
-math::Vec3 Skeleton::getPositionCOMGlobal()
+math::Vec3 Skeleton::getWorldCOM()
 {
-    math::Vec3 p(0,0,0);
+    Vector3d com(0, 0, 0);
 
-    // TODO: Not implemented.
+    assert(mTotalMass != 0);
+    const int nNodes = getNumBodyNodes();
 
-    return p;
+    for(int i = 0; i < nNodes; i++)
+    {
+        BodyNode* bodyNode = getBodyNode(i);
+        com += (bodyNode->getMass() * bodyNode->getWorldCOM());
+    }
+
+    return com / mTotalMass;
 }
 
 math::Vec3 Skeleton::getVelocityCOMGlobal()

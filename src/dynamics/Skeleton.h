@@ -193,7 +193,7 @@ public:
 
     // TODO: Not implemented.
     /// @brief
-    math::Vec3 getPositionCOMGlobal();
+    math::Vec3 getWorldCOM();
 
     // TODO: Not implemented.
     /// @brief
