@@ -67,11 +67,16 @@ BodyNode::BodyNode(const std::string& _name)
       mChildBodyNodes(std::vector<BodyNode*>(0)),
       mGravityMode(true),
       mCenterOfMass(math::Vec3::Zero()),
+      mI(Eigen::Matrix6d::Identity()),
       mW(math::SE3::Identity()),
       mV(math::se3::Zero()),
+      mEta(math::se3::Zero()),
       mdV(math::se3::Zero()),
-      mI(Eigen::Matrix6d::Identity()),
       mF(math::dse3::Zero()),
+      mFext(math::dse3::Zero()),
+      mFgravity(math::dse3::Zero()),
+      mB(math::dse3::Zero()),
+      mBeta(math::dse3::Zero()),
       mRestitutionCoeff(0.5),
       mFrictionCoeff(0.4),
       mID(BodyNode::msBodyNodeCount++)
@@ -706,12 +711,12 @@ void BodyNode::updatePi()
 void BodyNode::updateBeta()
 {
     mAlpha           = mParentJoint->get_tau();
-    mAlpha          += mParentJoint->getDampingForce();
 
     // TODO: Need to find more efficient way in architecture
     // Add constraint force
     if (mParentJoint->getDOF() > 0)
     {
+        mAlpha          += mParentJoint->getDampingForce();
         Eigen::VectorXd Fc = Eigen::VectorXd::Zero(mParentJoint->getDOF());
         for (int i = 0; i < mParentJoint->getDOF(); i++)
             Fc(i) = mSkeleton->getConstraintForces()[(mParentJoint->getGenCoords()[i])->getSkelIndex()];
