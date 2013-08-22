@@ -17,7 +17,7 @@ set(DART_FOUND_2 FALSE)
 set(SYS_INSTALL_PREFIX @CMAKE_INSTALL_PREFIX@)
 
 set(DART_INCLUDE_DIRS ${SYS_INSTALL_PREFIX}/include/dart)
-if(EXISTS ${DART_INCLUDE_DIRS}/kinematics/Skeleton.h)
+if(EXISTS ${DART_INCLUDE_DIRS}/dynamics/Skeleton.h)
     set(DART_FOUND_2 TRUE)
 else()
     find_package(PkgConfig QUIET)
@@ -27,12 +27,12 @@ else()
     endif()
 
     unset(DART_INCLUDE_DIRS)
-    find_path(DART_INCLUDE_DIRS kinematics/Skeleton.h
+    find_path(DART_INCLUDE_DIRS dynamics/Skeleton.h
         PATHS ${PC_DART_INCLUDEDIR} ${SYS_INSTALL_PREFIX}/include
         PATH_SUFFIXES dart)
 endif()
 
-if(EXISTS DART_INCLUDE_DIRS/kinematics/Skeleton.h)
+if(EXISTS DART_INCLUDE_DIRS/dynamics/Skeleton.h)
     set(DART_FOUND_2 TRUE)
 endif()
 
