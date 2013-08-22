@@ -83,7 +83,7 @@ public:
 
 protected:
     /// @brief
-    simulation::World* mWorld;
+    World* mWorld;
 
     /// @brief
     int mPlayFrame;
