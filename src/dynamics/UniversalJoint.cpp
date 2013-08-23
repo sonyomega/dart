@@ -44,7 +44,8 @@
 namespace dart {
 namespace dynamics {
 
-UniversalJoint::UniversalJoint()
+UniversalJoint::UniversalJoint(const math::Axis& _axis0,
+                               const math::Axis& _axis1)
     : Joint("Universal joint")
 {
     mJointType = UNIVERSAL;
@@ -56,6 +57,9 @@ UniversalJoint::UniversalJoint()
     mdS = Eigen::Matrix<double,6,2>::Zero();
 
     mDampingCoefficient.resize(2, 0);
+
+    mAxis[0] = _axis0;
+    mAxis[1] = _axis1;
 }
 
 UniversalJoint::~UniversalJoint()

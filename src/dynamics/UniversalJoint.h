@@ -53,7 +53,8 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    UniversalJoint();
+    UniversalJoint(const math::Axis& _axis0 = math::Axis(1.0, 0.0, 0.0),
+                   const math::Axis& _axis1 = math::Axis(0.0, 1.0, 0.0));
 
     /// @brief
     virtual ~UniversalJoint();
@@ -111,4 +112,3 @@ public:
 } // namespace dart
 
 #endif // #ifndef DART_DYNAMICS_UNIVERSAL_JOINT_H
-
