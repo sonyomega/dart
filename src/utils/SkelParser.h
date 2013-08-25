@@ -104,6 +104,7 @@ double          toDouble(const std::string& _str);
 char            toChar(const std::string& _str);
 Eigen::Vector2d toVector2d(const std::string& _str);
 Eigen::Vector3d toVector3d(const std::string& _str);
+Eigen::Vector6d toVector6d(const std::string& _str);
 //math::Vec3      toVector3d(const std::string& _str);
 //math::so3       toVector3d(const std::string& _str);
 //math::SO3       toSO3(const std::string& _str);
@@ -134,6 +135,9 @@ Eigen::Vector2d getValueVector2d(tinyxml2::XMLElement* _parentElement,
                                  const std::string& _name);
 
 Eigen::Vector3d getValueVector3d(tinyxml2::XMLElement* _parentElement,
+                                 const std::string& _name);
+
+Eigen::Vector6d getValueVector6d(tinyxml2::XMLElement* _parentElement,
                                  const std::string& _name);
 
 math::Vec3 getValueVec3(tinyxml2::XMLElement* _parentElement,

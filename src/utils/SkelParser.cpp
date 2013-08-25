@@ -658,6 +658,26 @@ dynamics::RevoluteJoint*readRevoluteJoint(
         assert(0);
     }
 
+    //--------------------------------------------------------------------------
+    // init_pos
+    if (hasElement(_revoluteJointElement, "init_pos"))
+    {
+        double init_pos = getValueDouble(_revoluteJointElement, "init_pos");
+        Eigen::VectorXd ipos = Eigen::VectorXd(1);
+        ipos << init_pos;
+        newRevoluteJoint->set_q(ipos);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_vel
+    if (hasElement(_revoluteJointElement, "init_vel"))
+    {
+        double init_vel = getValueDouble(_revoluteJointElement, "init_vel");
+        Eigen::VectorXd ivel = Eigen::VectorXd(1);
+        ivel << init_vel;
+        newRevoluteJoint->set_q(ivel);
+    }
+
     return newRevoluteJoint;
 }
 
@@ -712,6 +732,26 @@ dynamics::PrismaticJoint* readPrismaticJoint(
     else
     {
         assert(0);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_pos
+    if (hasElement(_prismaticJointElement, "init_pos"))
+    {
+        double init_pos = getValueDouble(_prismaticJointElement, "init_pos");
+        Eigen::VectorXd ipos = Eigen::VectorXd(1);
+        ipos << init_pos;
+        newPrismaticJoint->set_q(ipos);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_vel
+    if (hasElement(_prismaticJointElement, "init_vel"))
+    {
+        double init_vel = getValueDouble(_prismaticJointElement, "init_vel");
+        Eigen::VectorXd ivel = Eigen::VectorXd(1);
+        ivel << init_vel;
+        newPrismaticJoint->set_q(ivel);
     }
 
     return newPrismaticJoint;
@@ -814,6 +854,22 @@ dynamics::UniversalJoint* readUniversalJoint(
         assert(0);
     }
 
+    //--------------------------------------------------------------------------
+    // init_pos
+    if (hasElement(_universalJointElement, "init_pos"))
+    {
+        Eigen::Vector2d init_pos = getValueVector2d(_universalJointElement, "init_pos");
+        newUniversalJoint->set_q(init_pos);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_vel
+    if (hasElement(_universalJointElement, "init_vel"))
+    {
+        Eigen::Vector2d init_vel = getValueVector2d(_universalJointElement, "init_vel");
+        newUniversalJoint->set_q(init_vel);
+    }
+
     return newUniversalJoint;
 }
 
@@ -825,6 +881,22 @@ dynamics::BallJoint* readBallJoint(
     assert(_skeleton != NULL);
 
     dynamics::BallJoint* newBallJoint = new dynamics::BallJoint;
+
+    //--------------------------------------------------------------------------
+    // init_pos
+    if (hasElement(_ballJointElement, "init_pos"))
+    {
+        Eigen::Vector3d init_pos = getValueVector3d(_ballJointElement, "init_pos");
+        newBallJoint->set_q(init_pos);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_vel
+    if (hasElement(_ballJointElement, "init_vel"))
+    {
+        Eigen::Vector3d init_vel = getValueVector3d(_ballJointElement, "init_vel");
+        newBallJoint->set_q(init_vel);
+    }
 
     return newBallJoint;
 }
@@ -963,6 +1035,22 @@ dynamics::EulerJoint* readEulerJoint(
         }
     }
 
+    //--------------------------------------------------------------------------
+    // init_pos
+    if (hasElement(_eulerJointElement, "init_pos"))
+    {
+        Eigen::Vector3d init_pos = getValueVector3d(_eulerJointElement, "init_pos");
+        newEulerJoint->set_q(init_pos);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_vel
+    if (hasElement(_eulerJointElement, "init_vel"))
+    {
+        Eigen::Vector3d init_vel = getValueVector3d(_eulerJointElement, "init_vel");
+        newEulerJoint->set_q(init_vel);
+    }
+
     return newEulerJoint;
 }
 
@@ -976,6 +1064,22 @@ dynamics::TranslationalJoint*readTranslationalJoint(
     dynamics::TranslationalJoint* newTranslationalJoint
             = new dynamics::TranslationalJoint;
 
+    //--------------------------------------------------------------------------
+    // init_pos
+    if (hasElement(_translationalJointElement, "init_pos"))
+    {
+        Eigen::Vector3d init_pos = getValueVector3d(_translationalJointElement, "init_pos");
+        newTranslationalJoint->set_q(init_pos);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_vel
+    if (hasElement(_translationalJointElement, "init_vel"))
+    {
+        Eigen::Vector3d init_vel = getValueVector3d(_translationalJointElement, "init_vel");
+        newTranslationalJoint->set_q(init_vel);
+    }
+
     return newTranslationalJoint;
 }
 
@@ -987,6 +1091,22 @@ dynamics::FreeJoint*readFreeJoint(
     assert(_skeleton != NULL);
 
     dynamics::FreeJoint* newFreeJoint = new dynamics::FreeJoint;
+
+    //--------------------------------------------------------------------------
+    // init_pos
+    if (hasElement(_freeJointElement, "init_pos"))
+    {
+        Eigen::Vector6d init_pos = getValueVector6d(_freeJointElement, "init_pos");
+        newFreeJoint->set_q(init_pos);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_vel
+    if (hasElement(_freeJointElement, "init_vel"))
+    {
+        Eigen::Vector6d init_vel = getValueVector6d(_freeJointElement, "init_vel");
+        newFreeJoint->set_q(init_vel);
+    }
 
     return newFreeJoint;
 }
@@ -1160,6 +1280,45 @@ Eigen::Vector3d toVector3d(const std::string& _str)
     return ret;
 }
 
+Eigen::Vector6d toVector6d(const std::string& _str)
+{
+    Eigen::Vector6d ret;
+
+    std::vector<double> elements;
+    std::vector<std::string> pieces;
+    boost::split(pieces, _str, boost::is_any_of(" "));
+    assert(pieces.size() == 6);
+
+    for (int i = 0; i < pieces.size(); ++i)
+    {
+        if (pieces[i] != "")
+        {
+            try
+            {
+                elements.push_back(boost::lexical_cast<double>(pieces[i].c_str()));
+            }
+            catch(boost::bad_lexical_cast& e)
+            {
+                std::cerr << "value ["
+                          << pieces[i]
+                          << "] is not a valid double for Eigen::Vector6d["
+                          << i
+                          << "]"
+                          << std::endl;
+            }
+        }
+    }
+
+    ret(0) = elements[0];
+    ret(1) = elements[1];
+    ret(2) = elements[2];
+    ret(3) = elements[3];
+    ret(4) = elements[4];
+    ret(5) = elements[5];
+
+    return ret;
+}
+
 //math::SO3 toSO3(const std::string& _str)
 //{
 //    math::SO3 ret;
@@ -1319,6 +1478,16 @@ Eigen::Vector3d getValueVector3d(tinyxml2::XMLElement* _parentElement, const std
     std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
 
     return toVector3d(str);
+}
+
+Eigen::Vector6d getValueVector6d(tinyxml2::XMLElement* _parentElement, const std::string& _name)
+{
+    assert(_parentElement != NULL);
+    assert(!_name.empty());
+
+    std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
+
+    return toVector6d(str);
 }
 
 math::Vec3 getValueVec3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
