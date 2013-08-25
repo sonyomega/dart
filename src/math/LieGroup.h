@@ -80,11 +80,11 @@ SE3 EulerXYZ(const Vec3& angle);
 /// position.
 SE3 EulerXYZ(const Vec3& angle, const Vec3& position);
 
-///// @brief get a transformation matrix given by the Euler ZYX angle,
-///// where the positional part is set to be zero.
-///// singularity : x[1] = -+ 0.5*PI
-///// @sa SE3::iEulerZYX
-//SE3 EulerZYX(const Vec3& angle);
+/// @brief get a transformation matrix given by the Euler ZYX angle,
+/// where the positional part is set to be zero.
+/// singularity : x[1] = -+ 0.5*PI
+/// @sa SE3::iEulerZYX
+SE3 EulerZYX(const Vec3& angle);
 
 ///// @brief get a transformation matrix given by the Euler ZYX angle and
 ///// position.

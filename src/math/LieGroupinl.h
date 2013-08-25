@@ -444,23 +444,23 @@ inline SE3 EulerXYZ(const Vec3& angle)
     return ret;
 }
 
-//inline SE3 EulerZYX(const Vec3& angle)
-//{
-//    SE3 ret = SE3::Identity();
+inline SE3 EulerZYX(const Vec3& angle)
+{
+    SE3 ret = SE3::Identity();
 
-//    double ca = cos(angle[0]);
-//    double sa = sin(angle[0]);
-//    double cb = cos(angle[1]);
-//    double sb = sin(angle[1]);
-//    double cg = cos(angle[2]);
-//    double sg = sin(angle[2]);
+    double ca = cos(angle[0]);
+    double sa = sin(angle[0]);
+    double cb = cos(angle[1]);
+    double sb = sin(angle[1]);
+    double cg = cos(angle[2]);
+    double sg = sin(angle[2]);
 
-//    ret(0,0) = ca*cb;  ret(0,1) = ca*sb*sg - sa*cg;  ret(0,2) = ca*sb*cg + sa*sg;
-//    ret(1,0) = sa*cb;  ret(1,1) = sa*sb*sg + ca*cg;  ret(1,2) = sa*sb*cg - ca*sg;
-//    ret(2,0) = -sb;    ret(2,1) = cb*sg;             ret(2,2) = cb*cg;
+    ret(0,0) = ca*cb;  ret(0,1) = ca*sb*sg - sa*cg;  ret(0,2) = ca*sb*cg + sa*sg;
+    ret(1,0) = sa*cb;  ret(1,1) = sa*sb*sg + ca*cg;  ret(1,2) = sa*sb*cg - ca*sg;
+    ret(2,0) = -sb;    ret(2,1) = cb*sg;             ret(2,2) = cb*cg;
 
-//    return ret;
-//}
+    return ret;
+}
 
 //inline SE3 EulerZYZ(const Vec3& angle)
 //{
