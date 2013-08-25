@@ -391,6 +391,12 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
             shape->setTransform(W);
         }
 
+        // color
+        if (hasElement(vizElement, "color"))
+        {
+            Eigen::Vector3d color = getValueVector3d(vizElement, "color");
+            shape->setColor(color);
+        }
     }
 
     // collision_shape
