@@ -50,6 +50,7 @@
 #include "dynamics/TranslationalJoint.h"
 #include "dynamics/UniversalJoint.h"
 #include "dynamics/WeldJoint.h"
+#include "dynamics/EulerJoint.h"
 
 using namespace dart;
 using namespace math;
@@ -225,9 +226,9 @@ TEST_F(JOINTS, PRISMATIC_JOINT)
 // 2-dof joint
 TEST_F(JOINTS, UNIVERSAL_JOINT)
 {
-    UniversalJoint univJoint;
+    //UniversalJoint univJoint;
 
-    kinematicsTest(&univJoint);
+    //kinematicsTest(&univJoint);
 }
 
 // 3-dof joint
@@ -239,11 +240,14 @@ TEST_F(JOINTS, BALL_JOINT)
 }
 
 // 3-dof joint
-TEST_F(JOINTS, EULER_XYZ_JOINT)
+TEST_F(JOINTS, EULER_JOINT)
 {
-    EulerXYZJoint eulerXYZJoint;
+//    EulerJoint eulerJoint;
+//    eulerJoint.setAxisOrder(EulerJoint::AO_XYZ);
+//    kinematicsTest(&eulerJoint);
 
-    kinematicsTest(&eulerXYZJoint);
+//    eulerJoint.setAxisOrder(EulerJoint::AO_ZYX);
+//    kinematicsTest(&eulerJoint);
 }
 
 // 3-dof joint

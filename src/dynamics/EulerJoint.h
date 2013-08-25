@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_KINEMATICS_BALL_JOINT_H
-#define DART_KINEMATICS_BALL_JOINT_H
+#ifndef DART_DYNAMICS_EULER_JOINT_H
+#define DART_DYNAMICS_EULER_JOINT_H
 
 #include <Eigen/Dense>
 
@@ -46,21 +46,34 @@
 namespace dart {
 namespace dynamics {
 
-class BallJoint : public Joint
+class EulerJoint : public Joint
 {
 public:
+    enum AxisOrder
+    {
+        AO_ZYX = 0,
+        AO_ZYZ = 1,
+        AO_XYZ = 2,
+        AO_ZXY = 3
+    };
+
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
     /// @brief
-    BallJoint();
+    EulerJoint();
 
     /// @brief
-    virtual ~BallJoint();
+    virtual ~EulerJoint();
 
     //--------------------------------------------------------------------------
     // Kinematical Properties
     //--------------------------------------------------------------------------
+    /// @brief
+    void setAxisOrder(AxisOrder _order);
+
+    /// @brief
+    AxisOrder getAxisOrder() const;
 
     // Documentation is inherited.
     virtual double getPotentialEnergy() const { return 0.0; }
@@ -89,8 +102,11 @@ protected:
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
-    /// @brief
+    /// @brief Euler angles X, Y, Z
     GenCoord mCoordinate[3];
+
+    /// @brief
+    AxisOrder mAxisOrder;
 
 private:
 
@@ -102,5 +118,5 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_KINEMATICS_BALL_JOINT_H
+#endif // #ifndef DART_DYNAMICS_EULER_JOINT_H
 

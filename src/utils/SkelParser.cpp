@@ -54,6 +54,8 @@
 #include "dynamics/TranslationalJoint.h"
 #include "dynamics/BallJoint.h"
 #include "dynamics/FreeJoint.h"
+#include "dynamics/EulerJoint.h"
+#include "dynamics/UniversalJoint.h"
 #include "dynamics/Skeleton.h"
 #include "simulation/World.h"
 #include "utils/SkelParser.h"
@@ -507,10 +509,12 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
         newJoint = readPrismaticJoint(_jointElement, _skeleton);
     if (type == std::string("revolute"))
         newJoint = readRevoluteJoint(_jointElement, _skeleton);
+    if (type == std::string("universal"))
+        newJoint = readUniversalJoint(_jointElement, _skeleton);
     if (type == std::string("ball"))
         newJoint = readBallJoint(_jointElement, _skeleton);
-    if (type == std::string("euler_xyz"))
-        newJoint = readEulerXYZJoint(_jointElement, _skeleton);
+    if (type == std::string("euler"))
+        newJoint = readEulerJoint(_jointElement, _skeleton);
     if (type == std::string("translational"))
         newJoint = readTranslationalJoint(_jointElement, _skeleton);
     if (type == std::string("free"))
@@ -713,7 +717,107 @@ dynamics::PrismaticJoint* readPrismaticJoint(
     return newPrismaticJoint;
 }
 
-dynamics::BallJoint*readBallJoint(
+dynamics::UniversalJoint* readUniversalJoint(
+        tinyxml2::XMLElement* _universalJointElement,
+        dynamics::Skeleton *_skeleton)
+{
+    assert(_universalJointElement != NULL);
+    assert(_skeleton != NULL);
+
+    dynamics::UniversalJoint* newUniversalJoint = new dynamics::UniversalJoint;
+
+    //--------------------------------------------------------------------------
+    // axis
+    if (hasElement(_universalJointElement, "axis"))
+    {
+        tinyxml2::XMLElement* axisElement
+                = getElement(_universalJointElement, "axis");
+
+        // xyz
+        Eigen::Vector3d xyz = getValueVector3d(axisElement, "xyz");
+        newUniversalJoint->setAxis(0, xyz);
+
+        // damping
+        if (hasElement(axisElement, "damping"))
+        {
+            double damping = getValueDouble(axisElement, "damping");
+            newUniversalJoint->setDampingCoefficient(0, damping);
+        }
+
+        // limit
+        if (hasElement(axisElement, "limit"))
+        {
+            tinyxml2::XMLElement* limitElement
+                    = getElement(axisElement, "limit");
+
+            // lower
+            if (hasElement(limitElement, "lower"))
+            {
+                double lower = getValueDouble(limitElement, "lower");
+                newUniversalJoint->getDof(0)->set_qMin(lower);
+            }
+
+            // upper
+            if (hasElement(limitElement, "upper"))
+            {
+                double upper = getValueDouble(limitElement, "upper");
+                newUniversalJoint->getDof(0)->set_qMax(upper);
+            }
+        }
+    }
+    else
+    {
+        assert(0);
+    }
+
+    //--------------------------------------------------------------------------
+    // axis2
+    if (hasElement(_universalJointElement, "axis2"))
+    {
+        tinyxml2::XMLElement* axis2Element
+                = getElement(_universalJointElement, "axis2");
+
+        // xyz
+        Eigen::Vector3d xyz = getValueVector3d(axis2Element, "xyz");
+        newUniversalJoint->setAxis(1, xyz);
+
+        // damping
+        if (hasElement(axis2Element, "damping"))
+        {
+            double damping = getValueDouble(axis2Element, "damping");
+            newUniversalJoint->setDampingCoefficient(1, damping);
+        }
+
+        // limit
+        if (hasElement(axis2Element, "limit"))
+        {
+            tinyxml2::XMLElement* limitElement
+                    = getElement(axis2Element, "limit");
+
+            // lower
+            if (hasElement(limitElement, "lower"))
+            {
+                double lower = getValueDouble(limitElement, "lower");
+                newUniversalJoint->getDof(0)->set_qMin(lower);
+            }
+
+            // upper
+            if (hasElement(limitElement, "upper"))
+            {
+                double upper = getValueDouble(limitElement, "upper");
+                newUniversalJoint->getDof(1)->set_qMax(upper);
+            }
+        }
+    }
+    else
+    {
+        assert(0);
+    }
+
+    return newUniversalJoint;
+}
+
+dynamics::BallJoint* readBallJoint(
         tinyxml2::XMLElement* _ballJointElement,
         dynamics::Skeleton* _skeleton)
 {
@@ -725,16 +829,141 @@ dynamics::BallJoint*readBallJoint(
     return newBallJoint;
 }
 
-dynamics::EulerXYZJoint* readEulerXYZJoint(
-        tinyxml2::XMLElement* _eulerXYZJointElement,
+dynamics::EulerJoint* readEulerJoint(
+        tinyxml2::XMLElement* _eulerJointElement,
         dynamics::Skeleton* _skeleton)
 {
-    assert(_eulerXYZJointElement != NULL);
+    assert(_eulerJointElement != NULL);
     assert(_skeleton != NULL);
 
-    dynamics::EulerXYZJoint* newEulerXYZJoint = new dynamics::EulerXYZJoint;
+    dynamics::EulerJoint* newEulerJoint = new dynamics::EulerJoint;
 
-    return newEulerXYZJoint;
+    //--------------------------------------------------------------------------
+    // axis order
+    std::string order = getValueString(_eulerJointElement, "axis_order");
+    if (order == "xyz")
+    {
+        newEulerJoint->setAxisOrder(dynamics::EulerJoint::AO_XYZ);
+    }
+    else if (order == "zyx")
+    {
+        newEulerJoint->setAxisOrder(dynamics::EulerJoint::AO_ZYX);
+    }
+    else
+    {
+        dterr << "Undefined Euler axis order\n";
+        assert(0);
+    }
+
+    //--------------------------------------------------------------------------
+    // axis
+    if (hasElement(_eulerJointElement, "axis"))
+    {
+        tinyxml2::XMLElement* axisElement
+                = getElement(_eulerJointElement, "axis");
+
+        // damping
+        if (hasElement(axisElement, "damping"))
+        {
+            double damping = getValueDouble(axisElement, "damping");
+            newEulerJoint->setDampingCoefficient(0, damping);
+        }
+
+        // limit
+        if (hasElement(axisElement, "limit"))
+        {
+            tinyxml2::XMLElement* limitElement
+                    = getElement(axisElement, "limit");
+
+            // lower
+            if (hasElement(limitElement, "lower"))
+            {
+                double lower = getValueDouble(limitElement, "lower");
+                newEulerJoint->getDof(0)->set_qMin(lower);
+            }
+
+            // upper
+            if (hasElement(limitElement, "upper"))
+            {
+                double upper = getValueDouble(limitElement, "upper");
+                newEulerJoint->getDof(0)->set_qMax(upper);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // axis2
+    if (hasElement(_eulerJointElement, "axis2"))
+    {
+        tinyxml2::XMLElement* axis2Element
+                = getElement(_eulerJointElement, "axis2");
+
+        // damping
+        if (hasElement(axis2Element, "damping"))
+        {
+            double damping = getValueDouble(axis2Element, "damping");
+            newEulerJoint->setDampingCoefficient(1, damping);
+        }
+
+        // limit
+        if (hasElement(axis2Element, "limit"))
+        {
+            tinyxml2::XMLElement* limitElement
+                    = getElement(axis2Element, "limit");
+
+            // lower
+            if (hasElement(limitElement, "lower"))
+            {
+                double lower = getValueDouble(limitElement, "lower");
+                newEulerJoint->getDof(1)->set_qMin(lower);
+            }
+
+            // upper
+            if (hasElement(limitElement, "upper"))
+            {
+                double upper = getValueDouble(limitElement, "upper");
+                newEulerJoint->getDof(1)->set_qMax(upper);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // axis3
+    if (hasElement(_eulerJointElement, "axis3"))
+    {
+        tinyxml2::XMLElement* axis3Element
+                = getElement(_eulerJointElement, "axis3");
+
+        // damping
+        if (hasElement(axis3Element, "damping"))
+        {
+            double damping = getValueDouble(axis3Element, "damping");
+            newEulerJoint->setDampingCoefficient(2, damping);
+        }
+
+        // limit
+        if (hasElement(axis3Element, "limit"))
+        {
+            tinyxml2::XMLElement* limitElement
+                    = getElement(axis3Element, "limit");
+
+            // lower
+            if (hasElement(limitElement, "lower"))
+            {
+                double lower = getValueDouble(limitElement, "lower");
+                newEulerJoint->getDof(2)->set_qMin(lower);
+            }
+
+            // upper
+            if (hasElement(limitElement, "upper"))
+            {
+                double upper = getValueDouble(limitElement, "upper");
+                newEulerJoint->getDof(2)->set_qMax(upper);
+            }
+        }
+    }
+
+    return newEulerJoint;
 }
 
 dynamics::TranslationalJoint*readTranslationalJoint(
