@@ -223,6 +223,7 @@ void World::addSkeleton(dynamics::Skeleton* _skeleton)
     //_skeleton->initKinematics();
     _skeleton->initDynamics();
     _skeleton->updateForwardKinematics();
+    _skeleton->computeEquationsOfMotionID(mGravity);
     _skeleton->backupInitState();
 
     mIndices.push_back(mIndices.back() + _skeleton->getDOF());
