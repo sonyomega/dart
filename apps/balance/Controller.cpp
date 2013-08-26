@@ -60,7 +60,7 @@ void Controller::computeTorques(const VectorXd& _dof, const VectorXd& _dofVel) {
     
     // ankle strategy for sagital plane
     Vector3d com = mSkel->getWorldCOM();    
-    Vector3d cop = xformHom(mSkel->findBodyNode("fullbody1_h_heel_left")->getWorldTransform(), Vector3d(0.05, 0, 0));
+    Vector3d cop = xformHom(mSkel->findBodyNode("h_heel_left")->getWorldTransform(), Vector3d(0.05, 0, 0));
     Vector2d diff(com[0] - cop[0], com[2] - cop[2]);
     if (diff[0] < 0.1) {
         double offset = com[0] - cop[0];
