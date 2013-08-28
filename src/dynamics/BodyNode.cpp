@@ -730,7 +730,10 @@ void BodyNode::updateBeta()
 
     mAlpha          -= mParentJoint->mS.transpose()*(mAI*mEta + mB);
     mBeta            = mB;
-    mBeta.noalias() += mAI*(mEta + mParentJoint->mS*mPsi*(mAlpha));
+    if (mParentJoint->getDOF() > 0)
+        mBeta += mAI*(mEta + mParentJoint->mS*mPsi*(mAlpha));
+    else
+        mBeta += mAI*mEta;
 
     assert(math::Verifyse3(mBeta));
 }
