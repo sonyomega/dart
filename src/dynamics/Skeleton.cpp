@@ -279,7 +279,7 @@ void Skeleton::clearExternalForces()
     int nNodes = getNumBodyNodes();
 
     for (int i = 0; i < nNodes; i++)
-        mBodyNodes.at(i)->clearExternalForces();
+        mBodyNodes[i]->clearExternalForces();
 }
 
 void Skeleton::computeInverseDynamicsWithZeroAcceleration(
@@ -307,6 +307,8 @@ void Skeleton::computeForwardDynamicsID(
                                + this->getConstraintForces() );
 
     this->set_ddq(qddot);
+
+    clearExternalForces();
 }
 
 void Skeleton::computeForwardDynamicsID2(
@@ -361,6 +363,8 @@ void Skeleton::computeForwardDynamicsID2(
     mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
 
     this->set_ddq(qddot);
+
+    clearExternalForces();
 }
 
 void Skeleton::computeForwardDynamicsFS(
@@ -404,7 +408,9 @@ void Skeleton::computeForwardDynamicsFS(
         (*itrBody)->update_ddq();
         (*itrBody)->updateAcceleration();
         (*itrBody)->update_F_fs();
-     }
+    }
+
+    clearExternalForces();
 }
 
 void Skeleton::computeHybridDynamicsFS(
