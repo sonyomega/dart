@@ -455,7 +455,7 @@ void Skeleton::computeEquationsOfMotionID(
     mM = Eigen::MatrixXd::Zero(n,n);
     for (int i = 0; i < getNumBodyNodes(); i++)
     {
-        BodyNode *nodei = static_cast<BodyNode*>(getBodyNode(i));
+        BodyNode *nodei = getBodyNode(i);
         nodei->updateMassMatrix();
         nodei->aggregateMass(mM);
     }
