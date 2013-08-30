@@ -206,9 +206,9 @@ protected:
     /// @brief The collision handler.
     constraint::ConstraintDynamics* mCollisionHandle;
 
-    utils::Timer mStepTimer;
-    utils::Timer mDynamicsTimer;
-    utils::Timer mCollisionDetectionTimer;
+//    common::Timer mStepTimer;
+//    common::Timer mDynamicsTimer;
+//    common::Timer mCollisionDetectionTimer;
 
 private:
 };

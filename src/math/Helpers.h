@@ -50,7 +50,6 @@
 // External Libraries
 #include <Eigen/Dense>
 // Local Headers
-#include "common/Misc.h"
 #include "math/MathTypes.h"
 
 namespace dart {
@@ -58,80 +57,103 @@ namespace math {
 
 // a cross b = (CR*a) dot b
 /* const Matd CR(2,2,0.0,-1.0,1.0,0.0); */
-const Eigen::Matrix2d CR( (Eigen::Matrix2d() << 0.0, -1.0, 1.0, 0.0).finished() );
+//const Eigen::Matrix2d CR( (Eigen::Matrix2d() << 0.0, -1.0, 1.0, 0.0).finished() );
 
-inline int delta(int i, int j) {
-    if(i == j) return 1;
+inline int delta(int i, int j)
+{
+    if (i == j)
+        return 1;
     return 0;
 }
 
-inline int sgn(double a){
-    if(a<0) return -1;
-    else if(a==0) return 0;
-    else return 1;
+inline int sgn(double a)
+{
+    if (a < 0)
+        return -1;
+    else if (a == 0)
+        return 0;
+    else
+        return 1;
 }
 
-inline double sqr(double x){
+inline double sqr(double x)
+{
     return x*x;
 }
 
-inline double Tsinc(double theta){
+inline double Tsinc(double theta)
+{
     return 0.5-sqrt(theta)/48;
 }
 
-inline bool isZero(double theta){
-    return(fabs(theta)<M_EPSILON);
+inline bool isZero(double theta)
+{
+    return (fabs(theta) < M_EPSILON);
 }
 
-inline double asinh(double X){
+inline double asinh(double X)
+{
     return log(X + sqrt(X * X + 1));
 }
 
-inline double acosh(double X){
+inline double acosh(double X)
+{
     return log(X + sqrt(X * X - 1));
 }
 
-inline double atanh(double X){
+inline double atanh(double X)
+{
     return log((1 + X)/(1 - X))/ 2;
 }
 
-inline double asech(double X){
+inline double asech(double X)
+{
     return log((sqrt(-X * X + 1) + 1) / X);
 }
 
-inline double acosech(double X){
+inline double acosech(double X)
+{
     return log((sgn(X) * sqrt(X * X + 1) +1) / X);
 }
 
-inline double acotanh(double X){
+inline double acotanh(double X)
+{
     return log((X + 1) / (X - 1)) / 2;
 }
 
-inline double round(double x){
+inline double round(double x)
+{
     return floor(x+0.5);
 }
 
-inline double round2(double x){
+inline double round2(double x)
+{
     int gintx = (int)floor(x);
-    if(x-gintx<0.5) return (double)gintx;
-    else return (double)(gintx+1);
+    if (x - gintx < 0.5)
+        return (double)gintx;
+    else
+        return (double)(gintx + 1);
 }
 
-inline bool isEqual(double x, double y){
+inline bool isEqual(double x, double y)
+{
     return (fabs(x - y) < M_EPSILON);
 }
 
 // check if it is an integer
-inline bool isInt(double x){
+inline bool isInt(double x)
+{
     if(isEqual(round(x), x)) return true;
     else return false;
 }
 
-inline double random( double min, double max ){
+inline double random( double min, double max )
+{
     return min + ((double)rand()/(RAND_MAX + 1.0)) * (max-min);
 }
 
-inline unsigned seedRand(){
+inline unsigned seedRand()
+{
     time_t now = time(0);
     unsigned char *p = (unsigned char *)&now;
     unsigned seed = 0;
@@ -144,7 +166,8 @@ inline unsigned seedRand(){
     return seed;
 }
 
-inline Eigen::Vector3d crossOperator(const Eigen::MatrixXd & m) {
+inline Eigen::Vector3d crossOperator(const Eigen::MatrixXd & m)
+{
     Eigen::Vector3d ret = Eigen::Vector3d::Zero();
     ret[0] = m(1, 2) - m(2, 1);
     ret[1] = m(2, 0) - m(0, 2);

@@ -2,8 +2,9 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
- * Date: 06/12/2011
+ * Author(s): Sumit Jain <sumit@cc.gatech.edu>,
+ *            Jeongseok Lee <jslee02@gmail.com>
+ * Date: 05/26/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,52 +36,43 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_COMMON_MISC_H
-#define DART_COMMON_MISC_H
+#ifndef DART_COMMON_CONSOLE_H
+#define DART_COMMON_CONSOLE_H
 
-// Epsilon definition
-#ifndef M_EPSILON
-#define M_EPSILON 1.0e-6
-#endif
+#include <string>
+#include <vector>
+#include <iterator>
+#include <algorithm> // for copy
+#include <iostream>
+#include <istream>
+#include <fstream>
+#include <sstream>
 
-// PI definition
-#ifndef M_PI
-#define M_PI 3.141592653589793
-#endif
-#ifndef M_PI_2
-#define M_PI_2 M_PI*0.5;
-#endif
+namespace dart {
+namespace common {
 
-// Define a macro which returns the "pretty" name of function
-// It should include names of class and functions
-#ifdef __linux
-#define FUNCTION_NAME() (__PRETTY_FUNCTION__)
-#elif defined(__APPLE__)
-#define FUNCTION_NAME() (__PRETTY_FUNCTION__)
-//#error "Define your own FUNCTION_NAME() macro on Apple"
-#elif defined(_WIN32)
-#define FUNCTION_NAME() (__FUNCSIG__)
-#else
-#error "What's your operating system?"
-#endif
+/// @briefOutput a message
+#define dtmsg (dart::common::colorMsg("Msg", 32))
 
-// Safe Release Ptr
-// Warning!!! You should put ";" after this macros!!!
-#define SAFE_RELEASE_PTR(x) do{if(x) {delete x; x = NULL;}}while(0)
+/// @briefOutput a debug message
+#define dtdbg (dart::common::colorMsg("Dbg", 36))
 
-// For generate getter/setter method
-#define GETSET(type, var)                       \
-    public:                                     \
-    type var() const {                          \
-        return var##_;                          \
-    }                                           \
-    void set_##var(type _val) {                 \
-        var##_ = _val;                          \
-    }                                           \
-private:                                        \
-type var##_
+/// @brief Output a warning message
+#define dtwarn (dart::common::colorErr("Warning", __FILE__, __LINE__, 33))
 
+/// @brief Output an error message
+#define dterr (dart::common::colorErr("Error", __FILE__, __LINE__, 31))
 
-#endif // #ifndef DART_COMMON_MISC_H
+/// @brief
+std::ostream& colorMsg(const std::string& _msg, int _color);
 
+/// @brief
+std::ostream& colorErr(const std::string& _msg,
+                       const std::string& _file,
+                       unsigned int _line,
+                       int _color);
 
+} // namespace common
+} // namespace dart
+
+#endif // #ifndef DART_COMMON_CONSOLE_H

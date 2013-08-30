@@ -36,56 +36,31 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_COMMON_UTILSCODE_H
-#define DART_COMMON_UTILSCODE_H
+#include "UtilsCode.h"
 
-#include <string>
-#include <vector>
-#include <iterator>
-#include <algorithm> // for copy
-#include <iostream>
-#include <istream>
-#include <fstream>
-#include <sstream>
+using namespace std;
 
 namespace dart {
 namespace common {
 
-/// @brief Breaks the _str string into a vector of _tokens using delimiters from
-/// input _delimiters
-void tokenize(const std::string& _str,
-              std::vector<std::string>& _tokens,
-              const std::string& _delimiters = " ");    //
-
-/// @brief
-template <class T>
-inline std::vector<T> stringToVec( const std::string &_str )
+std::ostream& colorMsg(const std::string& _msg, int _color)
 {
-    std::vector<T> myVec;
-    std::istringstream iss (_str, std::istringstream::in);
-    copy(std::istream_iterator<T>(iss),
-         std::istream_iterator<T>(),
-         back_inserter(myVec));
-    //check http://www.sgi.com/tech/stl/istream_iterator.html
-    return myVec;
+    std::cout << "\033[1;" << _color << "m" << _msg << "\033[0m ";
+    return std::cout;
 }
 
-/// @brief
-template <typename T_POINTER>
-inline void swapPointers(T_POINTER *&_p1, T_POINTER *&_p2)
+std::ostream& colorErr(const std::string& _msg,
+                       const std::string& _file,
+                       unsigned int _line,
+                       int _color)
 {
-    T_POINTER *temp = _p2;
-    _p2=_p1;
-    _p1=temp;
-}
+    int index = _file.find_last_of("/") + 1;
 
-/// @brief
-inline bool isNaN(double _v)
-{
-    return _v != _v;
+    std::cerr << "\033[1;" << _color << "m" << _msg << " [" <<
+                 _file.substr(index , _file.size() - index)<< ":" << _line << "]\033[0m ";
+
+    return std::cerr;
 }
 
 } // namespace common
 } // namespace dart
-
-#endif // #ifndef DART_COMMON_UTILSCODE_H

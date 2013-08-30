@@ -86,7 +86,7 @@ inline Eigen::Vector3d iEulerXYZ(const Eigen::Isometry3d& T)
 //    // v = beta*p + gamma*w + 1 / 2*cross(p, w)
 //    //    , beta = t*(1 + cos(t)) / (2*sin(t)), gamma = <w, p>*(1 - beta) / t^2
 //    //--------------------------------------------------------------------------
-//    double theta = std::acos(std::max(std::min(SCALAR_1_2*(T(0,0) + T(1,1) + T(2,2) - SCALAR_1), SCALAR_1), -SCALAR_1));
+//    double theta = std::acos(std::max(std::min(1.0_2*(T(0,0) + T(1,1) + T(2,2) - 1.0), 1.0), -1.0));
 //    double alpha;
 //    double beta;
 //    double gamma;
@@ -99,35 +99,35 @@ inline Eigen::Vector3d iEulerXYZ(const Eigen::Isometry3d& T)
 //        const double c3 = 0.00546765085347;		// 3 / pi^4 - 1 / 4 / pi^2
 
 //        double phi = M_PI - theta;
-//        double delta = SCALAR_1_2 + SCALAR_1_8*phi*phi;
+//        double delta = 1.0_2 + 1.0_8*phi*phi;
 
-//        double w[] = {	T(2,1) > T(1,2) ? theta*sqrt(SCALAR_1 + (T(0,0) - SCALAR_1)*delta) : -theta*sqrt(SCALAR_1 + (T(0,0) - SCALAR_1)*delta),
-//                        T(0,2) > T(2,0) ? theta*sqrt(SCALAR_1 + (T(1,1) - SCALAR_1)*delta) : -theta*sqrt(SCALAR_1 + (T(1,1) - SCALAR_1)*delta),
-//                        T(1,0) > T(0,1) ? theta*sqrt(SCALAR_1 + (T(2,2) - SCALAR_1)*delta) : -theta*sqrt(SCALAR_1 + (T(2,2) - SCALAR_1)*delta) };
+//        double w[] = {	T(2,1) > T(1,2) ? theta*sqrt(1.0 + (T(0,0) - 1.0)*delta) : -theta*sqrt(1.0 + (T(0,0) - 1.0)*delta),
+//                        T(0,2) > T(2,0) ? theta*sqrt(1.0 + (T(1,1) - 1.0)*delta) : -theta*sqrt(1.0 + (T(1,1) - 1.0)*delta),
+//                        T(1,0) > T(0,1) ? theta*sqrt(1.0 + (T(2,2) - 1.0)*delta) : -theta*sqrt(1.0 + (T(2,2) - 1.0)*delta) };
 
-//        beta = SCALAR_1_4*theta*(M_PI - theta);
+//        beta = 1.0_4*theta*(M_PI - theta);
 //        gamma = (w[0]*T(0,3) + w[1]*T(1,3) + w[2]*T(2,3))*(c1 -  c2*phi + c3*phi*phi);
 
 //        ret << w[0],
 //               w[1],
 //               w[2],
-//               beta*T(0,3) - SCALAR_1_2*(w[1]*T(2,3) - w[2]*T(1,3)) + gamma*w[0],
-//               beta*T(1,3) - SCALAR_1_2*(w[2]*T(0,3) - w[0]*T(2,3)) + gamma*w[1],
-//               beta*T(2,3) - SCALAR_1_2*(w[0]*T(1,3) - w[1]*T(0,3)) + gamma*w[2];
+//               beta*T(0,3) - 1.0_2*(w[1]*T(2,3) - w[2]*T(1,3)) + gamma*w[0],
+//               beta*T(1,3) - 1.0_2*(w[2]*T(0,3) - w[0]*T(2,3)) + gamma*w[1],
+//               beta*T(2,3) - 1.0_2*(w[0]*T(1,3) - w[1]*T(0,3)) + gamma*w[2];
 //    }
 //    else
 //    {
 //        if (theta > LIE_EPS)
 //        {
-//            alpha = SCALAR_1_2*theta / sin(theta);
-//            beta = (SCALAR_1 + cos(theta))*alpha;
-//            gamma = (SCALAR_1 - beta) / theta / theta;
+//            alpha = 1.0_2*theta / sin(theta);
+//            beta = (1.0 + cos(theta))*alpha;
+//            gamma = (1.0 - beta) / theta / theta;
 //        }
 //        else
 //        {
-//            alpha = SCALAR_1_2 + SCALAR_1_12*theta*theta;
-//            beta = SCALAR_1 - SCALAR_1_12*theta*theta;
-//            gamma = SCALAR_1_12 + SCALAR_1_720*theta*theta;
+//            alpha = 1.0_2 + 1.0_12*theta*theta;
+//            beta = 1.0 - 1.0_12*theta*theta;
+//            gamma = 1.0_12 + 1.0_720*theta*theta;
 //        }
 
 //        double w[] = { alpha*(T(2,1) - T(1,2)), alpha*(T(0,2) - T(2,0)), alpha*(T(1,0) - T(0,1)) };
@@ -136,9 +136,9 @@ inline Eigen::Vector3d iEulerXYZ(const Eigen::Isometry3d& T)
 //        ret << w[0],
 //               w[1],
 //               w[2],
-//               beta*T(0,3) + SCALAR_1_2*(w[2]*T(1,3) - w[1]*T(2,3)) + gamma*w[0],
-//               beta*T(1,3) + SCALAR_1_2*(w[0]*T(2,3) - w[2]*T(0,3)) + gamma*w[1],
-//               beta*T(2,3) + SCALAR_1_2*(w[1]*T(0,3) - w[0]*T(1,3)) + gamma*w[2];
+//               beta*T(0,3) + 1.0_2*(w[2]*T(1,3) - w[1]*T(2,3)) + gamma*w[0],
+//               beta*T(1,3) + 1.0_2*(w[0]*T(2,3) - w[2]*T(0,3)) + gamma*w[1],
+//               beta*T(2,3) + 1.0_2*(w[1]*T(0,3) - w[0]*T(1,3)) + gamma*w[2];
 //    }
 
 //    return ret;
@@ -146,21 +146,21 @@ inline Eigen::Vector3d iEulerXYZ(const Eigen::Isometry3d& T)
 
 //inline Axis LogR(const SE3& T)
 //{
-//    double theta = std::acos(std::max(std::min(SCALAR_1_2*(T(0,0) + T(1,1) + T(2,2) - SCALAR_1), SCALAR_1), -SCALAR_1)), alpha;
+//    double theta = std::acos(std::max(std::min(1.0_2*(T(0,0) + T(1,1) + T(2,2) - 1.0), 1.0), -1.0)), alpha;
 
 //    if ( theta > M_PI - LIE_EPS )
 //    {
-//        double delta = SCALAR_1_2 + SCALAR_1_8*(M_PI - theta)*(M_PI - theta);
+//        double delta = 1.0_2 + 1.0_8*(M_PI - theta)*(M_PI - theta);
 
-//        return Axis(T(2,1) > T(1,2) ? theta*sqrt(SCALAR_1 + (T(0,0) - SCALAR_1)*delta) : -theta*sqrt(SCALAR_1 + (T(0,0) - SCALAR_1)*delta),
-//                    T(0,2) > T(2,0) ? theta*sqrt(SCALAR_1 + (T(1,1) - SCALAR_1)*delta) : -theta*sqrt(SCALAR_1 + (T(1,1) - SCALAR_1)*delta),
-//                    T(1,0) > T(0,1) ? theta*sqrt(SCALAR_1 + (T(2,2) - SCALAR_1)*delta) : -theta*sqrt(SCALAR_1 + (T(2,2) - SCALAR_1)*delta));
+//        return Axis(T(2,1) > T(1,2) ? theta*sqrt(1.0 + (T(0,0) - 1.0)*delta) : -theta*sqrt(1.0 + (T(0,0) - 1.0)*delta),
+//                    T(0,2) > T(2,0) ? theta*sqrt(1.0 + (T(1,1) - 1.0)*delta) : -theta*sqrt(1.0 + (T(1,1) - 1.0)*delta),
+//                    T(1,0) > T(0,1) ? theta*sqrt(1.0 + (T(2,2) - 1.0)*delta) : -theta*sqrt(1.0 + (T(2,2) - 1.0)*delta));
 //    } else
 //    {
 //        if ( theta > LIE_EPS )
-//            alpha = SCALAR_1_2*theta / sin(theta);
+//            alpha = 1.0_2*theta / sin(theta);
 //        else
-//            alpha = SCALAR_1_2 + SCALAR_1_12*theta*theta;
+//            alpha = 1.0_2 + 1.0_12*theta*theta;
 
 //        return Axis(alpha*(T(2,1) - T(1,2)), alpha*(T(0,2) - T(2,0)), alpha*(T(1,0) - T(0,1)));
 //    }
@@ -233,7 +233,7 @@ inline Eigen::Vector6d AdTLinear(const Eigen::Isometry3d& T, const Eigen::Vector
     //--------------------------------------------------------------------------
     Eigen::Vector6d ret = Eigen::Vector6d::Zero();
 
-    ret << SCALAR_0, SCALAR_0, SCALAR_0,
+    ret << 0.0, 0.0, 0.0,
            T(0,0)*v[0] + T(0,1)*v[1] + T(0,2)*v[2],
            T(1,0)*v[0] + T(1,1)*v[1] + T(1,2)*v[2],
            T(2,0)*v[0] + T(2,1)*v[1] + T(2,2)*v[2];
@@ -539,14 +539,14 @@ inline Eigen::Isometry3d Exp(const Eigen::Vector6d& s)
     {
         double sin_t = sin(theta);
         alpha = sin_t / theta;
-        beta = (SCALAR_1 - cos_t) / theta / theta;
+        beta = (1.0 - cos_t) / theta / theta;
         gamma = (s[0]*s[3] + s[1]*s[4] + s[2]*s[5])*(theta - sin_t) / theta / theta / theta;
     }
     else
     {
-        alpha = SCALAR_1 - SCALAR_1_6*theta*theta;
-        beta = SCALAR_1_2 - SCALAR_1_24*theta*theta;
-        gamma = (s[0]*s[3] + s[1]*s[4] + s[2]*s[5])*SCALAR_1_6 - SCALAR_1_120*theta*theta;
+        alpha = 1.0 - theta*theta/6.0;
+        beta = 0.5 - theta*theta/24.0;
+        gamma = (s[0]*s[3] + s[1]*s[4] + s[2]*s[5])/6.0 - theta*theta/120.0;
     }
 
     ret(0,0) = beta*s2[0] + cos_t;       ret(0,1) = beta*s3[0] - alpha*s[2];  ret(0,2) = beta*s3[2] + alpha*s[1];  ret(0,3) = alpha*s[3] + beta*(s[1]*s[5] - s[2]*s[4]) + gamma*s[0];
@@ -570,12 +570,12 @@ inline Eigen::Isometry3d ExpAngular(const Eigen::Vector3d& S)
     if (theta > LIE_EPS)
     {
         alpha = sin(theta) / theta;
-        beta = (SCALAR_1 - cos_t) / theta / theta;
+        beta = (1.0 - cos_t) / theta / theta;
     }
     else
     {
-        alpha = SCALAR_1 - SCALAR_1_6*theta*theta;
-        beta = SCALAR_1_2 - SCALAR_1_24*theta*theta;
+        alpha = 1.0 - theta*theta/6.0;
+        beta = 0.5 - theta*theta/24.0;
     }
 
     ret(0,0) = beta*s2[0] + cos_t;       ret(0,1) = beta*s3[0] - alpha*S[2];  ret(0,2) = beta*s3[2] + alpha*S[1];
@@ -591,10 +591,10 @@ inline Eigen::Isometry3d ExpAngular(const Eigen::Vector3d& S)
 //    SE3 ret = SE3::Identity();
 //    double s2[] = { S[0]*S[0], S[1]*S[1], S[2]*S[2] };
 
-//    if ( abs(s2[0] + s2[1] + s2[2] - SCALAR_1) > LIE_EPS ) return ExpAngular(theta*S);
+//    if ( abs(s2[0] + s2[1] + s2[2] - 1.0) > LIE_EPS ) return ExpAngular(theta*S);
 
 //    double s3[] = { S[0]*S[1], S[1]*S[2], S[2]*S[0] };
-//    double alpha = sin(theta), cos_t = cos(theta), beta = SCALAR_1 - cos_t;
+//    double alpha = sin(theta), cos_t = cos(theta), beta = 1.0 - cos_t;
 
 //    ret(0,0) = beta*s2[0] + cos_t;       ret(0,1) = beta*s3[0] - alpha*S[2];  ret(0,2) = beta*s3[2] + alpha*S[1];
 //    ret(1,0) = beta*s3[0] + alpha*S[2];  ret(1,1) = beta*s2[1] + cos_t;       ret(1,2) = beta*s3[1] - alpha*S[0];
@@ -664,23 +664,23 @@ inline Eigen::Isometry3d RotZ(double t)
 //inline SE3 Normalize(const SE3& T)
 //{
 //    SE3 ret = SE3::Identity();
-//    double idet = SCALAR_1 / (T(0,0)*(T(1,1)*T(2,2) - T(2,1)*T(1,2)) +
+//    double idet = 1.0 / (T(0,0)*(T(1,1)*T(2,2) - T(2,1)*T(1,2)) +
 //                              T(0,1)*(T(2,0)*T(1,2) - T(1,0)*T(2,2)) +
 //                              T(0,2)*(T(1,0)*T(2,1) - T(2,0)*T(1,1)));
 
-//    ret(0,0) = SCALAR_1_2*(T(0,0) + idet*(T(1,1)*T(2,2) - T(2,1)*T(1,2)));
-//    ret(0,1) = SCALAR_1_2*(T(0,1) + idet*(T(2,0)*T(1,2) - T(1,0)*T(2,2)));
-//    ret(0,2) = SCALAR_1_2*(T(0,2) + idet*(T(1,0)*T(2,1) - T(2,0)*T(1,1)));
+//    ret(0,0) = 1.0_2*(T(0,0) + idet*(T(1,1)*T(2,2) - T(2,1)*T(1,2)));
+//    ret(0,1) = 1.0_2*(T(0,1) + idet*(T(2,0)*T(1,2) - T(1,0)*T(2,2)));
+//    ret(0,2) = 1.0_2*(T(0,2) + idet*(T(1,0)*T(2,1) - T(2,0)*T(1,1)));
 //    ret(0,3) = T(0,3);
 
-//    ret(1,0) = SCALAR_1_2*(T(1,0) + idet*(T(2,1)*T(0,2) - T(0,1)*T(2,2)));
-//    ret(1,1) = SCALAR_1_2*(T(1,1) + idet*(T(0,0)*T(2,2) - T(2,0)*T(0,2)));
-//    ret(1,2) = SCALAR_1_2*(T(1,2) + idet*(T(2,0)*T(0,1) - T(0,0)*T(2,1)));
+//    ret(1,0) = 1.0_2*(T(1,0) + idet*(T(2,1)*T(0,2) - T(0,1)*T(2,2)));
+//    ret(1,1) = 1.0_2*(T(1,1) + idet*(T(0,0)*T(2,2) - T(2,0)*T(0,2)));
+//    ret(1,2) = 1.0_2*(T(1,2) + idet*(T(2,0)*T(0,1) - T(0,0)*T(2,1)));
 //    ret(1,3) = T(1,3);
 
-//    ret(2,0) = SCALAR_1_2*(T(2,0) + idet*(T(0,1)*T(1,2) - T(1,1)*T(0,2)));
-//    ret(2,1) = SCALAR_1_2*(T(2,1) + idet*(T(1,0)*T(0,2) - T(0,0)*T(1,2)));
-//    ret(2,2) = SCALAR_1_2*(T(2,2) + idet*(T(0,0)*T(1,1) - T(1,0)*T(0,1)));
+//    ret(2,0) = 1.0_2*(T(2,0) + idet*(T(0,1)*T(1,2) - T(1,1)*T(0,2)));
+//    ret(2,1) = 1.0_2*(T(2,1) + idet*(T(1,0)*T(0,2) - T(0,0)*T(1,2)));
+//    ret(2,2) = 1.0_2*(T(2,2) + idet*(T(0,0)*T(1,1) - T(1,0)*T(0,1)));
 //    ret(2,3) = T(2,3);
 
 //    return ret;

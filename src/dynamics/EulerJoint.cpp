@@ -37,8 +37,8 @@
 
 #include "EulerJoint.h"
 
+#include "common/Console.h"
 #include "math/Helpers.h"
-#include "math/Geometry.h"
 #include "math/Geometry.h"
 
 namespace dart {

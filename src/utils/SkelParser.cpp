@@ -43,7 +43,7 @@
 #include <Eigen/Dense>
 
 // Local Files
-#include "common/UtilsCode.h"
+#include "common/Console.h"
 #include "dynamics/BodyNode.h"
 #include "dynamics/ShapeBox.h"
 #include "dynamics/ShapeCylinder.h"

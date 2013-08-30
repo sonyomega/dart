@@ -47,7 +47,7 @@
 #include "simulation/World.h"
 
 using namespace dart;
-using namespace utils;
+using namespace common;
 using namespace math;
 using namespace dynamics;
 using namespace simulation;

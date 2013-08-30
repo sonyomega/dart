@@ -48,7 +48,7 @@ typedef struct {
 #endif
 
 namespace dart {
-namespace utils {
+namespace common {
 
 class Timer;
 
@@ -113,7 +113,7 @@ private:
 
 };
 
-} // namespace utils
+} // namespace common
 } // namespace dart
 
 #endif // #ifndef DART_COMMON_TIMER_H

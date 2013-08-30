@@ -46,7 +46,7 @@ using namespace std;
 //#endif
 
 namespace dart {
-namespace utils {
+namespace common {
 
 double subtractTimes( double endTime, double startTime) {
     return (endTime - startTime) / CLOCKS_PER_SEC;
@@ -161,5 +161,5 @@ void Timer::print( bool _toScreen ){
     else printLog();
 }
 
-} // namespace utils
+} // namespace common
 } // namespace dart

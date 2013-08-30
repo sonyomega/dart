@@ -59,14 +59,6 @@
 namespace dart {
 namespace math {
 
-//typedef Eigen::Vector3d Eigen::Vector3d;
-//typedef Eigen::Vector3d Eigen::Vector3d;
-//typedef Eigen::Vector3d so3;
-//typedef Eigen::Vector3d dso3;
-//typedef Eigen::Matrix3d SO3;
-//typedef Eigen::Isometry3d SE3;
-//typedef Eigen::Vector6d se3;
-//typedef Eigen::Vector6d dse3;
 typedef Eigen::Matrix6d Inertia;
 typedef Eigen::Matrix<double,6,Eigen::Dynamic> Jacobian;
 

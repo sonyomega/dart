@@ -38,7 +38,6 @@
 
 #include <iomanip>
 
-#include "common/Misc.h"
 #include "math/Geometry.h"
 
 using namespace std;

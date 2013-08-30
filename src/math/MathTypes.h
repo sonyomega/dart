@@ -40,40 +40,19 @@
 
 #include <Eigen/Dense>
 #include <Eigen/StdVector>
+//#include <math.h>
 
 //------------------------------------------------------------------------------
 // Defines
 //------------------------------------------------------------------------------
-#define LIE_EPS		 1E-6
-#define SCALAR_0	 0.0
-#define SCALAR_1	 1.0
-#define SCALAR_2	 2.0
-#define SCALAR_3	 3.0
-#define SCALAR_1_2	 0.5
-#define SCALAR_1_3	 0.333333333333333333333
-#define SCALAR_1_4	 0.25
-#define SCALAR_1_6	 0.166666666666666666667
-#define SCALAR_1_8	 0.125
-#define SCALAR_1_12	 0.0833333333333333333333
-#define SCALAR_1_24	 0.0416666666666666666667
-#define SCALAR_1_30	 0.0333333333333333333333
-#define SCALAR_1_60	 0.0166666666666666666667
-#define SCALAR_1_120 0.00833333333333333333333
-#define SCALAR_1_180 0.00555555555555555555556
-#define SCALAR_1_720 0.00138888888888888888889
-#define SCALAR_1_1260 0.000793650793650793650794
-
+// Epsilon definition
+#define M_EPSILON    1.0E-6
+#define LIE_EPS		 1.0E-6
 #define M_PI		 3.14159265358979323846
 #define M_2PI		 6.28318530717958647693		// = 2 * pi
 #define M_PI_SQR	 9.86960440108935861883		// = pi^2
 #define M_RADIAN	 0.0174532925199432957692	// = pi / 180
-#define M_DEGREE	 57.2957795130823208768		// = pi / 180
-#define SCALAR_MAX	 DBL_MAX
-
-#define LIEGROUP_EPS 10e-9
-#define LIEGROUP_PI				(3.1415926535897932384626433832795)	//< $\pi$
-#define LIEGROUP_PI_SQRT2		(2.22144146907918312351)	//< $\frac {pi}{\sqrt{2}}$
-#define LIEGROUP_PI_SQR			(9.86960440108935861883)	//< $\pi^2$
+#define M_DEGREE	 57.2957795130823208768		// = 18 / pi
 
 //------------------------------------------------------------------------------
 // Macros

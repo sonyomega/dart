@@ -36,6 +36,7 @@
 #include <gtest/gtest.h>
 
 #include "common/Paths.h"
+#include "common/Console.h"
 #include "math/Helpers.h"
 //#include "dynamics/FileInfoSkel.hpp"
 #include "dynamics/Skeleton.h"
