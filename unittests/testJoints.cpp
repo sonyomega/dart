@@ -226,9 +226,9 @@ TEST_F(JOINTS, PRISMATIC_JOINT)
 // 2-dof joint
 TEST_F(JOINTS, UNIVERSAL_JOINT)
 {
-    //UniversalJoint univJoint;
+    UniversalJoint univJoint;
 
-    //kinematicsTest(&univJoint);
+    kinematicsTest(&univJoint);
 }
 
 // 3-dof joint
@@ -242,12 +242,12 @@ TEST_F(JOINTS, BALL_JOINT)
 // 3-dof joint
 TEST_F(JOINTS, EULER_JOINT)
 {
-//    EulerJoint eulerJoint;
-//    eulerJoint.setAxisOrder(EulerJoint::AO_XYZ);
-//    kinematicsTest(&eulerJoint);
+    EulerJoint eulerJoint;
+    eulerJoint.setAxisOrder(EulerJoint::AO_XYZ);
+    kinematicsTest(&eulerJoint);
 
-//    eulerJoint.setAxisOrder(EulerJoint::AO_ZYX);
-//    kinematicsTest(&eulerJoint);
+    eulerJoint.setAxisOrder(EulerJoint::AO_ZYX);
+    kinematicsTest(&eulerJoint);
 }
 
 // 3-dof joint

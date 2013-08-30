@@ -103,11 +103,11 @@ inline void UniversalJoint::_updateVelocity()
 inline void UniversalJoint::_updateAcceleration()
 {
     // dS
-    mdS.col(0) = -math::ad(mS.col(0)*mCoordinate[0].get_dq(), math::AdTAngular(mT_ChildBodyToJoint * math::ExpAngular(-mAxis[1]*mCoordinate[1].get_q()), mAxis[0]));
+    mdS.col(0) = -math::ad(mS.col(1)*mCoordinate[1].get_dq(), math::AdTAngular(mT_ChildBodyToJoint * math::ExpAngular(-mAxis[1]*mCoordinate[1].get_q()), mAxis[0]));
     //mdS.col(1) = setZero();
 
     // dV = dS * dq + S * ddq
-    mdV = mdS * get_q() + mS * get_ddq();
+    mdV = mdS * get_dq() + mS * get_ddq();
 }
 
 } // namespace dynamics
