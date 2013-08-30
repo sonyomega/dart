@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     std::cout << "'1'--'4': programmed interaction" << std::endl;
 
     glutInit(&argc, argv);
-    window.initWindow(640, 480, "Boxes");
+    window.initWindow(640, 480, "Test Bed");
     glutMainLoop();
 
     return 0;

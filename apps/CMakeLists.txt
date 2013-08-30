@@ -5,10 +5,8 @@ set_property(DIRECTORY PROPERTY FOLDER Apps)
 foreach(APPDIR
     #meshCollision
     #viewer
-    viewer_DART
     forwardSim
     cubes
-    spheres
     #motionAnalysis
     #pdController
     balance
@@ -18,6 +16,7 @@ foreach(APPDIR
     #hardcodedDesign
     #closedLoop
     #drawRRT
+    testBed
     )
     add_subdirectory(${APPDIR})
     if(WIN32)
