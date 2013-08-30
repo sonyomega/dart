@@ -51,7 +51,6 @@
 namespace dart {
 namespace simulation {
 
-////////////////////////////////////////////////////////////////////////////////
 World::World()
     : integration::IntegrableSystem(),
       mTime(0.0),
@@ -63,7 +62,6 @@ World::World()
     mIndices.push_back(0);
 }
 
-////////////////////////////////////////////////////////////////////////////////
 World::~World()
 {
     delete mIntegrator;
@@ -74,7 +72,8 @@ Eigen::VectorXd World::getState() const
 {
     Eigen::VectorXd state(mIndices.back() * 2);
 
-    for (unsigned int i = 0; i < getNumSkeletons(); i++) {
+    for (unsigned int i = 0; i < getNumSkeletons(); i++)
+    {
         int start = mIndices[i] * 2;
         int size = getSkeleton(i)->getDOF();
         state.segment(start, size) = getSkeleton(i)->get_q();
@@ -86,7 +85,8 @@ Eigen::VectorXd World::getState() const
 
 void World::setState(const Eigen::VectorXd& _newState)
 {
-    for (int i = 0; i < getNumSkeletons(); i++) {
+    for (int i = 0; i < getNumSkeletons(); i++)
+    {
         int start = mIndices[i] * 2;
         int size = getSkeleton(i)->getDOF();
 
@@ -101,7 +101,8 @@ void World::setState(const Eigen::VectorXd& _newState)
 
 void World::setControlInput()
 {
-    for (int i = 0; i < getNumSkeletons(); i++) {
+    for (int i = 0; i < getNumSkeletons(); i++)
+    {
         getSkeleton(i);
     }
 }
@@ -121,7 +122,8 @@ Eigen::VectorXd World::evalDeriv()
     mCollisionHandle->computeConstraintForces();
 
     // set constraint force
-    for (unsigned int i = 0; i < getNumSkeletons(); i++) {
+    for (unsigned int i = 0; i < getNumSkeletons(); i++)
+    {
         // skip immobile objects in forward simulation
         if (mSkeletons[i]->getImmobileState())
             continue;
@@ -160,14 +162,17 @@ Eigen::VectorXd World::evalDeriv()
     return deriv;
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void World::setTimeStep(double _timeStep)
 {
     mTimeStep = _timeStep;
     mCollisionHandle->setTimeStep(_timeStep);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+double World::getTimeStep() const
+{
+    return mTimeStep;
+}
+
 void World::reset()
 {
     for (unsigned int i = 0; i < getNumSkeletons(); ++i)
@@ -178,14 +183,14 @@ void World::reset()
     mFrame = 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
 void World::step()
 {
     mIntegrator->integrate(this, mTimeStep);
 
     for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
-         ++itrSkeleton) {
+         ++itrSkeleton)
+    {
         (*itrSkeleton)->clearInternalForces();
     }
 
@@ -193,19 +198,43 @@ void World::step()
     mFrame++;
 }
 
-////////////////////////////////////////////////////////////////////////////////
+void World::setTime(double _time)
+{
+    mTime = _time;
+}
+
+double World::getTime() const
+{
+    return mTime;
+}
+
+int World::getSimFrames() const
+{
+    return mFrame;
+}
+
+void World::setGravity(const Eigen::Vector3d& _gravity)
+{
+    mGravity = _gravity;
+}
+
+const Eigen::Vector3d&World::getGravity() const
+{
+    return mGravity;
+}
+
 dynamics::Skeleton* World::getSkeleton(int _index) const
 {
     return mSkeletons[_index];
 }
 
-////////////////////////////////////////////////////////////////////////////////
 dynamics::Skeleton* World::getSkeleton(const std::string& _name) const
 {
     for (std::vector<dynamics::Skeleton*>::const_iterator itrSkeleton
          = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
-         ++itrSkeleton) {
+         ++itrSkeleton)
+    {
         if ((*itrSkeleton)->getName() == _name)
             return *itrSkeleton;
     }
@@ -213,7 +242,11 @@ dynamics::Skeleton* World::getSkeleton(const std::string& _name) const
     return NULL;
 }
 
-////////////////////////////////////////////////////////////////////////////////
+int World::getNumSkeletons() const
+{
+    return mSkeletons.size();
+}
+
 void World::addSkeleton(dynamics::Skeleton* _skeleton)
 {
     assert(_skeleton != NULL);
@@ -231,9 +264,20 @@ void World::addSkeleton(dynamics::Skeleton* _skeleton)
     mCollisionHandle->addSkeleton(_skeleton);
 }
 
+int World::getIndex(int _index) const
+{
+    return mIndices[_index];
+}
+
 bool World::checkCollision(bool checkAllCollisions)
 {
-    return mCollisionHandle->getCollisionChecker()->checkCollision(checkAllCollisions, false);
+    return mCollisionHandle->getCollisionChecker()->checkCollision(
+                checkAllCollisions, false);
+}
+
+constraint::ConstraintDynamics*World::getCollisionHandle() const
+{
+    return mCollisionHandle;
 }
 
 } // namespace simulation

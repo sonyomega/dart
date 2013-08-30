@@ -105,31 +105,31 @@ public:
     void step();
 
     /// @brief
-    void setTime(double _time) { mTime = _time; }
+    void setTime(double _time);
 
     /// @brief Get the time step.
     /// @return Time step.
-    double getTime() const { return mTime; }
+    double getTime() const;
 
     /// @brief Get the number of simulated frames.
-    int getSimFrames() const { return mFrame; }
+    int getSimFrames() const;
 
     //--------------------------------------------------------------------------
     // Properties
     //--------------------------------------------------------------------------
     /// @brief .
     /// @param[in] _gravity
-    void setGravity(const Eigen::Vector3d& _gravity) { mGravity = _gravity; }
+    void setGravity(const Eigen::Vector3d& _gravity);
 
     /// @brief .
-    const Eigen::Vector3d& getGravity() const { return mGravity; }
+    const Eigen::Vector3d& getGravity() const;
 
     /// @brief .
     /// @param[in] _timeStep
     void setTimeStep(double _timeStep);
 
     /// @brief Get the time step.
-    double getTimeStep() const { return mTimeStep; }
+    double getTimeStep() const;
 
     //--------------------------------------------------------------------------
     // Structueral Properties
@@ -145,7 +145,7 @@ public:
     dynamics::Skeleton* getSkeleton(const std::string& _name) const;
 
     /// @brief Get the number of skeletons.
-    int getNumSkeletons() const { return mSkeletons.size(); }
+    int getNumSkeletons() const;
 
     /// @brief .
     /// @param[in] _skel
@@ -153,7 +153,7 @@ public:
 
     /// @brief Get the dof index for the indexed skeleton.
     /// @param[in] _index
-    int getIndex(int _index) const { return mIndices[_index]; }
+    int getIndex(int _index) const;
 
     //--------------------------------------------------------------------------
     // Kinematics
@@ -169,8 +169,7 @@ public:
     // Collision
     //--------------------------------------------------------------------------
     /// @brief Get the collision handler.
-    constraint::ConstraintDynamics* getCollisionHandle() const
-    { return mCollisionHandle; }
+    constraint::ConstraintDynamics* getCollisionHandle() const;
 
 protected:
     //--------------------------------------------------------------------------
