@@ -53,8 +53,8 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    UniversalJoint(const math::Axis& _axis0 = math::Axis(1.0, 0.0, 0.0),
-                   const math::Axis& _axis1 = math::Axis(0.0, 1.0, 0.0),
+    UniversalJoint(const Eigen::Vector3d& _axis0 = Eigen::Vector3d(1.0, 0.0, 0.0),
+                   const Eigen::Vector3d& _axis1 = Eigen::Vector3d(0.0, 1.0, 0.0),
                    const std::string& _name = "Universal joint");
 
     /// @brief
@@ -64,10 +64,10 @@ public:
     // Kinematical Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setAxis(int _idx, const math::so3& _axis);
+    void setAxis(int _idx, const Eigen::Vector3d& _axis);
 
     /// @brief
-    const math::so3& getAxis(int _idx) const;
+    const Eigen::Vector3d& getAxis(int _idx) const;
 
     // Documentation is inherited.
     virtual double getPotentialEnergy() const { return 0.0; }
@@ -100,7 +100,7 @@ protected:
     GenCoord mCoordinate[2];
 
     /// @brief Rotational axis.
-    math::Axis mAxis[2];
+    Eigen::Vector3d mAxis[2];
 
 private:
 

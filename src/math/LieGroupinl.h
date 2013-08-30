@@ -19,11 +19,11 @@
 //    return ret;
 //}
 
-inline Vec3 Rotate(const SE3& T, const Vec3& v)
+inline Eigen::Vector3d Rotate(const Eigen::Isometry3d& T, const Eigen::Vector3d& v)
 {
-    return Vec3(T(0,0)*v[0] + T(0,1)*v[1] + T(0,2)*v[2],
-                T(1,0)*v[0] + T(1,1)*v[1] + T(1,2)*v[2],
-                T(2,0)*v[0] + T(2,1)*v[1] + T(2,2)*v[2]);
+    return Eigen::Vector3d(T(0,0)*v[0] + T(0,1)*v[1] + T(0,2)*v[2],
+                           T(1,0)*v[0] + T(1,1)*v[1] + T(1,2)*v[2],
+                           T(2,0)*v[0] + T(2,1)*v[1] + T(2,2)*v[2]);
 }
 
 //inline Vec3 RotateInv(const SE3& T, const Vec3& v)
@@ -40,11 +40,11 @@ inline Vec3 Rotate(const SE3& T, const Vec3& v)
 //                T(0,2)*v[0] + T(1,2)*v[1] + T(2,2)*v[2]);
 //}
 
-inline Vec3 iEulerXYZ(const SE3& T)
+inline Eigen::Vector3d iEulerXYZ(const Eigen::Isometry3d& T)
 {
-    return Vec3(atan2(-T(1,2), T(2,2)),
-                atan2( T(0,2), sqrt(T(1,2)*T(1,2) + T(2,2)*T(2,2))),
-                atan2(-T(0,1), T(0,0)));
+    return Eigen::Vector3d(atan2(-T(1,2), T(2,2)),
+                           atan2( T(0,2), sqrt(T(1,2)*T(1,2) + T(2,2)*T(2,2))),
+                           atan2(-T(0,1), T(0,0)));
 }
 
 //inline Vec3 iEulerZYX(const SE3& T)
@@ -167,13 +167,13 @@ inline Vec3 iEulerXYZ(const SE3& T)
 //}
 
 // re = T*s*Inv(T)
-inline se3 AdT(const SE3& T, const se3& s)
+inline Eigen::Vector6d AdT(const Eigen::Isometry3d& T, const Eigen::Vector6d& s)
 {
     //--------------------------------------------------------------------------
     // w' = R*w
     // v' = p x R*w + R*v
     //--------------------------------------------------------------------------
-    se3 ret = se3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
     double Rw[3] = { T(0,0)*s[0] + T(0,1)*s[1] + T(0,2)*s[2],
                      T(1,0)*s[0] + T(1,1)*s[1] + T(1,2)*s[2],
                      T(2,0)*s[0] + T(2,1)*s[1] + T(2,2)*s[2] };
@@ -187,13 +187,13 @@ inline se3 AdT(const SE3& T, const se3& s)
     return ret;
 }
 
-inline se3 AdR(const SE3& T, const se3& s)
+inline Eigen::Vector6d AdR(const Eigen::Isometry3d& T, const Eigen::Vector6d& s)
 {
     //--------------------------------------------------------------------------
     // w' = R*w
     // v' = R*v
     //--------------------------------------------------------------------------
-    se3 ret = se3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
 
     ret << T(0,0)*s[0] + T(0,1)*s[1] + T(0,2)*s[2],
            T(1,0)*s[0] + T(1,1)*s[1] + T(1,2)*s[2],
@@ -205,13 +205,13 @@ inline se3 AdR(const SE3& T, const se3& s)
     return ret;
 }
 
-inline se3 AdTAngular(const SE3& T, const Axis& s)
+inline Eigen::Vector6d AdTAngular(const Eigen::Isometry3d& T, const Eigen::Vector3d& s)
 {
     //--------------------------------------------------------------------------
     // w' = R*w
     // v' = p x R*w
     //--------------------------------------------------------------------------
-    se3 ret = se3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
     double Rw[3] = { T(0,0)*s[0] + T(0,1)*s[1] + T(0,2)*s[2],
                      T(1,0)*s[0] + T(1,1)*s[1] + T(1,2)*s[2],
                      T(2,0)*s[0] + T(2,1)*s[1] + T(2,2)*s[2] };
@@ -225,13 +225,13 @@ inline se3 AdTAngular(const SE3& T, const Axis& s)
     return ret;
 }
 
-inline se3 AdTLinear(const SE3& T, const Vec3& v)
+inline Eigen::Vector6d AdTLinear(const Eigen::Isometry3d& T, const Eigen::Vector3d& v)
 {
     //--------------------------------------------------------------------------
     // w' = 0
     // v' = R*v
     //--------------------------------------------------------------------------
-    se3 ret = se3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
 
     ret << SCALAR_0, SCALAR_0, SCALAR_0,
            T(0,0)*v[0] + T(0,1)*v[1] + T(0,2)*v[2],
@@ -241,7 +241,7 @@ inline se3 AdTLinear(const SE3& T, const Vec3& v)
     return ret;
 }
 
-inline Jacobian AdTJac(const SE3& T, const Jacobian& J)
+inline Jacobian AdTJac(const Eigen::Isometry3d& T, const Jacobian& J)
 {
     Jacobian AdTJ = Jacobian::Zero(6,J.cols());
 
@@ -283,9 +283,9 @@ inline Jacobian AdTJac(const SE3& T, const Jacobian& J)
 //}
 
 // re = Inv(T)*s*T
-inline se3 AdInvT(const SE3& T, const se3& s)
+inline Eigen::Vector6d AdInvT(const Eigen::Isometry3d& T, const Eigen::Vector6d& s)
 {
-    se3 ret = se3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
     double tmp[3] = {	s[3] + s[1]*T(2,3) - s[2]*T(1,3),
                         s[4] + s[2]*T(0,3) - s[0]*T(2,3),
                         s[5] + s[0]*T(1,3) - s[1]*T(0,3) };
@@ -314,9 +314,9 @@ inline se3 AdInvT(const SE3& T, const se3& s)
 //    return ret;
 //}
 
-inline se3 AdInvRLinear(const SE3& T, const Vec3& v)
+inline Eigen::Vector6d AdInvRLinear(const Eigen::Isometry3d& T, const Eigen::Vector3d& v)
 {
-    se3 ret = se3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
 
     ret << 0.0,
            0.0,
@@ -328,7 +328,7 @@ inline se3 AdInvRLinear(const SE3& T, const Vec3& v)
     return ret;
 }
 
-inline se3 ad(const se3& s1, const se3& s2)
+inline Eigen::Vector6d ad(const Eigen::Vector6d& s1, const Eigen::Vector6d& s2)
 {
     //--------------------------------------------------------------------------
     // ad(s1, s2) = | [w1]    0 | | w2 |
@@ -337,7 +337,7 @@ inline se3 ad(const se3& s1, const se3& s2)
     //            = |          [w1]w2 |
     //              | [v1]w2 + [w1]v2 |
     //--------------------------------------------------------------------------
-    se3 ret = se3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
 
     ret << s1[1]*s2[2] - s1[2]*s2[1],
            s1[2]*s2[0] - s1[0]*s2[2],
@@ -349,9 +349,9 @@ inline se3 ad(const se3& s1, const se3& s2)
     return ret;
 }
 
-inline dse3 dAdT(const SE3& T, const dse3& t)
+inline Eigen::Vector6d dAdT(const Eigen::Isometry3d& T, const Eigen::Vector6d& t)
 {
-    dse3 ret = dse3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
 
     double tmp[3] = {	t[0] - T(1,3)*t[5] + T(2,3)*t[4],
                         t[1] - T(2,3)*t[3] + T(0,3)*t[5],
@@ -382,9 +382,9 @@ inline dse3 dAdT(const SE3& T, const dse3& t)
 //    return ret;
 //}
 
-inline dse3 dAdInvT(const SE3& T, const dse3& t)
+inline Eigen::Vector6d dAdInvT(const Eigen::Isometry3d& T, const Eigen::Vector6d& t)
 {
-    dse3 ret = dse3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
 
     double tmp[3] = { T(0,0)*t[3] + T(0,1)*t[4] + T(0,2)*t[5],
                       T(1,0)*t[3] + T(1,1)*t[4] + T(1,2)*t[5],
@@ -398,9 +398,9 @@ inline dse3 dAdInvT(const SE3& T, const dse3& t)
     return ret;
 }
 
-inline dse3 dAdInvR(const SE3& T, const dse3& t)
+inline Eigen::Vector6d dAdInvR(const Eigen::Isometry3d& T, const Eigen::Vector6d& t)
 {
-    dse3 ret = dse3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
 
     ret << T(0,0)*t[0] + T(0,1)*t[1] + T(0,2)*t[2],
            T(1,0)*t[0] + T(1,1)*t[1] + T(1,2)*t[2],
@@ -426,9 +426,9 @@ inline dse3 dAdInvR(const SE3& T, const dse3& t)
 //    return ret;
 //}
 
-inline SE3 EulerXYZ(const Vec3& angle)
+inline Eigen::Isometry3d EulerXYZ(const Eigen::Vector3d& angle)
 {
-    SE3 ret = SE3::Identity();
+    Eigen::Isometry3d ret = Eigen::Isometry3d::Identity();
 
     double c0 = cos(angle[0]);
     double s0 = sin(angle[0]);
@@ -444,9 +444,9 @@ inline SE3 EulerXYZ(const Vec3& angle)
     return ret;
 }
 
-inline SE3 EulerZYX(const Vec3& angle)
+inline Eigen::Isometry3d EulerZYX(const Eigen::Vector3d& angle)
 {
-    SE3 ret = SE3::Identity();
+    Eigen::Isometry3d ret = Eigen::Isometry3d::Identity();
 
     double ca = cos(angle[0]);
     double sa = sin(angle[0]);
@@ -480,9 +480,9 @@ inline SE3 EulerZYX(const Vec3& angle)
 //    return ret;
 //}
 
-inline SE3 EulerXYZ(const Vec3& angle, const Vec3& pos)
+inline Eigen::Isometry3d EulerXYZ(const Eigen::Vector3d& angle, const Eigen::Vector3d& pos)
 {
-    SE3 T = RotX(angle[0])*RotY(angle[1])*RotZ(angle[2]);
+    Eigen::Isometry3d T = RotX(angle[0])*RotY(angle[1])*RotZ(angle[2]);
 
     T(0,3) = pos[0];
     T(1,3) = pos[1];
@@ -528,9 +528,9 @@ inline SE3 EulerXYZ(const Vec3& angle, const Vec3& pos)
 // R = Exp(w)
 // p = sin(t) / t*v + (t - sin(t)) / t^3*<w, v>*w + (1 - cos(t)) / t^2*(w X v)
 // , when S = (w, v), t = |w|
-inline SE3 Exp(const se3& s)
+inline Eigen::Isometry3d Exp(const Eigen::Vector6d& s)
 {
-    SE3 ret = SE3::Identity();
+    Eigen::Isometry3d ret = Eigen::Isometry3d::Identity();
     double s2[] = { s[0]*s[0], s[1]*s[1], s[2]*s[2] };
     double s3[] = { s[0]*s[1], s[1]*s[2], s[2]*s[0] };
     double theta = sqrt(s2[0] + s2[1] + s2[2]), cos_t = cos(theta), alpha, beta, gamma;
@@ -557,9 +557,9 @@ inline SE3 Exp(const se3& s)
 }
 
 // I + sin(t) / t*[S] + (1 - cos(t)) / t^2*[S]^2, where t = |S|
-inline SE3 ExpAngular(const Axis& S)
+inline Eigen::Isometry3d ExpAngular(const Eigen::Vector3d& S)
 {
-    SE3 ret = SE3::Identity();
+    Eigen::Isometry3d ret = Eigen::Isometry3d::Identity();
     double s2[] = { S[0]*S[0], S[1]*S[1], S[2]*S[2] };
     double s3[] = { S[0]*S[1], S[1]*S[2], S[2]*S[0] };
     double theta = sqrt(s2[0] + s2[1] + s2[2]);
@@ -603,9 +603,9 @@ inline SE3 ExpAngular(const Axis& S)
 //    return ret;
 //}
 
-inline SE3 ExpLinear(const Vec3& s)
+inline Eigen::Isometry3d ExpLinear(const Eigen::Vector3d& s)
 {
-    SE3 ret = SE3::Identity();
+    Eigen::Isometry3d ret = Eigen::Isometry3d::Identity();
 
     ret(0,3) = s[0];
     ret(1,3) = s[1];
@@ -614,9 +614,9 @@ inline SE3 ExpLinear(const Vec3& s)
     return ret;
 }
 
-inline SE3 Inv(const SE3& T)
+inline Eigen::Isometry3d Inv(const Eigen::Isometry3d& T)
 {
-    SE3 ret = SE3::Identity();
+    Eigen::Isometry3d ret = Eigen::Isometry3d::Identity();
 
     ret(0,0) = T(0,0);  ret(0,1) = T(1,0);  ret(0,2) = T(2,0);  ret(0,3) = -T(0,0)*T(0,3) - T(1,0)*T(1,3) - T(2,0)*T(2,3);
     ret(1,0) = T(0,1);  ret(1,1) = T(1,1);  ret(1,2) = T(2,1);  ret(1,3) = -T(0,1)*T(0,3) - T(1,1)*T(1,3) - T(2,1)*T(2,3);
@@ -625,9 +625,9 @@ inline SE3 Inv(const SE3& T)
     return ret;
 }
 
-inline SE3 RotX(double t)
+inline Eigen::Isometry3d RotX(double t)
 {
-    SE3 ret = SE3::Identity();
+    Eigen::Isometry3d ret = Eigen::Isometry3d::Identity();
     double c = cos(t);
     double s = sin(t);
 
@@ -637,9 +637,9 @@ inline SE3 RotX(double t)
     return ret;
 }
 
-inline SE3 RotY(double t)
+inline Eigen::Isometry3d RotY(double t)
 {
-    SE3 ret = SE3::Identity();
+    Eigen::Isometry3d ret = Eigen::Isometry3d::Identity();
     double c = cos(t);
     double s = sin(t);
 
@@ -649,9 +649,9 @@ inline SE3 RotY(double t)
     return ret;
 }
 
-inline SE3 RotZ(double t)
+inline Eigen::Isometry3d RotZ(double t)
 {
-    SE3 ret = SE3::Identity();
+    Eigen::Isometry3d ret = Eigen::Isometry3d::Identity();
     double c = cos(t);
     double s = sin(t);
 
@@ -715,9 +715,9 @@ inline SE3 RotZ(double t)
 //                s2[1]*s1[0] - s2[0]*s1[1]);
 //}
 
-inline dse3 dad(const se3& s, const dse3& t)
+inline Eigen::Vector6d dad(const Eigen::Vector6d& s, const Eigen::Vector6d& t)
 {
-    dse3 ret = dse3::Zero();
+    Eigen::Vector6d ret = Eigen::Vector6d::Zero();
 
     ret << t[1] * s[2] - t[2] * s[1] + t[4] * s[5] - t[5] * s[4],
            t[2] * s[0] - t[0] * s[2] + t[5] * s[3] - t[3] * s[5],
@@ -729,7 +729,7 @@ inline dse3 dad(const se3& s, const dse3& t)
     return ret;
 }
 
-inline Inertia Transform(const SE3& T, const Inertia& AI)
+inline Inertia Transform(const Eigen::Isometry3d& T, const Inertia& AI)
 {
     // operation count: multiplication = 186, addition = 117, subtract = 21
 
@@ -799,7 +799,7 @@ inline Inertia Transform(const SE3& T, const Inertia& AI)
     return ret;
 }
 
-inline bool VerifySE3(const SE3& _T)
+inline bool VerifySE3(const Eigen::Isometry3d& _T)
 {
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 4; j++)
@@ -824,7 +824,7 @@ inline bool VerifySE3(const SE3& _T)
     return true;
 }
 
-inline bool Verifyse3(const se3& _V)
+inline bool Verifyse3(const Eigen::Vector6d& _V)
 {
     for (int i = 0; i < 6; ++i)
         if (_V(i) != _V(i))

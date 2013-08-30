@@ -65,9 +65,9 @@ BallJoint::~BallJoint()
 inline void BallJoint::_updateTransformation()
 {
     // T
-    math::so3 q(mCoordinate[0].get_q(),
-                mCoordinate[1].get_q(),
-                mCoordinate[2].get_q());
+    Eigen::Vector3d q(mCoordinate[0].get_q(),
+                      mCoordinate[1].get_q(),
+                      mCoordinate[2].get_q());
 
     mT = mT_ParentBodyToJoint *
             math::ExpAngular(q) *
@@ -83,9 +83,9 @@ inline void BallJoint::_updateVelocity()
 
     Eigen::Matrix3d J = math::expMapJac(q);
 
-    math::se3 J0;
-    math::se3 J1;
-    math::se3 J2;
+    Eigen::Vector6d J0;
+    Eigen::Vector6d J1;
+    Eigen::Vector6d J2;
 
     J0 << J(0,0), J(0,1), J(0,2), 0, 0, 0;
     J1 << J(1,0), J(1,1), J(1,2), 0, 0, 0;
@@ -111,9 +111,9 @@ inline void BallJoint::_updateAcceleration()
 
     Eigen::Matrix3d dJ = math::expMapJacDot(q, dq);
 
-    math::se3 dJ0;
-    math::se3 dJ1;
-    math::se3 dJ2;
+    Eigen::Vector6d dJ0;
+    Eigen::Vector6d dJ1;
+    Eigen::Vector6d dJ2;
 
     dJ0 << dJ(0,0), dJ(0,1), dJ(0,2), 0, 0, 0;
     dJ1 << dJ(1,0), dJ(1,1), dJ(1,2), 0, 0, 0;

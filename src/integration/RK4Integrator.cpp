@@ -65,29 +65,6 @@ void RK4Integrator::integrate(IntegrableSystem* system, double dt) const {
     system->setState(x + ((1.0/6.0) * (k1 + (2.0 * k2) + (2.0 * k3) + k4)));
 }
 
-// TODO (kasiu): Slow. Needs to be optimized.
-//void RK4Integrator::integrate(dynamics::System* _system, double _dt) const
-//{
-//    // calculates the four weighted deltas
-//    VectorXd deriv = _system->evalDeriv();
-//    VectorXd x = _system->getState();
-//    k1 = deriv * _dt;
-
-//    _system->setState(x + (k1 * 0.5));
-//    deriv = _system->evalDeriv();
-//    k2 = deriv * _dt;
-
-//    _system->setState(x + (k2 * 0.5));
-//    deriv = _system->evalDeriv();
-//    k3 = deriv * _dt;
-
-//    _system->setState(x + k3);
-//    deriv = _system->evalDeriv();
-//    k4 = deriv * _dt;
-
-//    _system->setState(x + ((1.0/6.0) * (k1 + (2.0 * k2) + (2.0 * k3) + k4)));
-//    dterr << "Not implemented.\n";
-//}
 
 } // namespace integration
 } // namespace dart

@@ -45,7 +45,7 @@ using namespace math;
 
 namespace dynamics {
 
-PrismaticJoint::PrismaticJoint(const Vec3& axis, const std::string& _name)
+PrismaticJoint::PrismaticJoint(const Eigen::Vector3d& axis, const std::string& _name)
     : Joint(_name),
       mDirectionVector(axis)
       //mDampingCoefficient(0.0)
@@ -63,15 +63,15 @@ PrismaticJoint::~PrismaticJoint()
 {
 }
 
-void PrismaticJoint::setAxis(const Vec3& _axis)
+void PrismaticJoint::setAxis(const Eigen::Vector3d& _axis)
 {
     assert(_axis.norm() == 1.0);
     mDirectionVector = _axis;
 }
 
-Vec3 PrismaticJoint::getAxisGlobal() const
+Eigen::Vector3d PrismaticJoint::getAxisGlobal() const
 {
-    math::SE3 parentTransf = math::SE3::Identity();
+    Eigen::Isometry3d parentTransf = Eigen::Isometry3d::Identity();
 
     if (this->mParentBody != NULL)
         parentTransf = mParentBody->getWorldTransform();

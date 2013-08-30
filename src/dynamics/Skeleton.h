@@ -108,9 +108,10 @@ public:
     // Structueral Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setWorldTransformation(const math::SE3& _W, bool _updateChilds = true);
+    void setWorldTransformation(const Eigen::Isometry3d& _W, bool _updateChilds = true);
 
-    const math::SE3& getWorldTransformation() const { return mFrame; }
+    /// @brief
+    const Eigen::Isometry3d& getWorldTransformation() const { return mFrame; }
 
     /// @brief
     void addBodyNode(BodyNode* _body, bool _addParentJoint = true);
@@ -192,23 +193,23 @@ public:
 
     // TODO: Not implemented.
     /// @brief
-    math::Vec3 getWorldCOM();
+    Eigen::Vector3d getWorldCOM();
 
     // TODO: Not implemented.
     /// @brief
-    math::Vec3 getVelocityCOMGlobal();
+    Eigen::Vector3d getVelocityCOMGlobal();
 
     // TODO: Not implemented.
     /// @brief
-    math::Vec3 getAccelerationCOMGlobal();
+    Eigen::Vector3d getAccelerationCOMGlobal();
 
     // TODO: Not implemented.
     /// @brief
-    math::dse3 getMomentumGlobal();
+    Eigen::Vector6d getMomentumGlobal();
 
     // TODO: Not implemented.
     /// @brief
-    math::dse3 getMomentumCOM();
+    Eigen::Vector6d getMomentumCOM();
 
     //--------------------------------------------------------------------------
     // Recursive kinematics Algorithms
@@ -324,10 +325,10 @@ protected:
     BodyNode* mRootBodyNode;
 
     /// @brief
-    math::SE3 mFrame;
+    Eigen::Isometry3d mFrame;
 
     /// @brief Constant
-    math::SE3 mToRootBody;
+    Eigen::Isometry3d mToRootBody;
 
     /// @brief
     std::vector<BodyNode*> mBodyNodes;

@@ -78,7 +78,7 @@ inline void EulerJoint::_updateTransformation()
     case AO_XYZ:
     {
         mT = mT_ParentBodyToJoint *
-                math::EulerXYZ(math::Vec3(mCoordinate[0].get_q(),
+                math::EulerXYZ(Eigen::Vector3d(mCoordinate[0].get_q(),
                                           mCoordinate[1].get_q(),
                                           mCoordinate[2].get_q())) *
                 math::Inv(mT_ChildBodyToJoint);
@@ -87,7 +87,7 @@ inline void EulerJoint::_updateTransformation()
     case AO_ZYX:
     {
         mT = mT_ParentBodyToJoint *
-                math::EulerZYX(math::Vec3(mCoordinate[0].get_q(),
+                math::EulerZYX(Eigen::Vector3d(mCoordinate[0].get_q(),
                                           mCoordinate[1].get_q(),
                                           mCoordinate[2].get_q())) *
                 math::Inv(mT_ChildBodyToJoint);
@@ -118,9 +118,9 @@ inline void EulerJoint::_updateVelocity()
     double s1 = sin(q1);
     double s2 = sin(q2);
 
-    math::se3 J0 = math::se3::Zero();
-    math::se3 J1 = math::se3::Zero();
-    math::se3 J2 = math::se3::Zero();
+    Eigen::Vector6d J0 = Eigen::Vector6d::Zero();
+    Eigen::Vector6d J1 = Eigen::Vector6d::Zero();
+    Eigen::Vector6d J2 = Eigen::Vector6d::Zero();
 
     switch (mAxisOrder)
     {
@@ -189,9 +189,9 @@ inline void EulerJoint::_updateAcceleration()
     double s1 = sin(q1);
     double s2 = sin(q2);
 
-    math::se3 dJ0 = math::se3::Zero();
-    math::se3 dJ1 = math::se3::Zero();
-    math::se3 dJ2 = math::se3::Zero();
+    Eigen::Vector6d dJ0 = Eigen::Vector6d::Zero();
+    Eigen::Vector6d dJ1 = Eigen::Vector6d::Zero();
+    Eigen::Vector6d dJ2 = Eigen::Vector6d::Zero();
 
     switch (mAxisOrder)
     {

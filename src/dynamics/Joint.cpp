@@ -49,12 +49,12 @@ Joint::Joint(const std::string& _name)
       mJointType(UNKNOWN),
       mParentBody(NULL),
       mChildBody(NULL),
-      mT_ParentBodyToJoint(math::SE3::Identity()),
-      mT_ChildBodyToJoint(math::SE3::Identity()),
-      mT(math::SE3::Identity()),
-      mV(math::se3::Zero()),
+      mT_ParentBodyToJoint(Eigen::Isometry3d::Identity()),
+      mT_ChildBodyToJoint(Eigen::Isometry3d::Identity()),
+      mT(Eigen::Isometry3d::Identity()),
+      mV(Eigen::Vector6d::Zero()),
       mS(math::Jacobian::Zero(6,0)),
-      mdV(math::se3::Zero()),
+      mdV(Eigen::Vector6d::Zero()),
       mdS(math::Jacobian::Zero(6,0))
 {
 }
@@ -107,14 +107,14 @@ void Joint::setChildBody(BodyNode* _body)
     }
 }
 
-void Joint::setTransformFromParentBody(const math::SE3& _T)
+void Joint::setTransformFromParentBody(const Eigen::Isometry3d& _T)
 {
     assert(math::VerifySE3(_T));
 
     mT_ParentBodyToJoint = _T;
 }
 
-void Joint::setTransformFromChildBody(const math::SE3& _T)
+void Joint::setTransformFromChildBody(const Eigen::Isometry3d& _T)
 {
     assert(math::VerifySE3(_T));
 

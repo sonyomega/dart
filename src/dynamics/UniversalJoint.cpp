@@ -44,8 +44,8 @@
 namespace dart {
 namespace dynamics {
 
-UniversalJoint::UniversalJoint(const math::Axis& _axis0,
-                               const math::Axis& _axis1,
+UniversalJoint::UniversalJoint(const Eigen::Vector3d& _axis0,
+                               const Eigen::Vector3d& _axis1,
                                const std::string& _name)
     : Joint(_name)
 {
@@ -67,7 +67,7 @@ UniversalJoint::~UniversalJoint()
 {
 }
 
-void UniversalJoint::setAxis(int _idx, const math::so3 &_axis)
+void UniversalJoint::setAxis(int _idx, const Eigen::Vector3d& _axis)
 {
     assert(_axis.norm() == 1);
     assert(0 <= _idx && _idx <=1);
@@ -75,7 +75,7 @@ void UniversalJoint::setAxis(int _idx, const math::so3 &_axis)
     mAxis[_idx] = _axis;
 }
 
-const math::so3 &UniversalJoint::getAxis(int _idx) const
+const Eigen::Vector3d& UniversalJoint::getAxis(int _idx) const
 {
     assert(0 <= _idx && _idx <=1);
 

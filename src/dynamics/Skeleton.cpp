@@ -57,7 +57,7 @@ Skeleton::Skeleton(const std::string& _name)
       mTotalMass(0.0),
       mImmobile(false),
       mJointLimit(true),
-      mFrame(math::SE3::Identity())
+      mFrame(Eigen::Isometry3d::Identity())
 {
 }
 
@@ -65,7 +65,7 @@ Skeleton::~Skeleton()
 {
 }
 
-void Skeleton::setWorldTransformation(const math::SE3& _W, bool _updateChilds)
+void Skeleton::setWorldTransformation(const Eigen::Isometry3d& _W, bool _updateChilds)
 {
     mFrame = _W;
 
@@ -522,7 +522,7 @@ double Skeleton::getPotentialEnergy() const
     return potentialEnergy;
 }
 
-math::Vec3 Skeleton::getWorldCOM()
+Eigen::Vector3d Skeleton::getWorldCOM()
 {
     Vector3d com(0, 0, 0);
 
@@ -538,36 +538,36 @@ math::Vec3 Skeleton::getWorldCOM()
     return com / mTotalMass;
 }
 
-math::Vec3 Skeleton::getVelocityCOMGlobal()
+Eigen::Vector3d Skeleton::getVelocityCOMGlobal()
 {
-    math::Vec3 p(0,0,0);
+    Eigen::Vector3d p(0,0,0);
 
     // TODO: Not implemented.
 
     return p;
 }
 
-math::Vec3 Skeleton::getAccelerationCOMGlobal()
+Eigen::Vector3d Skeleton::getAccelerationCOMGlobal()
 {
-    math::Vec3 p(0,0,0);
+    Eigen::Vector3d p(0,0,0);
 
     // TODO: Not implemented.
 
     return p;
 }
 
-math::dse3 Skeleton::getMomentumGlobal()
+Eigen::Vector6d Skeleton::getMomentumGlobal()
 {
-    math::dse3 M = math::dse3::Zero();
+    Eigen::Vector6d M = Eigen::Vector6d::Zero();
 
     // TODO: Not implemented.
 
     return M;
 }
 
-math::dse3 Skeleton::getMomentumCOM()
+Eigen::Vector6d Skeleton::getMomentumCOM()
 {
-    math::dse3 M = math::dse3::Zero();
+    Eigen::Vector6d M = Eigen::Vector6d::Zero();
 
     // TODO: Not implemented.
 

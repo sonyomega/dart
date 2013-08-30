@@ -105,20 +105,20 @@ public:
     JointType getJointType() const { return mJointType; }
 
     /// @brief
-    const math::SE3& getLocalTransformation() const { return mT; }
+    const Eigen::Isometry3d& getLocalTransformation() const { return mT; }
 
     /// @brief
     const math::Jacobian& getLocalJacobian() const { return mS; }
 
     /// @brief
-    const math::se3& getLocalVelocity() const { return mV; }
+    const Eigen::Vector6d& getLocalVelocity() const { return mV; }
 
     /// @brief
     const math::Jacobian& getLocalJacobianFirstDerivative() const
     { return mdS; }
 
     /// @brief
-    const math::se3& getLocalAcceleration() const { return mdV; }
+    const Eigen::Vector6d& getLocalAcceleration() const { return mdV; }
 
     //--------------------------------------------------------------------------
     // Structueral Properties
@@ -136,10 +136,10 @@ public:
     void setChildBody(BodyNode* _body);
 
     /// @brief
-    void setTransformFromParentBody(const math::SE3& _T);
+    void setTransformFromParentBody(const Eigen::Isometry3d& _T);
 
     /// @brief
-    void setTransformFromChildBody(const math::SE3& _T);
+    void setTransformFromChildBody(const Eigen::Isometry3d& _T);
 
     /// @brief
     DEPRECATED BodyNode* getParentNode() const { return mParentBody; }
@@ -150,11 +150,11 @@ public:
     BodyNode* getChildBody() const { return mChildBody; }
 
     /// @brief
-    const math::SE3& getLocalTransformationFromParentBody() const
+    const Eigen::Isometry3d& getLocalTransformationFromParentBody() const
     { return mT_ParentBodyToJoint; }
 
     /// @brief
-    const math::SE3& getLocalTransformationFromChildBody() const
+    const Eigen::Isometry3d& getLocalTransformationFromChildBody() const
     { return mT_ChildBodyToJoint; }
 
     // TODO: Not implemented.
@@ -220,25 +220,25 @@ protected:
     BodyNode* mChildBody;
 
     /// @brief
-    math::SE3 mT_ParentBodyToJoint;
+    Eigen::Isometry3d mT_ParentBodyToJoint;
 
     /// @brief
-    math::SE3 mT_ChildBodyToJoint;
+    Eigen::Isometry3d mT_ChildBodyToJoint;
 
     //--------------------------------------------------------------------------
     // Kinematics variables
     //--------------------------------------------------------------------------
     /// @brief Local transformation.
-    math::SE3 mT;
+    Eigen::Isometry3d mT;
 
     /// @brief Local generalized body velocity.
-    math::se3 mV;
+    Eigen::Vector6d mV;
 
     /// @brief Local Jacobian.
     math::Jacobian mS;
 
     /// @brief Local generalized body acceleration.
-    math::se3 mdV;
+    Eigen::Vector6d mdV;
 
     /// @brief Time derivative of local Jacobian.
     math::Jacobian mdS;

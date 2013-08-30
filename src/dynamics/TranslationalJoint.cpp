@@ -63,7 +63,7 @@ TranslationalJoint::~TranslationalJoint()
 void TranslationalJoint::_updateTransformation()
 {
     // T
-    math::Vec3 v(mCoordinate[0].get_q(),
+    Eigen::Vector3d v(mCoordinate[0].get_q(),
                  mCoordinate[1].get_q(),
                  mCoordinate[2].get_q());
 
@@ -75,9 +75,9 @@ void TranslationalJoint::_updateTransformation()
 void TranslationalJoint::_updateVelocity()
 {
     // S
-    math::se3 J0;
-    math::se3 J1;
-    math::se3 J2;
+    Eigen::Vector6d J0;
+    Eigen::Vector6d J1;
+    Eigen::Vector6d J2;
 
     J0 << 0, 0, 0, 1, 0, 0;
     J1 << 0, 0, 0, 0, 1, 0;

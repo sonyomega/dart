@@ -429,7 +429,7 @@ TEST(DYNAMICS, INERTIA)
         double Ixy = random(0.1,max);
         double Ixz = random(0.1,max);
         double Iyz = random(0.1,max);
-        math::Vec3 com(random(min,max), random(min,max), random(min,max));
+        Eigen::Vector3d com(random(min,max), random(min,max), random(min,max));
         double mass = random(0.1,max);
 
         // G = | I - m * [r] * [r]   m * [r] |

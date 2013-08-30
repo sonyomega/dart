@@ -62,9 +62,9 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
     char v6 = 'd';
     Eigen::Vector2d v7 = Eigen::Vector2d::Ones();
     Eigen::Vector3d v8 = Eigen::Vector3d::Ones();
-    math::so3 v9 = math::so3::Identity();
+    //Eigen::Vector3d v9 = Eigen::Vector3d::Ones();
     //math::SO3 v10;
-    math::SE3 v11 = math::SE3::Identity();
+    Eigen::Isometry3d v11 = Eigen::Isometry3d::Identity();
 
     std::string str1 = toString(v1);
     std::string str2 = toString(v2);
@@ -74,7 +74,7 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
     std::string str6 = toString(v6);
     std::string str7 = toString(v7);
     std::string str8 = toString(v8);
-    std::string str9 = toString(v9);
+    //std::string str9 = toString(v9);
     //std::string str10 = toString(v10);
     std::string str11 = toString(v11);
 
@@ -86,9 +86,9 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
     char c = toChar(str6);
     Eigen::Vector2d vec2 = toVector2d(str7);
     Eigen::Vector3d vec3 = toVector3d(str8);
-    math::so3 valso3 = toVector3d(str9);
+    //Eigen::Vector3d valso3 = toVector3d(str9);
     //math::SO3 valSO3 = toSO3(str10);
-    math::SE3 valSE3 = toSE3(str11);
+    Eigen::Isometry3d valSE3 = toSE3(str11);
 
     EXPECT_EQ(b, v1);
     EXPECT_EQ(i, v2);
@@ -100,7 +100,7 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
         EXPECT_EQ(vec2[i], v7[i]);
     }
     EXPECT_EQ(vec3, v8);
-    EXPECT_EQ(valso3, v9);
+    //EXPECT_EQ(valso3, v9);
     //EXPECT_EQ(valSO3, v10);
     for (int i = 0; i < 4; ++i)
         for (int j = 0; j < 4; ++j)

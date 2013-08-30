@@ -94,7 +94,7 @@ std::string toString(const Eigen::Vector3d& _v);
 //std::string toString(const math::Vec3& _v);
 //std::string toString(const math::so3& _v);
 //std::string toString(const math::SO3& _v);
-std::string toString(const math::SE3& _v);
+std::string toString(const Eigen::Isometry3d& _v);
 
 bool            toBool(const std::string& _str);
 int             toInt(const std::string& _str);
@@ -108,7 +108,7 @@ Eigen::Vector6d toVector6d(const std::string& _str);
 //math::Vec3      toVector3d(const std::string& _str);
 //math::so3       toVector3d(const std::string& _str);
 //math::SO3       toSO3(const std::string& _str);
-math::SE3       toSE3(const std::string& _str);
+Eigen::Isometry3d       toSE3(const std::string& _str);
 
 std::string getValueString(tinyxml2::XMLElement* _parentElement,
                     const std::string& _name);
@@ -140,16 +140,16 @@ Eigen::Vector3d getValueVector3d(tinyxml2::XMLElement* _parentElement,
 Eigen::Vector6d getValueVector6d(tinyxml2::XMLElement* _parentElement,
                                  const std::string& _name);
 
-math::Vec3 getValueVec3(tinyxml2::XMLElement* _parentElement,
+Eigen::Vector3d getValueVec3(tinyxml2::XMLElement* _parentElement,
                                  const std::string& _name);
 
-math::so3 getValueso3(tinyxml2::XMLElement* _parentElement,
-                      const std::string& _name);
+//math::so3 getValueso3(tinyxml2::XMLElement* _parentElement,
+//                      const std::string& _name);
 
 //math::SO3 getValueSO3(tinyxml2::XMLElement* _parentElement,
 //                      const std::string& _name);
 
-math::SE3 getValueSE3(tinyxml2::XMLElement* _parentElement,
+Eigen::Isometry3d getValueSE3(tinyxml2::XMLElement* _parentElement,
                       const std::string& _name);
 
 bool hasElement(tinyxml2::XMLElement* _parentElement,

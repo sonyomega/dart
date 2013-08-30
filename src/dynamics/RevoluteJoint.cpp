@@ -42,7 +42,7 @@
 namespace dart {
 namespace dynamics {
 
-RevoluteJoint::RevoluteJoint(const math::Axis& axis, const std::string& _name)
+RevoluteJoint::RevoluteJoint(const Eigen::Vector3d& axis, const std::string& _name)
     : Joint(_name),
       mAxis(axis)
       //mDampingCoefficient(0.0)
@@ -61,15 +61,15 @@ RevoluteJoint::~RevoluteJoint()
 {
 }
 
-void RevoluteJoint::setAxis(const math::so3& _axis)
+void RevoluteJoint::setAxis(const Eigen::Vector3d& _axis)
 {
     assert(_axis.norm() == 1);
     mAxis = _axis;
 }
 
-math::so3 RevoluteJoint::getAxisGlobal() const
+Eigen::Vector3d RevoluteJoint::getAxisGlobal() const
 {
-    math::SE3 parentTransf = math::SE3::Identity();
+    Eigen::Isometry3d parentTransf = Eigen::Isometry3d::Identity();
 
     if (this->mParentBody != NULL)
         parentTransf = mParentBody->getWorldTransform();

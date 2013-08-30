@@ -53,7 +53,7 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    RevoluteJoint(const math::Axis& axis = math::Axis(1.0, 0.0, 0.0),
+    RevoluteJoint(const Eigen::Vector3d& axis = Eigen::Vector3d(1.0, 0.0, 0.0),
                   const std::string& _name = "Revolute joint");
 
     /// @brief
@@ -63,13 +63,13 @@ public:
     // Kinematical Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setAxis(const math::so3& _axis);
+    void setAxis(const Eigen::Vector3d& _axis);
 
     /// @brief
-    const math::so3& getAxis() const { return mAxis; }
+    const Eigen::Vector3d& getAxis() const { return mAxis; }
 
     /// @brief
-    math::so3 getAxisGlobal() const;
+    Eigen::Vector3d getAxisGlobal() const;
 
 //    /// @brief
 //    void setDampingCoefficient(double _c) { mDampingCoefficient = _c; }
@@ -108,7 +108,7 @@ protected:
     GenCoord mCoordinate;
 
     /// @brief Rotational axis.
-    math::Axis mAxis;
+    Eigen::Vector3d mAxis;
 
 //    /// @brief Daping coefficient of revolute joint.
 //    double mDampingCoefficient;

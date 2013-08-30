@@ -97,25 +97,25 @@ void JOINTS::kinematicsTest(Joint* _joint)
         if (_joint->getDOF() == 0)
             return;
 
-        SE3 T = _joint->getLocalTransformation();
-        se3 V = _joint->getLocalVelocity();
+        Eigen::Isometry3d T = _joint->getLocalTransformation();
+        Eigen::Vector6d V = _joint->getLocalVelocity();
         Jacobian J = _joint->getLocalJacobian();
-        se3 dV = _joint->getLocalAcceleration();
+        Eigen::Vector6d dV = _joint->getLocalAcceleration();
         Jacobian dJ = _joint->getLocalJacobianFirstDerivative();
 
         //--------------------------------------------------------------------------
         // Test V == J * dq
         //--------------------------------------------------------------------------
-        se3 Jdq = J * _joint->get_dq();
+        Eigen::Vector6d Jdq = J * _joint->get_dq();
         for (int i = 0; i < 6; ++i)
             EXPECT_NEAR(V(i), Jdq(i), JOINT_TOL);
 
         //--------------------------------------------------------------------------
         // Test dV == dJ * dq + J * ddq
         //--------------------------------------------------------------------------
-        se3 dJdq = dJ * _joint->get_dq();
-        se3 Jddq = J * _joint->get_ddq();
-        se3 dJdq_Jddq = dJdq + Jddq;
+        Eigen::Vector6d dJdq = dJ * _joint->get_dq();
+        Eigen::Vector6d Jddq = J * _joint->get_ddq();
+        Eigen::Vector6d dJdq_Jddq = dJdq + Jddq;
         for (int i = 0; i < 6; ++i)
             EXPECT_NEAR(dV(i), dJdq_Jddq(i), JOINT_TOL);
 
@@ -130,17 +130,17 @@ void JOINTS::kinematicsTest(Joint* _joint)
             Eigen::VectorXd q_a = q;
             _joint->set_q(q_a);
             _joint->updateKinematics();
-            SE3 T_a = _joint->getLocalTransformation();
+            Eigen::Isometry3d T_a = _joint->getLocalTransformation();
 
             // b
             Eigen::VectorXd q_b = q;
             q_b(i) += dt;
             _joint->set_q(q_b);
             _joint->updateKinematics();
-            SE3 T_b = _joint->getLocalTransformation();
+            Eigen::Isometry3d T_b = _joint->getLocalTransformation();
 
             //
-            SE3 Tinv_a = Inv(T_a);
+            Eigen::Isometry3d Tinv_a = Inv(T_a);
             Eigen::Matrix4d Tinv_a_eigen = Tinv_a.matrix();
 
             // dTdq
@@ -151,7 +151,7 @@ void JOINTS::kinematicsTest(Joint* _joint)
 
             // J(i)
             Eigen::Matrix4d Ji_4x4matrix_eigen = Tinv_a_eigen * dTdq_eigen;
-            se3 Ji;
+            Eigen::Vector6d Ji;
             Ji[0] = Ji_4x4matrix_eigen(2,1);
             Ji[1] = Ji_4x4matrix_eigen(0,2);
             Ji[2] = Ji_4x4matrix_eigen(1,0);

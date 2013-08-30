@@ -153,7 +153,7 @@ public:
                             double _Ixy, double _Ixz, double _Iyz);
 
     /// @brief
-    void setLocalCOM(const math::Vec3& _com);
+    void setLocalCOM(const Eigen::Vector3d& _com);
 
     /// @brief
     const Eigen::Vector3d& getLocalCOM() const;
@@ -257,49 +257,49 @@ public:
     /// This function should be called only in modeling process. The
     /// transformation of this link will be updating by dynamics algorithms
     /// automatically.
-    void setWorldTransform(const math::SE3& _W);
+    void setWorldTransform(const Eigen::Isometry3d& _W);
 
     /// @brief Transformation from the local coordinates of this body node to
     /// the world coordinates.
-    const math::SE3& getWorldTransform() const { return mW; }
+    const Eigen::Isometry3d& getWorldTransform() const { return mW; }
 
     /// @brief Transformation from the world coordinates to the local
     /// coordinates of this body node.
-    math::SE3 getWorldInvTransform() const { return math::Inv(mW); }
+    Eigen::Isometry3d getWorldInvTransform() const { return math::Inv(mW); }
 
     /// @brief Given a 3D vector lp in the local coordinates of this body node.
     /// @return The world coordinates of this vector
     Eigen::Vector3d evalWorldPos(const Eigen::Vector3d& _lp) const;
 
     /// @brief
-    const math::se3& getVelocityBody() const { return mV; }
+    const Eigen::Vector6d& getVelocityBody() const { return mV; }
 
     /// @brief
-    math::se3 getVelocityWorld() const;
+    Eigen::Vector6d getVelocityWorld() const;
 
     /// @brief
-    math::se3 getVelocityWorldAtCOG() const;
+    Eigen::Vector6d getVelocityWorldAtCOG() const;
 
     /// @breif
-    math::se3 getVelocityWorldAtPoint(const math::Vec3& _pointBody) const;
+    Eigen::Vector6d getVelocityWorldAtPoint(const Eigen::Vector3d& _pointBody) const;
 
     /// @breif
-    math::se3 getVelocityWorldAtFrame(const math::SE3& _T) const;
+    Eigen::Vector6d getVelocityWorldAtFrame(const Eigen::Isometry3d& _T) const;
 
     /// @brief
-    const math::se3& getAcceleration() const { return mdV; }
+    const Eigen::Vector6d& getAcceleration() const { return mdV; }
 
     /// @brief
-    math::se3 getAccelerationWorld() const;
+    Eigen::Vector6d getAccelerationWorld() const;
 
     /// @brief
-    math::se3 getAccelerationWorldAtCOG() const;
+    Eigen::Vector6d getAccelerationWorldAtCOG() const;
 
     /// @breif
-    math::se3 getAccelerationWorldAtPoint(const math::Vec3& _pointBody) const;
+    Eigen::Vector6d getAccelerationWorldAtPoint(const Eigen::Vector3d& _pointBody) const;
 
     /// @breif
-    math::se3 getAccelerationWorldAtFrame(const math::SE3& _T) const;
+    Eigen::Vector6d getAccelerationWorldAtFrame(const Eigen::Isometry3d& _T) const;
 
     /// @brief
     const math::Jacobian& getJacobianBody() const { return mBodyJacobian; }
@@ -308,13 +308,13 @@ public:
     math::Jacobian getJacobianWorld() const;
 
     /// @brief Get body Jacobian at contact point.
-    math::Jacobian getJacobianWorldAtPoint(const math::Vec3& r_world) const;
+    math::Jacobian getJacobianWorldAtPoint(const Eigen::Vector3d& r_world) const;
 
     // TODO: Speed up here.
     // TODO: Eigne?
     /// @brief
     Eigen::MatrixXd getJacobianWorldAtPoint_LinearPartOnly(
-            const math::Vec3& r_world) const;
+            const Eigen::Vector3d& r_world) const;
 
     /// @brief
     void setColliding(bool _colliding) { mColliding = _colliding; }
@@ -323,10 +323,10 @@ public:
     bool getColliding() { return mColliding; }
 
     /// @brief
-    void setExternalForceLocal(const math::dse3& _FextLocal);
+    void setExternalForceLocal(const Eigen::Vector6d& _FextLocal);
 
     /// @brief
-    void setExternalForceGlobal(const math::dse3& _FextWorld);
+    void setExternalForceGlobal(const Eigen::Vector6d& _FextWorld);
 
     /// @brief
     void setExternalForceLocal(const Eigen::Vector3d& _posLocal,
@@ -355,10 +355,10 @@ public:
     void clearExternalForces();
 
     /// @brief
-    void addExternalForceLocal(const math::dse3& _FextLocal);
+    void addExternalForceLocal(const Eigen::Vector6d& _FextLocal);
 
     /// @brief
-    void addExternalForceGlobal(const math::dse3& _FextWorld);
+    void addExternalForceGlobal(const Eigen::Vector6d& _FextWorld);
 
     /// @brief apply linear Cartesian forces to this node.
     ///
@@ -373,13 +373,13 @@ public:
                                bool _isLinearForceLocal = false);
 
     /// @brief
-    const math::dse3& getExternalForceLocal() const;
+    const Eigen::Vector6d& getExternalForceLocal() const;
 
     /// @brief
-    math::dse3 getExternalForceGlobal() const;
+    Eigen::Vector6d getExternalForceGlobal() const;
 
     /// @brief
-    const math::dse3& getBodyForce() const { return mF; }
+    const Eigen::Vector6d& getBodyForce() const { return mF; }
 
     /// @brief
     double getKineticEnergy() const { return 0.5 * mV.dot(mI * mV); }
@@ -546,7 +546,7 @@ protected:
     // Dynamical Properties
     //--------------------------------------------------------------------------
     /// @brief World transformation.
-    math::SE3 mW;
+    Eigen::Isometry3d mW;
 
     /// @brief
     math::Jacobian mBodyJacobian;
@@ -555,30 +555,30 @@ protected:
     math::Jacobian mBodyJacobianDeriv;
 
     /// @brief Generalized body velocity w.r.t. body frame.
-    math::se3 mV;
+    Eigen::Vector6d mV;
 
     /// @brief
-    math::se3 mEta;
+    Eigen::Vector6d mEta;
 
     /// @brief Generalized body acceleration w.r.t. body frame.
-    math::se3 mdV;
+    Eigen::Vector6d mdV;
 
     /// @brief Generalized body force w.r.t. body frame.
-    math::dse3 mF;
+    Eigen::Vector6d mF;
 
     /// @brief
-    math::dse3 mFext;
+    Eigen::Vector6d mFext;
 
     /// @brief
-    math::dse3 mFgravity;
+    Eigen::Vector6d mFgravity;
 
     math::Inertia mAI;      ///< Articulated inertia
-    math::dse3 mB;          ///< Bias force
+    Eigen::Vector6d mB;          ///< Bias force
     Eigen::MatrixXd mAI_S;
     Eigen::MatrixXd mPsi;
     math::Inertia mPi;
     Eigen::VectorXd mAlpha;
-    math::dse3 mBeta;
+    Eigen::Vector6d mBeta;
 
     /// @brief
     Eigen::MatrixXd mM;

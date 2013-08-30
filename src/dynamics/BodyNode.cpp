@@ -66,17 +66,17 @@ BodyNode::BodyNode(const std::string& _name)
       mParentBodyNode(NULL),
       mChildBodyNodes(std::vector<BodyNode*>(0)),
       mGravityMode(true),
-      mCenterOfMass(math::Vec3::Zero()),
+      mCenterOfMass(Eigen::Vector3d::Zero()),
       mI(Eigen::Matrix6d::Identity()),
-      mW(math::SE3::Identity()),
-      mV(math::se3::Zero()),
-      mEta(math::se3::Zero()),
-      mdV(math::se3::Zero()),
-      mF(math::dse3::Zero()),
-      mFext(math::dse3::Zero()),
-      mFgravity(math::dse3::Zero()),
-      mB(math::dse3::Zero()),
-      mBeta(math::dse3::Zero()),
+      mW(Eigen::Isometry3d::Identity()),
+      mV(Eigen::Vector6d::Zero()),
+      mEta(Eigen::Vector6d::Zero()),
+      mdV(Eigen::Vector6d::Zero()),
+      mF(Eigen::Vector6d::Zero()),
+      mFext(Eigen::Vector6d::Zero()),
+      mFgravity(Eigen::Vector6d::Zero()),
+      mB(Eigen::Vector6d::Zero()),
+      mBeta(Eigen::Vector6d::Zero()),
       mRestitutionCoeff(0.5),
       mFrictionCoeff(0.4),
       mID(BodyNode::msBodyNodeCount++)
@@ -182,7 +182,7 @@ GenCoord* BodyNode::getLocalDof(int _idx) const
     return mParentJoint->getDof(_idx);
 }
 
-void BodyNode::setWorldTransform(const math::SE3 &_W)
+void BodyNode::setWorldTransform(const Eigen::Isometry3d &_W)
 {
     assert(math::VerifySE3(_W));
 
@@ -194,54 +194,54 @@ Eigen::Vector3d BodyNode::evalWorldPos(const Eigen::Vector3d& _lp) const
     return math::xformHom(mW, _lp);
 }
 
-math::se3 BodyNode::getVelocityWorld() const
+Eigen::Vector6d BodyNode::getVelocityWorld() const
 {
     //return math::Rotate(mW, mV);
     return math::AdR(mW, mV);
 }
 
-math::se3 BodyNode::getVelocityWorldAtCOG() const
+Eigen::Vector6d BodyNode::getVelocityWorldAtCOG() const
 {
-    math::SE3 worldFrameAtCOG = mW;
+    Eigen::Isometry3d worldFrameAtCOG = mW;
     worldFrameAtCOG.translation() = math::Rotate(mW, -mCenterOfMass);
     return math::AdT(worldFrameAtCOG, mV);
 }
 
-math::se3 BodyNode::getVelocityWorldAtPoint(const math::Vec3& _pointBody) const
+Eigen::Vector6d BodyNode::getVelocityWorldAtPoint(const Eigen::Vector3d& _pointBody) const
 {
-    math::SE3 worldFrameAtPoint = mW;
+    Eigen::Isometry3d worldFrameAtPoint = mW;
     worldFrameAtPoint.translation() = math::Rotate(mW, -_pointBody);
     return math::AdT(worldFrameAtPoint, mV);
 }
 
-math::se3 BodyNode::getVelocityWorldAtFrame(const math::SE3& _T) const
+Eigen::Vector6d BodyNode::getVelocityWorldAtFrame(const Eigen::Isometry3d& _T) const
 {
     assert(math::VerifySE3(_T));
 
     return math::AdT(math::Inv(_T) * mW, mV);
 }
 
-math::se3 BodyNode::getAccelerationWorld() const
+Eigen::Vector6d BodyNode::getAccelerationWorld() const
 {
     //return math::Rotate(mW, mdV);
     return math::AdR(mW, mdV);
 }
 
-math::se3 BodyNode::getAccelerationWorldAtCOG() const
+Eigen::Vector6d BodyNode::getAccelerationWorldAtCOG() const
 {
-    math::SE3 worldFrameAtCOG = mW;
+    Eigen::Isometry3d worldFrameAtCOG = mW;
     worldFrameAtCOG.translation() = math::Rotate(mW, -mCenterOfMass);
     return math::AdT(worldFrameAtCOG, mdV);
 }
 
-math::se3 BodyNode::getAccelerationWorldAtPoint(const math::Vec3& _pointBody) const
+Eigen::Vector6d BodyNode::getAccelerationWorldAtPoint(const Eigen::Vector3d& _pointBody) const
 {
-    math::SE3 worldFrameAtPoint = mW;
+    Eigen::Isometry3d worldFrameAtPoint = mW;
     worldFrameAtPoint.translation() = math::Rotate(mW, -_pointBody);
     return math::AdT(worldFrameAtPoint, mdV);
 }
 
-math::se3 BodyNode::getAccelerationWorldAtFrame(const math::SE3& _T) const
+Eigen::Vector6d BodyNode::getAccelerationWorldAtFrame(const Eigen::Isometry3d& _T) const
 {
     assert(math::VerifySE3(_T));
 
@@ -254,7 +254,7 @@ math::Jacobian BodyNode::getJacobianWorld() const
 }
 
 math::Jacobian BodyNode::getJacobianWorldAtPoint(
-        const math::Vec3& r_world) const
+        const Eigen::Vector3d& r_world) const
 {
     //--------------------------------------------------------------------------
     // Jb                : body jacobian
@@ -274,7 +274,7 @@ math::Jacobian BodyNode::getJacobianWorldAtPoint(
 }
 
 Eigen::MatrixXd BodyNode::getJacobianWorldAtPoint_LinearPartOnly(
-        const math::Vec3& r_world) const
+        const Eigen::Vector3d& r_world) const
 {
     //--------------------------------------------------------------------------
     // Jb                : body jacobian
@@ -481,7 +481,7 @@ void BodyNode::updateAcceleration(bool _updateJacobianDeriv)
         for (int i = 0; i < numParentDOFs; ++i)
         {
             assert(mParentJoint);
-            math::se3 dJi = math::AdInvT(mParentJoint->getLocalTransformation(),
+            Eigen::Vector6d dJi = math::AdInvT(mParentJoint->getLocalTransformation(),
                                          mParentBodyNode->mBodyJacobianDeriv.col(i));
             mBodyJacobianDeriv.col(i) = dJi;
         }
@@ -517,7 +517,7 @@ void BodyNode::setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
     _updateGeralizedInertia();
 }
 
-void BodyNode::setLocalCOM(const math::Vec3& _com)
+void BodyNode::setLocalCOM(const Eigen::Vector3d& _com)
 {
     mCenterOfMass = _com;
 
@@ -571,12 +571,12 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
 //    mContacts.push_back(pair<Vector3d, Vector3d>(pos, force));
 }
 
-void BodyNode::addExternalForceLocal(const math::dse3& _FextLocal)
+void BodyNode::addExternalForceLocal(const Eigen::Vector6d& _FextLocal)
 {
     mFext += _FextLocal;
 }
 
-void BodyNode::addExternalForceGlobal(const math::dse3& _FextWorld)
+void BodyNode::addExternalForceGlobal(const Eigen::Vector6d& _FextWorld)
 {
 //    mFext += math::dAdT(mW, _FextWorld);
 }
@@ -608,15 +608,15 @@ void BodyNode::addExternalForceLocal(
 //    mFext += contactForce;
 }
 
-const math::dse3& BodyNode::getExternalForceLocal() const
+const Eigen::Vector6d& BodyNode::getExternalForceLocal() const
 {
     return mFext;
 }
 
-math::dse3 BodyNode::getExternalForceGlobal() const
+Eigen::Vector6d BodyNode::getExternalForceGlobal() const
 {
     //return math::dAdInvT(mW, mFext);
-    return math::dse3();
+    return Eigen::Vector6d();
 }
 
 void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
@@ -678,7 +678,7 @@ void BodyNode::updateArticulatedInertia()
 void BodyNode::updateBiasForce(const Eigen::Vector3d& _gravity)
 {
     if (mGravityMode == true)
-        mFgravity = mI * math::AdInvRLinear(mW, math::Vec3(_gravity));
+        mFgravity = mI * math::AdInvRLinear(mW, Eigen::Vector3d(_gravity));
     else
         mFgravity.setZero();
 

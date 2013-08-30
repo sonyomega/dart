@@ -53,7 +53,7 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    PrismaticJoint(const math::Vec3& axis = math::Vec3(1.0, 0.0, 0.0),
+    PrismaticJoint(const Eigen::Vector3d& axis = Eigen::Vector3d(1.0, 0.0, 0.0),
                    const std::string& _name = "Prismatic joint");
 
     /// @brief
@@ -63,13 +63,13 @@ public:
     // Kinematical Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setAxis(const math::Vec3& _axis);
+    void setAxis(const Eigen::Vector3d& _axis);
 
     /// @brief
-    const math::Vec3& getAxis() const { return mDirectionVector; }
+    const Eigen::Vector3d& getAxis() const { return mDirectionVector; }
 
     /// @brief
-    math::Vec3 getAxisGlobal() const;
+    Eigen::Vector3d getAxisGlobal() const;
 
 //    /// @brief
 //    void setDampingCoefficient(double _c) { mDampingCoefficient = _c; }
@@ -108,7 +108,7 @@ protected:
     GenCoord mCoordinate;
 
     /// @brief Rotational axis.
-    math::Vec3 mDirectionVector;
+    Eigen::Vector3d mDirectionVector;
 
 //    /// @brief Daping coefficient of revolute joint.
 //    double mDampingCoefficient;

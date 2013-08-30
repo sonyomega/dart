@@ -264,7 +264,7 @@ dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
     // transformation
     if (hasElement(_skeletonElement, "transformation"))
     {
-        math::SE3 W = getValueSE3(_skeletonElement, "transformation");
+        Eigen::Isometry3d W = getValueSE3(_skeletonElement, "transformation");
         newSkeleton->setWorldTransformation(W, false);
     }
 
@@ -335,7 +335,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
     // transformation
     if (hasElement(_bodyNodeElement, "transformation"))
     {
-        math::SE3 W = getValueSE3(_bodyNodeElement, "transformation");
+        Eigen::Isometry3d W = getValueSE3(_bodyNodeElement, "transformation");
         newBodyNode->setWorldTransform(_skeleton->getWorldTransformation() * W);
     }
 
@@ -387,7 +387,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
         // transformation
         if (hasElement(vizElement, "transformation"))
         {
-            math::SE3 W = getValueSE3(vizElement, "transformation");
+            Eigen::Isometry3d W = getValueSE3(vizElement, "transformation");
             shape->setTransform(W);
         }
 
@@ -447,7 +447,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
         // transformation
         if (hasElement(colElement, "transformation"))
         {
-            math::SE3 W = getValueSE3(colElement, "transformation");
+            Eigen::Isometry3d W = getValueSE3(colElement, "transformation");
             shape->setTransform(W);
         }
     }
@@ -489,7 +489,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
         // offset
         if (hasElement(inertiaElement, "offset"))
         {
-            math::Vec3 offset = getValueVec3(inertiaElement, "offset");
+            Eigen::Vector3d offset = getValueVec3(inertiaElement, "offset");
             newBodyNode->setLocalCOM(offset);
         }
     }
@@ -584,15 +584,15 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
 
     //--------------------------------------------------------------------------
     // transformation
-    math::SE3 parentWorld = math::SE3::Identity();
-    math::SE3 childToJoint = math::SE3::Identity();
+    Eigen::Isometry3d parentWorld = Eigen::Isometry3d::Identity();
+    Eigen::Isometry3d childToJoint = Eigen::Isometry3d::Identity();
     assert(childBody != NULL);
-    math::SE3 childWorld = childBody->getWorldTransform();
+    Eigen::Isometry3d childWorld = childBody->getWorldTransform();
     if (parentBody)
          parentWorld = parentBody->getWorldTransform();
     if (hasElement(_jointElement, "transformation"))
         childToJoint = getValueSE3(_jointElement, "transformation");
-    math::SE3 parentToJoint = math::Inv(parentWorld)*childWorld*childToJoint;
+    Eigen::Isometry3d parentToJoint = math::Inv(parentWorld)*childWorld*childToJoint;
     newJoint->setTransformFromChildBody(childToJoint);
     newJoint->setTransformFromParentBody(parentToJoint);
 
@@ -1172,12 +1172,12 @@ std::string toString(const Eigen::Vector3d& _v)
 //    return boost::lexical_cast<std::string>(_v);
 //}
 
-std::string toString(const math::SE3& _v)
+std::string toString(const Eigen::Isometry3d& _v)
 {
     std::ostringstream ostr;
     ostr.precision(6);
 
-    math::Vec3 XYZ = math::iEulerXYZ(_v);
+    Eigen::Vector3d XYZ = math::iEulerXYZ(_v);
 
     ostr << _v(0,3) << " " << _v(1,3) << " " << _v(2,3);
     ostr << " ";
@@ -1365,7 +1365,7 @@ Eigen::Vector6d toVector6d(const std::string& _str)
 //}
 
 
-math::SE3 toSE3(const std::string& _str)
+Eigen::Isometry3d toSE3(const std::string& _str)
 {
     std::vector<double> elements;
     std::vector<std::string> pieces;
@@ -1392,8 +1392,8 @@ math::SE3 toSE3(const std::string& _str)
         }
     }
 
-    return math::EulerXYZ(math::Vec3(elements[3], elements[4], elements[5]),
-                          math::Vec3(elements[0], elements[1], elements[2]));
+    return math::EulerXYZ(Eigen::Vector3d(elements[3], elements[4], elements[5]),
+                          Eigen::Vector3d(elements[0], elements[1], elements[2]));
 }
 
 std::string getValueString(tinyxml2::XMLElement* _parentElement, const std::string& _name)
@@ -1496,7 +1496,7 @@ Eigen::Vector6d getValueVector6d(tinyxml2::XMLElement* _parentElement, const std
     return toVector6d(str);
 }
 
-math::Vec3 getValueVec3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
+Eigen::Vector3d getValueVec3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
@@ -1506,15 +1506,15 @@ math::Vec3 getValueVec3(tinyxml2::XMLElement* _parentElement, const std::string&
     return toVector3d(str);
 }
 
-math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
-{
-    assert(_parentElement != NULL);
-    assert(!_name.empty());
+//math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
+//{
+//    assert(_parentElement != NULL);
+//    assert(!_name.empty());
 
-    std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
+//    std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
 
-    return toVector3d(str);
-}
+//    return toVector3d(str);
+//}
 
 //math::SO3 getValueSO3(tinyxml2::XMLElement* _parentElement, const string& _name)
 //{
@@ -1526,7 +1526,7 @@ math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const std::string& _
 //    return toSO3(str);
 //}
 
-math::SE3 getValueSE3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
+Eigen::Isometry3d getValueSE3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());

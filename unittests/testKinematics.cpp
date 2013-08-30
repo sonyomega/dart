@@ -195,8 +195,8 @@ void KINEMATICS::JacobianTest(const std::string& dartFileName)
         BodyNode* body = skel->getBodyNode(skel->getNumBodyNodes() - 1);
 
         Jacobian J = body->getJacobianBody();
-        se3 J_dq = J * skel->get_dq();
-        se3 V = body->getVelocityBody();
+        Eigen::Vector6d J_dq = J * skel->get_dq();
+        Eigen::Vector6d V = body->getVelocityBody();
 
         for (int j = 0; j < 6; ++j)
             EXPECT_NEAR(J_dq(j), V(j), KIN_TOL);
@@ -213,8 +213,8 @@ void KINEMATICS::JacobianTest(const std::string& dartFileName)
         BodyNode* body = skel->getBodyNode(skel->getNumBodyNodes() - 1);
 
         Jacobian J = body->getJacobianBody();
-        se3 J_dq = J * skel->get_dq();
-        se3 V = body->getVelocityBody();
+        Eigen::Vector6d J_dq = J * skel->get_dq();
+        Eigen::Vector6d V = body->getVelocityBody();
 
         for (int j = 0; j < 6; ++j)
             EXPECT_NEAR(J_dq(j), V(j), KIN_TOL);
