@@ -454,7 +454,7 @@ TEST(DYNAMICS, INERTIA)
         // G of bodynode
         dynamics::BodyNode bodyNode;
         bodyNode.setMass(mass);
-        bodyNode.setCOM(com);
+        bodyNode.setLocalCOM(com);
         bodyNode.setMomentOfInertia(Ixx, Iyy, Izz, Ixy, Ixz, Iyz);
         Eigen::Matrix6d bodyNodeG = bodyNode.getGeneralizedInertia();
 

@@ -12,9 +12,9 @@
 #include <gtest/gtest.h>
 #include "TestHelpers.h"
 
-//using namespace std;
+using namespace std;
 
-//vector <int> twoLinkIndices;
+vector <int> twoLinkIndices;
 
 ///* ********************************************************************************************* */
 //TEST(FORWARD_KINEMATICS, YAW_ROLL) {

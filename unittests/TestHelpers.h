@@ -16,6 +16,7 @@
 #include "dynamics/BodyNode.h"
 #include "dynamics/Dof.h"
 #include "dynamics/Joint.h"
+#include "dynamics/FreeJoint.h"
 #include "dynamics/ShapeBox.h"
 
 using namespace dart;
@@ -62,9 +63,9 @@ bool equals (const Eigen::DenseBase<MATRIX>& A, const Eigen::DenseBase<MATRIX>& 
 //    Shape* shape = new ShapeBox(Vector3d(0.2, 0.2, 0.2));
 //    node->setLocalCOM(Vector3d(0.0, 0.0, 0.0));
 //    node->setMass(1.0);
-//    node->setVisualizationShape(shape);
-//    node->setCollisionShape(shape);
-//    robot->addNode(node);
+//    node->addVisualizationShape(shape);
+//    node->addCollisionShape(shape);
+//    robot->addBodyNode(node);
 //}
 
 ///* ********************************************************************************************* */

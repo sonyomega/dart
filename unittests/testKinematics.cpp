@@ -50,7 +50,7 @@ using namespace dart;
 using namespace math;
 using namespace dynamics;
 using namespace simulation;
-using namespace utils;;
+using namespace utils;
 
 #define KIN_TOL 1e-6
 
