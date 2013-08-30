@@ -42,8 +42,8 @@
 namespace dart {
 namespace dynamics {
 
-TranslationalJoint::TranslationalJoint()
-    : Joint("Translational joint")
+TranslationalJoint::TranslationalJoint(const std::string& _name)
+    : Joint(_name)
 {
     mJointType = TRANSLATIONAL;
     mGenCoords.push_back(&mCoordinate[0]);

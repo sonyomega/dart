@@ -45,8 +45,9 @@ namespace dart {
 namespace dynamics {
 
 UniversalJoint::UniversalJoint(const math::Axis& _axis0,
-                               const math::Axis& _axis1)
-    : Joint("Universal joint")
+                               const math::Axis& _axis1,
+                               const std::string& _name)
+    : Joint(_name)
 {
     mJointType = UNIVERSAL;
 

@@ -53,7 +53,7 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    WeldJoint();
+    WeldJoint(const std::string& _name = "Weld joint");
 
     /// @brief
     virtual ~WeldJoint();

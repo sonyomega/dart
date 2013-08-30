@@ -54,7 +54,8 @@ public:
     //--------------------------------------------------------------------------
     /// @brief
     UniversalJoint(const math::Axis& _axis0 = math::Axis(1.0, 0.0, 0.0),
-                   const math::Axis& _axis1 = math::Axis(0.0, 1.0, 0.0));
+                   const math::Axis& _axis1 = math::Axis(0.0, 1.0, 0.0),
+                   const std::string& _name = "Universal joint");
 
     /// @brief
     virtual ~UniversalJoint();

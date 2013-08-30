@@ -44,8 +44,8 @@ namespace dynamics {
 
 #define FJOINT_EPS 1e-6
 
-WeldJoint::WeldJoint()
-    : Joint("Weld joint")
+WeldJoint::WeldJoint(const std::string& _name)
+    : Joint(_name)
 {
     mJointType = WELD;
     mS = math::Jacobian::Zero(6,0);

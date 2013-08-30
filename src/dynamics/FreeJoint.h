@@ -53,7 +53,7 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    FreeJoint();
+    FreeJoint(const std::string& _name = "Free joint");
 
     /// @brief
     virtual ~FreeJoint();

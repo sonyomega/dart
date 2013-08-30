@@ -148,11 +148,12 @@ public:
     /// @brief
     double getMass() const;
 
+    /// @brief
     void setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
                             double _Ixy, double _Ixz, double _Iyz);
 
     /// @brief
-    void setCOM(const math::Vec3& _com);
+    void setLocalCOM(const math::Vec3& _com);
 
     /// @brief
     const Eigen::Vector3d& getLocalCOM() const;

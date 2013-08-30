@@ -53,7 +53,8 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    RevoluteJoint(const math::Axis& axis = math::Axis(1.0, 0.0, 0.0));
+    RevoluteJoint(const math::Axis& axis = math::Axis(1.0, 0.0, 0.0),
+                  const std::string& _name = "Revolute joint");
 
     /// @brief
     virtual ~RevoluteJoint();

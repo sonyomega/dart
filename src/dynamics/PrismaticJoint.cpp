@@ -45,8 +45,8 @@ using namespace math;
 
 namespace dynamics {
 
-PrismaticJoint::PrismaticJoint(const Vec3& axis)
-    : Joint("Revolute joint"),
+PrismaticJoint::PrismaticJoint(const Vec3& axis, const std::string& _name)
+    : Joint(_name),
       mDirectionVector(axis)
       //mDampingCoefficient(0.0)
 {

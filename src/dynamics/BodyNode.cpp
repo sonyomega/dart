@@ -517,7 +517,7 @@ void BodyNode::setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
     _updateGeralizedInertia();
 }
 
-void BodyNode::setCOM(const math::Vec3& _com)
+void BodyNode::setLocalCOM(const math::Vec3& _com)
 {
     mCenterOfMass = _com;
 

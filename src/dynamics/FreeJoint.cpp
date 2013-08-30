@@ -44,8 +44,8 @@
 namespace dart {
 namespace dynamics {
 
-FreeJoint::FreeJoint()
-    : Joint("Free joint")
+FreeJoint::FreeJoint(const std::string& _name)
+    : Joint(_name)
 {
     mJointType = FREE;
     mGenCoords.push_back(&mCoordinate[0]);

@@ -44,8 +44,8 @@
 namespace dart {
 namespace dynamics {
 
-BallJoint::BallJoint()
-    : Joint("Ball joint")
+BallJoint::BallJoint(const std::string& _name)
+    : Joint(_name)
 {
     mJointType = BALL;
     mGenCoords.push_back(&mCoordinate[0]);

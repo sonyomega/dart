@@ -42,8 +42,8 @@
 namespace dart {
 namespace dynamics {
 
-RevoluteJoint::RevoluteJoint(const math::Axis& axis)
-    : Joint("Revolute joint"),
+RevoluteJoint::RevoluteJoint(const math::Axis& axis, const std::string& _name)
+    : Joint(_name),
       mAxis(axis)
       //mDampingCoefficient(0.0)
 {
