@@ -48,9 +48,6 @@
 #include <fstream>
 #include <sstream>
 
-namespace dart {
-namespace common {
-
 /// @briefOutput a message
 #define dtmsg (dart::common::colorMsg("Msg", 32))
 
@@ -62,6 +59,9 @@ namespace common {
 
 /// @brief Output an error message
 #define dterr (dart::common::colorErr("Error", __FILE__, __LINE__, 31))
+
+namespace dart {
+namespace common {
 
 /// @brief
 std::ostream& colorMsg(const std::string& _msg, int _color);
