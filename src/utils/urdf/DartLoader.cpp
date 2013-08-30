@@ -294,7 +294,7 @@ dynamics::BodyNode* DartLoader::createDartNode(boost::shared_ptr<const urdf::Lin
   
   // Load Inertial information
   if(_lk->inertial) {
-      node->setCOM(toEigen(_lk->inertial->origin.position));
+      node->setLocalCOM(toEigen(_lk->inertial->origin.position));
       node->setMass(_lk->inertial->mass);
       node->setMomentOfInertia(_lk->inertial->ixx, _lk->inertial->iyy, _lk->inertial->izz,
                                _lk->inertial->ixy, _lk->inertial->ixz, _lk->inertial->iyz);

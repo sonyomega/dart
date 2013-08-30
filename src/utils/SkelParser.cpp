@@ -490,7 +490,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
         if (hasElement(inertiaElement, "offset"))
         {
             math::Vec3 offset = getValueVec3(inertiaElement, "offset");
-            newBodyNode->setCOM(offset);
+            newBodyNode->setLocalCOM(offset);
         }
     }
 
