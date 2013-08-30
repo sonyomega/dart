@@ -82,7 +82,7 @@ public:
     virtual ~World();
 
     //--------------------------------------------------------------------------
-    //
+    // Virtual functions
     //--------------------------------------------------------------------------
     virtual Eigen::VectorXd getState() const;
 
@@ -175,9 +175,6 @@ protected:
     //--------------------------------------------------------------------------
     // Dynamics Algorithms
     //--------------------------------------------------------------------------
-
-
-
     /// @brief Skeletones in this world.
     std::vector<dynamics::Skeleton*> mSkeletons;
 
@@ -204,10 +201,6 @@ protected:
 
     /// @brief The collision handler.
     constraint::ConstraintDynamics* mCollisionHandle;
-
-//    common::Timer mStepTimer;
-//    common::Timer mDynamicsTimer;
-//    common::Timer mCollisionDetectionTimer;
 
 private:
 };
