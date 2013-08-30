@@ -1,4 +1,6 @@
 #include "MyWindow.h"
+
+#include "dynamics/Skeleton.h"
 #include "simulation/World.h"
 
 using namespace Eigen;
@@ -12,7 +14,7 @@ void MyWindow::timeStepping()
 
 VectorXd MyWindow::computeDamping()
 {
-    int nDof = mWorld->getSkeleton(0)->getNumDofs();
+    int nDof = mWorld->getSkeleton(0)->getDOF();
     VectorXd damping = VectorXd::Zero(nDof);
     // add damping to each joint; twist-dof has smaller damping
     damping = -0.01 * mWorld->getSkeleton(0)->get_dq();
