@@ -46,7 +46,7 @@ using namespace Eigen;
 TEST(UTILS, ROTATION) {
   using namespace dart;
   using namespace math;
-  
+
   // Create Initial ExpMap
   Vector3d axis(2.0, 1.0, 1.0);
   axis.normalize();
@@ -61,7 +61,7 @@ TEST(UTILS, ROTATION) {
 
   EXPECT_NEAR((expmap - expmap2).norm(), 0.0, M_EPSILON)
     << "Orig: " << expmap << " Reconstructed: " << expmap2;
-  
+
   // Test conversion between matrix and euler
   Matrix3d m = quatToMatrix(q);
   Vector3d e = matrixToEuler(m, XYZ);

@@ -22,34 +22,34 @@ using namespace dart;
 using namespace dynamics;
 using namespace Eigen;
 
-///// Function headers
-//enum TypeOfDOF {
-//    DOF_X, DOF_Y, DOF_Z, DOF_ROLL, DOF_PITCH, DOF_YAW
-//};
+/// Function headers
+enum TypeOfDOF {
+    DOF_X, DOF_Y, DOF_Z, DOF_ROLL, DOF_PITCH, DOF_YAW
+};
 
-///* ********************************************************************************************* */
-///// Returns true if the two matrices are equal within the given bound
-//template <class MATRIX>
-//bool equals (const Eigen::DenseBase<MATRIX>& A, const Eigen::DenseBase<MATRIX>& B, double tol = 1e-5) {
+/* ********************************************************************************************* */
+/// Returns true if the two matrices are equal within the given bound
+template <class MATRIX>
+bool equals (const Eigen::DenseBase<MATRIX>& A, const Eigen::DenseBase<MATRIX>& B, double tol = 1e-5) {
 
-//    // Get the matrix sizes and sanity check the call
-//  const size_t n1 = A.cols(), m1 = A.rows();
-//  const size_t n2 = B.cols(), m2 = B.rows();
-//  if(m1!=m2 || n1!=n2) return false;
+    // Get the matrix sizes and sanity check the call
+  const size_t n1 = A.cols(), m1 = A.rows();
+  const size_t n2 = B.cols(), m2 = B.rows();
+  if(m1!=m2 || n1!=n2) return false;
 
-//    // Check each index
-//  for(size_t i=0; i<m1; i++) {
-//    for(size_t j=0; j<n1; j++) {
-//      if(boost::math::isnan(A(i,j)) ^ boost::math::isnan(B(i,j)))
-//        return false;
-//      else if(fabs(A(i,j) - B(i,j)) > tol)
-//        return false;
-//    }
-//    }
+    // Check each index
+  for(size_t i=0; i<m1; i++) {
+    for(size_t j=0; j<n1; j++) {
+      if(boost::math::isnan(A(i,j)) ^ boost::math::isnan(B(i,j)))
+        return false;
+      else if(fabs(A(i,j) - B(i,j)) > tol)
+        return false;
+    }
+    }
 
-//    // If no problems, the two matrices are equal
-//  return true;
-//}
+    // If no problems, the two matrices are equal
+  return true;
+}
 
 ///* ********************************************************************************************* */
 ///// Add an end-effector to the last link of the given robot
@@ -164,4 +164,4 @@ using namespace Eigen;
 //    return robot;
 //}
 
-#endif // DART_UNITTESTS_TEST_HELPERS_H
+#endif // #ifndef DART_UNITTESTS_TEST_HELPERS_H
