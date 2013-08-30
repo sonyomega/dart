@@ -5,6 +5,7 @@ set_property(DIRECTORY PROPERTY FOLDER Apps)
 foreach(APPDIR
     balance
     cubes
+    #hanging
     spheres
     serial_chain
     viewer_DART

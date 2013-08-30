@@ -19,7 +19,7 @@ class ConstraintDynamics;
 
 class Controller {
  public:
-    Controller(dart::dynamics::Skeleton*_skel, dart::constraint::ConstraintDynamics* _collisionHandle, double _t);
+    Controller(dart::dynamics::Skeleton*_skel, dart::constraint::ConstraintDynamics *_constraintHandle, double _t);
     virtual ~Controller() {}
 
     Eigen::VectorXd getTorques() { return mTorques; }
@@ -33,12 +33,8 @@ class Controller {
     void setConstrForces(const Eigen::VectorXd& _constrForce) { mConstrForces = _constrForce; }
 
  protected:
-    bool computeCoP(dart::dynamics::BodyNode *_node, Eigen::Vector3d *_cop);
-    Eigen::Vector3d evalLinMomentum(const Eigen::VectorXd& _dofVel);
-    Eigen::Vector3d evalAngMomentum(const Eigen::VectorXd& _dofVel);
-    Eigen::VectorXd adjustAngMomentum(Eigen::VectorXd _deltaMomentum, Eigen::VectorXd _controlledAxis);
     dart::dynamics::Skeleton* mSkel;
-    dart::constraint::ConstraintDynamics* mCollisionHandle;
+    dart::constraint::ConstraintDynamics *mConstraintHandle;
     Eigen::VectorXd mTorques;
     Eigen::VectorXd mDesiredDofs;
     Eigen::MatrixXd mKp;
@@ -46,7 +42,6 @@ class Controller {
     int mFrame;
     double mTimestep;
     double mPreOffset;
-    Eigen::VectorXd mConstrForces; // SPD utilizes the current info about contact forces
+    Eigen::VectorXd mConstrForces; // SPD utilizes the current info about constraint forces
 };
-
 #endif // #CONTROLLER_H
