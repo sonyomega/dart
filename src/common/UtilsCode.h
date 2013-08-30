@@ -59,7 +59,7 @@ void tokenize(const std::string& _str,
 
 /// @brief
 template <class T>
-inline std::vector<T> stringToVec( const std::string &_str )
+inline std::vector<T> stringToVec(const std::string& _str)
 {
     std::vector<T> myVec;
     std::istringstream iss (_str, std::istringstream::in);
@@ -72,11 +72,11 @@ inline std::vector<T> stringToVec( const std::string &_str )
 
 /// @brief
 template <typename T_POINTER>
-inline void swapPointers(T_POINTER *&_p1, T_POINTER *&_p2)
+inline void swapPointers(T_POINTER*& _p1, T_POINTER*& _p2)
 {
-    T_POINTER *temp = _p2;
-    _p2=_p1;
-    _p1=temp;
+    T_POINTER* temp = _p2;
+    _p2 = _p1;
+    _p1 = temp;
 }
 
 /// @brief
