@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef COLLISION_FCL_CONLLISION_NODE_H
-#define COLLISION_FCL_CONLLISION_NODE_H
+#ifndef DART_COLLISION_FCL_CONLLISION_NODE_H
+#define DART_COLLISION_FCL_CONLLISION_NODE_H
 
 #include <Eigen/Dense>
 #include <fcl/collision.h>
@@ -91,4 +91,4 @@ fcl::BVHModel<BV>* createEllipsoid(float _sizeX, float _sizeY, float _sizeZ);
 } // namespace collision
 } // namespace dart
 
-#endif // COLLISION_FCL2_CONLLISION_NODE_H
+#endif // #ifndef DART_COLLISION_FCL_CONLLISION_NODE_H

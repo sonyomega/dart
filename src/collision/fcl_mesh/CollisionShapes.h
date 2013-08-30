@@ -6,8 +6,8 @@
     Date    09/18/2011
 */
 
-#ifndef COLLISION_SHAPES_H_
-#define COLLISION_SHAPES_H_
+#ifndef DART_COLLISION_FCL_MESH_SHAPES_H
+#define DART_COLLISION_FCL_MESH_SHAPES_H
 
 #include "fcl/BVH/BVH_model.h"
 #include <assimp/scene.h>
@@ -404,4 +404,4 @@ fcl::BVHModel<BV>* createCylinder(double _baseRadius, double _topRadius,
 } // namespace collision
 } // namespace dart
 
-#endif
+#endif // #ifndef DART_COLLISION_FCL_MESH_SHAPES_H

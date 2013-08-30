@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef YUI_WIN3D_H
-#define YUI_WIN3D_H
+#ifndef DART_YUI_WIN3D_H
+#define DART_YUI_WIN3D_H
 
 #include "GlutWindow.h"
 #include "Trackball.h"
@@ -79,4 +79,4 @@ protected:
 } // namespace yui
 } // namespace dart
 
-#endif
+#endif // #ifndef DART_YUI_WIN3D_H

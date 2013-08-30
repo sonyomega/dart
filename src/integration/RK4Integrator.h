@@ -68,4 +68,4 @@ private:
 } // namespace integration
 } // namespace dart
 
-#endif // DART_INTEGRATION_RK4_INTEGRATOR_H
+#endif // #ifndef DART_INTEGRATION_RK4_INTEGRATOR_H

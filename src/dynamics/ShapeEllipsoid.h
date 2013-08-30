@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef KINEMATICS_SHAPE_ELLIPSOID_H
-#define KINEMATICS_SHAPE_ELLIPSOID_H
+#ifndef DART_DYNAMICS_SHAPE_ELLIPSOID_H
+#define DART_DYNAMICS_SHAPE_ELLIPSOID_H
 
 #include "Shape.h"
 
@@ -74,6 +74,6 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef KINEMATICS_PRIMITIVE_ELLIPSOID_H
+#endif // #ifndef DART_DYNAMICS_SHAPE_ELLIPSOID_H
 
 

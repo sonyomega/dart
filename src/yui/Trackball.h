@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef YUI_TRACKBALL
-#define YUI_TRACKBALL
+#ifndef DART_YUI_TRACKBALL_H
+#define DART_YUI_TRACKBALL_H
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -87,4 +87,4 @@ private:
 } // namespace yui
 } // namespace dart
 
-#endif
+#endif // #ifndef DART_YUI_TRACKBALL_H

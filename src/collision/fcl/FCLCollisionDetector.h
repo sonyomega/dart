@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef COLLISION_FCL_CONLLISION_DETECTOR_H
-#define COLLISION_FCL_CONLLISION_DETECTOR_H
+#ifndef DART_COLLISION_FCL_CONLLISION_DETECTOR_H
+#define DART_COLLISION_FCL_CONLLISION_DETECTOR_H
 
 #include <vector>
 #include <map>
@@ -77,4 +77,4 @@ protected:
 } // namespace collision
 } // namespace dart
 
-#endif // COLLISION_FCL_CONLLISION_DETECTOR_H
+#endif // #ifndef DART_COLLISION_FCL_CONLLISION_DETECTOR_H

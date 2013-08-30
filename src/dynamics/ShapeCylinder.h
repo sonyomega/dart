@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef KINEMATICS_SHAPE_CYLINDER_H
-#define KINEMATICS_SHAPE_CYLINDER_H
+#ifndef DART_DYNAMICS_SHAPE_CYLINDER_H
+#define DART_DYNAMICS_SHAPE_CYLINDER_H
 
 #include "Shape.h"
 
@@ -84,5 +84,5 @@ private:
 } // namespace dynamics
 } // namespace dart
 
-#endif
+#endif // #ifndef DART_DYNAMICS_SHAPE_CYLINDER_H
 

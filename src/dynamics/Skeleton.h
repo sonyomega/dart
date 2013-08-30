@@ -36,8 +36,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_KINEMATICS_SKELETON_H
-#define DART_KINEMATICS_SKELETON_H
+#ifndef DART_DYNAMICS_SKELETON_H
+#define DART_DYNAMICS_SKELETON_H
 
 #include <vector>
 
@@ -378,5 +378,5 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_KINEMATICS_SKELETON_H
+#endif // #ifndef DART_DYNAMICS_SKELETON_H
 

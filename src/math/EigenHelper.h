@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MATH_EIGEN_HELPER_H
-#define MATH_EIGEN_HELPER_H
+#ifndef DART_MATH_EIGEN_HELPER_H
+#define DART_MATH_EIGEN_HELPER_H
 
 #include <Eigen/Dense>
 #include <Eigen/StdVector>
@@ -60,5 +60,5 @@
 #define EIGEN_V_QUATD std::vector< Eigen::Quaterniond, Eigen::aligned_allocator<Eigen::Quaterniond > >
 #define EIGEN_VV_QUATD std::vector< std::vector< Eigen::Quaterniond, Eigen::aligned_allocator<Eigen::Quaterniond> > >
 
-#endif // #ifndef UTILS_EIGEN_HELPER_H
+#endif // #ifndef DART_UTILS_EIGEN_HELPER_H
 

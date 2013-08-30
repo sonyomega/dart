@@ -261,5 +261,5 @@ bool Verifyse3(const se3& _V);
 } // namespace math
 } // namespace dart
 
-#endif
+#endif // #ifndef DART_MATH_LIE_GROUP_H
 

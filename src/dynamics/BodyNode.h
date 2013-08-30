@@ -70,8 +70,8 @@ Runge-Kutta and fourth-order Runge Kutta.
 
 */
 
-#ifndef DART_KINEMATICS_BODYNODE_H
-#define DART_KINEMATICS_BODYNODE_H
+#ifndef DART_DYNAMICS_BODYNODE_H
+#define DART_DYNAMICS_BODYNODE_H
 
 #include <vector>
 
@@ -597,5 +597,5 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_KINEMATICS_BODYNODE_H
+#endif // #ifndef DART_DYNAMICS_BODYNODE_H
 

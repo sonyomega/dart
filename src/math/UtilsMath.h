@@ -221,6 +221,6 @@ inline T precision(const T& _a, const unsigned int& _precision)
 } // namespace utils
 } // namespace dart
 
-#endif // #ifndef DART_UTILS_UTILSMATH_H
+#endif // #ifndef DART_MATH_UTILSMATH_H
 
 

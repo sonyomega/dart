@@ -36,8 +36,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_KINEMATICS_DOF_H
-#define DART_KINEMATICS_DOF_H
+#ifndef DART_DYNAMICS_DOF_H
+#define DART_DYNAMICS_DOF_H
 
 #include <cassert>
 #include <string>
@@ -50,65 +50,6 @@ namespace dynamics {
 
 class Joint;
 class Transformation;
-
-struct ScalarCoord{
-    double q;       ///< Position
-    double qMin;    ///< Min value allowed.
-    double qMax;    ///< Max value allowed.
-
-    double dq;       ///< Velocity
-    double dqMin;    ///< Min value allowed.
-    double dqMax;    ///< Max value allowed.
-
-    double ddq;       ///< Acceleration
-    double ddqMin;    ///< Min value allowed.
-    double ddqMax;    ///< Max value allowed.
-
-    double tau;       ///< Force (torque)
-    double tauMin;    ///< Min value allowed.
-    double tauMax;    ///< Max value allowed.
-
-    double init_q;
-    double init_dq;
-};
-
-struct SO3Coord {
-    math::SO3 q;       ///< Position
-
-    math::so3 dq;       ///< Velocity
-    math::so3 dqMin;    ///< Min value allowed.
-    math::so3 dqMax;    ///< Max value allowed.
-
-    math::so3 ddq;       ///< Acceleration
-    math::so3 ddqMin;    ///< Min value allowed.
-    math::so3 ddqMax;    ///< Max value allowed.
-
-    math::dso3 tau;       ///< Force (torque)
-    math::dso3 tauMin;    ///< Min value allowed.
-    math::dso3 tauMax;    ///< Max value allowed.
-
-    math::SO3 init_q;
-    math::SO3 init_dq;
-};
-
-struct SE3Coord {
-    math::SE3 q;       ///< Position
-
-    math::se3 dq;       ///< Velocity
-    math::se3 dqMin;    ///< Min value allowed.
-    math::se3 dqMax;    ///< Max value allowed.
-
-    math::se3 ddq;       ///< Acceleration
-    math::se3 ddqMin;    ///< Min value allowed.
-    math::se3 ddqMax;    ///< Max value allowed.
-
-    math::dse3 tau;       ///< Force (torque)
-    math::dse3 tauMin;    ///< Min value allowed.
-    math::dse3 tauMax;    ///< Max value allowed.
-
-    math::SE3 init_q;
-    math::SE3 init_dq;
-};
 
 // TODO: Change name (Dof --> GeneralizedCoordinate).
 // A degrees of freedom is just a number of generalized coordinates.
@@ -249,5 +190,5 @@ protected:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_KINEMATICS_DOF_H
+#endif // #ifndef DART_DYNAMICS_DOF_H
 

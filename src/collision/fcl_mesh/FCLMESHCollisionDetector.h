@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef COLLISION_FCL_MESH_COLLISION_DETECTOR_H
-#define COLLISION_FCL_MESH_COLLISION_DETECTOR_H
+#ifndef DART_COLLISION_FCL_MESH_COLLISION_DETECTOR_H
+#define DART_COLLISION_FCL_MESH_COLLISION_DETECTOR_H
 
 #include <vector>
 #include <map>
@@ -106,4 +106,4 @@ inline bool Vec3fCmp(fcl::Vec3f& v1, fcl::Vec3f& v2)
 } // namespace collision
 } // namespace dart
 
-#endif // COLLISION_FCL_COLLISION_DETECTOR_H
+#endif // #ifndef DART_COLLISION_FCL_MESH_COLLISION_DETECTOR_H

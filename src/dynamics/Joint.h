@@ -36,8 +36,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_KINEMATICS_JOINT_H
-#define DART_KINEMATICS_JOINT_H
+#ifndef DART_DYNAMICS_JOINT_H
+#define DART_DYNAMICS_JOINT_H
 
 #include "math/LieGroup.h"
 #include "dynamics/System.h"
@@ -269,5 +269,5 @@ private:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_KINEMATICS_JOINT_H
+#endif // #ifndef DART_DYNAMICS_JOINT_H
 

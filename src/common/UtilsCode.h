@@ -36,8 +36,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef UTILS_UTILSCODE_H
-#define UTILS_UTILSCODE_H
+#ifndef DART_COMMON_UTILSCODE_H
+#define DART_COMMON_UTILSCODE_H
 
 #include <string>
 #include <vector>
@@ -108,4 +108,4 @@ std::ostream& colorErr(const std::string& _msg,
 } // namespace utils
 } // namespace dart
 
-#endif // #ifndef UTILS_UTILSMATH_H
+#endif // #ifndef DART_COMMON_UTILSCODE_H

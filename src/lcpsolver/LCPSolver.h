@@ -35,9 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-#ifndef _LCP_SOLVER
-#define _LCP_SOLVER
+#ifndef DART_LCP_SOLVER_LCP_SOLVER_H
+#define DART_LCP_SOLVER_LCP_SOLVER_H
 
 #include "Eigen/Dense"
 
@@ -60,4 +59,4 @@ private:
 } // namespace lcpsolver
 } // namespace dart
 
-#endif
+#endif // #ifndef DART_LCP_SOLVER_LCP_SOLVER_H

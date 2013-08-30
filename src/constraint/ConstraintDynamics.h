@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DYNAMICS_CONSTRAINT_DYNAMICS_H
-#define DYNAMICS_CONSTRAINT_DYNAMICS_H
+#ifndef DART_CONSTRAINT_CONSTRAINT_DYNAMICS_H
+#define DART_CONSTRAINT_CONSTRAINT_DYNAMICS_H
 
 #include <vector>
 #include <Eigen/Dense>
@@ -147,5 +147,5 @@ private:
 } // namespace constraint
 } // namepsace dart
 
-#endif // #ifndef DYNAMICS_CONSTRAINT_DYNAMICS_H
+#endif // #ifndef DART_CONSTRAINT_CONSTRAINT_DYNAMICS_H
 

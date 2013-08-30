@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef YUI_GLFUNCS_H
-#define YUI_GLFUNCS_H
+#ifndef DART_YUI_GLFUNCS_H
+#define DART_YUI_GLFUNCS_H
 
 #include <Eigen/Eigen>
 //#include "FreeImage.h"
@@ -59,4 +59,4 @@ void drawProgressBar(int currFrame, int totalFrame);
 } // namespace yui
 } // namespace dart
 
-#endif  //YUI_GLFUNCS_H
+#endif  // #ifndef DART_YUI_GLFUNCS_H

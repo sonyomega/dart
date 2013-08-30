@@ -53,4 +53,4 @@ typedef Eigen::Matrix<double, 6, 1> Vector6d;
 } // namespace math
 } // namespace dart
 
-#endif // DART_MATH_MATH_TYPES_H
+#endif // #ifndef DART_MATH_MATH_TYPES_H

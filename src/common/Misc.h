@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef UTILS_MISC_H
-#define UTILS_MISC_H
+#ifndef DART_COMMON_MISC_H
+#define DART_COMMON_MISC_H
 
 // Epsilon definition
 #ifndef M_EPSILON
@@ -81,6 +81,6 @@ private:                                        \
 type var##_
 
 
-#endif // #ifndef UTILS_MISC_H
+#endif // #ifndef DART_COMMON_MISC_H
 
 

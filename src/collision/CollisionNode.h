@@ -36,8 +36,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef COLLISION_CONLLISION_NODE_H
-#define COLLISION_CONLLISION_NODE_H
+#ifndef DART_COLLISION_CONLLISION_NODE_H
+#define DART_COLLISION_CONLLISION_NODE_H
 
 namespace dart {
 namespace dynamics { class BodyNode; }
@@ -75,4 +75,4 @@ private:
 } // namespace collision
 } // namespace dart
 
-#endif // COLLISION_CONLLISION_DETECTOR_H
+#endif // #ifndef DART_COLLISION_CONLLISION_NODE_H

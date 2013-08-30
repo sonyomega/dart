@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef UTILS_TIMER_H
-#define UTILS_TIMER_H
+#ifndef DART_COMMON_TIMER_H
+#define DART_COMMON_TIMER_H
 
 #if WIN32
 #define NOMINMAX
@@ -116,4 +116,4 @@ private:
 } // namespace utils
 } // namespace dart
 
-#endif // #ifndef UTILS_TIMER_H
+#endif // #ifndef DART_COMMON_TIMER_H

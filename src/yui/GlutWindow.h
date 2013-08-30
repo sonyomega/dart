@@ -36,8 +36,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef YUI_GLUTWINDOW_H
-#define YUI_GLUTWINDOW_H
+#ifndef DART_YUI_GLUTWINDOW_H
+#define DART_YUI_GLUTWINDOW_H
 
 #include "renderer/LoadOpengl.h"
 #include "renderer/RenderInterface.h"
@@ -100,4 +100,4 @@ protected:
 } // namespace yui
 } // namespace dart
 
-#endif // YUI_GLUTWINDOW_H
+#endif // #ifndef DART_YUI_GLUTWINDOW_H

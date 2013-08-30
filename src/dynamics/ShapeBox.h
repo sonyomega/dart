@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef KINEMATICS_SHAPE_CUBE_H
-#define KINEMATICS_SHAPE_CUBE_H
+#ifndef DART_DYNAMICS_SHAPE_BOX_H
+#define DART_DYNAMICS_SHAPE_BOX_H
 
 #include "Shape.h"
 
@@ -68,4 +68,4 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef KINEMATICS_PRIMITIVE_CUBE_H
+#endif // #ifndef DART_DYNAMICS_SHAPE_BOX_H

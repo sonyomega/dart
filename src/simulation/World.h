@@ -216,4 +216,4 @@ private:
 } // namespace simulation
 } // namespace dart
 
-#endif // #ifndef SIMULATION_WORLD_H
+#endif // #ifndef DART_SIMULATION_WORLD_H

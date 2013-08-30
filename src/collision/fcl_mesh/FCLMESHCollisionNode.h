@@ -36,8 +36,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef COLLISION_FCL_MESH_CONLLISION_NODE_H
-#define COLLISION_FCL_MESH_CONLLISION_NODE_H
+#ifndef DART_COLLISION_FCL_MESH_CONLLISION_NODE_H
+#define DART_COLLISION_FCL_MESH_CONLLISION_NODE_H
 
 #include <vector>
 #include <Eigen/Dense>
@@ -191,4 +191,4 @@ inline double FCLMESHCollisionNode::triArea(fcl::Vec3f p1, fcl::Vec3f p2, fcl::V
 } // namespace collision
 } // namespace dart
 
-#endif // COLLISION_FCL2_CONLLISION_NODE_H
+#endif // #ifndef DART_COLLISION_FCL_MESH_CONLLISION_NODE_H

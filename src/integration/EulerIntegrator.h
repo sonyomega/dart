@@ -61,4 +61,4 @@ public:
 } // namespace integration
 } // namespace dart
 
-#endif // DART_INTEGRATIONEULER_INTEGRATOR_H
+#endif // #ifndef DART_INTEGRATION_EULER_INTEGRATOR_H

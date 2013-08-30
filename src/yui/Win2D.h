@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef YUI_WIN2D_H
-#define YUI_WIN2D_H
+#ifndef DART_YUI_WIN2D_H
+#define DART_YUI_WIN2D_H
 
 #include "GlutWindow.h"
 
@@ -66,4 +66,4 @@ public:
 } // namespace yui
 } // namespace dart
 
-#endif
+#endif // #ifndef DART_YUI_WIN2D_H

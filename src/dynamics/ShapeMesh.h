@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef KINEMATICS_SHAPE_MESH_H
-#define KINEMATICS_SHAPE_MESH_H
+#ifndef DART_DYNAMICS_SHAPE_MESH_H
+#define DART_DYNAMICS_SHAPE_MESH_H
 
 #include "Shape.h"
 
@@ -88,5 +88,5 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef KINEMATICS_PRIMITIVE_MESH_H
+#endif // #ifndef DART_DYNAMICS_SHAPE_MESH_H
 

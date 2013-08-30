@@ -78,5 +78,5 @@ Eigen::Matrix3d expMapJacDeriv(const Eigen::Vector3d &_expmap, int _qi);    ///<
 } // namespace utils
 } // namespace dart
 
-#endif // #ifndef DART_UTILS_UTILSROTATION_H
+#endif // #ifndef DART_MATH_UTILSROTATION_H
 

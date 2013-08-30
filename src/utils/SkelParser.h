@@ -259,4 +259,4 @@ private:
 } // namespace utils
 } // namespace dart
 
-#endif // DART_UTILS_SKEL_PARSER_H
+#endif // #ifndef DART_UTILS_SKEL_PARSER_H

@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_KINEMATICS_WELD_JOINT_H
-#define DART_KINEMATICS_WELD_JOINT_H
+#ifndef DART_DYNAMICS_WELD_JOINT_H
+#define DART_DYNAMICS_WELD_JOINT_H
 
 #include <Eigen/Dense>
 
@@ -101,5 +101,5 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_KINEMATICS_WELD_JOINT_H
+#endif // #ifndef DART_DYNAMICS_WELD_JOINT_H
 
