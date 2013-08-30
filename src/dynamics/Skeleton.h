@@ -150,18 +150,17 @@ public:
                    bool _calcTrans = true, bool _calcDeriv = true);
 
     /// @brief
-    /// @todo Use set_q(const Eigen::VectorXd& _state) instead.
-    DEPRECATED void setPose(const Eigen::VectorXd& _pose,
+    void setPose(const Eigen::VectorXd& _pose,
                             bool bCalcTrans = true,
                             bool bCalcDeriv = true);
 
     /// @brief
     /// @todo Use get_q() instead.
-    DEPRECATED Eigen::VectorXd getPose() const { return get_q(); }
+    Eigen::VectorXd getPose() const { return get_q(); }
 
     /// @brief
     /// @todo Use get_dq() instead.
-    DEPRECATED Eigen::VectorXd getPoseVelocity() const { return get_dq(); }
+    Eigen::VectorXd getPoseVelocity() const { return get_dq(); }
 
     /// @brief
     // TODO: Not implemented.

@@ -437,7 +437,7 @@ void ConstraintDynamics::updateNBMatrices() {
 
         if (!mSkels[skelID1]->getImmobileState()) {
             int index1 = mIndices[skelID1];
-            int NDOF1 = c.collisionNode1->getBodyNode()->getSkel()->getDOF();
+            int NDOF1 = c.collisionNode1->getBodyNode()->getSkeleton()->getDOF();
             //    Vector3d N21 = c.normal;
             MatrixXd J21t = getJacobian(c.collisionNode1->getBodyNode(), p);
             mN.block(index1, i, NDOF1, 1).noalias() = J21t * N21;
@@ -447,7 +447,7 @@ void ConstraintDynamics::updateNBMatrices() {
 
         if (!mSkels[skelID2]->getImmobileState()) {
             int index2 = mIndices[skelID2];
-            int NDOF2 = c.collisionNode2->getBodyNode()->getSkel()->getDOF();
+            int NDOF2 = c.collisionNode2->getBodyNode()->getSkeleton()->getDOF();
             //Vector3d N12 = -c.normal;
             //if (B21.rows() == 0)
             //  B12 = getTangentBasisMatrix(p, N12);
@@ -462,7 +462,7 @@ void ConstraintDynamics::updateNBMatrices() {
 }
 
 MatrixXd ConstraintDynamics::getJacobian(dynamics::BodyNode* node, const Vector3d& p) {
-    int nDofs = node->getSkel()->getDOF();
+    int nDofs = node->getSkeleton()->getDOF();
     MatrixXd Jt = MatrixXd::Zero(nDofs, 3);
 
     MatrixXd JtBody

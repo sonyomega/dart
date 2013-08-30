@@ -176,7 +176,7 @@ void Skeleton::initKinematics()
     // init the dependsOnDof stucture for each bodylink
     for(int i = 0; i < getNumBodyNodes(); i++)
     {
-        mBodyNodes.at(i)->setSkel(this);
+        mBodyNodes.at(i)->setSkeleton(this);
         mBodyNodes.at(i)->setDependDofList();
         mBodyNodes.at(i)->init();
     }
