@@ -39,7 +39,7 @@
 #ifndef DART_DYNAMICS_JOINT_H
 #define DART_DYNAMICS_JOINT_H
 
-#include "math/LieGroup.h"
+#include "math/Geometry.h"
 #include "dynamics/System.h"
 
 namespace dart {

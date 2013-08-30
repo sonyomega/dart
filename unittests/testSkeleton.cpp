@@ -46,8 +46,8 @@
 #include <boost/pending/indirect_cmp.hpp>
 
 #include "common/UtilsCode.h"
-#include "math/LieGroup.h"
-#include "math/UtilsMath.h"
+#include "math/Geometry.h"
+#include "math/Helpers.h"
 #include "dynamics/BallJoint.h"
 #include "dynamics/RevoluteJoint.h"
 #include "dynamics/FreeJoint.h"

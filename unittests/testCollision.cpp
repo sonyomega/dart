@@ -43,7 +43,7 @@
 #include <fcl/narrowphase/narrowphase.h>
 
 #include "common/UtilsCode.h"
-#include "math/UtilsMath.h"
+#include "math/Helpers.h"
 //#include "collision/unc/UNCCollisionDetector.h"
 
 using namespace dart;

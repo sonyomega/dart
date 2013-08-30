@@ -33,8 +33,8 @@
  */
 
 #include "common/UtilsCode.h"
-#include "math/UtilsRotation.h"
-#include "math/UtilsMath.h"
+#include "math/Geometry.h"
+#include "math/Helpers.h"
 #include <iostream>
 #include <gtest/gtest.h>
 #include <Eigen/Dense>

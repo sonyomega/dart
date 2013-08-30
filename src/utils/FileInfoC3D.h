@@ -41,7 +41,7 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "math/EigenHelper.h"
+#include "math/MathTypes.h"
 
 namespace dart {
 namespace utils {
@@ -57,7 +57,7 @@ public:
     inline double getFPS() const { return mFPS; }
 
     inline Eigen::Vector3d getDataAt(int _frame, int _idx) const { return mData.at(_frame).at(_idx); } ///< Note: not checking index range
-    inline void addData(const EIGEN_V_VEC3D& _data) { mData.push_back(_data); }
+    inline void addData(const Eigen::EIGEN_V_VEC3D& _data) { mData.push_back(_data); }
 
     virtual bool loadFile(const char*);
     virtual bool saveFile(const char*, int _start, int _end, double _sampleRate = 1); ///< Note: down sampling not implemented yet
@@ -65,7 +65,7 @@ public:
 protected:
     int mNumMarkers;
     int mNumFrames;
-    EIGEN_VV_VEC3D mData;
+    Eigen::EIGEN_VV_VEC3D mData;
     double mFPS;
     char mFileName[256]; // change to string?
 };

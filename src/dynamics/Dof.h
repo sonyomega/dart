@@ -43,7 +43,7 @@
 #include <string>
 
 #include "common/Deprecated.h"
-#include "math/LieGroup.h"
+#include "math/Geometry.h"
 
 namespace dart {
 namespace dynamics {

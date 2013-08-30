@@ -37,9 +37,9 @@
 
 #include "EulerJoint.h"
 
-#include "math/UtilsMath.h"
-#include "math/LieGroup.h"
-#include "math/UtilsRotation.h"
+#include "math/Helpers.h"
+#include "math/Geometry.h"
+#include "math/Geometry.h"
 
 namespace dart {
 namespace dynamics {

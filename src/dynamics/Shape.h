@@ -40,7 +40,7 @@
 
 #include <Eigen/Dense>
 
-#include "math/LieGroup.h"
+#include "math/Geometry.h"
 
 extern "C" { struct aiScene; }
 

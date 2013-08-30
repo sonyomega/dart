@@ -1,5 +1,43 @@
-#ifndef DART_MATH_LIE_GROUP_H
-#define DART_MATH_LIE_GROUP_H
+/*
+ * Copyright (c) 2011, Georgia Tech Research Corporation
+ * All rights reserved.
+ *
+ * Author(s): Sehoon Ha <sehoon.ha@gmail.com>,
+ *            Jeongseok Lee <jslee02@gmail.com>
+ * Date: 06/12/2011
+ *
+ * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
+ *
+ * Directed by Prof. C. Karen Liu and Prof. Mike Stilman
+ * <karenliu@cc.gatech.edu> <mstilman@cc.gatech.edu>
+ *
+ * This file is provided under the following "BSD-style" License:
+ *   Redistribution and use in source and binary forms, with or
+ *   without modification, are permitted provided that the following
+ *   conditions are met:
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ *   CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *   INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ *   MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *   DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ *   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ *   USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ *   AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *   ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *   POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#ifndef DART_MATH_GEOMETRY_H
+#define DART_MATH_GEOMETRY_H
 
 #include <vector>
 #include <cassert>
@@ -10,43 +48,13 @@
 #include <Eigen/Dense>
 
 #include "common/UtilsCode.h"
-
-#define LIE_EPS		 1E-6
-#define SCALAR_0	 0.0
-#define SCALAR_1	 1.0
-#define SCALAR_2	 2.0
-#define SCALAR_3	 3.0
-#define SCALAR_1_2	 0.5
-#define SCALAR_1_3	 0.333333333333333333333
-#define SCALAR_1_4	 0.25
-#define SCALAR_1_6	 0.166666666666666666667
-#define SCALAR_1_8	 0.125
-#define SCALAR_1_12	 0.0833333333333333333333
-#define SCALAR_1_24	 0.0416666666666666666667
-#define SCALAR_1_30	 0.0333333333333333333333
-#define SCALAR_1_60	 0.0166666666666666666667
-#define SCALAR_1_120 0.00833333333333333333333
-#define SCALAR_1_180 0.00555555555555555555556
-#define SCALAR_1_720 0.00138888888888888888889
-#define SCALAR_1_1260 0.000793650793650793650794
-
-#define M_PI		 3.14159265358979323846
-#define M_2PI		 6.28318530717958647693		// = 2 * pi
-#define M_PI_SQR	 9.86960440108935861883		// = pi^2
-#define M_RADIAN	 0.0174532925199432957692	// = pi / 180
-#define M_DEGREE	 57.2957795130823208768		// = pi / 180
-#define SCALAR_MAX	 DBL_MAX
+#include "math/MathTypes.h"
 
 // TODO:
 //   3. naming check
 //   5. remove wired functions
 //  11. random setter
 //  13. / operator for SE3 * invSE3.
-
-namespace Eigen {
-typedef Eigen::Matrix<double,6,1> Vector6d;
-typedef Eigen::Matrix<double,6,6> Matrix6d;
-}
 
 namespace dart {
 namespace math {
@@ -67,6 +75,94 @@ typedef Eigen::Matrix<double,6,Eigen::Dynamic> Jacobian;
 //double Distance(const SE3& T1, const SE3& T2);
 
 //SE3 operator/(const SE3& T1, const SE3& T2);
+
+//------------------------------------------------------------------------------
+
+//inline VectorXd xformHom(const MatrixXd& M, const VectorXd& _v) { ///< homogeneous transformation of the vector _v with the last value treated a 1
+//    int n = _v.size();
+//    assert(M.rows() == n + 1);
+//    VectorXd augV(n + 1);
+//    augV.head(n) = _v;
+//    augV(n) = 1.0;
+
+//    augV = M * augV;
+//    VectorXd ret = augV.head(n);
+//    return ret;
+//}
+
+inline Eigen::Vector3d xformHom(const Eigen::Matrix4d& _W, const Eigen::Vector3d& _x) { ///< homogeneous transformation of the vector _v with the last value treated a 1
+    return _W.topLeftCorner<3,3>() * _x + _W.topRightCorner<3,1>();
+}
+
+inline Eigen::Vector3d xformHom(const Eigen::Isometry3d& _W, const Eigen::Vector3d& _x) { ///< homogeneous transformation of the vector _v with the last value treated a 1
+    return _W.rotation() * _x + _W.translation();
+}
+
+inline Eigen::Vector3d xformHomDir(const Eigen::Matrix4d& _W, const Eigen::Vector3d& _v) { ///< homogeneous transformation of the vector _v treated as a direction: last value 0
+    return _W.topLeftCorner<3,3>() * _v;
+}
+
+inline Eigen::Vector3d xformHomDir(const Eigen::Isometry3d& _W, const Eigen::Vector3d& _v) { ///< homogeneous transformation of the vector _v treated as a direction: last value 0
+    return _W.rotation() * _v;
+}
+
+inline Eigen::Matrix3d makeSkewSymmetric(const Eigen::Vector3d& v){
+    Eigen::Matrix3d result = Eigen::Matrix3d::Zero();
+
+    result(0, 1) = -v(2);
+    result(1, 0) =  v(2);
+    result(0, 2) =  v(1);
+    result(2, 0) = -v(1);
+    result(1, 2) = -v(0);
+    result(2, 1) =  v(0);
+
+    return result;
+}
+
+inline Eigen::Vector3d fromSkewSymmetric(const Eigen::Matrix3d& m) {
+#if _DEBUG
+    if (fabs(m(0, 0)) > M_EPSILON || fabs(m(1, 1)) > M_EPSILON || fabs(m(2, 2)) > M_EPSILON) {
+        std::cout << "Not skew symmetric matrix" << std::endl;
+        std::cerr << m << std::endl;
+        return Eigen::Vector3d::Zero();
+    }
+#endif
+    Eigen::Vector3d ret;
+    ret << m(2,1), m(0,2), m(1,0);
+    return ret;
+}
+
+//------------------------------------------------------------------------------
+enum RotationOrder {UNKNOWN, XYZ, XZY, YZX, YXZ, ZXY, ZYX};
+
+Eigen::Quaterniond matrixToQuat(Eigen::Matrix3d& m);	// forms the Quaterniond from a rotation matrix
+Eigen::Matrix3d quatToMatrix(Eigen::Quaterniond& q);
+
+Eigen::Quaterniond expToQuat(Eigen::Vector3d& v);
+Eigen::Vector3d quatToExp(Eigen::Quaterniond& q);
+
+
+// Note: xyz order means matrix is Rz*Ry*Rx i.e a point as transformed as Rz*Ry*Rx(p)
+// coord sys transformation as in GL will be written as glRotate(z); glRotate(y); glRotate(x)
+Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder _order);
+Eigen::Matrix3d eulerToMatrix(Eigen::Vector3d& v, RotationOrder _order);
+
+Eigen::Matrix3d eulerToMatrixX(double x);
+Eigen::Matrix3d eulerToMatrixY(double y);
+Eigen::Matrix3d eulerToMatrixZ(double z);
+
+Eigen::Vector3d rotatePoint(const Eigen::Quaterniond& q, const Eigen::Vector3d& pt);
+Eigen::Vector3d rotatePoint(const Eigen::Quaterniond& q, double x, double y, double z);
+
+// quaternion stuff
+Eigen::Matrix3d quatDeriv(const Eigen::Quaterniond& q, int el);
+Eigen::Matrix3d quatSecondDeriv(const Eigen::Quaterniond& q, int el1, int el2);
+
+// compute expmap stuff
+Eigen::Matrix3d expMapRot(const Eigen::Vector3d &_expmap); ///< computes the Rotation matrix from a given expmap vector
+Eigen::Matrix3d expMapJac(const Eigen::Vector3d &_expmap);  ///< computes the Jacobian of the expmap
+Eigen::Matrix3d expMapJacDot(const Eigen::Vector3d &_expmap, const Eigen::Vector3d &_qdot); ///< computes the time derivative of the expmap Jacobian
+Eigen::Matrix3d expMapJacDeriv(const Eigen::Vector3d &_expmap, int _qi);    ///< computes the derivative of the Jacobian of the expmap wrt to _qi indexed dof; _qi \in {0,1,2}
 
 //------------------------------------------------------------------------------
 
@@ -257,10 +353,10 @@ bool VerifySE3(const Eigen::Isometry3d& _T);
 /// @brief
 bool Verifyse3(const Eigen::Vector6d& _V);
 
-#include "math/LieGroupinl.h"
+#include "math/GeometryInl.h"
 
 } // namespace math
 } // namespace dart
 
-#endif // #ifndef DART_MATH_LIE_GROUP_H
+#endif // #ifndef DART_MATH_GEOMETRY_H
 

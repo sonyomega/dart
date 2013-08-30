@@ -41,7 +41,7 @@
 #include <vector>
 #include <ctime>
 #include <Eigen/Dense>
-#include "math/EigenHelper.h"
+#include "math/MathTypes.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  C3D file reader and writer
@@ -86,9 +86,9 @@ typedef struct c3d_frame_t {
 float convertDecToFloat(char _bytes[4]);
 void convertFloatToDec(float _f, char* _bytes);
 
-bool loadC3DFile( const char *_fileName, EIGEN_VV_VEC3D& _pointData,
+bool loadC3DFile( const char *_fileName, Eigen::EIGEN_VV_VEC3D& _pointData,
                   int *_nFrame, int *_nMarker, double *_freq );
-bool saveC3DFile( const char* _fileName, EIGEN_VV_VEC3D& _pointData,
+bool saveC3DFile( const char* _fileName, Eigen::EIGEN_VV_VEC3D& _pointData,
                   int _nFrame, int _nMarker, double _freq );
 
 double maxElem(std::vector<double>& _arr, int& _index);

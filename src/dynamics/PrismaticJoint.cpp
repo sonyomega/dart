@@ -35,7 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "math/LieGroup.h"
+#include "math/Geometry.h"
 #include "dynamics/BodyNode.h"
 #include "dynamics/PrismaticJoint.h"
 

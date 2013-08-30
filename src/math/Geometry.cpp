@@ -2,7 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sha9@gatech.edu>
+ * Author(s): Sehoon Ha <sehoon.ha@gmail.com>,
+ *            Jeongseok Lee <jslee02@gmail.com>
  * Date: 06/12/2011
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
@@ -35,19 +36,16 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "math/UtilsRotation.h"
-#include "math/UtilsMath.h"
+#include <iomanip>
 
-// Standard Libraries
-#include <cstdio>
-#include <iostream>
+#include "common/Misc.h"
+#include "math/Geometry.h"
+
 using namespace std;
 using namespace Eigen;
 
-namespace dart
-{
-namespace math
-{
+namespace dart {
+namespace math {
 
 Quaterniond matrixToQuat(Matrix3d& mat) {
     return Quaterniond(mat);
@@ -486,5 +484,6 @@ Matrix3d expMapJacDeriv( const Vector3d &_q, int _qi ) {
     return expMapJacDot(_q, qdot);
 }
 
-} // namespace utils
+
+} // namespace math
 } // namespace dart

@@ -40,8 +40,8 @@
 #include "TestHelpers.h"
 
 #include "common/Timer.h"
-#include "math/LieGroup.h"
-#include "math/UtilsMath.h"
+#include "math/Geometry.h"
+#include "math/Helpers.h"
 #include "dynamics/RevoluteJoint.h"
 #include "dynamics/Skeleton.h"
 #include "simulation/World.h"

@@ -40,8 +40,8 @@
 #include "TestHelpers.h"
 
 #include "common/UtilsCode.h"
-#include "math/LieGroup.h"
-#include "math/UtilsMath.h"
+#include "math/Geometry.h"
+#include "math/Helpers.h"
 #include "dynamics/BallJoint.h"
 #include "dynamics/FreeJoint.h"
 #include "dynamics/PrismaticJoint.h"

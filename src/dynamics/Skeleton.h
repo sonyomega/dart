@@ -43,7 +43,7 @@
 
 #include <Eigen/Dense>
 
-#include "math/LieGroup.h"
+#include "math/Geometry.h"
 #include "common/Deprecated.h"
 #include "dynamics/System.h"
 

@@ -2,7 +2,7 @@
 
 #include "common/Timer.h"
 #include "common/UtilsCode.h"
-#include "math/UtilsMath.h"
+#include "math/Helpers.h"
 #include "lcpsolver/LCPSolver.h"
 #include "collision/fcl_mesh/FCLMESHCollisionDetector.h"
 #include "collision/fcl/FCLCollisionDetector.h"

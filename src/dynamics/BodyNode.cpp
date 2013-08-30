@@ -41,7 +41,7 @@
 #include <iostream>
 
 #include "common/UtilsCode.h"
-#include "math/UtilsMath.h"
+#include "math/Helpers.h"
 #include "renderer/RenderInterface.h"
 #include "dynamics/Joint.h"
 #include "dynamics/Shape.h"
