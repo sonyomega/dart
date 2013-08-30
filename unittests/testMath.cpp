@@ -91,10 +91,6 @@ template<typename T>
 EIGEN_DONT_INLINE
 void inv(const T& a, T& b) { b = a.inverse(); }
 
-template<typename T>
-EIGEN_DONT_INLINE
-void inv_se3(const T& a, T& b) { b = Inv2(a); }
-
 EIGEN_DONT_INLINE
 Isometry3d Inv2(const Isometry3d& I)
 {
@@ -118,6 +114,10 @@ Isometry3d Inv2(const Isometry3d& I)
 
     return ret;
 }
+
+template<typename T>
+EIGEN_DONT_INLINE
+void inv_se3(const T& a, T& b) { b = Inv2(a); }
 
 EIGEN_DONT_INLINE
 void concatenate(const Affine3d& A1, const Affine3d& A2, Affine3d& res) {
