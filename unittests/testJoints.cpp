@@ -51,6 +51,7 @@
 #include "dynamics/UniversalJoint.h"
 #include "dynamics/WeldJoint.h"
 #include "dynamics/EulerJoint.h"
+#include "dynamics/ScrewJoint.h"
 
 using namespace dart;
 using namespace math;
@@ -221,6 +222,14 @@ TEST_F(JOINTS, PRISMATIC_JOINT)
     PrismaticJoint priJoint;
 
     kinematicsTest(&priJoint);
+}
+
+// 1-dof joint
+TEST_F(JOINTS, SCREW_JOINT)
+{
+    ScrewJoint screwJoint;
+
+    kinematicsTest(&screwJoint);
 }
 
 // 2-dof joint

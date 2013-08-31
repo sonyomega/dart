@@ -88,7 +88,7 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
     Eigen::Vector3d vec3 = toVector3d(str8);
     //Eigen::Vector3d valso3 = toVector3d(str9);
     //math::SO3 valSO3 = toSO3(str10);
-    Eigen::Isometry3d valSE3 = toSE3(str11);
+    Eigen::Isometry3d valSE3 = toIsometry3d(str11);
 
     EXPECT_EQ(b, v1);
     EXPECT_EQ(i, v2);

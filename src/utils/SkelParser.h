@@ -53,6 +53,7 @@ class Joint;
 class WeldJoint;
 class PrismaticJoint;
 class RevoluteJoint;
+class ScrewJoint;
 class UniversalJoint;
 class BallJoint;
 class EulerXYZJoint;
@@ -91,72 +92,34 @@ std::string toString(double _v);
 std::string toString(char _v);
 std::string toString(const Eigen::Vector2d& _v);
 std::string toString(const Eigen::Vector3d& _v);
-//std::string toString(const math::Vec3& _v);
-//std::string toString(const math::so3& _v);
-//std::string toString(const math::SO3& _v);
 std::string toString(const Eigen::Isometry3d& _v);
 
-bool            toBool(const std::string& _str);
-int             toInt(const std::string& _str);
-unsigned int    toUInt(const std::string& _str);
-float           toFloat(const std::string& _str);
-double          toDouble(const std::string& _str);
-char            toChar(const std::string& _str);
-Eigen::Vector2d toVector2d(const std::string& _str);
-Eigen::Vector3d toVector3d(const std::string& _str);
-Eigen::Vector6d toVector6d(const std::string& _str);
-//math::Vec3      toVector3d(const std::string& _str);
-//math::so3       toVector3d(const std::string& _str);
-//math::SO3       toSO3(const std::string& _str);
-Eigen::Isometry3d       toSE3(const std::string& _str);
+bool              toBool      (const std::string& _str);
+int               toInt       (const std::string& _str);
+unsigned int      toUInt      (const std::string& _str);
+float             toFloat     (const std::string& _str);
+double            toDouble    (const std::string& _str);
+char              toChar      (const std::string& _str);
+Eigen::Vector2d   toVector2d  (const std::string& _str);
+Eigen::Vector3d   toVector3d  (const std::string& _str);
+Eigen::Vector6d   toVector6d  (const std::string& _str);
+Eigen::Isometry3d toIsometry3d(const std::string& _str);
 
-std::string getValueString(tinyxml2::XMLElement* _parentElement,
-                    const std::string& _name);
+std::string       getValueString    (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+bool              getValueBool      (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+int               getValueInt       (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+unsigned int      getValueUInt      (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+float             getValueFloat     (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+double            getValueDouble    (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+char              getValueChar      (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+Eigen::Vector2d   getValueVector2d  (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+Eigen::Vector3d   getValueVector3d  (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+Eigen::Vector6d   getValueVector6d  (tinyxml2::XMLElement* _parentElement, const std::string& _name);
+Eigen::Isometry3d getValueIsometry3d(tinyxml2::XMLElement* _parentElement, const std::string& _name);
 
-bool getValueBool(tinyxml2::XMLElement* _parentElement,
-                  const std::string& _name);
+bool hasElement(tinyxml2::XMLElement* _parentElement, const std::string& _name);
+tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement, const std::string& _name);
 
-int getValueInt(tinyxml2::XMLElement* _parentElement,
-                const std::string& _name);
-
-unsigned int getValueUInt(tinyxml2::XMLElement* _parentElement,
-                          const std::string& _name);
-
-float getValueFloat(tinyxml2::XMLElement* _parentElement,
-                    const std::string& _name);
-
-double getValueDouble(tinyxml2::XMLElement* _parentElement,
-                      const std::string& _name);
-
-char getValueChar(tinyxml2::XMLElement* _parentElement,
-                  const std::string& _name);
-
-Eigen::Vector2d getValueVector2d(tinyxml2::XMLElement* _parentElement,
-                                 const std::string& _name);
-
-Eigen::Vector3d getValueVector3d(tinyxml2::XMLElement* _parentElement,
-                                 const std::string& _name);
-
-Eigen::Vector6d getValueVector6d(tinyxml2::XMLElement* _parentElement,
-                                 const std::string& _name);
-
-Eigen::Vector3d getValueVec3(tinyxml2::XMLElement* _parentElement,
-                                 const std::string& _name);
-
-//math::so3 getValueso3(tinyxml2::XMLElement* _parentElement,
-//                      const std::string& _name);
-
-//math::SO3 getValueSO3(tinyxml2::XMLElement* _parentElement,
-//                      const std::string& _name);
-
-Eigen::Isometry3d getValueSE3(tinyxml2::XMLElement* _parentElement,
-                      const std::string& _name);
-
-bool hasElement(tinyxml2::XMLElement* _parentElement,
-                const std::string& _name);
-
-tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement,
-                                 const std::string& _name);
 //------------------------------------------------------------------------------
 // Parsing Helper Functions
 //------------------------------------------------------------------------------
@@ -185,6 +148,10 @@ dynamics::PrismaticJoint* readPrismaticJoint(
 
 dynamics::RevoluteJoint* readRevoluteJoint(
         tinyxml2::XMLElement* _revoluteJointElement,
+        dynamics::Skeleton* _skeleton);
+
+dynamics::ScrewJoint* readScrewJoint(
+        tinyxml2::XMLElement* _screwJointElement,
         dynamics::Skeleton* _skeleton);
 
 dynamics::UniversalJoint* readUniversalJoint(

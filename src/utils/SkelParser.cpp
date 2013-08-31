@@ -51,6 +51,7 @@
 #include "dynamics/WeldJoint.h"
 #include "dynamics/PrismaticJoint.h"
 #include "dynamics/RevoluteJoint.h"
+#include "dynamics/ScrewJoint.h"
 #include "dynamics/TranslationalJoint.h"
 #include "dynamics/BallJoint.h"
 #include "dynamics/FreeJoint.h"
@@ -264,7 +265,7 @@ dynamics::Skeleton* readSkeleton(tinyxml2::XMLElement* _skeletonElement,
     // transformation
     if (hasElement(_skeletonElement, "transformation"))
     {
-        Eigen::Isometry3d W = getValueSE3(_skeletonElement, "transformation");
+        Eigen::Isometry3d W = getValueIsometry3d(_skeletonElement, "transformation");
         newSkeleton->setWorldTransformation(W, false);
     }
 
@@ -335,7 +336,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
     // transformation
     if (hasElement(_bodyNodeElement, "transformation"))
     {
-        Eigen::Isometry3d W = getValueSE3(_bodyNodeElement, "transformation");
+        Eigen::Isometry3d W = getValueIsometry3d(_bodyNodeElement, "transformation");
         newBodyNode->setWorldTransform(_skeleton->getWorldTransformation() * W);
     }
 
@@ -387,7 +388,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
         // transformation
         if (hasElement(vizElement, "transformation"))
         {
-            Eigen::Isometry3d W = getValueSE3(vizElement, "transformation");
+            Eigen::Isometry3d W = getValueIsometry3d(vizElement, "transformation");
             shape->setTransform(W);
         }
 
@@ -447,7 +448,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
         // transformation
         if (hasElement(colElement, "transformation"))
         {
-            Eigen::Isometry3d W = getValueSE3(colElement, "transformation");
+            Eigen::Isometry3d W = getValueIsometry3d(colElement, "transformation");
             shape->setTransform(W);
         }
     }
@@ -489,7 +490,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
         // offset
         if (hasElement(inertiaElement, "offset"))
         {
-            Eigen::Vector3d offset = getValueVec3(inertiaElement, "offset");
+            Eigen::Vector3d offset = getValueVector3d(inertiaElement, "offset");
             newBodyNode->setLocalCOM(offset);
         }
     }
@@ -591,7 +592,7 @@ dynamics::Joint* readJoint(tinyxml2::XMLElement* _jointElement,
     if (parentBody)
          parentWorld = parentBody->getWorldTransform();
     if (hasElement(_jointElement, "transformation"))
-        childToJoint = getValueSE3(_jointElement, "transformation");
+        childToJoint = getValueIsometry3d(_jointElement, "transformation");
     Eigen::Isometry3d parentToJoint = math::Inv(parentWorld)*childWorld*childToJoint;
     newJoint->setTransformFromChildBody(childToJoint);
     newJoint->setTransformFromParentBody(parentToJoint);
@@ -761,6 +762,89 @@ dynamics::PrismaticJoint* readPrismaticJoint(
     }
 
     return newPrismaticJoint;
+}
+
+dynamics::ScrewJoint* readScrewJoint(
+        tinyxml2::XMLElement* _screwJointElement,
+        dynamics::Skeleton* _skeleton)
+{
+    assert(_screwJointElement != NULL);
+    assert(_skeleton != NULL);
+
+    dynamics::ScrewJoint* newScrewJoint = new dynamics::ScrewJoint;
+
+    //--------------------------------------------------------------------------
+    // axis
+    if (hasElement(_screwJointElement, "axis"))
+    {
+        tinyxml2::XMLElement* axisElement
+                = getElement(_screwJointElement, "axis");
+
+        // xyz
+        Eigen::Vector3d xyz = getValueVector3d(axisElement, "xyz");
+        newScrewJoint->setAxis(xyz);
+
+        // pitch
+        if (hasElement(axisElement, "pitch"))
+        {
+            double pitch = getValueDouble(axisElement, "pitch");
+            newScrewJoint->setPitch(pitch);
+        }
+
+        // damping
+        if (hasElement(axisElement, "damping"))
+        {
+            double damping = getValueDouble(axisElement, "damping");
+            newScrewJoint->setDampingCoefficient(0, damping);
+        }
+
+        // limit
+        if (hasElement(axisElement, "limit"))
+        {
+            tinyxml2::XMLElement* limitElement
+                    = getElement(axisElement, "limit");
+
+            // lower
+            if (hasElement(limitElement, "lower"))
+            {
+                double lower = getValueDouble(limitElement, "lower");
+                newScrewJoint->getDof(0)->set_qMin(lower);
+            }
+
+            // upper
+            if (hasElement(limitElement, "upper"))
+            {
+                double upper = getValueDouble(limitElement, "upper");
+                newScrewJoint->getDof(0)->set_qMax(upper);
+            }
+        }
+    }
+    else
+    {
+        assert(0);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_pos
+    if (hasElement(_screwJointElement, "init_pos"))
+    {
+        double init_pos = getValueDouble(_screwJointElement, "init_pos");
+        Eigen::VectorXd ipos = Eigen::VectorXd(1);
+        ipos << init_pos;
+        newScrewJoint->set_q(ipos);
+    }
+
+    //--------------------------------------------------------------------------
+    // init_vel
+    if (hasElement(_screwJointElement, "init_vel"))
+    {
+        double init_vel = getValueDouble(_screwJointElement, "init_vel");
+        Eigen::VectorXd ivel = Eigen::VectorXd(1);
+        ivel << init_vel;
+        newScrewJoint->set_q(ivel);
+    }
+
+    return newScrewJoint;
 }
 
 dynamics::UniversalJoint* readUniversalJoint(
@@ -1167,11 +1251,6 @@ std::string toString(const Eigen::Vector3d& _v)
     return boost::lexical_cast<std::string>(rowVector3d);
 }
 
-//std::string toString(const math::SO3& _v)
-//{
-//    return boost::lexical_cast<std::string>(_v);
-//}
-
 std::string toString(const Eigen::Isometry3d& _v)
 {
     std::ostringstream ostr;
@@ -1325,47 +1404,7 @@ Eigen::Vector6d toVector6d(const std::string& _str)
     return ret;
 }
 
-//math::SO3 toSO3(const std::string& _str)
-//{
-//    math::SO3 ret;
-//    Eigen::Vector3d EulerXYZ;
-
-//    std::vector<double> elements;
-//    std::vector<std::string> pieces;
-//    boost::split(pieces, _str, boost::is_any_of(" "));
-//    assert(pieces.size() == 3);
-
-//    for (int i = 0; i < pieces.size(); ++i)
-//    {
-//        if (pieces[i] != "")
-//        {
-//            try
-//            {
-//                elements.push_back(boost::lexical_cast<double>(pieces[i].c_str()));
-//            }
-//            catch(boost::bad_lexical_cast& e)
-//            {
-//                std::cerr << "value ["
-//                          << pieces[i]
-//                          << "] is not a valid double for EulerXYZ["
-//                          << i
-//                          << "]"
-//                          << std::endl;
-//            }
-//        }
-//    }
-
-//    EulerXYZ(0) = elements[0];
-//    EulerXYZ(1) = elements[1];
-//    EulerXYZ(2) = elements[2];
-
-//    ret.setEulerXYZ(EulerXYZ);
-
-//    return ret;
-//}
-
-
-Eigen::Isometry3d toSE3(const std::string& _str)
+Eigen::Isometry3d toIsometry3d(const std::string& _str)
 {
     std::vector<double> elements;
     std::vector<std::string> pieces;
@@ -1506,34 +1545,14 @@ Eigen::Vector3d getValueVec3(tinyxml2::XMLElement* _parentElement, const std::st
     return toVector3d(str);
 }
 
-//math::so3 getValueso3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
-//{
-//    assert(_parentElement != NULL);
-//    assert(!_name.empty());
-
-//    std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
-
-//    return toVector3d(str);
-//}
-
-//math::SO3 getValueSO3(tinyxml2::XMLElement* _parentElement, const string& _name)
-//{
-//    assert(_parentElement != NULL);
-//    assert(!_name.empty());
-
-//    std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
-
-//    return toSO3(str);
-//}
-
-Eigen::Isometry3d getValueSE3(tinyxml2::XMLElement* _parentElement, const std::string& _name)
+Eigen::Isometry3d getValueIsometry3d(tinyxml2::XMLElement* _parentElement, const std::string& _name)
 {
     assert(_parentElement != NULL);
     assert(!_name.empty());
 
     std::string str = _parentElement->FirstChildElement(_name.c_str())->GetText();
 
-    return toSE3(str);
+    return toIsometry3d(str);
 }
 
 bool hasElement(tinyxml2::XMLElement* _parentElement, const std::string& _name)
