@@ -243,11 +243,11 @@ public:
 
     // TODO: Check
     /// @brief The number of the dofs by which this node is affected.
-    int getNumDependentDofs() const { return mDependentDofs.size(); }
+    int getNumDependentDofs() const { return mDependentDofIndexes.size(); }
 
     // TODO: Check
     /// @brief Return an dof index from the array index (< getNumDependentDofs).
-    int getDependentDof(int _arrayIndex) const { return mDependentDofs[_arrayIndex]; }
+    int getDependentDof(int _arrayIndex) const { return mDependentDofIndexes[_arrayIndex]; }
 
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)
@@ -540,7 +540,7 @@ protected:
     std::vector<BodyNode*> mChildBodyNodes;
 
     /// @brief A list of dependent dof indices
-    std::vector<int> mDependentDofs;
+    std::vector<int> mDependentDofIndexes;
 
     //--------------------------------------------------------------------------
     // Dynamical Properties

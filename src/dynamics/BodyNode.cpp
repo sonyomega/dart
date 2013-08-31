@@ -144,18 +144,19 @@ BodyNode* BodyNode::getChildBodyNode(int _idx) const
 
 void BodyNode::setDependDofList()
 {
-    mDependentDofs.clear();
+    mDependentDofIndexes.clear();
+
     if (mParentBodyNode != NULL)
     {
-        mDependentDofs.insert(mDependentDofs.end(),
-                              mParentBodyNode->mDependentDofs.begin(),
-                              mParentBodyNode->mDependentDofs.end());
+        mDependentDofIndexes.insert(mDependentDofIndexes.end(),
+                              mParentBodyNode->mDependentDofIndexes.begin(),
+                              mParentBodyNode->mDependentDofIndexes.end());
     }
 
     for (int i = 0; i < getNumLocalDofs(); i++)
     {
         int dofID = getLocalDof(i)->getSkelIndex();
-        mDependentDofs.push_back(dofID);
+        mDependentDofIndexes.push_back(dofID);
     }
 
 #if _DEBUG
@@ -793,13 +794,9 @@ void BodyNode::evalExternalForcesRecursive(Eigen::VectorXd& _extForce)
 
 void BodyNode::aggregateMass(Eigen::MatrixXd& _M)
 {
-    for(int i=0; i<getNumDependentDofs(); i++)
-    {
-        for(int j=0; j<getNumDependentDofs(); j++)
-        {
-            _M(mDependentDofs[i], mDependentDofs[j]) += mM(i, j);
-        }
-    }
+    for(int i = 0; i < getNumDependentDofs(); i++)
+        for(int j = 0; j < getNumDependentDofs(); j++)
+            _M(mDependentDofIndexes[i], mDependentDofIndexes[j]) += mM(i, j);
 }
 
 void BodyNode::_updateGeralizedInertia()
