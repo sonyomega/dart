@@ -180,8 +180,6 @@ void Skeleton::initKinematics()
         mBodyNodes.at(i)->setDependDofList();
         mBodyNodes.at(i)->init();
     }
-
-    //boost::write_graphviz(std::cout, *mGraph);
 }
 
 void Skeleton::updateForwardKinematics(bool _firstDerivative,
