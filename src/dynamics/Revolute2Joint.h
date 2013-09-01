@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/21/2013
+ * Date: 08/22/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,45 +35,39 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_DYNAMICS_EULER_JOINT_H
-#define DART_DYNAMICS_EULER_JOINT_H
+#ifndef DART_DYNAMICS_UNIVERSAL_JOINT_H
+#define DART_DYNAMICS_UNIVERSAL_JOINT_H
 
 #include <Eigen/Dense>
 
-#include "dynamics/GenCoord.h"
+#include "dynamics/Dof.h"
 #include "dynamics/Joint.h"
 
 namespace dart {
 namespace dynamics {
 
-class EulerJoint : public Joint
+class UniversalJoint : public Joint
 {
 public:
-    enum AxisOrder
-    {
-        AO_ZYX = 0,
-        AO_ZYZ = 1,
-        AO_XYZ = 2,
-        AO_ZXY = 3
-    };
-
     //--------------------------------------------------------------------------
     //
     //--------------------------------------------------------------------------
     /// @brief
-    EulerJoint();
+    UniversalJoint(const Eigen::Vector3d& _axis0 = Eigen::Vector3d(1.0, 0.0, 0.0),
+                   const Eigen::Vector3d& _axis1 = Eigen::Vector3d(0.0, 1.0, 0.0),
+                   const std::string& _name = "Universal joint");
 
     /// @brief
-    virtual ~EulerJoint();
+    virtual ~UniversalJoint();
 
     //--------------------------------------------------------------------------
     // Kinematical Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setAxisOrder(AxisOrder _order);
+    void setAxis(int _idx, const Eigen::Vector3d& _axis);
 
     /// @brief
-    AxisOrder getAxisOrder() const;
+    const Eigen::Vector3d& getAxis(int _idx) const;
 
     // Documentation is inherited.
     virtual double getPotentialEnergy() const { return 0.0; }
@@ -103,10 +97,10 @@ protected:
     //
     //--------------------------------------------------------------------------
     /// @brief Euler angles X, Y, Z
-    GenCoord mCoordinate[3];
+    GenCoord mCoordinate[2];
 
-    /// @brief
-    AxisOrder mAxisOrder;
+    /// @brief Rotational axis.
+    Eigen::Vector3d mAxis[2];
 
 private:
 
@@ -118,5 +112,4 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_DYNAMICS_EULER_JOINT_H
-
+#endif // #ifndef DART_DYNAMICS_UNIVERSAL_JOINT_H

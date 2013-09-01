@@ -40,7 +40,7 @@
 
 #include <Eigen/Dense>
 
-#include "dynamics/Dof.h"
+#include "dynamics/GenCoord.h"
 #include "dynamics/Joint.h"
 
 namespace dart {

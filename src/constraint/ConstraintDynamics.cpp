@@ -7,7 +7,7 @@
 #include "collision/fcl_mesh/FCLMESHCollisionDetector.h"
 #include "collision/fcl/FCLCollisionDetector.h"
 #include "dynamics/BodyNode.h"
-#include "dynamics/Dof.h"
+#include "dynamics/GenCoord.h"
 #include "dynamics/Skeleton.h"
 
 using namespace Eigen;

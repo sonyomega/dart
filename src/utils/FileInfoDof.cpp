@@ -40,7 +40,7 @@
 #include <iostream>
 
 #include "dynamics/Skeleton.h"
-#include "dynamics/Dof.h"
+#include "dynamics/GenCoord.h"
 #include "utils/FileInfoDof.h"
 
 using namespace std;

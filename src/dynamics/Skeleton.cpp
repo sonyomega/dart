@@ -39,7 +39,7 @@
 #include "math/Geometry.h"
 #include "math/Helpers.h"
 #include "dynamics/BodyNode.h"
-#include "dynamics/Dof.h"
+#include "dynamics/GenCoord.h"
 #include "dynamics/Joint.h"
 #include "dynamics/Skeleton.h"
 #include "dynamics/Skeleton.h"

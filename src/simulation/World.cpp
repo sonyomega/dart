@@ -43,7 +43,7 @@
 #include <iostream>
 
 #include "integration/EulerIntegrator.h"
-#include "dynamics/Dof.h"
+#include "dynamics/GenCoord.h"
 #include "dynamics/Skeleton.h"
 #include "constraint/ConstraintDynamics.h"
 #include "simulation/World.h"

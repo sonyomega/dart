@@ -38,8 +38,7 @@
 
 #include <limits>
 
-#include "Dof.h"
-//#include "Transformation.h"
+#include "GenCoord.h"
 
 namespace dart {
 namespace dynamics {

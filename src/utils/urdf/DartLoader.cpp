@@ -18,7 +18,7 @@
 #include "dynamics/PrismaticJoint.h"
 #include "dynamics/WeldJoint.h"
 #include "dynamics/FreeJoint.h"
-#include "dynamics/Dof.h"
+#include "dynamics/GenCoord.h"
 #include "dynamics/Shape.h"
 #include "dynamics/ShapeBox.h"
 #include "dynamics/ShapeEllipsoid.h"

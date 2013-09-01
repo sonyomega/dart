@@ -43,7 +43,7 @@
 
 #include "RRT.h"
 #include "simulation/World.h"
-#include "dynamics/Dof.h"
+#include "dynamics/GenCoord.h"
 #include "dynamics/Skeleton.h"
 
 using namespace std;

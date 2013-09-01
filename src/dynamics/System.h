@@ -41,7 +41,7 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "dynamics/Dof.h"
+#include "dynamics/GenCoord.h"
 
 namespace dart {
 namespace dynamics {

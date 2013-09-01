@@ -36,8 +36,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_DYNAMICS_DOF_H
-#define DART_DYNAMICS_DOF_H
+#ifndef DART_DYNAMICS_GEN_COORD_H
+#define DART_DYNAMICS_GEN_COORD_H
 
 #include <cassert>
 #include <string>
@@ -190,5 +190,5 @@ protected:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_DYNAMICS_DOF_H
+#endif // #ifndef DART_DYNAMICS_GEN_COORD_H
 

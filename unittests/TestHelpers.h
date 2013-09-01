@@ -14,7 +14,7 @@
 #include "dynamics/BodyNode.h"
 #include "constraint/ConstraintDynamics.h"
 #include "dynamics/BodyNode.h"
-#include "dynamics/Dof.h"
+#include "dynamics/GenCoord.h"
 #include "dynamics/Joint.h"
 #include "dynamics/FreeJoint.h"
 #include "dynamics/ShapeBox.h"
