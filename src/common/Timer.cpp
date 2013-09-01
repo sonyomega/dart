@@ -52,7 +52,6 @@ double subtractTimes( double endTime, double startTime) {
     return (endTime - startTime) / CLOCKS_PER_SEC;
 }
 
-
 Timer::Timer(const char* name) {
     mCount = 0;
     mTotal = 0;

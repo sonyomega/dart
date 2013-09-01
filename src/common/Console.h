@@ -40,13 +40,7 @@
 #define DART_COMMON_CONSOLE_H
 
 #include <string>
-#include <vector>
-#include <iterator>
-#include <algorithm> // for copy
 #include <iostream>
-#include <istream>
-#include <fstream>
-#include <sstream>
 
 /// @briefOutput a message
 #define dtmsg (dart::common::colorMsg("Msg", 32))

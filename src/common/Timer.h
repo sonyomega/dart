@@ -50,8 +50,6 @@ typedef struct {
 namespace dart {
 namespace common {
 
-class Timer;
-
 /// @brief The implementation of Timer class
 ///
 /// This is a definition of mTimer class.
