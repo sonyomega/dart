@@ -778,14 +778,14 @@ void BodyNode::updateMassMatrix()
 
 void BodyNode::evalExternalForcesRecursive(Eigen::VectorXd& _extForce)
 {
-//    assert(mParentJoint != NULL);
+    assert(mParentJoint != NULL);
 
-//    const math::Jacobian& J = mParentJoint->getLocalJacobian();
+    //const math::Jacobian& J = mParentJoint->getLocalJacobian();
 
-//    Eigen::VectorXd localForce = J.transpose()*mFext;
+    Eigen::VectorXd localForce = mBodyJacobian.transpose()*mFext;
 
-//    for(int i = 0; i < getNumDependentDofs(); i++)
-//        _extForce(mDependentDofs[i]) += mFext(i);
+    for(int i = 0; i < getNumDependentDofs(); i++)
+        _extForce(mDependentDofIndexes[i]) += localForce(i);
 }
 
 void BodyNode::aggregateMass(Eigen::MatrixXd& _M)
