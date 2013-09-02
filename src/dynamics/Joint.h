@@ -76,8 +76,7 @@ public:
         PLANAR,        // 2-dof
         TRANSLATIONAL, // 3-dof
         BALL,          // 3-dof
-        EULER_XYZ,     // 3-dof
-        EULER_ZYX,     // 3-dof
+        EULER,         // 3-dof
         FREE           // 6-dof
     };
 
@@ -103,20 +102,19 @@ public:
     // Kinematical Properties
     //--------------------------------------------------------------------------
     /// @brief
-    JointType getJointType() const { return mJointType; }
+    JointType getJointType() const;
 
     /// @brief
-    const Eigen::Isometry3d& getLocalTransformation() const { return mT; }
+    const Eigen::Isometry3d& getLocalTransformation() const;
 
     /// @brief
     const math::Jacobian& getLocalJacobian() const { return mS; }
 
     /// @brief
-    const Eigen::Vector6d& getLocalVelocity() const { return mV; }
+    const Eigen::Vector6d& getLocalVelocity() const;
 
     /// @brief
-    const math::Jacobian& getLocalJacobianFirstDerivative() const
-    { return mdS; }
+    const math::Jacobian& getLocalJacobianFirstDerivative() const;
 
     /// @brief
     const Eigen::Vector6d& getLocalAcceleration() const { return mdV; }
@@ -125,10 +123,10 @@ public:
     // Structueral Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setSkelIndex(int _idx){mSkelIndex= _idx;}
+    void setSkelIndex(int _idx);
 
     /// @brief
-    int getSkelIndex() const {return mSkelIndex;}
+    int getSkelIndex() const;
 
     /// @brief
     void setParentBody(BodyNode* _body);
@@ -144,19 +142,17 @@ public:
 
     /// @brief
     DEPRECATED BodyNode* getParentNode() const { return mParentBody; }
-    BodyNode* getParentBodyNode() const { return mParentBody; }
+    BodyNode* getParentBodyNode() const;
 
     /// @brief
     DEPRECATED BodyNode* getChildNode() const { return mChildBody; }
-    BodyNode* getChildBodyNode() const { return mChildBody; }
+    BodyNode* getChildBodyNode() const;
 
     /// @brief
-    const Eigen::Isometry3d& getLocalTransformationFromParentBody() const
-    { return mT_ParentBodyToJoint; }
+    const Eigen::Isometry3d& getLocalTransformationFromParentBody() const;
 
     /// @brief
-    const Eigen::Isometry3d& getLocalTransformationFromChildBody() const
-    { return mT_ChildBodyToJoint; }
+    const Eigen::Isometry3d& getLocalTransformationFromChildBody() const;
 
     // TODO: Not implemented.
     /// @brief

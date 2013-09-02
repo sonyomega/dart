@@ -50,7 +50,7 @@ PrismaticJoint::PrismaticJoint(const Eigen::Vector3d& axis, const std::string& _
       mDirectionVector(axis)
       //mDampingCoefficient(0.0)
 {
-    mJointType = REVOLUTE;
+    mJointType = PRISMATIC;
     mGenCoords.push_back(&mCoordinate);
     mS = Eigen::Matrix<double,6,1>::Zero();
     mdS = Eigen::Matrix<double,6,1>::Zero();
