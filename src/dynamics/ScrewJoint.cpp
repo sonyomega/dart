@@ -70,6 +70,11 @@ void ScrewJoint::setAxis(const Eigen::Vector3d& _axis)
     mAxis = _axis;
 }
 
+const Eigen::Vector3d&ScrewJoint::getAxis() const
+{
+    return mAxis;
+}
+
 Eigen::Vector3d ScrewJoint::getAxisGlobal() const
 {
     Eigen::Isometry3d parentTransf = Eigen::Isometry3d::Identity();

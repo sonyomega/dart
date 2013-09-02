@@ -66,7 +66,7 @@ public:
     void setAxis(const Eigen::Vector3d& _axis);
 
     /// @brief
-    const Eigen::Vector3d& getAxis() const { return mDirectionVector; }
+    const Eigen::Vector3d& getAxis() const;
 
     /// @brief
     Eigen::Vector3d getAxisGlobal() const;

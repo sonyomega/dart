@@ -48,7 +48,7 @@ EulerJoint::EulerJoint()
     : Joint("EulerXYZ joint"),
       mAxisOrder(AO_XYZ)
 {
-    mJointType = EULER_XYZ;
+    mJointType = EULER;
     mGenCoords.push_back(&mCoordinate[0]);
     mGenCoords.push_back(&mCoordinate[1]);
     mGenCoords.push_back(&mCoordinate[2]);

@@ -73,6 +73,46 @@ const std::string& Joint::getName() const
     return mName;
 }
 
+Joint::JointType Joint::getJointType() const
+{
+    return mJointType;
+}
+
+const Eigen::Isometry3d&Joint::getLocalTransformation() const
+{
+    return mT;
+}
+
+const math::Jacobian&Joint::getLocalJacobian() const
+{
+    return mS;
+}
+
+const Eigen::Vector6d&Joint::getLocalVelocity() const
+{
+    return mV;
+}
+
+const math::Jacobian&Joint::getLocalJacobianFirstDerivative() const
+{
+    return mdS;
+}
+
+const Eigen::Vector6d&Joint::getLocalAcceleration() const
+{
+    return mdV;
+}
+
+void Joint::setSkelIndex(int _idx)
+{
+    mSkelIndex= _idx;
+}
+
+int Joint::getSkelIndex() const
+{
+    return mSkelIndex;
+}
+
 void Joint::setParentBody(BodyNode* _body)
 {
     mParentBody = _body;
@@ -121,8 +161,28 @@ void Joint::setTransformFromChildBody(const Eigen::Isometry3d& _T)
     mT_ChildBodyToJoint = _T;
 }
 
+BodyNode* Joint::getParentBodyNode() const
+{
+    return mParentBody;
+}
+
+BodyNode* Joint::getChildBodyNode() const
+{
+    return mChildBody;
+}
+
+const Eigen::Isometry3d&Joint::getLocalTransformationFromParentBody() const
+{
+    return mT_ParentBodyToJoint;
+}
+
+const Eigen::Isometry3d&Joint::getLocalTransformationFromChildBody() const
+{
+    return mT_ChildBodyToJoint;
+}
+
 void Joint::updateKinematics(bool _firstDerivative,
-                                  bool _secondDerivative)
+                             bool _secondDerivative)
 {
     _updateTransformation();
     _updateVelocity();

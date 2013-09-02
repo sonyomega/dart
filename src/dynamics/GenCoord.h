@@ -80,16 +80,16 @@ public:
     void init();
 
     /// @brief
-    void setName(const std::string& _name) { mName = _name; }
+    void setName(const std::string& _name);
 
     /// @brief
-    const std::string& getName() const { return mName; }
+    const std::string& getName() const;
 
     /// @brief
-    int getSkelIndex() const { return mSkelIndex; }
+    int getSkelIndex() const;
 
     /// @brief
-    void setSkelIndex(int _idx) { mSkelIndex = _idx; }
+    void setSkelIndex(int _idx);
 
     /// @brief
     //void setJoint(Joint *_j) { mJoint = _j; }

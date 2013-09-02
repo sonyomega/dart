@@ -69,6 +69,11 @@ void PrismaticJoint::setAxis(const Eigen::Vector3d& _axis)
     mDirectionVector = _axis;
 }
 
+const Eigen::Vector3d&PrismaticJoint::getAxis() const
+{
+    return mDirectionVector;
+}
+
 Eigen::Vector3d PrismaticJoint::getAxisGlobal() const
 {
     Eigen::Isometry3d parentTransf = Eigen::Isometry3d::Identity();

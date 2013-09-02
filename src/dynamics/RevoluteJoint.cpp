@@ -67,6 +67,11 @@ void RevoluteJoint::setAxis(const Eigen::Vector3d& _axis)
     mAxis = _axis;
 }
 
+const Eigen::Vector3d&RevoluteJoint::getAxis() const
+{
+    return mAxis;
+}
+
 Eigen::Vector3d RevoluteJoint::getAxisGlobal() const
 {
     Eigen::Isometry3d parentTransf = Eigen::Isometry3d::Identity();

@@ -87,6 +87,26 @@ void GenCoord::init()
     //    mJoint = NULL;	// remains null if const dof
 }
 
+void GenCoord::setName(const std::string& _name)
+{
+    mName = _name;
+}
+
+const std::string& GenCoord::getName() const
+{
+    return mName;
+}
+
+int GenCoord::getSkelIndex() const
+{
+    return mSkelIndex;
+}
+
+void GenCoord::setSkelIndex(int _idx)
+{
+    mSkelIndex = _idx;
+}
+
 void GenCoord::backupInitState()
 {
     init_q = q;

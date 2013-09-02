@@ -70,47 +70,43 @@ public:
     virtual ~Shape() {}
 
     /// @brief
-    void setColor(const Eigen::Vector3d& _color) { mColor = _color; }
+    void setColor(const Eigen::Vector3d& _color);
 
     /// @brief
-    Eigen::Vector3d getColor() const { return mColor; }
+    Eigen::Vector3d getColor() const;
 
     /// @brief
     void setDim(const Eigen::Vector3d& _dim);
 
     /// @brief
-    Eigen::Vector3d getDim() const { return mDim; }
+    Eigen::Vector3d getDim() const;
 
     /// @brief
-    void setTransform(const Eigen::Isometry3d& _Transform )
-    { mTransform = _Transform; }
+    void setTransform(const Eigen::Isometry3d& _Transform);
 
     /// @brief
-    Eigen::Isometry3d getTransform() const { return mTransform; }
+    Eigen::Isometry3d getTransform() const;
 
     /// @brief
-    void setOffset(Eigen::Vector3d _offset)
-    { mTransform.translation() = _offset; }
+    void setOffset(Eigen::Vector3d _offset);
 
     /// @brief
-    Eigen::Vector3d getOffset() const
-    { return mTransform.translation(); }
+    Eigen::Vector3d getOffset() const;
 
     /// @brief
-    virtual Eigen::Matrix3d computeInertia(double _mass) const
-    { return Eigen::Matrix3d::Zero(); }
+    virtual Eigen::Matrix3d computeInertia(double _mass) const;
 
     /// @brief
-    void setVolume(double _v) { mVolume = _v; }
+    void setVolume(double _v);
 
     /// @brief
-    double getVolume() const { return mVolume; }
+    double getVolume() const;
 
     /// @brief
     int getID() const { return mID; }
 
     /// @brief
-    ShapeType getShapeType() const { return mType; }
+    ShapeType getShapeType() const;
 
     /// @brief
     virtual void draw(renderer::RenderInterface* _ri = NULL,

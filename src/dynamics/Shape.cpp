@@ -54,10 +54,65 @@ Shape::Shape(ShapeType _type) :
 {
 }
 
+void Shape::setColor(const Eigen::Vector3d& _color)
+{
+    mColor = _color;
+}
+
+Eigen::Vector3d Shape::getColor() const
+{
+    return mColor;
+}
+
 void Shape::setDim(const Eigen::Vector3d& _dim)
 {
     mDim = _dim;
     computeVolume();
+}
+
+Eigen::Vector3d Shape::getDim() const
+{
+    return mDim;
+}
+
+void Shape::setTransform(const Eigen::Isometry3d& _Transform)
+{
+    mTransform = _Transform;
+}
+
+Eigen::Isometry3d Shape::getTransform() const
+{
+    return mTransform;
+}
+
+void Shape::setOffset(Eigen::Vector3d _offset)
+{
+    mTransform.translation() = _offset;
+}
+
+Eigen::Vector3d Shape::getOffset() const
+{
+    return mTransform.translation();
+}
+
+Eigen::Matrix3d Shape::computeInertia(double _mass) const
+{
+    return Eigen::Matrix3d::Zero();
+}
+
+void Shape::setVolume(double _v)
+{
+    mVolume = _v;
+}
+
+double Shape::getVolume() const
+{
+    return mVolume;
+}
+
+Shape::ShapeType Shape::getShapeType() const
+{
+    return mType;
 }
 
 int Shape::mCounter = PRIMITIVE_MAGIC_NUMBER;
