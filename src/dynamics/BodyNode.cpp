@@ -336,7 +336,7 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
     // render the subtree
     for (unsigned int i = 0; i < mJointsChild.size(); i++)
     {
-        mJointsChild[i]->getChildNode()->draw(_ri, _color, _useDefaultColor);
+        mJointsChild[i]->getChildBodyNode()->draw(_ri, _color, _useDefaultColor);
     }
 
     _ri->popMatrix();

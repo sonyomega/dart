@@ -340,7 +340,7 @@ public:
     /// Coordinate transformations are applied when needed. The point of
     /// application and the force in local coordinates are stored in mContacts.
     /// When conversion is needed, make sure the transformations are avaialble.
-    DEPRECATED void addExtForce(const Eigen::Vector3d& _offset,
+    void addExtForce(const Eigen::Vector3d& _offset,
                      const Eigen::Vector3d& _force,
                      bool _isOffsetLocal = true, bool _isForceLocal = false);
 
@@ -587,7 +587,7 @@ protected:
     /// @brief List of contact points where external forces are applied.
     /// contact points are a pair of (local point offset, Cartesian force in
     /// local coordinates).
-    DEPRECATED std::vector< std::pair<Eigen::Vector3d, Eigen::Vector3d> > mContacts;
+    std::vector< std::pair<Eigen::Vector3d, Eigen::Vector3d> > mContacts;
 
 private:
     void _updateGeralizedInertia();
