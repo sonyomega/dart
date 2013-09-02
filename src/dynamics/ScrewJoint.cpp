@@ -50,7 +50,7 @@ ScrewJoint::ScrewJoint(const Eigen::Vector3d& axis,
       mPitch(_pitch)
       //mDampingCoefficient(0.0)
 {
-    mJointType = REVOLUTE;
+    mJointType = SCREW;
     mGenCoords.push_back(&mCoordinate);
 
     mS = Eigen::Matrix<double,6,1>::Zero();

@@ -68,16 +68,17 @@ public:
     enum JointType
     {
         UNKNOWN,
-        WELD,          // 0 dof
-        REVOLUTE,
-        PRISMATIC,     // 1 dof
-        UNIVERSAL,
-        PLANAR,        // 2 dof
-        TRANSLATIONAL,
-        BALL,          // 3 dof
-        EULER_XYZ,
-        EULER_ZYX,
-        FREE           // 6 dof
+        WELD,          // 0-dof
+        REVOLUTE,      // 1-dof
+        PRISMATIC,     // 1-dof
+        SCREW,         // 1-dof
+        UNIVERSAL,     // 2-dof
+        PLANAR,        // 2-dof
+        TRANSLATIONAL, // 3-dof
+        BALL,          // 3-dof
+        EULER_XYZ,     // 3-dof
+        EULER_ZYX,     // 3-dof
+        FREE           // 6-dof
     };
 
     //--------------------------------------------------------------------------
