@@ -287,7 +287,7 @@ Jacobian AdTJac(const Eigen::Isometry3d& T, const Jacobian& J);
 Eigen::Vector6d AdInvT(const Eigen::Isometry3d& T, const Eigen::Vector6d& V);
 
 ///// @brief fast version of Ad(Inv(T), se3(Eigen_Vec3(0), v))
-//Vec3 AdInvTLinear(const SE3& T, const Vec3& v);
+//Eigen::Vector3d AdInvTLinear(const Eigen::Isometry3d& T, const Eigen::Vector3d& v);
 
 ///// @brief fast version of Ad(Inv(T), se3(w, Eigen_Vec3(0)))
 //Axis AdInvTAngular(const SE3& T, const Axis& w);
