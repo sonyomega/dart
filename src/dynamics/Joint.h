@@ -108,7 +108,7 @@ public:
     const Eigen::Isometry3d& getLocalTransformation() const;
 
     /// @brief
-    const math::Jacobian& getLocalJacobian() const { return mS; }
+    const math::Jacobian& getLocalJacobian() const;
 
     /// @brief
     const Eigen::Vector6d& getLocalVelocity() const;
@@ -117,7 +117,7 @@ public:
     const math::Jacobian& getLocalJacobianFirstDerivative() const;
 
     /// @brief
-    const Eigen::Vector6d& getLocalAcceleration() const { return mdV; }
+    const Eigen::Vector6d& getLocalAcceleration() const;
 
     //--------------------------------------------------------------------------
     // Structueral Properties
