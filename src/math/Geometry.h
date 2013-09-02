@@ -50,17 +50,8 @@
 #include "common/UtilsCode.h"
 #include "math/MathTypes.h"
 
-// TODO:
-//   3. naming check
-//   5. remove wired functions
-//  11. random setter
-//  13. / operator for SE3 * invSE3.
-
 namespace dart {
 namespace math {
-
-typedef Eigen::Matrix6d Inertia;
-typedef Eigen::Matrix<double,6,Eigen::Dynamic> Jacobian;
 
 /// @brief Compute geometric distance on SE(3) manifold.
 /// Norm(Log(Inv(T1) * T2)).
@@ -69,32 +60,35 @@ typedef Eigen::Matrix<double,6,Eigen::Dynamic> Jacobian;
 //SE3 operator/(const SE3& T1, const SE3& T2);
 
 //------------------------------------------------------------------------------
-
-//inline VectorXd xformHom(const MatrixXd& M, const VectorXd& _v) { ///< homogeneous transformation of the vector _v with the last value treated a 1
-//    int n = _v.size();
-//    assert(M.rows() == n + 1);
-//    VectorXd augV(n + 1);
-//    augV.head(n) = _v;
-//    augV(n) = 1.0;
-
-//    augV = M * augV;
-//    VectorXd ret = augV.head(n);
-//    return ret;
-//}
-
-inline Eigen::Vector3d xformHom(const Eigen::Matrix4d& _W, const Eigen::Vector3d& _x) { ///< homogeneous transformation of the vector _v with the last value treated a 1
+/// @brief homogeneous transformation of the vector _v with the last value
+/// treated a 1
+inline Eigen::Vector3d xformHom(const Eigen::Matrix4d& _W,
+                                const Eigen::Vector3d& _x)
+{
     return _W.topLeftCorner<3,3>() * _x + _W.topRightCorner<3,1>();
 }
 
-inline Eigen::Vector3d xformHom(const Eigen::Isometry3d& _W, const Eigen::Vector3d& _x) { ///< homogeneous transformation of the vector _v with the last value treated a 1
+/// @brief homogeneous transformation of the vector _v with the last value
+///treated a 1
+inline Eigen::Vector3d xformHom(const Eigen::Isometry3d& _W,
+                                const Eigen::Vector3d& _x)
+{
     return _W.rotation() * _x + _W.translation();
 }
 
-inline Eigen::Vector3d xformHomDir(const Eigen::Matrix4d& _W, const Eigen::Vector3d& _v) { ///< homogeneous transformation of the vector _v treated as a direction: last value 0
+/// @brief homogeneous transformation of the vector _v treated as a direction:
+/// last value 0
+inline Eigen::Vector3d xformHomDir(const Eigen::Matrix4d& _W,
+                                   const Eigen::Vector3d& _v)
+{
     return _W.topLeftCorner<3,3>() * _v;
 }
 
-inline Eigen::Vector3d xformHomDir(const Eigen::Isometry3d& _W, const Eigen::Vector3d& _v) { ///< homogeneous transformation of the vector _v treated as a direction: last value 0
+/// @brief homogeneous transformation of the vector _v treated as a direction:
+/// last value 0
+inline Eigen::Vector3d xformHomDir(const Eigen::Isometry3d& _W,
+                                   const Eigen::Vector3d& _v)
+{
     return _W.rotation() * _v;
 }
 
