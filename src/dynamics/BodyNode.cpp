@@ -306,9 +306,9 @@ void BodyNode::init()
 
     const int numDepDofs = getNumDependentDofs();
 
-    mBodyJacobian = math::Jacobian::Zero(6,numDepDofs);
+    mBodyJacobian      = math::Jacobian::Zero(6,numDepDofs);
     mBodyJacobianDeriv = math::Jacobian::Zero(6,numDepDofs);
-    mM = Eigen::MatrixXd::Zero(numDepDofs, numDepDofs);
+    mM                 = Eigen::MatrixXd::Zero(numDepDofs, numDepDofs);
 }
 
 void BodyNode::draw(renderer::RenderInterface* _ri,
@@ -666,13 +666,12 @@ void BodyNode::updateArticulatedInertia()
 {
     mAI = mI;
 
-    for (std::vector<Joint*>::iterator itrJoint = mJointsChild.begin();
-         itrJoint != mJointsChild.end();
-         ++itrJoint)
+    std::vector<Joint*>::iterator iJoint;
+    for (iJoint = mJointsChild.begin(); iJoint != mJointsChild.end(); ++iJoint)
     {
         mAI += math::Transform(
-                   math::Inv((*itrJoint)->getLocalTransformation()),
-                   (*itrJoint)->getChildBody()->mPi);
+                    math::Inv((*iJoint)->getLocalTransformation()),
+                    (*iJoint)->getChildBodyNode()->mPi);
     }
 }
 
@@ -685,13 +684,10 @@ void BodyNode::updateBiasForce(const Eigen::Vector3d& _gravity)
 
     mB = -math::dad(mV, mI*mV) - mFext - mFgravity;
 
-    for (std::vector<Joint*>::iterator itrJoint = mJointsChild.begin();
-         itrJoint != mJointsChild.end();
-         ++itrJoint)
-    {
-        mB += math::dAdInvT((*itrJoint)->getLocalTransformation(),
-                            (*itrJoint)->getChildBody()->mBeta);
-    }
+    std::vector<Joint*>::iterator iJoint;
+    for (iJoint = mJointsChild.begin(); iJoint != mJointsChild.end(); ++iJoint)
+        mB += math::dAdInvT((*iJoint)->getLocalTransformation(),
+                            (*iJoint)->getChildBodyNode()->mBeta);
 
     assert(math::Verifyse3(mB));
 }

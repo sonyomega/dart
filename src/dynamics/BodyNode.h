@@ -232,20 +232,21 @@ public:
     /// @brief
     const std::vector<BodyNode*>& getChildBodies() const { return mChildBodyNodes; }
 
-    // TODO: Check
+    /// @brief
     void setDependDofList();
 
-    // TODO: Check
+    /// @brief
     int getNumLocalDofs() const;
 
-    // TODO: Check
+    /// @brief
     GenCoord* getLocalDof(int _idx) const;
 
-    // TODO: Check
     /// @brief The number of the dofs by which this node is affected.
     int getNumDependentDofs() const { return mDependentDofIndexes.size(); }
 
-    // TODO: Check
+    /// @brief
+    const std::vector<int>& getDependentDofIndexes() const { return mDependentDofIndexes; }
+
     /// @brief Return an dof index from the array index (< getNumDependentDofs).
     int getDependentDof(int _arrayIndex) const { return mDependentDofIndexes[_arrayIndex]; }
 

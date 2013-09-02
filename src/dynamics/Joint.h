@@ -143,11 +143,11 @@ public:
 
     /// @brief
     DEPRECATED BodyNode* getParentNode() const { return mParentBody; }
-    BodyNode* getParentBody() const { return mParentBody; }
+    BodyNode* getParentBodyNode() const { return mParentBody; }
 
     /// @brief
     DEPRECATED BodyNode* getChildNode() const { return mChildBody; }
-    BodyNode* getChildBody() const { return mChildBody; }
+    BodyNode* getChildBodyNode() const { return mChildBody; }
 
     /// @brief
     const Eigen::Isometry3d& getLocalTransformationFromParentBody() const

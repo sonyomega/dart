@@ -123,14 +123,14 @@ TEST(BUILDING, BASIC)
 	EXPECT_TRUE(body3.getParentBody() == &body1);
 	EXPECT_TRUE(body3.getChildBodies().size() == 0);
 
-	EXPECT_TRUE(joint1.getParentBody() == NULL);
-	EXPECT_TRUE(joint1.getChildBody() == &body1);
+	EXPECT_TRUE(joint1.getParentBodyNode() == NULL);
+	EXPECT_TRUE(joint1.getChildBodyNode() == &body1);
 
-	EXPECT_TRUE(joint2.getParentBody() == &body1);
-	EXPECT_TRUE(joint2.getChildBody() == &body2);
+	EXPECT_TRUE(joint2.getParentBodyNode() == &body1);
+	EXPECT_TRUE(joint2.getChildBodyNode() == &body2);
 
-	EXPECT_TRUE(joint3.getParentBody() == &body1);
-	EXPECT_TRUE(joint3.getChildBody() == &body3);
+	EXPECT_TRUE(joint3.getParentBodyNode() == &body1);
+	EXPECT_TRUE(joint3.getChildBodyNode() == &body3);
 
     EXPECT_TRUE(skel1.getNumBodyNodes() == 3);
 	EXPECT_TRUE(skel1.getNumJoints() == 3);
