@@ -55,8 +55,8 @@
 namespace dart {
 namespace math {
 
-// a cross b = (CR*a) dot b
-/* const Matd CR(2,2,0.0,-1.0,1.0,0.0); */
+/// @brief a cross b = (CR*a) dot b
+/// const Matd CR(2,2,0.0,-1.0,1.0,0.0);
 const Eigen::Matrix2d CR( (Eigen::Matrix2d() << 0.0, -1.0, 1.0, 0.0).finished() );
 
 inline int delta(int i, int j)
