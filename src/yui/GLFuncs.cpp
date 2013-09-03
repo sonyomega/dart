@@ -42,8 +42,6 @@
 #include <Eigen/Eigen>
 #include <cstdio>
 
-using namespace Eigen;
-
 namespace dart {
 namespace yui {
 
@@ -72,8 +70,8 @@ void drawStringOnScreen(float x, float y, const std::string& s)
 }
 
 // draw a 3D arrow starting from pt along dir, the arrowhead is on the other end
-void drawArrow3D(const Vector3d& pt, const Vector3d& dir, const double length, const double thickness, const double arrowThickness){
-    Vector3d normDir = dir;
+void drawArrow3D(const Eigen::Vector3d& pt, const Eigen::Vector3d& dir, const double length, const double thickness, const double arrowThickness){
+    Eigen::Vector3d normDir = dir;
     normDir.normalize();
 
     double arrowLength;
@@ -104,7 +102,7 @@ void drawArrow3D(const Vector3d& pt, const Vector3d& dir, const double length, c
 }
 
 // draw a 2D arrow starting from pt along vec, the arrow head is on the other end
-void drawArrow2D(const Vector2d& pt, const Vector2d& vec, double thickness)
+void drawArrow2D(const Eigen::Vector2d& pt, const Eigen::Vector2d& vec, double thickness)
 {
     // draw the arrow body as a thick line
     glLineWidth(thickness);

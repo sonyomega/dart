@@ -44,8 +44,6 @@
 #include "dynamics/Skeleton.h"
 #include "dynamics/Skeleton.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace dynamics {
 
@@ -118,7 +116,7 @@ void Skeleton::setWorldTransformation(const Eigen::Isometry3d& _W,
         updateForwardKinematics(false, false);
 }
 
-const Isometry3d&Skeleton::getWorldTransformation() const
+const Eigen::Isometry3d& Skeleton::getWorldTransformation() const
 {
     return mFrame;
 }
@@ -129,16 +127,16 @@ void Skeleton::initDynamics()
 
     int DOF = getDOF();
 
-    mM    = MatrixXd::Zero(DOF, DOF);
-    mMInv = MatrixXd::Zero(DOF, DOF);
-    mC    = MatrixXd::Zero(DOF, DOF);
-    mCvec = VectorXd::Zero(DOF);
-    mG    = VectorXd::Zero(DOF);
-    mCg   = VectorXd::Zero(DOF);
-    set_tau(VectorXd::Zero(DOF));
-    mFext = VectorXd::Zero(DOF);
-    mFc   = VectorXd::Zero(DOF);
-    mDampingForce = VectorXd::Zero(DOF);
+    mM    = Eigen::MatrixXd::Zero(DOF, DOF);
+    mMInv = Eigen::MatrixXd::Zero(DOF, DOF);
+    mC    = Eigen::MatrixXd::Zero(DOF, DOF);
+    mCvec = Eigen::VectorXd::Zero(DOF);
+    mG    = Eigen::VectorXd::Zero(DOF);
+    mCg   = Eigen::VectorXd::Zero(DOF);
+    set_tau(Eigen::VectorXd::Zero(DOF));
+    mFext = Eigen::VectorXd::Zero(DOF);
+    mFc   = Eigen::VectorXd::Zero(DOF);
+    mDampingForce = Eigen::VectorXd::Zero(DOF);
 
     // calculate mass
     // init the dependsOnDof stucture for each bodylink
@@ -231,52 +229,52 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
     }
 }
 
-VectorXd Skeleton::getPose() const
+Eigen::VectorXd Skeleton::getPose() const
 {
     return get_q();
 }
 
-VectorXd Skeleton::getPoseVelocity() const
+Eigen::VectorXd Skeleton::getPoseVelocity() const
 {
     return get_dq();
 }
 
-MatrixXd Skeleton::getMassMatrix() const
+Eigen::MatrixXd Skeleton::getMassMatrix() const
 {
     return mM;
 }
 
-MatrixXd Skeleton::getInvMassMatrix() const
+Eigen::MatrixXd Skeleton::getInvMassMatrix() const
 {
     return mMInv;
 }
 
-MatrixXd Skeleton::getCoriolisMatrix() const
+Eigen::MatrixXd Skeleton::getCoriolisMatrix() const
 {
     return mC;
 }
 
-VectorXd Skeleton::getCoriolisVector() const
+Eigen::VectorXd Skeleton::getCoriolisVector() const
 {
     return mCvec;
 }
 
-VectorXd Skeleton::getGravityVector() const
+Eigen::VectorXd Skeleton::getGravityVector() const
 {
     return mG;
 }
 
-VectorXd Skeleton::getCombinedVector() const
+Eigen::VectorXd Skeleton::getCombinedVector() const
 {
     return mCg;
 }
 
-VectorXd Skeleton::getExternalForces() const
+Eigen::VectorXd Skeleton::getExternalForces() const
 {
     return mFext;
 }
 
-VectorXd Skeleton::getInternalForces() const
+Eigen::VectorXd Skeleton::getInternalForces() const
 {
     return get_tau();
 }
@@ -449,7 +447,7 @@ void Skeleton::computeEquationsOfMotionID(
     }
 
     // Inverse of mass matrix
-    mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
+    mMInv = mM.ldlt().solve(Eigen::MatrixXd::Identity(n,n));
 
     // Restore the torque
     set_tau(tau_old);
@@ -523,7 +521,7 @@ void Skeleton::computeForwardDynamicsID2(
                                + this->getConstraintForces() );
 
     //mMInv = mM.inverse();
-    mMInv = mM.ldlt().solve(MatrixXd::Identity(n,n));
+    mMInv = mM.ldlt().solve(Eigen::MatrixXd::Identity(n,n));
 
     this->set_ddq(qddot);
 
@@ -581,12 +579,12 @@ Eigen::VectorXd Skeleton::getDampingForces() const
     return mDampingForce;
 }
 
-VectorXd Skeleton::getConstraintForces() const
+Eigen::VectorXd Skeleton::getConstraintForces() const
 {
     return mFc;
 }
 
-void Skeleton::setInternalForces(const VectorXd& _forces)
+void Skeleton::setInternalForces(const Eigen::VectorXd& _forces)
 {
     set_tau(_forces);
 }
@@ -596,7 +594,7 @@ void Skeleton::clearInternalForces()
     set_tau(Eigen::VectorXd::Zero(getDOF()));
 }
 
-void Skeleton::setConstraintForces(const VectorXd& _Fc)
+void Skeleton::setConstraintForces(const Eigen::VectorXd& _Fc)
 {
     mFc = _Fc;
 }
@@ -628,7 +626,7 @@ double Skeleton::getPotentialEnergy() const
 
 Eigen::Vector3d Skeleton::getWorldCOM()
 {
-    Vector3d com(0, 0, 0);
+    Eigen::Vector3d com(0, 0, 0);
 
     assert(mTotalMass != 0);
     const int nNodes = getNumBodyNodes();

@@ -38,7 +38,6 @@
 #include "Solver.h"
 #include "Var.h"
 #include "Problem.h"
-using namespace Eigen;
 
 namespace dart {
 namespace optimizer {
@@ -58,7 +57,7 @@ Eigen::VectorXd Solver::getState() {
     int nVar = mProb->getNumVariables();
     std::vector<Var *>& vars(mProb->vars());
 
-    VectorXd x(nVar);
+    Eigen::VectorXd x(nVar);
     for (int i = 0; i < nVar; i++) {
         x(i) = vars[i]->mVal;
     }

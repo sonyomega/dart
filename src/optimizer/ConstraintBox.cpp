@@ -39,7 +39,6 @@
 #include "Constraint.h"
 
 #include <Eigen/Dense>
-using namespace Eigen;
 
 namespace dart {
 namespace optimizer {
@@ -148,7 +147,7 @@ void ConstraintBox::evalCon() {
             count += mConstraints[i]->mNumRows;
             continue;
         }
-        VectorXd constraintVal = mConstraints[i]->evalCon();
+        Eigen::VectorXd constraintVal = mConstraints[i]->evalCon();
         unsigned int n = constraintVal.size();
 
         for(unsigned int j = 0; j < n; j++) {

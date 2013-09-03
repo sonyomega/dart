@@ -10,7 +10,6 @@
 #include "dynamics/GenCoord.h"
 #include "dynamics/Skeleton.h"
 
-using namespace Eigen;
 using namespace dart;
 using namespace collision;
 using namespace math;
@@ -89,10 +88,10 @@ void ConstraintDynamics::addConstraint(Constraint *_constr) {
         mJ[i].conservativeResize(mTotalRows, mSkels[i]->getDOF());
         mJ[i].bottomRows(_constr->getNumRows()).setZero();
     }
-    mC = VectorXd(mTotalRows);
-    mCDot = VectorXd(mTotalRows);
-    mGInv = MatrixXd::Zero(mTotalRows, mTotalRows);
-    mTauHat = VectorXd(mTotalRows);
+    mC = Eigen::VectorXd(mTotalRows);
+    mCDot = Eigen::VectorXd(mTotalRows);
+    mGInv = Eigen::MatrixXd::Zero(mTotalRows, mTotalRows);
+    mTauHat = Eigen::VectorXd(mTotalRows);
 }
 
 void ConstraintDynamics::deleteConstraint(int _index) {
@@ -139,12 +138,12 @@ void ConstraintDynamics::addSkeleton(dynamics::Skeleton* _newSkel)
 
     Eigen::VectorXd newConstrForce;
     if (!_newSkel->getImmobileState())
-        newConstrForce = VectorXd::Zero(_newSkel->getDOF());
+        newConstrForce = Eigen::VectorXd::Zero(_newSkel->getDOF());
     mContactForces.push_back(newConstrForce);
     mTotalConstrForces.push_back(newConstrForce);
 
-    mMInv = MatrixXd::Zero(rows, cols);
-    mTauStar = VectorXd::Zero(rows);
+    mMInv = Eigen::MatrixXd::Zero(rows, cols);
+    mTauStar = Eigen::VectorXd::Zero(rows);
 
     mIndices.clear();
     int sumNDofs = 0;
@@ -161,7 +160,7 @@ void ConstraintDynamics::addSkeleton(dynamics::Skeleton* _newSkel)
     mJ.resize(mSkels.size());
     mPreJ.resize(mSkels.size());
     mJMInv.resize(mSkels.size());
-    mZ = MatrixXd(rows, cols);
+    mZ = Eigen::MatrixXd(rows, cols);
 }
 
 void ConstraintDynamics::initialize() {
@@ -196,12 +195,12 @@ void ConstraintDynamics::initialize() {
     for (int i = 0; i < mSkels.size(); i++){
         if (mSkels[i]->getImmobileState())
             continue;
-        mContactForces[i] = VectorXd::Zero(mSkels[i]->getDOF());
-        mTotalConstrForces[i] = VectorXd::Zero(mSkels[i]->getDOF());
+        mContactForces[i] = Eigen::VectorXd::Zero(mSkels[i]->getDOF());
+        mTotalConstrForces[i] = Eigen::VectorXd::Zero(mSkels[i]->getDOF());
     }
 
-    mMInv = MatrixXd::Zero(rows, cols);
-    mTauStar = VectorXd::Zero(rows);
+    mMInv = Eigen::MatrixXd::Zero(rows, cols);
+    mTauStar = Eigen::VectorXd::Zero(rows);
 
     // Initialize the index vector:
     // If we have 3 skeletons,
@@ -227,7 +226,7 @@ void ConstraintDynamics::initialize() {
     mJ.resize(mSkels.size());
     mPreJ.resize(mSkels.size());
     mJMInv.resize(mSkels.size());
-    mZ = MatrixXd(rows, cols);
+    mZ = Eigen::MatrixXd(rows, cols);
 }
 
 void ConstraintDynamics::destroy()
@@ -239,7 +238,7 @@ void ConstraintDynamics::destroy()
 void ConstraintDynamics::computeConstraintWithoutContact() {
     updateMassMat();
     updateConstraintTerms();
-    VectorXd lambda = mGInv * mTauHat;
+    Eigen::VectorXd lambda = mGInv * mTauHat;
 
     for (int i = 0; i < mSkels.size(); i++) {
         if (mSkels[i]->getImmobileState())
@@ -254,18 +253,18 @@ void ConstraintDynamics::fillMatrices() {
     int nConstrs = mConstraints.size();
     int cd = nContacts * mNumDir;
     int dimA = nContacts * (2 + mNumDir) + nJointLimits;
-    mA = MatrixXd::Zero(dimA, dimA);
-    mQBar = VectorXd::Zero(dimA);
+    mA = Eigen::MatrixXd::Zero(dimA, dimA);
+    mQBar = Eigen::VectorXd::Zero(dimA);
     updateMassMat();
     updateTauStar();
 
-    MatrixXd augMInv = mMInv;
-    VectorXd tauVec = VectorXd::Zero(getTotalNumDofs());
+    Eigen::MatrixXd augMInv = mMInv;
+    Eigen::VectorXd tauVec = Eigen::VectorXd::Zero(getTotalNumDofs());
     if (nConstrs > 0) {
         updateConstraintTerms();
-        augMInv -= mZ.triangularView<Lower>();
+        augMInv -= mZ.triangularView<Eigen::Lower>();
 
-        VectorXd tempVec = mDt * mGInv * mTauHat;
+        Eigen::VectorXd tempVec = mDt * mGInv * mTauHat;
         for (int i = 0; i < mSkels.size(); i++) {
             if (mSkels[i]->getImmobileState())
                 continue;
@@ -274,21 +273,21 @@ void ConstraintDynamics::fillMatrices() {
     }
     tauVec = mMInv * (tauVec + mTauStar);
 
-    MatrixXd NTerm(getTotalNumDofs(), nContacts);
-    MatrixXd BTerm(getTotalNumDofs(), cd);
+    Eigen::MatrixXd NTerm(getTotalNumDofs(), nContacts);
+    Eigen::MatrixXd BTerm(getTotalNumDofs(), cd);
 
     if (nContacts > 0) {
         updateNBMatrices();
-        MatrixXd E = getContactMatrix();
+        Eigen::MatrixXd E = getContactMatrix();
         // Compute NTerm and BTerm
         NTerm.noalias() = augMInv * mN;
         BTerm.noalias() = augMInv * mB;
-        mA.block(0, 0, nContacts, nContacts).triangularView<Lower>() = mN.transpose() * NTerm;
-        mA.block(0, 0, nContacts, nContacts).triangularView<StrictlyUpper>() = mA.block(0, 0, nContacts, nContacts).transpose();
+        mA.block(0, 0, nContacts, nContacts).triangularView<Eigen::Lower>() = mN.transpose() * NTerm;
+        mA.block(0, 0, nContacts, nContacts).triangularView<Eigen::StrictlyUpper>() = mA.block(0, 0, nContacts, nContacts).transpose();
         mA.block(0, nContacts, nContacts, cd).noalias() = mN.transpose() * BTerm;
         mA.block(nContacts, 0, cd, nContacts) = mA.block(0, nContacts, nContacts, cd).transpose();
-        mA.block(nContacts, nContacts, cd, cd).triangularView<Lower>() = mB.transpose() * BTerm;
-        mA.block(nContacts, nContacts, cd, cd).triangularView<StrictlyUpper>() = mA.block(nContacts, nContacts, cd, cd).transpose();
+        mA.block(nContacts, nContacts, cd, cd).triangularView<Eigen::Lower>() = mB.transpose() * BTerm;
+        mA.block(nContacts, nContacts, cd, cd).triangularView<Eigen::StrictlyUpper>() = mA.block(nContacts, nContacts, cd, cd).transpose();
         mA.block(nContacts, nContacts + cd, cd, nContacts) = E;
         mA.block(nContacts + cd, 0, nContacts, nContacts) = getMuMatrix();
         mA.block(nContacts + cd, nContacts, nContacts, cd) = -E.transpose();
@@ -316,7 +315,7 @@ void ConstraintDynamics::fillMatrices() {
 
         if (nContacts > 0) {
 
-            MatrixXd STerm(mMInv.rows(), nJointLimits);
+            Eigen::MatrixXd STerm(mMInv.rows(), nJointLimits);
             for (int i = 0; i < nJointLimits; i++) {
                 if (mLimitingDofIndex[i] > 0) // hitting upper bound
                     STerm.col(i) = -augMInv.col(mLimitingDofIndex[i] - 1);
@@ -353,12 +352,12 @@ bool ConstraintDynamics::solve() {
 }
 
 void ConstraintDynamics::applySolution() {
-    VectorXd contactForces(VectorXd::Zero(getTotalNumDofs()));
-    VectorXd jointLimitForces(VectorXd::Zero(getTotalNumDofs()));
+    Eigen::VectorXd contactForces(Eigen::VectorXd::Zero(getTotalNumDofs()));
+    Eigen::VectorXd jointLimitForces(Eigen::VectorXd::Zero(getTotalNumDofs()));
 
     if (getNumContacts() > 0) {
-        VectorXd f_n = mX.head(getNumContacts());
-        VectorXd f_d = mX.segment(getNumContacts(), getNumContacts() * mNumDir);
+        Eigen::VectorXd f_n = mX.head(getNumContacts());
+        Eigen::VectorXd f_d = mX.segment(getNumContacts(), getNumContacts() * mNumDir);
         contactForces.noalias() = mN * f_n;
         contactForces.noalias() += mB * f_d;
         for (int i = 0; i < getNumContacts(); i++) {
@@ -375,7 +374,7 @@ void ConstraintDynamics::applySolution() {
         }
     }
 
-    VectorXd lambda = VectorXd::Zero(mGInv.rows());
+    Eigen::VectorXd lambda = Eigen::VectorXd::Zero(mGInv.rows());
     for (int i = 0; i < mSkels.size(); i++) {
         if (mSkels[i]->getImmobileState())
             continue;
@@ -384,7 +383,7 @@ void ConstraintDynamics::applySolution() {
         mTotalConstrForces[i] = mContactForces[i] + jointLimitForces.segment(mIndices[i], mSkels[i]->getDOF());
 
         if (mConstraints.size() > 0) {
-            VectorXd tempVec = mGInv * (mTauHat - mJMInv[i] * (contactForces.segment(mIndices[i], mSkels[i]->getDOF()) + jointLimitForces.segment(mIndices[i], mSkels[i]->getDOF())));
+            Eigen::VectorXd tempVec = mGInv * (mTauHat - mJMInv[i] * (contactForces.segment(mIndices[i], mSkels[i]->getDOF()) + jointLimitForces.segment(mIndices[i], mSkels[i]->getDOF())));
             mTotalConstrForces[i] += mJ[i].transpose() * tempVec;
             lambda += tempVec;
         }
@@ -414,32 +413,32 @@ void ConstraintDynamics::updateTauStar() {
         if (mSkels[i]->getImmobileState())
             continue;
 
-        VectorXd tau = mSkels[i]->getExternalForces() + mSkels[i]->getInternalForces() + mSkels[i]->getDampingForces();
-        VectorXd tauStar = (mSkels[i]->getMassMatrix() * mSkels[i]->getPoseVelocity()) - (mDt * (mSkels[i]->getCombinedVector() - tau));
+        Eigen::VectorXd tau = mSkels[i]->getExternalForces() + mSkels[i]->getInternalForces() + mSkels[i]->getDampingForces();
+        Eigen::VectorXd tauStar = (mSkels[i]->getMassMatrix() * mSkels[i]->getPoseVelocity()) - (mDt * (mSkels[i]->getCombinedVector() - tau));
         mTauStar.block(startRow, 0, tauStar.rows(), 1) = tauStar;
         startRow += tauStar.rows();
     }
 }
 
 void ConstraintDynamics::updateNBMatrices() {
-    mN = MatrixXd::Zero(getTotalNumDofs(), getNumContacts());
-    mB = MatrixXd::Zero(getTotalNumDofs(), getNumContacts() * mNumDir);
+    mN = Eigen::MatrixXd::Zero(getTotalNumDofs(), getNumContacts());
+    mB = Eigen::MatrixXd::Zero(getTotalNumDofs(), getNumContacts() * mNumDir);
     for (int i = 0; i < getNumContacts(); i++) {
         Contact& c = mCollisionChecker->getContact(i);
-        Vector3d p = c.point;
+        Eigen::Vector3d p = c.point;
         int skelID1 = mBodyIndexToSkelIndex[c.collisionNode1->getIndex()];
         int skelID2 = mBodyIndexToSkelIndex[c.collisionNode2->getIndex()];
 
-        Vector3d N21 = c.normal;
-        Vector3d N12 = -c.normal;
-        MatrixXd B21 = getTangentBasisMatrix(p, N21);
-        MatrixXd B12 = -B21;
+        Eigen::Vector3d N21 = c.normal;
+        Eigen::Vector3d N12 = -c.normal;
+        Eigen::MatrixXd B21 = getTangentBasisMatrix(p, N21);
+        Eigen::MatrixXd B12 = -B21;
 
         if (!mSkels[skelID1]->getImmobileState()) {
             int index1 = mIndices[skelID1];
             int NDOF1 = c.collisionNode1->getBodyNode()->getSkeleton()->getDOF();
             //    Vector3d N21 = c.normal;
-            MatrixXd J21t = getJacobian(c.collisionNode1->getBodyNode(), p);
+            Eigen::MatrixXd J21t = getJacobian(c.collisionNode1->getBodyNode(), p);
             mN.block(index1, i, NDOF1, 1).noalias() = J21t * N21;
             //B21 = getTangentBasisMatrix(p, N21);
             mB.block(index1, i * mNumDir, NDOF1, mNumDir).noalias() = J21t * B21;
@@ -453,7 +452,7 @@ void ConstraintDynamics::updateNBMatrices() {
             //  B12 = getTangentBasisMatrix(p, N12);
             //else
             //   B12 = -B21;
-            MatrixXd J12t = getJacobian(c.collisionNode2->getBodyNode(), p);
+            Eigen::MatrixXd J12t = getJacobian(c.collisionNode2->getBodyNode(), p);
             mN.block(index2, i, NDOF2, 1).noalias() = J12t * N12;
             mB.block(index2, i * mNumDir, NDOF2, mNumDir).noalias() = J12t * B12;
 
@@ -461,11 +460,11 @@ void ConstraintDynamics::updateNBMatrices() {
     }
 }
 
-MatrixXd ConstraintDynamics::getJacobian(dynamics::BodyNode* node, const Vector3d& p) {
+Eigen::MatrixXd ConstraintDynamics::getJacobian(dynamics::BodyNode* node, const Eigen::Vector3d& p) {
     int nDofs = node->getSkeleton()->getDOF();
-    MatrixXd Jt = MatrixXd::Zero(nDofs, 3);
+    Eigen::MatrixXd Jt = Eigen::MatrixXd::Zero(nDofs, 3);
 
-    MatrixXd JtBody
+    Eigen::MatrixXd JtBody
             = node->getJacobianWorldAtPoint_LinearPartOnly(p).transpose();
 
     for(int dofIndex = 0; dofIndex < node->getNumDependentDofs(); dofIndex++)
@@ -477,14 +476,14 @@ MatrixXd ConstraintDynamics::getJacobian(dynamics::BodyNode* node, const Vector3
     return Jt;
 }
 
-MatrixXd ConstraintDynamics::getTangentBasisMatrix(const Vector3d& p, const Vector3d& n)  {
-    MatrixXd T(MatrixXd::Zero(3, mNumDir));
+Eigen::MatrixXd ConstraintDynamics::getTangentBasisMatrix(const Eigen::Vector3d& p, const Eigen::Vector3d& n)  {
+    Eigen::MatrixXd T(Eigen::MatrixXd::Zero(3, mNumDir));
 
     // Pick an arbitrary vector to take the cross product of (in this case, Z-axis)
-    Vector3d tangent = Vector3d::UnitZ().cross(n);
+    Eigen::Vector3d tangent = Eigen::Vector3d::UnitZ().cross(n);
     // If they're too close, pick another tangent (use X-axis as arbitrary vector)
     if (tangent.norm() < EPSILON) {
-        tangent = Vector3d::UnitX().cross(n);
+        tangent = Eigen::Vector3d::UnitX().cross(n);
     }
     tangent.normalize();
 
@@ -494,7 +493,7 @@ MatrixXd ConstraintDynamics::getTangentBasisMatrix(const Vector3d& p, const Vect
     double angle = (2 * M_PI) / mNumDir;
     int iter = (mNumDir % 2 == 0) ? mNumDir / 2 : mNumDir;
     for (int i = 0; i < iter; i++) {
-        Vector3d basis = Quaterniond(AngleAxisd(i * angle, n)) * tangent;
+        Eigen::Vector3d basis = Eigen::Quaterniond(Eigen::AngleAxisd(i * angle, n)) * tangent;
         T.col(i) = basis;
 
         if (mNumDir % 2 == 0) {
@@ -503,18 +502,18 @@ MatrixXd ConstraintDynamics::getTangentBasisMatrix(const Vector3d& p, const Vect
     }
     return T;
 }
-MatrixXd ConstraintDynamics::getContactMatrix() const {
-    MatrixXd E = MatrixXd::Zero(getNumContacts() * mNumDir, getNumContacts());
-    VectorXd column = VectorXd::Ones(mNumDir);
+Eigen::MatrixXd ConstraintDynamics::getContactMatrix() const {
+    Eigen::MatrixXd E = Eigen::MatrixXd::Zero(getNumContacts() * mNumDir, getNumContacts());
+    Eigen::VectorXd column = Eigen::VectorXd::Ones(mNumDir);
     for (int i = 0; i < getNumContacts(); i++) {
         E.block(i * mNumDir, i, mNumDir, 1) = column;
     }
     return E;
 }
 
-MatrixXd ConstraintDynamics::getMuMatrix() const {
+Eigen::MatrixXd ConstraintDynamics::getMuMatrix() const {
     int c = getNumContacts();
-    return MatrixXd::Identity(c, c) * mMu;
+    return Eigen::MatrixXd::Identity(c, c) * mMu;
 
 }
 
@@ -528,18 +527,18 @@ void ConstraintDynamics::updateConstraintTerms(){
         count += mConstraints[i]->getNumRows();
     }
     // compute JMInv, GInv, Z
-    mGInv.triangularView<Lower>().setZero();
+    mGInv.triangularView<Eigen::Lower>().setZero();
     for (int i = 0; i < mSkels.size(); i++) {
         if (mSkels[i]->getImmobileState())
             continue;
         mJMInv[i] = mJ[i] * mSkels[i]->getInvMassMatrix();
-        mGInv.triangularView<Lower>() += (mJMInv[i] * mJ[i].transpose());
+        mGInv.triangularView<Eigen::Lower>() += (mJMInv[i] * mJ[i].transpose());
     }
-    mGInv = mGInv.ldlt().solve(MatrixXd::Identity(mTotalRows, mTotalRows));
+    mGInv = mGInv.ldlt().solve(Eigen::MatrixXd::Identity(mTotalRows, mTotalRows));
     for (int i = 0; i < mSkels.size(); i++) {
         if (mSkels[i]->getImmobileState())
             continue;
-        mZ.block(mIndices[i], mIndices[i], mSkels[i]->getDOF(), mSkels[i]->getDOF()).triangularView<Lower>() = mJMInv[i].transpose() * mGInv * mJMInv[i];
+        mZ.block(mIndices[i], mIndices[i], mSkels[i]->getDOF(), mSkels[i]->getDOF()).triangularView<Eigen::Lower>() = mJMInv[i].transpose() * mGInv * mJMInv[i];
         for (int j = 0; j < i; j++) {
             if (mSkels[j]->getImmobileState())
                 continue;
@@ -554,7 +553,7 @@ void ConstraintDynamics::updateConstraintTerms(){
     for (int i = 0; i < mSkels.size(); i++) {
         if (mSkels[i]->getImmobileState())
             continue;
-        VectorXd qDot = mSkels[i]->getPoseVelocity();
+        Eigen::VectorXd qDot = mSkels[i]->getPoseVelocity();
         mTauHat.noalias() += -(mJ[i] - mPreJ[i]) / mDt * qDot;
         mTauHat.noalias() -= mJMInv[i] * (mSkels[i]->getInternalForces() + mSkels[i]->getExternalForces() - mSkels[i]->getCombinedVector());
     }

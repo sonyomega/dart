@@ -4,8 +4,6 @@
 #include "lcp.h"
 #include "misc.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace lcpsolver {
 
@@ -18,7 +16,7 @@ LCPSolver::~LCPSolver()
 
 }
 
-bool LCPSolver::Solve(const MatrixXd& _A, const VectorXd& _b, VectorXd& _x, int _numContacts, double _mu, int _numDir, bool _bUseODESolver)
+bool LCPSolver::Solve(const Eigen::MatrixXd& _A, const Eigen::VectorXd& _b, Eigen::VectorXd& _x, int _numContacts, double _mu, int _numDir, bool _bUseODESolver)
 {
     if (!_bUseODESolver)
     {
@@ -28,8 +26,8 @@ bool LCPSolver::Solve(const MatrixXd& _A, const VectorXd& _b, VectorXd& _x, int 
     else
     {
         assert(_numDir >= 4);
-        MatrixXd AODE;
-        VectorXd bODE;
+        Eigen::MatrixXd AODE;
+        Eigen::VectorXd bODE;
         transferToODEFormulation(_A, _b, AODE, bODE, _numDir, _numContacts);
         double* A, *b, *x, *w, *lo, *hi;
         int n = AODE.rows();
@@ -83,7 +81,7 @@ bool LCPSolver::Solve(const MatrixXd& _A, const VectorXd& _b, VectorXd& _x, int 
                   cout << "w[i] " << i << " is zero, but x is " << x[i] << endl;
                   }
                 */
-        VectorXd xODE = VectorXd::Zero(n);
+        Eigen::VectorXd xODE = Eigen::VectorXd::Zero(n);
         for (int i = 0; i < n; ++i)
         {
             xODE[i] = x[i];
@@ -104,13 +102,13 @@ bool LCPSolver::Solve(const MatrixXd& _A, const VectorXd& _b, VectorXd& _x, int 
 
 }
 
-void LCPSolver::transferToODEFormulation(const MatrixXd& _A, const VectorXd& _b, MatrixXd& _AOut, VectorXd& _bOut, int _numDir, int _numContacts)
+void LCPSolver::transferToODEFormulation(const Eigen::MatrixXd& _A, const Eigen::VectorXd& _b, Eigen::MatrixXd& _AOut, Eigen::VectorXd& _bOut, int _numDir, int _numContacts)
 {
     int numOtherConstrs = _A.rows() - _numContacts * (2 + _numDir);
     int n = _numContacts * 3 + numOtherConstrs;
-    MatrixXd AIntermediate = MatrixXd::Zero(n, _A.cols());
-    _AOut = MatrixXd::Zero(n, n);
-    _bOut = VectorXd::Zero(n);
+    Eigen::MatrixXd AIntermediate = Eigen::MatrixXd::Zero(n, _A.cols());
+    _AOut = Eigen::MatrixXd::Zero(n, n);
+    _bOut = Eigen::VectorXd::Zero(n);
     int offset = _numDir / 4;
     for (int i = 0; i < _numContacts; ++i)
     {
@@ -137,10 +135,10 @@ void LCPSolver::transferToODEFormulation(const MatrixXd& _A, const VectorXd& _b,
 
 }
 
-void LCPSolver::transferSolFromODEFormulation(const VectorXd& _x, VectorXd& _xOut, int _numDir, int _numContacts)
+void LCPSolver::transferSolFromODEFormulation(const Eigen::VectorXd& _x, Eigen::VectorXd& _xOut, int _numDir, int _numContacts)
 {
     int numOtherConstrs = _x.size() - _numContacts * 3;
-    _xOut = VectorXd::Zero(_numContacts * (2 + _numDir) + numOtherConstrs);
+    _xOut = Eigen::VectorXd::Zero(_numContacts * (2 + _numDir) + numOtherConstrs);
 
     _xOut.head(_numContacts) = _x.head(_numContacts);
 
@@ -153,12 +151,12 @@ void LCPSolver::transferSolFromODEFormulation(const VectorXd& _x, VectorXd& _xOu
     for (int i = 0; i < numOtherConstrs; i++)
         _xOut[_numContacts * (2 + _numDir) + i] = _x[_numContacts * 3 + i];
 }
-bool LCPSolver::checkIfSolution(const MatrixXd& _A, const VectorXd& _b, const VectorXd& _x)
+bool LCPSolver::checkIfSolution(const Eigen::MatrixXd& _A, const Eigen::VectorXd& _b, const Eigen::VectorXd& _x)
 {
     const double threshold = 1e-4;
     int n = _x.size();
 
-    VectorXd w = _A * _x + _b;
+    Eigen::VectorXd w = _A * _x + _b;
     for (int i = 0; i < n; ++i)
     {
         if (w(i) < -threshold || _x(i) < -threshold)

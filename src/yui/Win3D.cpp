@@ -39,8 +39,6 @@
 #include "Win3D.h"
 #include "Jitter.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace yui {
 
@@ -53,7 +51,7 @@ void Win3D::initWindow(int w, int h, const char* name)
     GlutWindow::initWindow(w,h,name);
 
     int smaller = w<h?w:h;
-    mTrackBall.setTrackball(Vector2d(w*0.5,h*0.5), smaller/2.5);
+    mTrackBall.setTrackball(Eigen::Vector2d(w*0.5,h*0.5), smaller/2.5);
 }
 
 void Win3D::resize(int w, int h)
@@ -70,7 +68,7 @@ void Win3D::resize(int w, int h)
     glLoadIdentity();
 
     int small = w<h?w:h;
-    mTrackBall.setCenter(Vector2d(w*0.5,h*0.5));
+    mTrackBall.setCenter(Eigen::Vector2d(w*0.5,h*0.5));
     mTrackBall.setRadius(small/2.5);
 
     glutPostRedisplay();
@@ -145,8 +143,8 @@ void Win3D::drag(int x, int y)
             mTrackBall.updateBall(x,mWinHeight-y);
     }
     if(mTranslate){
-        Matrix3d rot = mTrackBall.getRotationMatrix();
-        mTrans += rot.transpose()*Vector3d(deltaX, -deltaY, 0.0);
+        Eigen::Matrix3d rot = mTrackBall.getRotationMatrix();
+        mTrans += rot.transpose()*Eigen::Vector3d(deltaX, -deltaY, 0.0);
     }
     if(mZooming){
         mZoom += deltaY*0.01;

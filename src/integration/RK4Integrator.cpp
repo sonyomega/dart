@@ -38,16 +38,14 @@
 #include "common/UtilsCode.h"
 #include "integration/RK4Integrator.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace integration {
 
 // TODO (kasiu): Slow. Needs to be optimized.
 void RK4Integrator::integrate(IntegrableSystem* system, double dt) const {
     // calculates the four weighted deltas
-    VectorXd deriv = system->evalDeriv();
-    VectorXd x = system->getState();
+    Eigen::VectorXd deriv = system->evalDeriv();
+    Eigen::VectorXd x = system->getState();
     k1 = deriv * dt;
 
     system->setState(x + (k1 * 0.5));

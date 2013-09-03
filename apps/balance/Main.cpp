@@ -5,8 +5,6 @@
 #include "simulation/World.h"
 #include "utils/SkelParser.h"
 
-using namespace Eigen;
-
 using namespace dart;
 using namespace dynamics;
 using namespace simulation;
@@ -19,10 +17,10 @@ int main(int argc, char* argv[])
             = dart::utils::readSkelFile(DART_DATA_PATH"skel/fullbody1.skel");
     assert(myWorld != NULL);
 
-    Vector3d gravity(0.0, -9.81, 0.0);
+    Eigen::Vector3d gravity(0.0, -9.81, 0.0);
     myWorld->setGravity(gravity);
 
-    VectorXd initPose = myWorld->getSkeleton(1)->get_q();
+    Eigen::VectorXd initPose = myWorld->getSkeleton(1)->get_q();
     initPose[1] = -0.1;
     initPose[6] = 0.2; // left hip
     initPose[9] = -0.5; // left knee

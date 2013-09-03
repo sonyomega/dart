@@ -8,8 +8,6 @@
 #include "constraint/ConstraintDynamics.h"
 #include "collision/CollisionDetector.h"
 
-using namespace Eigen;
-
 using namespace dart;
 using namespace dynamics;
 using namespace math;
@@ -52,16 +50,16 @@ void Controller::computeTorques(const Eigen::VectorXd& _dof,
                                 const Eigen::VectorXd& _dofVel) {
     // SPD tracking
     int nDof = mSkel->getDOF();
-    MatrixXd invM = (mSkel->getMassMatrix() + mKd * mTimestep).inverse();
-    VectorXd p = -mKp * (_dof + _dofVel * mTimestep - mDesiredDofs);
-    VectorXd d = -mKd * _dofVel;
-    VectorXd qddot = invM * (-mSkel->getCombinedVector() + p + d + mConstrForces);
+    Eigen::MatrixXd invM = (mSkel->getMassMatrix() + mKd * mTimestep).inverse();
+    Eigen::VectorXd p = -mKp * (_dof + _dofVel * mTimestep - mDesiredDofs);
+    Eigen::VectorXd d = -mKd * _dofVel;
+    Eigen::VectorXd qddot = invM * (-mSkel->getCombinedVector() + p + d + mConstrForces);
     mTorques = p + d - mKd * qddot * mTimestep;
     
     // ankle strategy for sagital plane
-    Vector3d com = mSkel->getWorldCOM();    
-    Vector3d cop = xformHom(mSkel->findBodyNode("h_heel_left")->getWorldTransform(), Vector3d(0.05, 0, 0));
-    Vector2d diff(com[0] - cop[0], com[2] - cop[2]);
+    Eigen::Vector3d com = mSkel->getWorldCOM();
+    Eigen::Vector3d cop = xformHom(mSkel->findBodyNode("h_heel_left")->getWorldTransform(), Eigen::Vector3d(0.05, 0, 0));
+    Eigen::Vector2d diff(com[0] - cop[0], com[2] - cop[2]);
     if (diff[0] < 0.1) {
         double offset = com[0] - cop[0];
         double k1 = 20.0;

@@ -42,23 +42,21 @@
 #include <assimp/postprocess.h>
 #include <assimp/cimport.h>
 
-using namespace Eigen;
-
 namespace dart {
 namespace dynamics {
 
-MeshShape::MeshShape(Vector3d _dim, const aiScene *_mesh)
+MeshShape::MeshShape(Eigen::Vector3d _dim, const aiScene *_mesh)
     : Shape(P_MESH),
       mMesh(_mesh),
       mDisplayList(0)
 {
     mDim = _dim;
     initMeshes();
-    if (mDim != Vector3d::Zero())
+    if (mDim != Eigen::Vector3d::Zero())
         computeVolume();
 }
 
-void MeshShape::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
+void MeshShape::draw(renderer::RenderInterface* _ri, const Eigen::Vector4d& _color, bool _useDefaultColor) const {
     if (!_ri)
         return;
     if (!_useDefaultColor)
@@ -73,7 +71,7 @@ void MeshShape::draw(renderer::RenderInterface* _ri, const Vector4d& _color, boo
     _ri->popMatrix();
 }
 
-Matrix3d MeshShape::computeInertia(double _mass) {
+Eigen::Matrix3d MeshShape::computeInertia(double _mass) {
     // use bounding box to represent the mesh
     double max_X = -1e7;
     double max_Y = -1e7;
@@ -102,7 +100,7 @@ Matrix3d MeshShape::computeInertia(double _mass) {
     double h = mDim[1] * (max_Y - min_Y);
     double w = mDim[2] * (max_Z - min_Z);
 
-    Matrix3d inertia = Matrix3d::Zero();
+    Eigen::Matrix3d inertia = Eigen::Matrix3d::Identity();
     inertia(0, 0) = _mass / 12.0 * (h * h + w * w);
     inertia(1, 1) = _mass / 12.0 * (l * l + w * w);
     inertia(2, 2) = _mass / 12.0 * (l * l + h * h);

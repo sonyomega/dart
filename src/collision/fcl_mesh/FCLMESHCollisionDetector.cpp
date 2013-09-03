@@ -12,8 +12,6 @@
 #include "collision/fcl_mesh/FCLMESHCollisionNode.h"
 #include "collision/fcl_mesh/FCLMESHCollisionDetector.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace collision {
 

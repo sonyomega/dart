@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include "SnoptInterface.h"
-using namespace Eigen;
 
 namespace dart {
 namespace optimizer {

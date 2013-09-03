@@ -46,8 +46,6 @@
 #include "renderer/LoadOpengl.h"
 #include "renderer/OpenGLRenderInterface.h"
 
-using namespace Eigen;
-
 // Code taken from glut/lib/glut_shapes.c
 static GLUquadricObj *quadObj;
 
@@ -75,7 +73,7 @@ void OpenGLRenderInterface::initialize() {
     glEnable(GL_DEPTH_TEST);
     //glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
     glShadeModel(GL_SMOOTH);
-    clear(Vector3d(1.0, 1.0, 1.0));
+    clear(Eigen::Vector3d(1.0, 1.0, 1.0));
 }
 
 void OpenGLRenderInterface::destroy() {
@@ -97,7 +95,7 @@ void OpenGLRenderInterface::getViewport(int& _x, int& _y, int& _width, int& _hei
     _height =mViewportHeight;
 }
 
-void OpenGLRenderInterface::clear(const Vector3d& _color) {
+void OpenGLRenderInterface::clear(const Eigen::Vector3d& _color) {
     glClearColor((GLfloat)_color[0], (GLfloat)_color[1], (GLfloat)_color[2], 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 }
@@ -115,11 +113,11 @@ void OpenGLRenderInterface::turnLightsOn() {
     glEnable(GL_LIGHTING);
 }
 
-void OpenGLRenderInterface::setMaterial(const Vector3d& _diffuse, const Vector3d& _specular, double _cosinePow) {
+void OpenGLRenderInterface::setMaterial(const Eigen::Vector3d& _diffuse, const Eigen::Vector3d& _specular, double _cosinePow) {
 
 }
 
-void OpenGLRenderInterface::getMaterial(Vector3d& _diffuse, Vector3d& _specular, double& _cosinePow) const {
+void OpenGLRenderInterface::getMaterial(Eigen::Vector3d& _diffuse, Eigen::Vector3d& _specular, double& _cosinePow) const {
 
 }
 
@@ -143,23 +141,23 @@ void OpenGLRenderInterface::popName() {
     glPopName();
 }
 
-void OpenGLRenderInterface::translate(const Vector3d& _offset) {
+void OpenGLRenderInterface::translate(const Eigen::Vector3d& _offset) {
     glTranslated(_offset[0], _offset[1], _offset[2]);
 }
 
-void OpenGLRenderInterface::rotate(const Vector3d& _axis, double _rad) {
+void OpenGLRenderInterface::rotate(const Eigen::Vector3d& _axis, double _rad) {
     glRotated(_rad, _axis[0], _axis[1], _axis[2]);
 }
 
-void OpenGLRenderInterface::transform(const Isometry3d& _transform) {
+void OpenGLRenderInterface::transform(const Eigen::Isometry3d& _transform) {
     glMultMatrixd(_transform.data());
 }
 
-void OpenGLRenderInterface::scale(const Vector3d& _scale) {
+void OpenGLRenderInterface::scale(const Eigen::Vector3d& _scale) {
     glScaled(_scale[0], _scale[1], _scale[2]);
 }
 
-void OpenGLRenderInterface::drawEllipsoid(const Vector3d& _size) {
+void OpenGLRenderInterface::drawEllipsoid(const Eigen::Vector3d& _size) {
     glScaled(_size(0), _size(1), _size(2));
 
     GLdouble radius = 0.5;
@@ -176,7 +174,7 @@ void OpenGLRenderInterface::drawEllipsoid(const Vector3d& _size) {
     //glut/lib/glut_shapes.c
 }
 
-void OpenGLRenderInterface::drawCube(const Vector3d& _size) {
+void OpenGLRenderInterface::drawCube(const Eigen::Vector3d& _size) {
     glScaled(_size(0), _size(1), _size(2));
 
     // Code taken from glut/lib/glut_shapes.c
@@ -386,7 +384,7 @@ void recursiveRender (const struct aiScene *sc, const struct aiNode* nd) {
     glPopMatrix();
 }
 
-void OpenGLRenderInterface::drawMesh(const Vector3d& _size, const aiScene *_mesh) {
+void OpenGLRenderInterface::drawMesh(const Eigen::Vector3d& _size, const aiScene *_mesh) {
     if(_mesh)
         recursiveRender(_mesh, _mesh->mRootNode);
 }
@@ -450,7 +448,7 @@ GLuint OpenGLRenderInterface::compileList(const aiScene *_mesh) {
     GLuint index = glGenLists(1);
     // Compile list
     glNewList(index, GL_COMPILE);
-    drawMesh(Vector3d::Ones(), _mesh);
+    drawMesh(Eigen::Vector3d::Ones(), _mesh);
     glEndList();
 
     return index;
@@ -470,7 +468,7 @@ void OpenGLRenderInterface::draw(dynamics::BodyNode *_node, bool _vizCol, bool _
         return;
 
     // Get world transform
-    Isometry3d pose;
+    Eigen::Isometry3d pose;
     pose = _node->getWorldTransform();
 
     // GL calls
@@ -503,8 +501,8 @@ void OpenGLRenderInterface::draw(dynamics::Shape *_shape) {
     if(_shape == 0)
         return;
 
-    Isometry3d pose = _shape->getTransform();
-    Vector3d color = _shape->getColor();
+    Eigen::Isometry3d pose = _shape->getTransform();
+    Eigen::Vector3d color = _shape->getColor();
 
     glPushMatrix();
 
@@ -540,7 +538,7 @@ void OpenGLRenderInterface::draw(dynamics::Shape *_shape) {
             else if(shapeMesh->getDisplayList())
                 drawList(shapeMesh->getDisplayList());
             else
-                drawMesh(Vector3d::Ones(), shapeMesh->getMesh());
+                drawMesh(Eigen::Vector3d::Ones(), shapeMesh->getMesh());
 
             break;
     }
@@ -549,11 +547,11 @@ void OpenGLRenderInterface::draw(dynamics::Shape *_shape) {
     glPopMatrix();
 }
 
-void OpenGLRenderInterface::setPenColor(const Vector4d& _col) {
+void OpenGLRenderInterface::setPenColor(const Eigen::Vector4d& _col) {
     glColor4d(_col[0], _col[1], _col[2], _col[3]);
 }
 
-void OpenGLRenderInterface::setPenColor(const Vector3d& _col) {
+void OpenGLRenderInterface::setPenColor(const Eigen::Vector3d& _col) {
     glColor4d(_col[0], _col[1], _col[2], 1.0);
 }
 

@@ -10,7 +10,6 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-using namespace Eigen;
 
 #include "optimizer/Problem.h"
 #include "optimizer/Var.h"

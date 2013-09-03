@@ -6,7 +6,6 @@
 using namespace dart;
 using namespace dynamics;
 using namespace simulation;
-using namespace Eigen;
 
 int main(int argc, char* argv[])
 {
@@ -15,7 +14,7 @@ int main(int argc, char* argv[])
             = dart::utils::readSkelFile(
                   DART_DATA_PATH"/skel/cubes.skel");
     assert(myWorld != NULL);
-    Vector3d gravity(0.0, -9.81, 0.0);
+    Eigen::Vector3d gravity(0.0, -9.81, 0.0);
     myWorld->setGravity(gravity);
 
     // create a window and link it to the world

@@ -36,7 +36,6 @@
  */
 
 #include "Shape.h"
-using namespace Eigen;
 
 #define PRIMITIVE_MAGIC_NUMBER 1000
 
@@ -50,7 +49,7 @@ Shape::Shape(ShapeType _type) :
     mID(mCounter++),
     mColor(0.5, 0.5, 1.0),
     mOffset(0, 0, 0),
-    mTransform(Isometry3d::Identity())
+    mTransform(Eigen::Isometry3d::Identity())
 {
 }
 

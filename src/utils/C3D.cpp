@@ -39,7 +39,6 @@
 
 #include <cstring>
 #include <cstdio>
-using namespace Eigen;
 
 ///////////////////////////////////////////////////////////////////////
 //  C3D file reader and writer
@@ -71,10 +70,10 @@ void ConvertFloatToDec(float _f, char* _bytes) {
 }
 
 
-bool loadC3DFile(const char *_fileName, EIGEN_VV_VEC3D& _pointData, int *_nFrame, int *_nMarker, double *_freq) {
+bool loadC3DFile(const char *_fileName, Eigen::EIGEN_VV_VEC3D& _pointData, int *_nFrame, int *_nMarker, double *_freq) {
     char buf[C3D_REC_SIZE];
     FILE *file;
-    Vector3d v;
+    Eigen::Vector3d v;
     c3d_head hdr;
     c3d_param param;
     c3d_frameSI frameSI;
@@ -168,9 +167,9 @@ bool loadC3DFile(const char *_fileName, EIGEN_VV_VEC3D& _pointData, int *_nFrame
     return true;
 }
 
-bool saveC3DFile(const char *_fileName, EIGEN_VV_VEC3D& _pointData, int _nFrame, int _nMarker, double _freq) {
+bool saveC3DFile(const char *_fileName, Eigen::EIGEN_VV_VEC3D& _pointData, int _nFrame, int _nMarker, double _freq) {
     FILE *file;
-    Vector3d v;
+    Eigen::Vector3d v;
     c3d_head hdr;
     c3d_param parm;
     c3d_frame frame;

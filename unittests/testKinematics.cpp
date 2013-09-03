@@ -62,7 +62,6 @@ public:
 
 ///* ********************************************************************************************* */
 //TEST(KINEMATICS, VSK_LOADER) {
-//    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
   
@@ -79,7 +78,6 @@ public:
 
 ///* ********************************************************************************************* */
 //TEST(KINEMATICS, C3D_LOADER) {
-//    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
   
@@ -93,7 +91,6 @@ public:
 
 ///* ********************************************************************************************* */
 //TEST(KINEMATICS, TRANS_AND_DERIV) {
-//    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
   

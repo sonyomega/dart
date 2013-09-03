@@ -38,21 +38,19 @@
 #include "BoxShape.h"
 #include "renderer/RenderInterface.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace dynamics {
 
-BoxShape::BoxShape(Vector3d _dim)
+BoxShape::BoxShape(Eigen::Vector3d _dim)
     : Shape(P_BOX)
 {
     mDim = _dim;
     initMeshes();
-    if (_dim != Vector3d::Zero())
+    if (_dim != Eigen::Vector3d::Zero())
         computeVolume();
 }
 
-void BoxShape::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
+void BoxShape::draw(renderer::RenderInterface* _ri, const Eigen::Vector4d& _color, bool _useDefaultColor) const {
     if (!_ri) return;
     if (!_useDefaultColor)
         _ri->setPenColor(_color);
@@ -64,8 +62,8 @@ void BoxShape::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool
     _ri->popMatrix();
 }
 
-Matrix3d BoxShape::computeInertia(double _mass) const {
-    Matrix3d inertia = Matrix3d::Zero();
+Eigen::Matrix3d BoxShape::computeInertia(double _mass) const {
+    Eigen::Matrix3d inertia = Eigen::Matrix3d::Identity();
     inertia(0, 0) = _mass / 12.0 * (mDim(1) * mDim(1) + mDim(2) * mDim(2));
     inertia(1, 1) = _mass / 12.0 * (mDim(0) * mDim(0) + mDim(2) * mDim(2));
     inertia(2, 2) = _mass / 12.0 * (mDim(0) * mDim(0) + mDim(1) * mDim(1));

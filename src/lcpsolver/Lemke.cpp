@@ -4,8 +4,6 @@
 #include <math.h>
 #include <vector>
 
-using namespace Eigen;
-
 #ifndef isnan
 # define isnan(x) \
     (sizeof (x) == sizeof (long double) ? isnan_ld (x) \
@@ -51,7 +49,7 @@ double RandDouble(double _low, double _high)
 }
 
 
-int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
+int Lemke(const Eigen::MatrixXd& _M, const Eigen::VectorXd& _q, Eigen::VectorXd& _z)
 {
     int n = _q.size();
 
@@ -63,17 +61,17 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
     if (_q.minCoeff() > 0)
     {
         //		    LOG(INFO) << "Trivial solution exists.";
-        _z = VectorXd::Zero(n);
+        _z = Eigen::VectorXd::Zero(n);
         return err;
     }
 
-    _z = VectorXd::Zero(2 * n);
+    _z = Eigen::VectorXd::Zero(2 * n);
     int iter = 0;
     double theta = 0;
     double ratio = 0;
     int leaving  = 0;
-    VectorXd Be = VectorXd::Constant(n, 1);
-    VectorXd x = _q;
+    Eigen::VectorXd Be = Eigen::VectorXd::Constant(n, 1);
+    Eigen::VectorXd x = _q;
     std::vector<int> bas;
     std::vector<int> nonbas;
 
@@ -88,7 +86,7 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
         bas.push_back(i);
     }
 
-    MatrixXd B = -MatrixXd::Identity(n, n);
+    Eigen::MatrixXd B = -Eigen::MatrixXd::Identity(n, n);
 
     for (int i = 0; i < bas.size(); ++i) {
         B.col(bas[i]) = _M.col(bas[i]);
@@ -96,13 +94,13 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
 
     x = -B.partialPivLu().solve(_q);
 
-    VectorXd minuxX = -x;
+    Eigen::VectorXd minuxX = -x;
     int lvindex;
     double tval = minuxX.maxCoeff(&lvindex);
     leaving = bas[lvindex];
     bas[lvindex] = t;
 
-    VectorXd U = VectorXd::Zero(n);
+    Eigen::VectorXd U = Eigen::VectorXd::Zero(n);
     for (int i = 0; i < n; ++i)
     {
         if (x[i] < 0)
@@ -122,7 +120,7 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
         else if (leaving < n)
         {
             entering = n + leaving;
-            Be = VectorXd::Zero(n);
+            Be = Eigen::VectorXd::Zero(n);
             Be[leaving] = -1;
         }
         else
@@ -131,7 +129,7 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
             Be = _M.col(entering);
         }
 
-        VectorXd d = B.partialPivLu().solve(Be);
+        Eigen::VectorXd d = B.partialPivLu().solve(Be);
 
         std::vector<int> j;
         for (int i = 0; i < n; ++i)
@@ -146,7 +144,7 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
         }
 
         int jSize = static_cast<int>(j.size());
-        VectorXd minRatio(jSize);
+        Eigen::VectorXd minRatio(jSize);
         for (int i = 0; i < jSize; ++i)
         {
             minRatio[i] = (x[j[i]] + zer_tol) / d[j[i]];
@@ -245,7 +243,7 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
             }
         }
 
-        VectorXd realZ = _z.segment(0, n);
+        Eigen::VectorXd realZ = _z.segment(0, n);
         _z = realZ;
 
         if (!validate(_M, _z, _q))
@@ -256,7 +254,7 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
     }
     else
     {
-        _z = VectorXd::Zero(n); //solve failed, return a 0 vector
+        _z = Eigen::VectorXd::Zero(n); //solve failed, return a 0 vector
     }
 
     // 	    if (err == 1)
@@ -271,12 +269,12 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
     return err;
 }
 
-bool validate(const MatrixXd& _M, const VectorXd& _z, const VectorXd& _q)
+bool validate(const Eigen::MatrixXd& _M, const Eigen::VectorXd& _z, const Eigen::VectorXd& _q)
 {
     const double threshold = 1e-4;
     int n = _z.size();
 
-    VectorXd w = _M * _z + _q;
+    Eigen::VectorXd w = _M * _z + _q;
     for (int i = 0; i < n; ++i)
     {
         if (w(i) < -threshold || _z(i) < -threshold)

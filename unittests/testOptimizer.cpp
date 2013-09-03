@@ -42,8 +42,6 @@
 #include "optimizer/ObjectiveBox.h"
 #include "optimizer/snopt/SnoptSolver.h"
 
-using namespace Eigen;
-
 /* ********************************************************************************************* *
 class SampleConstraint : public optimizer::Constraint {
 public:

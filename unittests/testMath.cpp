@@ -80,8 +80,6 @@ private:
     Eigen::Matrix4d mT;
 };
 
-using namespace Eigen;
-
 template<typename T>
 EIGEN_DONT_INLINE
 void prod(const T& a, const T& b, T& c) { c = a*b; }

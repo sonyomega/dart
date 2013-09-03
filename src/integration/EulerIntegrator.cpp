@@ -38,8 +38,6 @@
 #include "dynamics/System.h"
 #include "integration/EulerIntegrator.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace integration {
 
@@ -55,7 +53,7 @@ EulerIntegrator::~EulerIntegrator()
 void EulerIntegrator::integrate(IntegrableSystem* system, double dt) const
 {
     // Explicit Euler Method
-    VectorXd deriv = system->evalDeriv();
+    Eigen::VectorXd deriv = system->evalDeriv();
     system->setState(system->getState() + (dt * deriv));
 
     // Semi-implicit Euler Method

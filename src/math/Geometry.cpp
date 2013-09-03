@@ -40,40 +40,38 @@
 
 #include "math/Geometry.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace math {
 
-Quaterniond matrixToQuat(Matrix3d& mat) {
-    return Quaterniond(mat);
+Eigen::Quaterniond matrixToQuat(Eigen::Matrix3d& mat) {
+    return Eigen::Quaterniond(mat);
 }
 
-Matrix3d quatToMatrix(Quaterniond& q) {
-    return Matrix3d(q);
+Eigen::Matrix3d quatToMatrix(Eigen::Quaterniond& q) {
+    return Eigen::Matrix3d(q);
 }
 
-Quaterniond expToQuat(Vector3d& v) {
+Eigen::Quaterniond expToQuat(Eigen::Vector3d& v) {
     double mag = v.norm();
     if(mag > 1e-10){
-        Quaterniond q(AngleAxisd(mag, v / mag));
+        Eigen::Quaterniond q(Eigen::AngleAxisd(mag, v / mag));
         return q;
     }
     else{
-        Quaterniond q(1, 0, 0, 0);
+        Eigen::Quaterniond q(1, 0, 0, 0);
         return q;
     }
 }
 
-Vector3d quatToExp(Quaterniond& q) {
-    AngleAxisd aa(q);
-    Vector3d v = aa.axis();
+Eigen::Vector3d quatToExp(Eigen::Quaterniond& q) {
+    Eigen::AngleAxisd aa(q);
+    Eigen::Vector3d v = aa.axis();
     return v*aa.angle();
 }
 
 // Note: xyz order means matrix is Rz*Ry*Rx i.e a point as transformed as Rz*Ry*Rx(p)
 // coordinate system transformation as in GL will be written as glRotate(z); glRotate(y); glRotate(x)
-Vector3d matrixToEuler(Matrix3d& m, RotationOrder order) {
+Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order) {
     double x, y, z;
 
     if(order==XYZ) {
@@ -92,7 +90,7 @@ Vector3d matrixToEuler(Matrix3d& m, RotationOrder order) {
         x = atan2(m(2, 1), m(2, 2));
         y = -asin(m(2, 0));
         z = atan2(m(1, 0), m(0, 0));
-        return Vector3d(x,y,z);	// order of return is the order of input
+        return Eigen::Vector3d(x,y,z);	// order of return is the order of input
     }
 
     if(order==ZYX) {
@@ -111,7 +109,7 @@ Vector3d matrixToEuler(Matrix3d& m, RotationOrder order) {
         z = -atan2(m(0, 1), m(0, 0));
         y = asin(m(0, 2));
         x = -atan2(m(1, 2), m(2, 2));
-        return Vector3d(z,y,x);	// order of return is the order of input
+        return Eigen::Vector3d(z,y,x);	// order of return is the order of input
     }
 
     if(order==YZX) {
@@ -130,7 +128,7 @@ Vector3d matrixToEuler(Matrix3d& m, RotationOrder order) {
         y = atan2(m(0, 2), m(0, 0));
         z = -asin(m(0, 1));
         x = atan2(m(2, 1), m(1, 1));
-        return Vector3d(y,z,x);	// order of return is the order of input
+        return Eigen::Vector3d(y,z,x);	// order of return is the order of input
     }
 
     if(order==XZY) {
@@ -149,7 +147,7 @@ Vector3d matrixToEuler(Matrix3d& m, RotationOrder order) {
         x = -atan2(m(1, 2), m(1, 1));
         z = asin(m(1, 0));
         y = -atan2(m(2, 0), m(0, 0));
-        return Vector3d(x,z,y);	// order of return is the order of input
+        return Eigen::Vector3d(x,z,y);	// order of return is the order of input
     }
 
     if(order==YXZ){
@@ -168,7 +166,7 @@ Vector3d matrixToEuler(Matrix3d& m, RotationOrder order) {
         y = -atan2(m(2, 0), m(2, 2));
         x = asin(m(2, 1));
         z = -atan2(m(0, 1), m(1, 1));
-        return Vector3d(y, x, z);	// order of return is the order of input
+        return Eigen::Vector3d(y, x, z);	// order of return is the order of input
     }
 
     if(order==ZXY){
@@ -187,13 +185,13 @@ Vector3d matrixToEuler(Matrix3d& m, RotationOrder order) {
         z = atan2(m(1, 0), m(1, 1));
         x = -asin(m(1, 2));
         y = atan2(m(0, 2), m(2, 2));
-        return Vector3d(z,x,y);	// order of return is the order of input
+        return Eigen::Vector3d(z,x,y);	// order of return is the order of input
     }
     printf("Matrix_to_Euler - Do not support rotation order %d. Make sure letters are in lowercase\n", order);
-    return Vector3d(0.0, 0.0, 0.0);
+    return Eigen::Vector3d(0.0, 0.0, 0.0);
 }
 
-Matrix3d eulerToMatrix(Vector3d& v, RotationOrder order) {
+Eigen::Matrix3d eulerToMatrix(Eigen::Vector3d& v, RotationOrder order) {
     if(order==XYZ){
         return eulerToMatrixZ(v[2])*eulerToMatrixY(v[1])*eulerToMatrixX(v[0]);
     }
@@ -214,11 +212,11 @@ Matrix3d eulerToMatrix(Vector3d& v, RotationOrder order) {
     }
 
     printf("euler_to_matrix - Do not support rotation order %d. Make sure letters are in lowercase\n", order);
-    return Matrix3d::Zero();
+    return Eigen::Matrix3d::Zero();
 }
 
-Matrix3d eulerToMatrixX(double x) {
-    Matrix3d mat = Matrix3d::Zero();
+Eigen::Matrix3d eulerToMatrixX(double x) {
+    Eigen::Matrix3d mat = Eigen::Matrix3d::Zero();
     double cosangle = cos(x);
     double sinangle = sin(x);
     mat(0, 0) = 1.0;
@@ -229,8 +227,8 @@ Matrix3d eulerToMatrixX(double x) {
     return mat;
 }
 
-Matrix3d eulerToMatrixY(double y) {
-    Matrix3d mat = Matrix3d::Zero();
+Eigen::Matrix3d eulerToMatrixY(double y) {
+    Eigen::Matrix3d mat = Eigen::Matrix3d::Zero();
     double cosangle = cos(y);
     double sinangle = sin(y);
     mat(1, 1) = 1.0;
@@ -241,8 +239,8 @@ Matrix3d eulerToMatrixY(double y) {
     return mat;
 }
 
-Matrix3d eulerToMatrixZ(double z) {
-    Matrix3d mat = Matrix3d::Zero();
+Eigen::Matrix3d eulerToMatrixZ(double z) {
+    Eigen::Matrix3d mat = Eigen::Matrix3d::Zero();
     double cosangle = cos(z);
     double sinangle = sin(z);
     mat(2, 2) = 1.0;
@@ -254,8 +252,8 @@ Matrix3d eulerToMatrixZ(double z) {
 }
 
 // get the derivative of rotation matrix wrt el no.
-Matrix3d quatDeriv(const Quaterniond& q, int el){
-    Matrix3d mat = Matrix3d::Zero();
+Eigen::Matrix3d quatDeriv(const Eigen::Quaterniond& q, int el){
+    Eigen::Matrix3d mat = Eigen::Matrix3d::Zero();
     switch(el){
         case 0:	// wrt w
             mat(0, 0) = q.w();
@@ -307,8 +305,8 @@ Matrix3d quatDeriv(const Quaterniond& q, int el){
     return 2*mat;
 }
 
-Matrix3d quatSecondDeriv(const Quaterniond& q, int el1, int el2){
-    Matrix3d mat = Matrix3d::Zero();
+Eigen::Matrix3d quatSecondDeriv(const Eigen::Quaterniond& q, int el1, int el2){
+    Eigen::Matrix3d mat = Eigen::Matrix3d::Zero();
 
     // wrt same dof
     if(el1==el2){
@@ -386,14 +384,14 @@ Matrix3d quatSecondDeriv(const Quaterniond& q, int el1, int el2){
     return 2*mat;
 }
 
-Vector3d rotatePoint(const Quaterniond& q, const Vector3d& pt) {
-    Quaterniond quat_pt(0, pt[0], pt[1], pt[2]);
-    Quaterniond qinv = q.inverse();
+Eigen::Vector3d rotatePoint(const Eigen::Quaterniond& q, const Eigen::Vector3d& pt) {
+    Eigen::Quaterniond quat_pt(0, pt[0], pt[1], pt[2]);
+    Eigen::Quaterniond qinv = q.inverse();
 
-    Quaterniond rot = q*quat_pt*qinv;
+    Eigen::Quaterniond rot = q*quat_pt*qinv;
 
     // check below - assuming same format of point achieved
-    Vector3d temp;
+    Eigen::Vector3d temp;
     //VLOG(1)<<"Point before: "<<0<<" "<<pt.x<<" "<<pt.y<<" "<<pt.z<<"\n";
     //VLOG(1)<<"Point after:  "<<rot.x<<" "<<rot.y<<" "<<rot.z<<" "<<rot.w<<"\n";
     temp[0]=rot.x();
@@ -404,8 +402,8 @@ Vector3d rotatePoint(const Quaterniond& q, const Vector3d& pt) {
     return temp;
 }
 
-Vector3d rotatePoint(const Quaterniond& q, double x, double y, double z){
-    Vector3d pt;
+Eigen::Vector3d rotatePoint(const Eigen::Quaterniond& q, double x, double y, double z){
+    Eigen::Vector3d pt;
     pt[0]=x;
     pt[1]=y;
     pt[2]=z;
@@ -417,45 +415,45 @@ Vector3d rotatePoint(const Quaterniond& q, double x, double y, double z){
 
 #define EPSILON_EXPMAP_THETA 1.0e-3
 
-Matrix3d expMapRot(const Vector3d &_q){
+Eigen::Matrix3d expMapRot(const Eigen::Vector3d &_q){
     double theta = _q.norm();
 
-    Matrix3d R = Matrix3d::Zero();
-    Matrix3d qss =  math::makeSkewSymmetric(_q);
-    Matrix3d qss2 =  qss*qss;
+    Eigen::Matrix3d R = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d qss =  math::makeSkewSymmetric(_q);
+    Eigen::Matrix3d qss2 =  qss*qss;
 
     if(theta<EPSILON_EXPMAP_THETA){
-        R = Matrix3d::Identity() + qss + 0.5*qss2;
+        R = Eigen::Matrix3d::Identity() + qss + 0.5*qss2;
     }
     else {
-        R = Matrix3d::Identity() + (sin(theta)/theta)*qss + ((1-cos(theta))/(theta*theta))*qss2;
+        R = Eigen::Matrix3d::Identity() + (sin(theta)/theta)*qss + ((1-cos(theta))/(theta*theta))*qss2;
     }
     return R;
 }
 
-Matrix3d expMapJac(const Vector3d &_q){
+Eigen::Matrix3d expMapJac(const Eigen::Vector3d &_q){
     double theta = _q.norm();
 
-    Matrix3d J = Matrix3d::Zero();
-    Matrix3d qss =  math::makeSkewSymmetric(_q);
-    Matrix3d qss2 =  qss*qss;
+    Eigen::Matrix3d J = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d qss =  math::makeSkewSymmetric(_q);
+    Eigen::Matrix3d qss2 =  qss*qss;
 
     if(theta<EPSILON_EXPMAP_THETA){
-        J = Matrix3d::Identity() + 0.5*qss +  (1.0/6.0)*qss2;
+        J = Eigen::Matrix3d::Identity() + 0.5*qss +  (1.0/6.0)*qss2;
     }
     else {
-        J = Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
+        J = Eigen::Matrix3d::Identity() + ((1-cos(theta))/(theta*theta))*qss + ((theta-sin(theta))/(theta*theta*theta))*qss2;
     }
     return J;
 }
 
-Matrix3d expMapJacDot(const Vector3d &_q, const Vector3d &_qdot){
+Eigen::Matrix3d expMapJacDot(const Eigen::Vector3d& _q, const Eigen::Vector3d& _qdot){
     double theta = _q.norm();
 
-    Matrix3d Jdot = Matrix3d::Zero();
-    Matrix3d qss =  math::makeSkewSymmetric(_q);
-    Matrix3d qss2 =  qss*qss;
-    Matrix3d qdss = math::makeSkewSymmetric(_qdot);
+    Eigen::Matrix3d Jdot = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d qss  = math::makeSkewSymmetric(_q);
+    Eigen::Matrix3d qss2 = qss*qss;
+    Eigen::Matrix3d qdss = math::makeSkewSymmetric(_qdot);
     double ttdot = _q.dot(_qdot);   // theta*thetaDot
     double st = sin(theta);
     double ct = cos(theta);
@@ -475,9 +473,9 @@ Matrix3d expMapJacDot(const Vector3d &_q, const Vector3d &_qdot){
     return Jdot;
 }
 
-Matrix3d expMapJacDeriv( const Vector3d &_q, int _qi ) {
+Eigen::Matrix3d expMapJacDeriv(const Eigen::Vector3d& _q, int _qi ) {
     assert(_qi>=0 && _qi<=2);
-    Vector3d qdot = Vector3d::Zero();
+    Eigen::Vector3d qdot = Eigen::Vector3d::Zero();
     qdot[_qi] = 1.0;
     return expMapJacDot(_q, qdot);
 }

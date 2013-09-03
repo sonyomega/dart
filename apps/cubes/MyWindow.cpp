@@ -3,16 +3,14 @@
 #include "dynamics/BodyNode.h"
 #include "dynamics/Skeleton.h"
 
-using namespace Eigen;
 using namespace dart;
 using namespace dynamics;
-
 
 void MyWindow::timeStepping()
 {
     //mWorld->getSkeleton(1)->getNode(0)->addExtForce(Vector3d(0.0, 0.0, 0.0), mForce);
     mWorld->getSkeleton(1)->getBodyNode(0)->addExternalForceLocal(
-                Vector3d(0.0, 0.0, 0.0), mForce);
+                Eigen::Vector3d(0.0, 0.0, 0.0), mForce);
     mWorld->step();
     mForce /= 2.0;
 }
@@ -21,7 +19,7 @@ void MyWindow::drawSkels()
 {
     glEnable(GL_LIGHTING);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    Vector4d color;
+    Eigen::Vector4d color;
     color << 0.95, 0.95, 0.95, 1.0;
     mWorld->getSkeleton(0)->draw(mRI, color, false);
     color << 0.8, 0.3, 0.3, 1.0;

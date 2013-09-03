@@ -37,7 +37,6 @@
 
 #include "ObjectiveBox.h"
 #include "Constraint.h"
-using namespace Eigen;
 #include <iostream>
 
 namespace dart {

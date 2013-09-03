@@ -36,7 +36,6 @@
  */
 
 #include "Constraint.h"
-using namespace Eigen;
 
 namespace dart {
 namespace optimizer {
@@ -55,7 +54,7 @@ Constraint::Constraint(std::vector<Var*>& var)
 }
 
 double Constraint::evalObj() {
-    VectorXd constr = evalCon();
+    Eigen::VectorXd constr = evalCon();
     return 0.5 * constr.dot(constr);
     /* return 0.5*dot(constr, constr); */
 }

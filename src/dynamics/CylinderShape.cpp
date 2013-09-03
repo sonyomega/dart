@@ -38,8 +38,6 @@
 #include "CylinderShape.h"
 #include "renderer/RenderInterface.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace dynamics {
 
@@ -54,7 +52,7 @@ CylinderShape::CylinderShape(double _radius, double _height)
     }
 }
 
-void CylinderShape::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
+void CylinderShape::draw(renderer::RenderInterface* _ri, const Eigen::Vector4d& _color, bool _useDefaultColor) const {
     if (!_ri) return;
     if (!_useDefaultColor)
         _ri->setPenColor(_color);
@@ -70,8 +68,8 @@ void CylinderShape::computeVolume() {
     mVolume = M_PI * mRadius * mRadius * mHeight;
 }
 
-Matrix3d CylinderShape::computeInertia(double _mass) {
-    Matrix3d inertia = Matrix3d::Zero();
+Eigen::Matrix3d CylinderShape::computeInertia(double _mass) {
+    Eigen::Matrix3d inertia = Eigen::Matrix3d::Zero();
     inertia(0, 0) = _mass * (3.0 * mRadius * mRadius + mHeight * mHeight) / 12.0;
     inertia(1, 1) = inertia(0, 0);
     inertia(2, 2) = 0.5 * _mass * mRadius * mRadius;

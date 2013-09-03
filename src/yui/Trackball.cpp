@@ -38,8 +38,6 @@
 #include "Trackball.h"
 #include "renderer/LoadOpengl.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace yui {
 
@@ -50,15 +48,15 @@ void Trackball::startBall(double x, double y)
 
 void Trackball::updateBall(double x, double y)
 {
-    Vector3d toPos = mouseOnSphere(x,y);
-    Quaterniond newQuat(quatFromVectors(mStartPos, toPos));
+    Eigen::Vector3d toPos = mouseOnSphere(x,y);
+    Eigen::Quaterniond newQuat(quatFromVectors(mStartPos, toPos));
     mStartPos = toPos;
     mCurrQuat = newQuat*mCurrQuat;
 }
 
 void Trackball::applyGLRotation()
 {
-    Transform<double, 3, Affine> t(mCurrQuat);
+    Eigen::Transform<double, 3, Eigen::Affine> t(mCurrQuat);
     glMultMatrixd(t.data());
 }
 
@@ -91,10 +89,10 @@ void Trackball::draw(int winWidth, int winHeight)
     glPopMatrix();
 }
 
-Vector3d Trackball::mouseOnSphere(double mouseX, double mouseY) const
+Eigen::Vector3d Trackball::mouseOnSphere(double mouseX, double mouseY) const
 {
     double mag;
-    Vector3d pointOnSphere;
+    Eigen::Vector3d pointOnSphere;
 
     pointOnSphere(0) = (mouseX - mCenter(0)) / mRadius;
     pointOnSphere(1) = (mouseY - mCenter(1)) / mRadius;
@@ -113,9 +111,9 @@ Vector3d Trackball::mouseOnSphere(double mouseX, double mouseY) const
     return pointOnSphere;
 }
 
-Quaterniond Trackball::quatFromVectors(const Vector3d& from, const Vector3d& to) const
+Eigen::Quaterniond Trackball::quatFromVectors(const Eigen::Vector3d& from, const Eigen::Vector3d& to) const
 {
-    Quaterniond quat;
+    Eigen::Quaterniond quat;
     quat.x() = from(1)*to(2) - from(2)*to(1);
     quat.y() = from(2)*to(0) - from(0)*to(2);
     quat.z() = from(0)*to(1) - from(1)*to(0);

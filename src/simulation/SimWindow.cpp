@@ -47,8 +47,6 @@
 #include "collision/CollisionDetector.h"
 #include "yui/GLFuncs.h"
 
-using namespace Eigen;
-
 namespace dart {
 namespace simulation {
 
@@ -112,16 +110,16 @@ void SimWindow::draw()
                 int sumDofs = mWorld->getIndex(nSkels);
                 int nContact = (mBakedStates[mPlayFrame].size() - sumDofs) / 6;
                 for (int i = 0; i < nContact; i++) {
-                    Vector3d v = mBakedStates[mPlayFrame].segment(sumDofs + i * 6, 3);
-                    Vector3d f = mBakedStates[mPlayFrame].segment(sumDofs + i * 6 + 3, 3) / 10.0;
+                    Eigen::Vector3d v = mBakedStates[mPlayFrame].segment(sumDofs + i * 6, 3);
+                    Eigen::Vector3d f = mBakedStates[mPlayFrame].segment(sumDofs + i * 6 + 3, 3) / 10.0;
                     glBegin(GL_LINES);
                     glVertex3f(v[0], v[1], v[2]);
                     glVertex3f(v[0] + f[0], v[1] + f[1], v[2] + f[2]);
                     glEnd();
-                    mRI->setPenColor(Vector3d(0.2, 0.2, 0.8));
+                    mRI->setPenColor(Eigen::Vector3d(0.2, 0.2, 0.8));
                     mRI->pushMatrix();
                     glTranslated(v[0], v[1], v[2]);
-                    mRI->drawEllipsoid(Vector3d(0.02, 0.02, 0.02));
+                    mRI->drawEllipsoid(Eigen::Vector3d(0.02, 0.02, 0.02));
                     mRI->popMatrix();
                 }
             }
@@ -129,16 +127,16 @@ void SimWindow::draw()
     }else{
         if (mShowMarkers) {
             for (int k = 0; k < mWorld->getCollisionHandle()->getCollisionChecker()->getNumContacts(); k++) {
-                Vector3d  v = mWorld->getCollisionHandle()->getCollisionChecker()->getContact(k).point;
-                Vector3d f = mWorld->getCollisionHandle()->getCollisionChecker()->getContact(k).force / 10.0;
+                Eigen::Vector3d v = mWorld->getCollisionHandle()->getCollisionChecker()->getContact(k).point;
+                Eigen::Vector3d f = mWorld->getCollisionHandle()->getCollisionChecker()->getContact(k).force / 10.0;
                 glBegin(GL_LINES);
                 glVertex3f(v[0], v[1], v[2]);
                 glVertex3f(v[0] + f[0], v[1] + f[1], v[2] + f[2]);
                 glEnd();
-                mRI->setPenColor(Vector3d(0.2, 0.2, 0.8));
+                mRI->setPenColor(Eigen::Vector3d(0.2, 0.2, 0.8));
                 mRI->pushMatrix();
                 glTranslated(v[0], v[1], v[2]);
-                mRI->drawEllipsoid(Vector3d(0.02, 0.02, 0.02));
+                mRI->drawEllipsoid(Eigen::Vector3d(0.02, 0.02, 0.02));
                 mRI->popMatrix();
             }
         }
@@ -202,7 +200,7 @@ void SimWindow::keyboard(unsigned char key, int x, int y)
 void SimWindow::bake()
 {
     int nContact = mWorld->getCollisionHandle()->getCollisionChecker()->getNumContacts();
-    VectorXd state(mWorld->getIndex(mWorld->getNumSkeletons()) + 6 * nContact);
+    Eigen::VectorXd state(mWorld->getIndex(mWorld->getNumSkeletons()) + 6 * nContact);
     for (unsigned int i = 0; i < mWorld->getNumSkeletons(); i++)
         state.segment(mWorld->getIndex(i), mWorld->getSkeleton(i)->getDOF()) = mWorld->getSkeleton(i)->getPose();
     for (int i = 0; i < nContact; i++) {
