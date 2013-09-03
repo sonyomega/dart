@@ -2,8 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
- * Date: 06/12/2011
+ * Author(s): Tobias Kunz <tobias@gatech.edu>
+ * Date: 01/29/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,48 +35,54 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ShapeBox.h"
-#include "renderer/RenderInterface.h"
+#ifndef DART_DYNAMICS_CYLINDER_SHAPE_H
+#define DART_DYNAMICS_CYLINDER_SHAPE_H
 
-using namespace std;
-using namespace Eigen;
+#include "Shape.h"
 
 namespace dart {
 namespace dynamics {
 
-ShapeBox::ShapeBox(Vector3d _dim)
-    : Shape(P_BOX)
-{
-    mDim = _dim;
-    initMeshes();
-    if (_dim != Vector3d::Zero())
-        computeVolume();
-}
+class CylinderShape : public Shape {
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-void ShapeBox::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
-    if (!_ri) return;
-    if (!_useDefaultColor)
-        _ri->setPenColor(_color);
-    else
-        _ri->setPenColor(mColor);
-    _ri->pushMatrix();
-    _ri->transform(mTransform);
-    _ri->drawCube(mDim);
-    _ri->popMatrix();
-}
+    /// @brief Constructor.
+    CylinderShape(double _radius, double _height);
 
-Matrix3d ShapeBox::computeInertia(double _mass) const {
-    Matrix3d inertia = Matrix3d::Zero();
-    inertia(0, 0) = _mass / 12.0 * (mDim(1) * mDim(1) + mDim(2) * mDim(2));
-    inertia(1, 1) = _mass / 12.0 * (mDim(0) * mDim(0) + mDim(2) * mDim(2));
-    inertia(2, 2) = _mass / 12.0 * (mDim(0) * mDim(0) + mDim(1) * mDim(1));
+    /// @brief
+    inline double getRadius() const { return mRadius; }
 
-    return inertia;
-}
+    /// @brief
+    inline void setRadius(double _radius) { mRadius = _radius; }
 
-void ShapeBox::computeVolume() {
-    mVolume = mDim(0) * mDim(1) * mDim(2); // a * b * c
-}
+    /// @brief
+    inline double getHeight() const { return mHeight; }
+
+    /// @brief
+    inline void setHeight(double _height) { mHeight = _height; }
+
+    // Documentation inherited.
+    void draw(renderer::RenderInterface* _ri = NULL,
+              const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
+              bool _useDefaultColor = true) const;
+
+    // Documentation inherited.
+    virtual Eigen::Matrix3d computeInertia(double _mass);
+
+private:
+    // Documentation inherited.
+    void computeVolume();
+
+    /// @brief
+    double mRadius;
+
+    /// @brief Height along z-axis.
+    double mHeight;
+};
 
 } // namespace dynamics
 } // namespace dart
+
+#endif // #ifndef DART_DYNAMICS_CYLINDER_SHAPE_H
+

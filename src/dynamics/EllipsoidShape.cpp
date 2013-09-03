@@ -2,8 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s):
- * Date:
+ * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
+ * Date: 06/12/2011
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,58 +35,57 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_DYNAMICS_SHAPE_MESH_H
-#define DART_DYNAMICS_SHAPE_MESH_H
+#include "EllipsoidShape.h"
+#include "renderer/RenderInterface.h"
 
-#include "Shape.h"
+using namespace Eigen;
 
 namespace dart {
 namespace dynamics {
 
-class ShapeMesh : public Shape {
-public:
-    /// @brief Constructor.
-    ShapeMesh(Eigen::Vector3d _dim, const aiScene *_mesh);
+EllipsoidShape::EllipsoidShape(Vector3d _dim)
+    : Shape(P_ELLIPSOID)
+{
+    mDim = _dim;
+    initMeshes();
+    if (mDim != Vector3d::Zero())
+        computeVolume();
+}
 
-    /// @brief
-    inline const aiScene* getMesh() const { return mMesh; }
+void EllipsoidShape::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
+    if (!_ri)
+        return;
+    if (!_useDefaultColor)
+        _ri->setPenColor(_color);
+    else
+        _ri->setPenColor(mColor);
+    _ri->pushMatrix();
+    _ri->transform(mTransform);
+    _ri->drawEllipsoid(mDim);
+    _ri->popMatrix();
+}
 
-    /// @brief
-    inline void setMesh(const aiScene* _mesh) { mMesh = _mesh; }
+Matrix3d EllipsoidShape::computeInertia(double _mass) {
+    Matrix3d inertia = Matrix3d::Zero();
+    inertia(0, 0) = _mass / 20.0 * (mDim(1) * mDim(1) + mDim(2) * mDim(2));
+    inertia(1, 1) = _mass / 20.0 * (mDim(0) * mDim(0) + mDim(2) * mDim(2));
+    inertia(2, 2) = _mass / 20.0 * (mDim(0) * mDim(0) + mDim(1) * mDim(1));
 
-    /// @brief
-    inline int getDisplayList() const { return mDisplayList; }
+    return inertia;
+}
 
-    /// @brief
-    inline void setDisplayList(int _index) { mDisplayList = _index; }
+bool EllipsoidShape::isSphere() const {
+    if (mDim[0] == mDim[1] && mDim[1] == mDim[2])
+        return true;
+    else
+        return false;
+}
 
-    // Documentation inherited.
-    void draw(renderer::RenderInterface* _ri = NULL,
-              const Eigen::Vector4d& _col = Eigen::Vector4d::Ones(),
-              bool _default = true) const;
-
-    /// @brief
-    static const aiScene* loadMesh(const std::string& fileName);
-
-    // Documentation inherited.
-    virtual Eigen::Matrix3d computeInertia(double _mass);
-
-private:
-    // Documentation inherited.
-    void computeVolume();
-
-    /// @brief
-    const aiScene *mMesh;
-
-    /// @brief OpenGL DisplayList id for rendering
-    int mDisplayList;
-
-public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-};
+void EllipsoidShape::computeVolume() {
+    mVolume = M_PI * mDim(0) * mDim(1) *mDim(2) /6;	//	4/3* Pi* a/2* b/2* c/2
+}
+void EllipsoidShape::initMeshes() {
+}
 
 } // namespace dynamics
 } // namespace dart
-
-#endif // #ifndef DART_DYNAMICS_SHAPE_MESH_H
-

@@ -41,8 +41,8 @@
 #include "dynamics/Skeleton.h"
 #include "dynamics/BodyNode.h"
 #include "dynamics/Shape.h"
-#include "dynamics/ShapeCylinder.h"
-#include "dynamics/ShapeMesh.h"
+#include "dynamics/CylinderShape.h"
+#include "dynamics/MeshShape.h"
 #include "renderer/LoadOpengl.h"
 #include "renderer/OpenGLRenderInterface.h"
 
@@ -432,7 +432,7 @@ void OpenGLRenderInterface::compileList(dynamics::Shape *_shape) {
         case dynamics::Shape::P_MESH:
             //FIXME: Separate these calls once BodyNode is refactored to contain
             // both a col Shape and vis Shape.
-            dynamics::ShapeMesh* shapeMesh = dynamic_cast<dynamics::ShapeMesh*>(_shape);
+            dynamics::MeshShape* shapeMesh = dynamic_cast<dynamics::MeshShape*>(_shape);
 
             if(shapeMesh == 0)
                 return;
@@ -525,7 +525,7 @@ void OpenGLRenderInterface::draw(dynamics::Shape *_shape) {
             break;
         case dynamics::Shape::P_CYLINDER:
             //FIXME: We are not in a glut instance
-            drawCylinder( ((dynamics::ShapeCylinder*)_shape)->getRadius(), ((dynamics::ShapeCylinder*)_shape)->getHeight() );
+            drawCylinder( ((dynamics::CylinderShape*)_shape)->getRadius(), ((dynamics::CylinderShape*)_shape)->getHeight() );
             break;
         case dynamics::Shape::P_ELLIPSOID:
             //FIXME: We are not in a glut instance
@@ -534,7 +534,7 @@ void OpenGLRenderInterface::draw(dynamics::Shape *_shape) {
         case dynamics::Shape::P_MESH:
             glDisable(GL_COLOR_MATERIAL); // Use mesh colors to draw
 
-            dynamics::ShapeMesh* shapeMesh = dynamic_cast<dynamics::ShapeMesh*>(_shape);
+            dynamics::MeshShape* shapeMesh = dynamic_cast<dynamics::MeshShape*>(_shape);
 
             if(!shapeMesh)
                 break;

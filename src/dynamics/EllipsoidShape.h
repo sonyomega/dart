@@ -2,8 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Tobias Kunz <tobias@gatech.edu>
- * Date: 01/29/2013
+ * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
+ * Date: 06/12/2011
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,50 +35,45 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ShapeCylinder.h"
-#include "renderer/RenderInterface.h"
+#ifndef DART_DYNAMICS_ELLIPSOID_SHAPE_H
+#define DART_DYNAMICS_ELLIPSOID_SHAPE_H
 
-using namespace std;
-using namespace Eigen;
+#include "Shape.h"
 
 namespace dart {
 namespace dynamics {
 
-ShapeCylinder::ShapeCylinder(double _radius, double _height)
-    : Shape(P_CYLINDER),
-      mRadius(_radius),
-      mHeight(_height)
+class EllipsoidShape : public Shape
 {
-    initMeshes();
-    if (mRadius > 0.0 && mHeight > 0.0) {
-        computeVolume();
-    }
-}
+public:
+    /// @brief Constructor.
+    EllipsoidShape(Eigen::Vector3d _dim);
 
-void ShapeCylinder::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
-    if (!_ri) return;
-    if (!_useDefaultColor)
-        _ri->setPenColor(_color);
-    else
-        _ri->setPenColor(mColor);
-    _ri->pushMatrix();
-    _ri->transform(mTransform);
-    _ri->drawCylinder(mRadius, mHeight);
-    _ri->popMatrix();
-}
+    // Documentation inherited.
+    void draw(renderer::RenderInterface* _ri = NULL,
+              const Eigen::Vector4d& _col = Eigen::Vector4d::Ones(),
+              bool _useDefaultColor = true) const;
 
-void ShapeCylinder::computeVolume() {
-    mVolume = M_PI * mRadius * mRadius * mHeight;
-}
+    // Documentation inherited.
+    virtual Eigen::Matrix3d computeInertia(double _mass);
 
-Matrix3d ShapeCylinder::computeInertia(double _mass) {
-    Matrix3d inertia = Matrix3d::Zero();
-    inertia(0, 0) = _mass * (3.0 * mRadius * mRadius + mHeight * mHeight) / 12.0;
-    inertia(1, 1) = inertia(0, 0);
-    inertia(2, 2) = 0.5 * _mass * mRadius * mRadius;
+    /// @brief True if (mDim[0] == mDim[1] == mDim[2]).
+    bool isSphere(void) const;
 
-    return inertia;
-}
+private:
+    // Documentation inherited.
+    void computeVolume();
+
+    // Documentation inherited.
+    void initMeshes();
+
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
 
 } // namespace dynamics
 } // namespace dart
+
+#endif // #ifndef DART_DYNAMICS_ELLIPSOID_SHAPE_H
+
+

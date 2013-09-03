@@ -20,10 +20,10 @@
 #include "dynamics/FreeJoint.h"
 #include "dynamics/GenCoord.h"
 #include "dynamics/Shape.h"
-#include "dynamics/ShapeBox.h"
-#include "dynamics/ShapeEllipsoid.h"
-#include "dynamics/ShapeCylinder.h"
-#include "dynamics/ShapeMesh.h"
+#include "dynamics/BoxShape.h"
+#include "dynamics/EllipsoidShape.h"
+#include "dynamics/CylinderShape.h"
+#include "dynamics/MeshShape.h"
 #include "simulation/World.h"
 
 namespace dart {
@@ -336,30 +336,30 @@ dynamics::Shape* DartLoader::createShape(boost::shared_ptr<VisualOrCollision> _v
 
   // Sphere
   if(urdf::Sphere* sphere = dynamic_cast<urdf::Sphere*>(_vizOrCol->geometry.get())) {
-    shape = new dynamics::ShapeEllipsoid(2.0 * sphere->radius * Eigen::Vector3d::Ones());
+    shape = new dynamics::EllipsoidShape(2.0 * sphere->radius * Eigen::Vector3d::Ones());
   }
 
   // Box
   else if(urdf::Box* box = dynamic_cast<urdf::Box*>(_vizOrCol->geometry.get())) {
-    shape = new dynamics::ShapeBox(Eigen::Vector3d(box->dim.x, box->dim.y, box->dim.z));
+    shape = new dynamics::BoxShape(Eigen::Vector3d(box->dim.x, box->dim.y, box->dim.z));
   }
 
   // Cylinder
   else if(urdf::Cylinder* cylinder = dynamic_cast<urdf::Cylinder*>(_vizOrCol->geometry.get())) {
-    shape = new dynamics::ShapeCylinder(cylinder->radius, cylinder->length);
+    shape = new dynamics::CylinderShape(cylinder->radius, cylinder->length);
   }
 
   // Mesh
   else if(urdf::Mesh* mesh = dynamic_cast<urdf::Mesh*>(_vizOrCol->geometry.get())) {
     std::string fullPath = _rootToSkelPath + mesh->filename;
-    const aiScene* model = dynamics::ShapeMesh::loadMesh( fullPath );
+    const aiScene* model = dynamics::MeshShape::loadMesh( fullPath );
     
     if(!model) {
       std::cout<< "[add_Shape] [ERROR] Not loading model " << fullPath << " (NULL) \n";
       shape = NULL;
     } 
     else {
-      shape = new dynamics::ShapeMesh(Eigen::Vector3d(mesh->scale.x, mesh->scale.y, mesh->scale.z), model);
+      shape = new dynamics::MeshShape(Eigen::Vector3d(mesh->scale.x, mesh->scale.y, mesh->scale.z), model);
     }
   }
 

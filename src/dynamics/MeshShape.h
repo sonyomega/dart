@@ -2,8 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
- * Date: 06/12/2011
+ * Author(s):
+ * Date:
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,37 +35,51 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_DYNAMICS_SHAPE_ELLIPSOID_H
-#define DART_DYNAMICS_SHAPE_ELLIPSOID_H
+#ifndef DART_DYNAMICS_MESH_SHAPE_H
+#define DART_DYNAMICS_MESH_SHAPE_H
 
 #include "Shape.h"
 
 namespace dart {
 namespace dynamics {
 
-class ShapeEllipsoid : public Shape
-{
+class MeshShape : public Shape {
 public:
     /// @brief Constructor.
-    ShapeEllipsoid(Eigen::Vector3d _dim);
+    MeshShape(Eigen::Vector3d _dim, const aiScene *_mesh);
+
+    /// @brief
+    inline const aiScene* getMesh() const { return mMesh; }
+
+    /// @brief
+    inline void setMesh(const aiScene* _mesh) { mMesh = _mesh; }
+
+    /// @brief
+    inline int getDisplayList() const { return mDisplayList; }
+
+    /// @brief
+    inline void setDisplayList(int _index) { mDisplayList = _index; }
 
     // Documentation inherited.
     void draw(renderer::RenderInterface* _ri = NULL,
               const Eigen::Vector4d& _col = Eigen::Vector4d::Ones(),
-              bool _useDefaultColor = true) const;
+              bool _default = true) const;
+
+    /// @brief
+    static const aiScene* loadMesh(const std::string& fileName);
 
     // Documentation inherited.
     virtual Eigen::Matrix3d computeInertia(double _mass);
-
-    /// @brief True if (mDim[0] == mDim[1] == mDim[2]).
-    bool isSphere(void) const;
 
 private:
     // Documentation inherited.
     void computeVolume();
 
-    // Documentation inherited.
-    void initMeshes();
+    /// @brief
+    const aiScene *mMesh;
+
+    /// @brief OpenGL DisplayList id for rendering
+    int mDisplayList;
 
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -74,6 +88,5 @@ public:
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_DYNAMICS_SHAPE_ELLIPSOID_H
-
+#endif // #ifndef DART_DYNAMICS_MESH_SHAPE_H
 

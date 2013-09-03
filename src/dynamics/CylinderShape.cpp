@@ -2,8 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
- * Date: 06/12/2011
+ * Author(s): Tobias Kunz <tobias@gatech.edu>
+ * Date: 01/29/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,37 +35,50 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_DYNAMICS_SHAPE_BOX_H
-#define DART_DYNAMICS_SHAPE_BOX_H
+#include "CylinderShape.h"
+#include "renderer/RenderInterface.h"
 
-#include "Shape.h"
+using namespace std;
+using namespace Eigen;
 
 namespace dart {
 namespace dynamics {
 
-class ShapeBox : public Shape
+CylinderShape::CylinderShape(double _radius, double _height)
+    : Shape(P_CYLINDER),
+      mRadius(_radius),
+      mHeight(_height)
 {
-public:
-    /// @brief Constructor.
-    ShapeBox(Eigen::Vector3d _dim);
+    initMeshes();
+    if (mRadius > 0.0 && mHeight > 0.0) {
+        computeVolume();
+    }
+}
 
-    // Documentation inherited.
-    void draw(renderer::RenderInterface* _ri = NULL,
-              const Eigen::Vector4d& _col = Eigen::Vector4d::Ones(),
-              bool _default = true) const;
+void CylinderShape::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
+    if (!_ri) return;
+    if (!_useDefaultColor)
+        _ri->setPenColor(_color);
+    else
+        _ri->setPenColor(mColor);
+    _ri->pushMatrix();
+    _ri->transform(mTransform);
+    _ri->drawCylinder(mRadius, mHeight);
+    _ri->popMatrix();
+}
 
-    // Documentation inherited.
-    virtual Eigen::Matrix3d computeInertia(double _mass) const;
+void CylinderShape::computeVolume() {
+    mVolume = M_PI * mRadius * mRadius * mHeight;
+}
 
-private:
-    // Documentation inherited.
-    void computeVolume();
+Matrix3d CylinderShape::computeInertia(double _mass) {
+    Matrix3d inertia = Matrix3d::Zero();
+    inertia(0, 0) = _mass * (3.0 * mRadius * mRadius + mHeight * mHeight) / 12.0;
+    inertia(1, 1) = inertia(0, 0);
+    inertia(2, 2) = 0.5 * _mass * mRadius * mRadius;
 
-public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-};
+    return inertia;
+}
 
 } // namespace dynamics
 } // namespace dart
-
-#endif // #ifndef DART_DYNAMICS_SHAPE_BOX_H

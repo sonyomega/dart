@@ -2,8 +2,8 @@
  * Copyright (c) 2011, Georgia Tech Research Corporation
  * All rights reserved.
  *
- * Author(s): Tobias Kunz <tobias@gatech.edu>
- * Date: 01/29/2013
+ * Author(s): Sehoon Ha <sehoon.ha@gmail.com>
+ * Date: 06/12/2011
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,54 +35,37 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_DYNAMICS_SHAPE_CYLINDER_H
-#define DART_DYNAMICS_SHAPE_CYLINDER_H
+#ifndef DART_DYNAMICS_BOX_SHAPE_H
+#define DART_DYNAMICS_BOX_SHAPE_H
 
 #include "Shape.h"
 
 namespace dart {
 namespace dynamics {
 
-class ShapeCylinder : public Shape {
+class BoxShape : public Shape
+{
 public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
     /// @brief Constructor.
-    ShapeCylinder(double _radius, double _height);
-
-    /// @brief
-    inline double getRadius() const { return mRadius; }
-
-    /// @brief
-    inline void setRadius(double _radius) { mRadius = _radius; }
-
-    /// @brief
-    inline double getHeight() const { return mHeight; }
-
-    /// @brief
-    inline void setHeight(double _height) { mHeight = _height; }
+    BoxShape(Eigen::Vector3d _dim);
 
     // Documentation inherited.
     void draw(renderer::RenderInterface* _ri = NULL,
-              const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
-              bool _useDefaultColor = true) const;
+              const Eigen::Vector4d& _col = Eigen::Vector4d::Ones(),
+              bool _default = true) const;
 
     // Documentation inherited.
-    virtual Eigen::Matrix3d computeInertia(double _mass);
+    virtual Eigen::Matrix3d computeInertia(double _mass) const;
 
 private:
     // Documentation inherited.
     void computeVolume();
 
-    /// @brief
-    double mRadius;
-
-    /// @brief Height along z-axis.
-    double mHeight;
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 } // namespace dynamics
 } // namespace dart
 
-#endif // #ifndef DART_DYNAMICS_SHAPE_CYLINDER_H
-
+#endif // #ifndef DART_DYNAMICS_BOX_SHAPE_H

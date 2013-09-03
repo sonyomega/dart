@@ -17,7 +17,7 @@
 #include "dynamics/GenCoord.h"
 #include "dynamics/Joint.h"
 #include "dynamics/FreeJoint.h"
-#include "dynamics/ShapeBox.h"
+#include "dynamics/BoxShape.h"
 
 using namespace dart;
 using namespace dynamics;

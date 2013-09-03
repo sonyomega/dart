@@ -35,7 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ShapeMesh.h"
+#include "MeshShape.h"
 #include "renderer/RenderInterface.h"
 #include <iostream>
 #include <assimp/Importer.hpp>
@@ -48,7 +48,7 @@ using namespace std;
 namespace dart {
 namespace dynamics {
 
-ShapeMesh::ShapeMesh(Vector3d _dim, const aiScene *_mesh)
+MeshShape::MeshShape(Vector3d _dim, const aiScene *_mesh)
     : Shape(P_MESH),
       mMesh(_mesh),
       mDisplayList(0)
@@ -59,7 +59,7 @@ ShapeMesh::ShapeMesh(Vector3d _dim, const aiScene *_mesh)
         computeVolume();
 }
 
-void ShapeMesh::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
+void MeshShape::draw(renderer::RenderInterface* _ri, const Vector4d& _color, bool _useDefaultColor) const {
     if (!_ri)
         return;
     if (!_useDefaultColor)
@@ -74,7 +74,7 @@ void ShapeMesh::draw(renderer::RenderInterface* _ri, const Vector4d& _color, boo
     _ri->popMatrix();
 }
 
-Matrix3d ShapeMesh::computeInertia(double _mass) {
+Matrix3d MeshShape::computeInertia(double _mass) {
     // use bounding box to represent the mesh
     double max_X = -1e7;
     double max_Y = -1e7;
@@ -111,11 +111,11 @@ Matrix3d ShapeMesh::computeInertia(double _mass) {
     return inertia;
 }
 
-void ShapeMesh::computeVolume() {
+void MeshShape::computeVolume() {
     mVolume = mDim(0) * mDim(1) * mDim(2); // a * b * c
 }
 
-const aiScene* ShapeMesh::loadMesh(const string& fileName) {
+const aiScene* MeshShape::loadMesh(const string& fileName) {
     aiPropertyStore* propertyStore = aiCreatePropertyStore();
     aiSetImportPropertyInteger(propertyStore, AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE ); // remove points and lines
     const aiScene* scene = aiImportFileExWithProperties(fileName.c_str(), aiProcess_GenNormals             |

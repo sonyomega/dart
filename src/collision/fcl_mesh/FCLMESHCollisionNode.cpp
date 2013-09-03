@@ -44,9 +44,9 @@
 
 #include "dynamics/BodyNode.h"
 #include "dynamics/Shape.h"
-#include "dynamics/ShapeMesh.h"
-#include "dynamics/ShapeEllipsoid.h"
-#include "dynamics/ShapeCylinder.h"
+#include "dynamics/MeshShape.h"
+#include "dynamics/EllipsoidShape.h"
+#include "dynamics/CylinderShape.h"
 #include "dynamics/BodyNode.h"
 
 #include "renderer/LoadOpengl.h"
@@ -69,7 +69,7 @@ FCLMESHCollisionNode::FCLMESHCollisionNode(dynamics::BodyNode* _bodyNode)
         switch (shape->getShapeType()) {
             case dynamics::Shape::P_ELLIPSOID:
             {
-                dynamics::ShapeEllipsoid* ellipsoid = dynamic_cast<dynamics::ShapeEllipsoid*>(shape);
+                dynamics::EllipsoidShape* ellipsoid = dynamic_cast<dynamics::EllipsoidShape*>(shape);
 
                 if (ellipsoid->isSphere())
                 {
@@ -87,7 +87,7 @@ FCLMESHCollisionNode::FCLMESHCollisionNode(dynamics::BodyNode* _bodyNode)
                 break;
             case dynamics::Shape::P_CYLINDER:
             {
-                dynamics::ShapeCylinder *cylinder = dynamic_cast<dynamics::ShapeCylinder *>(shape);
+                dynamics::CylinderShape *cylinder = dynamic_cast<dynamics::CylinderShape *>(shape);
                 if(cylinder) {
                     double radius = cylinder->getRadius();
                     double height = cylinder->getHeight();
@@ -97,7 +97,7 @@ FCLMESHCollisionNode::FCLMESHCollisionNode(dynamics::BodyNode* _bodyNode)
             }
             case dynamics::Shape::P_MESH:
             {
-                dynamics::ShapeMesh *shapeMesh = dynamic_cast<dynamics::ShapeMesh *>(shape);
+                dynamics::MeshShape *shapeMesh = dynamic_cast<dynamics::MeshShape *>(shape);
                 if(shapeMesh) {
                     mMeshes.push_back(createMesh<fcl::OBBRSS>(shape->getDim()[0], shape->getDim()[1], shape->getDim()[2], shapeMesh->getMesh(), shapeTransform));
                 }

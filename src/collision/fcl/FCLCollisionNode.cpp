@@ -40,9 +40,9 @@
 #include <fcl/shape/geometric_shape_to_BVH_model.h>
 
 #include "dynamics/BodyNode.h"
-#include "dynamics/ShapeEllipsoid.h"
-#include "dynamics/ShapeCylinder.h"
-#include "dynamics/ShapeMesh.h"
+#include "dynamics/EllipsoidShape.h"
+#include "dynamics/CylinderShape.h"
+#include "dynamics/MeshShape.h"
 
 #include "collision/fcl/FCLCollisionNode.h"
 
@@ -65,8 +65,8 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
                 break;
             case dynamics::Shape::P_ELLIPSOID:
             {
-                dynamics::ShapeEllipsoid* ellipsoid
-                        = dynamic_cast<dynamics::ShapeEllipsoid*>(shape);
+                dynamics::EllipsoidShape* ellipsoid
+                        = dynamic_cast<dynamics::EllipsoidShape*>(shape);
 
                 if (ellipsoid->isSphere())
                     mCollisionGeometries.push_back(new fcl::Sphere(ellipsoid->getDim()[0] * 0.5));
@@ -78,16 +78,16 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
             }
             case dynamics::Shape::P_CYLINDER:
             {
-                dynamics::ShapeCylinder* cylinder
-                        = dynamic_cast<dynamics::ShapeCylinder*>(shape);
+                dynamics::CylinderShape* cylinder
+                        = dynamic_cast<dynamics::CylinderShape*>(shape);
                 mCollisionGeometries.push_back(new fcl::Cylinder(cylinder->getRadius(),
                                                                  cylinder->getHeight()));
                 break;
             }
             case dynamics::Shape::P_MESH:
             {
-                dynamics::ShapeMesh *shapeMesh
-                        = dynamic_cast<dynamics::ShapeMesh *>(shape);
+                dynamics::MeshShape *shapeMesh
+                        = dynamic_cast<dynamics::MeshShape *>(shape);
 
                 if(shapeMesh)
                     mCollisionGeometries.push_back(createMesh<fcl::OBBRSS>(shape->getDim()[0],

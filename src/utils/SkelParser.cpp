@@ -45,9 +45,9 @@
 // Local Files
 #include "common/Console.h"
 #include "dynamics/BodyNode.h"
-#include "dynamics/ShapeBox.h"
-#include "dynamics/ShapeCylinder.h"
-#include "dynamics/ShapeEllipsoid.h"
+#include "dynamics/BoxShape.h"
+#include "dynamics/CylinderShape.h"
+#include "dynamics/EllipsoidShape.h"
 #include "dynamics/WeldJoint.h"
 #include "dynamics/PrismaticJoint.h"
 #include "dynamics/RevoluteJoint.h"
@@ -359,7 +359,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
 
             Eigen::Vector3d size = getValueVector3d(boxElement, "size");
 
-            shape = new dynamics::ShapeBox(size);
+            shape = new dynamics::BoxShape(size);
         }
         else if (hasElement(geometryElement, "ellipsoid"))
         {
@@ -367,7 +367,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
 
             Eigen::Vector3d size = getValueVector3d(ellipsoidElement, "size");
 
-            shape = new dynamics::ShapeEllipsoid(size);
+            shape = new dynamics::EllipsoidShape(size);
         }
         else if (hasElement(geometryElement, "cylinder"))
         {
@@ -376,7 +376,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
             double radius = getValueDouble(cylinderElement, "radius");
             double height = getValueDouble(cylinderElement, "height");
 
-            shape = new dynamics::ShapeCylinder(radius, height);
+            shape = new dynamics::CylinderShape(radius, height);
         }
         else
         {
@@ -419,7 +419,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
 
             Eigen::Vector3d size = getValueVector3d(boxElement, "size");
 
-            shape = new dynamics::ShapeBox(size);
+            shape = new dynamics::BoxShape(size);
         }
         else if (hasElement(geometryElement, "ellipsoid"))
         {
@@ -427,7 +427,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
 
             Eigen::Vector3d size = getValueVector3d(ellipsoidElement, "size");
 
-            shape = new dynamics::ShapeEllipsoid(size);
+            shape = new dynamics::EllipsoidShape(size);
         }
         else if (hasElement(geometryElement, "cylinder"))
         {
@@ -436,7 +436,7 @@ dynamics::BodyNode* readBodyNode(tinyxml2::XMLElement* _bodyNodeElement,
             double radius = getValueDouble(cylinderElement, "radius");
             double height = getValueDouble(cylinderElement, "height");
 
-            shape = new dynamics::ShapeCylinder(radius, height);
+            shape = new dynamics::CylinderShape(radius, height);
         }
         else
         {
