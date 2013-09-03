@@ -173,7 +173,7 @@ void Skeleton::addJoint(Joint* _joint)
 
 void Skeleton::setRootBodyNode(BodyNode* _body)
 {
-    mRootBody = _body;
+    mRootBodyNode = _body;
 }
 
 int Skeleton::getNumBodyNodes() const
