@@ -134,6 +134,7 @@ void Skeleton::initDynamics()
     set_tau(VectorXd::Zero(DOF));
     mFext = VectorXd::Zero(DOF);
     mFc   = VectorXd::Zero(DOF);
+    mDampingForce = VectorXd::Zero(DOF);
 
     // calculate mass
     // init the dependsOnDof stucture for each bodylink
@@ -210,18 +211,6 @@ BodyNode* Skeleton::findBodyNode(const string& _name) const
     return NULL;
 }
 
-//Eigen::VectorXd Skeleton::getDependentConfiguration(BodyNode* _beginBody,
-//                                                    BodyNode* _endBody) const
-//{
-//    assert(_beginBody != NULL);
-//    assert(_endBody != NULL);
-//
-//    int beginBodyID = _beginBody->getSkelIndex();
-//    int endBodyID = _endBody->getSkelIndex();
-//
-//
-//}
-
 void Skeleton::setPose(const Eigen::VectorXd& _pose,
                        bool bCalcTrans,
                        bool bCalcDeriv)
@@ -229,7 +218,8 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
     for (int i = 0; i < getDOF(); i++)
         mGenCoords.at(i)->set_q(_pose[i]);
 
-    if (bCalcTrans) {
+    if (bCalcTrans)
+    {
         if (bCalcDeriv)
             updateForwardKinematics(true, false);
         else
@@ -397,6 +387,21 @@ void Skeleton::updateExternalForces()
     }
 }
 
+void Skeleton::updateDampingForces()
+{
+    int idx = 0;
+    int numJoints = mJoints.size();
+
+    for (int i = 0; i < numJoints; ++i) {
+        int numDofsJoint = mJoints[i]->getDOF();
+        Eigen::VectorXd dampingForceJoint = mJoints[i]->getDampingForce();
+
+        mDampingForce.segment(idx, numDofsJoint) = dampingForceJoint;
+
+        idx += numDofsJoint;
+    }
+}
+
 void Skeleton::clearExternalForces()
 {
     int nNodes = getNumBodyNodes();
@@ -449,17 +454,20 @@ void Skeleton::computeEquationsOfMotionID(
 
     // Evaluate external forces in generalized coordinate.
     updateExternalForces();
+
+    // Update damping forces
+    updateDampingForces();
 }
 
 void Skeleton::computeForwardDynamicsID(
         const Eigen::Vector3d& _gravity, bool _equationsOfMotion)
 {
     Eigen::VectorXd qddot = this->getInvMassMatrix()
-                            * (-this->getCombinedVector()
-                               + this->getExternalForces()
+                            * (-mCg
+                               + mFext
                                + this->getInternalForces()
-                               + this->getDampingForces()
-                               + this->getConstraintForces() );
+                               + mDampingForce
+                               + mFc );
 
     this->set_ddq(qddot);
 }
@@ -568,21 +576,7 @@ void Skeleton::computeForwardDynamicsFS(
 
 Eigen::VectorXd Skeleton::getDampingForces() const
 {
-    Eigen::VectorXd dampingForce = Eigen::VectorXd(getDOF());
-
-    int idx = 0;
-    int numJoints = mJoints.size();
-
-    for (int i = 0; i < numJoints; ++i) {
-        int numDofsJoint = mJoints[i]->getDOF();
-        Eigen::VectorXd dampingForceJoint = mJoints[i]->getDampingForce();
-
-        dampingForce.segment(idx, numDofsJoint) = dampingForceJoint;
-
-        idx += numDofsJoint;
-    }
-
-    return dampingForce;
+    return mDampingForce;
 }
 
 VectorXd Skeleton::getConstraintForces() const

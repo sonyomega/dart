@@ -275,6 +275,9 @@ public:
     DEPRECATED void evalExternalForces();
     void updateExternalForces();
 
+    /// #brief
+    void updateDampingForces();
+
     /// @brief Clear all the contacts of external forces.
     /// Automatically called after each (forward/inverse) dynamics computation,
     /// which marks the end of a cycle.
@@ -384,6 +387,9 @@ protected:
 
     /// @brief
     Eigen::VectorXd mFc;
+
+    /// @brief
+    Eigen::VectorXd mDampingForce;
 
 private:
 
