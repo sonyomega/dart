@@ -457,9 +457,9 @@ public:
     /// @brief
     void updateMassMatrix();
 
-    /// @brief Evaluates the external forces mFext in the generalized
+    /// @brief Aggregate the external forces mFext in the generalized
     /// coordinates recursively.
-    void evalExternalForcesRecursive(Eigen::VectorXd& _extForce);
+    void aggregateExternalForces(Eigen::VectorXd& _extForce);
 
     /// @brief
     void aggregateMass(Eigen::MatrixXd& M);

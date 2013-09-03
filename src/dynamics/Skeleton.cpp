@@ -380,16 +380,13 @@ void Skeleton::evalExternalForces()
 
 void Skeleton::updateExternalForces()
 {
+    // Clear external force.
     mFext.setZero();
-    int nBodyNodes = getNumBodyNodes();
 
-    // recursive from child to parent
-    for (int i = nBodyNodes - 1; i >= 0; i--)
-    {
-        BodyNode* nodei = getBodyNode(i);
-
-        nodei->evalExternalForcesRecursive(mFext);
-    }
+    // Recursive from child to parent.
+    for (std::vector<BodyNode*>::iterator itr = mBodyNodes.begin();
+         itr != mBodyNodes.end(); ++itr)
+        (*itr)->aggregateExternalForces(mFext);
 }
 
 void Skeleton::updateDampingForces()

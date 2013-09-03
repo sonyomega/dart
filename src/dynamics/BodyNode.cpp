@@ -776,13 +776,11 @@ void BodyNode::updateMassMatrix()
     mM.triangularView<Eigen::StrictlyLower>() = mM.transpose();
 }
 
-void BodyNode::evalExternalForcesRecursive(Eigen::VectorXd& _extForce)
+void BodyNode::aggregateExternalForces(Eigen::VectorXd& _extForce)
 {
     assert(mParentJoint != NULL);
 
-    //const math::Jacobian& J = mParentJoint->getLocalJacobian();
-
-    Eigen::VectorXd localForce = mBodyJacobian.transpose()*mFext;
+    Eigen::VectorXd localForce = mBodyJacobian.transpose() * mFext;
 
     for(int i = 0; i < getNumDependentDofs(); i++)
         _extForce(mDependentDofIndexes[i]) += localForce(i);
