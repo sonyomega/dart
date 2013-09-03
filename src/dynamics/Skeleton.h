@@ -75,23 +75,22 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    void setName(const std::string& _name) { mName = _name; }
+    void setName(const std::string& _name);
 
     /// @brief
-    const std::string& getName() const { return mName; }
+    const std::string& getName() const;
 
     /// @brief
-    void setSelfCollidable(bool _selfCollidable)
-    { mSelfCollidable = _selfCollidable; }
+    void setSelfCollidable(bool _selfCollidable);
 
     /// @brief
     bool getSelfCollidable() const { return mSelfCollidable; }
 
     /// @brief
-    void setImmobileState(bool _immobile) { mImmobile = _immobile; }
+    void setImmobileState(bool _immobile);
 
     /// @brief
-    bool getImmobileState() const { return mImmobile; }
+    bool getImmobileState() const;
 
     /// @brief
     /// @todo Let's set this state for each joints
@@ -102,7 +101,7 @@ public:
     DEPRECATED void setJointLimitState(bool _s) { mJointLimit = _s; }
 
     /// @brief
-    double getTotalMass() const { return mTotalMass; }
+    double getTotalMass() const;
 
     //--------------------------------------------------------------------------
     // Structueral Properties
@@ -111,7 +110,7 @@ public:
     void setWorldTransformation(const Eigen::Isometry3d& _W, bool _updateChilds = true);
 
     /// @brief
-    const Eigen::Isometry3d& getWorldTransformation() const { return mFrame; }
+    const Eigen::Isometry3d& getWorldTransformation() const;
 
     /// @brief
     void addBodyNode(BodyNode* _body, bool _addParentJoint = true);
@@ -123,16 +122,16 @@ public:
     //void setRootBody(BodyNode* _body) { mRootBody = _body; }
 
     /// @brief
-    int getNumBodyNodes() const { return mBodyNodes.size(); }
+    int getNumBodyNodes() const;
 
     /// @brief
-    int getNumJoints() const { return mJoints.size(); }
+    int getNumJoints() const;
 
     /// @brief
-    BodyNode* getRoot() { return mRootBodyNode; }
+    BodyNode* getRoot();
 
     /// @brief
-    BodyNode* getBodyNode(int _idx) const { return mBodyNodes[_idx]; }
+    BodyNode* getBodyNode(int _idx) const;
 
     /// @brief
     BodyNode* findBodyNode(const std::string& _name) const;
@@ -157,11 +156,11 @@ public:
 
     /// @brief
     /// @todo Use get_q() instead.
-    Eigen::VectorXd getPose() const { return get_q(); }
+    Eigen::VectorXd getPose() const;
 
     /// @brief
     /// @todo Use get_dq() instead.
-    Eigen::VectorXd getPoseVelocity() const { return get_dq(); }
+    Eigen::VectorXd getPoseVelocity() const;
 
     /// @brief
     // TODO: Not implemented.
@@ -169,20 +168,20 @@ public:
                                BodyNode* _endBody) const;
 
     // Dynamics equation
-    Eigen::MatrixXd getMassMatrix() const { return mM; }
-    Eigen::MatrixXd getInvMassMatrix() const { return mMInv; }
-    Eigen::MatrixXd getCoriolisMatrix() const { return mC; }
-    Eigen::VectorXd getCoriolisVector() const { return mCvec; }
-    Eigen::VectorXd getGravityVector() const { return mG; }
-    Eigen::VectorXd getCombinedVector() const { return mCg; }
-    Eigen::VectorXd getExternalForces() const { return mFext; }
-    Eigen::VectorXd getInternalForces() const { return get_tau(); }
+    Eigen::MatrixXd getMassMatrix() const;
+    Eigen::MatrixXd getInvMassMatrix() const;
+    Eigen::MatrixXd getCoriolisMatrix() const;
+    Eigen::VectorXd getCoriolisVector() const;
+    Eigen::VectorXd getGravityVector() const;
+    Eigen::VectorXd getCombinedVector() const;
+    Eigen::VectorXd getExternalForces() const;
+    Eigen::VectorXd getInternalForces() const;
     Eigen::VectorXd getDampingForces() const;
-    Eigen::VectorXd getConstraintForces() const { return mFc; }
+    Eigen::VectorXd getConstraintForces() const;
 
-    void setInternalForces(const Eigen::VectorXd& _forces) { set_tau(_forces); }
-    void clearInternalForces() { set_tau(Eigen::VectorXd::Zero(getDOF())); }
-    void setConstraintForces(const Eigen::VectorXd& _Fc) { mFc = _Fc; }
+    void setInternalForces(const Eigen::VectorXd& _forces);
+    void clearInternalForces();
+    void setConstraintForces(const Eigen::VectorXd& _Fc);
 
     /// @brief
     double getKineticEnergy() const;
@@ -252,7 +251,8 @@ public:
     /// the respective (recursive or nonrecursive) dynamics computation because
     /// the necessary Jacobians will be ready. Extra care is needed to make sure
     /// the required quantities are up-to-date when using this function alone.
-    void evalExternalForces();
+    DEPRECATED void evalExternalForces();
+    void updateExternalForces();
 
     /// @brief Clear all the contacts of external forces.
     /// Automatically called after each (forward/inverse) dynamics computation,
@@ -265,9 +265,8 @@ public:
             const Eigen::Vector3d& _gravity,
             bool _withExternalForces = false);
 
-    /// @brief (q, dq, tau) --> (ddq)
-    void computeForwardDynamics(const Eigen::Vector3d& _gravity,
-                                bool _equationsOfMotion = true);
+    /// @brief (q, dq) --> M, C, G
+    void computeEquationsOfMotionID(const Eigen::Vector3d& _gravity);
 
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamicsID(const Eigen::Vector3d& _gravity,
@@ -280,24 +279,6 @@ public:
     /// @brief (q, dq, tau) --> (ddq)
     void computeForwardDynamicsFS(const Eigen::Vector3d& _gravity,
                                   bool _equationsOfMotion = true);
-
-    /// @brief (q, dq, ddq_v, tau_u) --> (tau_v, ddq_u)
-    void computeHybridDynamicsFS(const Eigen::Vector3d& _gravity,
-                                 bool _equationsOfMotion = true);
-
-    /// @brief
-    void computeImpuseBasedForwardDynamics(const Eigen::Vector3d& _gravity,
-                                           bool _equationsOfMotion = true);
-
-    /// @brief
-    void computeImpuseBasedHybridDynamics(const Eigen::Vector3d& _gravity,
-                                           bool _equationsOfMotion = true);
-
-    /// @brief (q, dq) --> M, C, G
-    void computeEquationsOfMotionID(const Eigen::Vector3d& _gravity);
-
-    /// @brief (q, dq) --> M, C, G
-    void computeEquationsOfMotionFS(const Eigen::Vector3d& _gravity);
 
     //--------------------------------------------------------------------------
     // Rendering
