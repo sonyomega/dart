@@ -39,7 +39,6 @@
 #include "utils/C3D.h"
 
 #include <cassert>
-using namespace std;
 
 namespace dart {
 namespace utils {
@@ -51,7 +50,7 @@ FileInfoC3D::FileInfoC3D()
 bool FileInfoC3D::loadFile(const char* _fName)
 {
     if( loadC3DFile( _fName, mData, &mNumFrames, &mNumMarkers, &mFPS) ){
-        string text = _fName;
+        std::string text = _fName;
         int lastSlash = text.find_last_of("/");
         text = text.substr(lastSlash+1);
         strcpy(mFileName, text.c_str());
@@ -72,7 +71,7 @@ bool FileInfoC3D::saveFile(const char* _fName, int _start, int _end, double _sam
     tmpData.erase( tmpData.begin(), tmpData.begin()+first);
 
     if( saveC3DFile( _fName, tmpData, last-first+1, mData[0].size(), mFPS )){
-        string text = _fName;
+        std::string text = _fName;
         int lastSlash = text.find_last_of("/");
         text = text.substr(lastSlash+1);
         strcpy(mFileName, text.c_str());

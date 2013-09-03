@@ -4,7 +4,6 @@
 #include <math.h>
 #include <vector>
 
-using namespace std;
 using namespace Eigen;
 
 #ifndef isnan
@@ -75,8 +74,8 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
     int leaving  = 0;
     VectorXd Be = VectorXd::Constant(n, 1);
     VectorXd x = _q;
-    vector<int> bas;
-    vector<int> nonbas;
+    std::vector<int> bas;
+    std::vector<int> nonbas;
 
     int t = 2 * n + 1;
     int entering = t;
@@ -134,7 +133,7 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
 
         VectorXd d = B.partialPivLu().solve(Be);
 
-        vector<int> j;
+        std::vector<int> j;
         for (int i = 0; i < n; ++i)
         {
             if (d[i] > piv_tol)
@@ -154,8 +153,8 @@ int Lemke(const MatrixXd& _M, const VectorXd& _q, VectorXd& _z)
         }
         double theta = minRatio.minCoeff();
 
-        vector<int> tmpJ;
-        vector<double> tmpMinRatio;
+        std::vector<int> tmpJ;
+        std::vector<double> tmpMinRatio;
         for (int i = 0; i < jSize; ++i)
         {
             if (x[j[i]] / d[j[i]] <= theta)

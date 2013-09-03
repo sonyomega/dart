@@ -11,8 +11,6 @@
 #include <Eigen/Core>
 #include "TestHelpers.h"
 
-using namespace std;
-
 /* ********************************************************************************************* */
 TEST(NEAREST_NEIGHBOR, 2D) {
 

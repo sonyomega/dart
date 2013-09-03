@@ -8,7 +8,6 @@
 #include "constraint/ConstraintDynamics.h"
 #include "collision/CollisionDetector.h"
 
-using namespace std;
 using namespace Eigen;
 
 using namespace dart;
@@ -21,9 +20,9 @@ Controller::Controller(dynamics::Skeleton* _skel, constraint::ConstraintDynamics
     mTimestep = _t;
     mFrame = 0;
     int nDof = mSkel->getDOF();
-    mKp = MatrixXd::Identity(nDof, nDof);
-    mKd = MatrixXd::Identity(nDof, nDof);
-    mConstrForces = VectorXd::Zero(nDof);
+    mKp = Eigen::MatrixXd::Identity(nDof, nDof);
+    mKd = Eigen::MatrixXd::Identity(nDof, nDof);
+    mConstrForces = Eigen::VectorXd::Zero(nDof);
         
     mTorques.resize(nDof);
     mDesiredDofs.resize(nDof);
@@ -49,7 +48,8 @@ Controller::Controller(dynamics::Skeleton* _skel, constraint::ConstraintDynamics
     mPreOffset = 0.0;
 }
 
-void Controller::computeTorques(const VectorXd& _dof, const VectorXd& _dofVel) {
+void Controller::computeTorques(const Eigen::VectorXd& _dof,
+                                const Eigen::VectorXd& _dofVel) {
     // SPD tracking
     int nDof = mSkel->getDOF();
     MatrixXd invM = (mSkel->getMassMatrix() + mKd * mTimestep).inverse();

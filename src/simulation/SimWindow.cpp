@@ -48,7 +48,6 @@
 #include "yui/GLFuncs.h"
 
 using namespace Eigen;
-using namespace std;
 
 namespace dart {
 namespace simulation {
@@ -152,7 +151,7 @@ void SimWindow::draw()
         sprintf(buff, "%d", mPlayFrame);
     else
         sprintf(buff, "%d", mWorld->getSimFrames());
-    string frame(buff);
+    std::string frame(buff);
     glColor3f(0.0, 0.0, 0.0);
     yui::drawStringOnScreen(0.02f, 0.02f, frame);
     glEnable(GL_LIGHTING);

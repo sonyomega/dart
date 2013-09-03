@@ -39,7 +39,6 @@
 #include "Constraint.h"
 using namespace Eigen;
 #include <iostream>
-using namespace std;
 
 namespace dart {
 namespace optimizer {

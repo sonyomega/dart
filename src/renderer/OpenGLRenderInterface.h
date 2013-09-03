@@ -43,8 +43,6 @@
 #include "RenderInterface.h"
 #include "renderer/LoadOpengl.h"
 
-using namespace std;
-
 namespace dart {
 
 namespace dynamics {

@@ -47,9 +47,6 @@
 #include "dynamics/Shape.h"
 #include "dynamics/Skeleton.h"
 
-using namespace std;
-using namespace Eigen;
-
 namespace dart {
 namespace dynamics {
 
@@ -535,7 +532,7 @@ Eigen::Vector3d BodyNode::getWorldCOM() const
     return evalWorldPos(mCenterOfMass);
 }
 
-Matrix6d BodyNode::getGeneralizedInertia() const
+Eigen::Matrix6d BodyNode::getGeneralizedInertia() const
 {
     return mI;
 }
@@ -560,8 +557,8 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
                            const Eigen::Vector3d& _force,
                            bool _isOffsetLocal, bool _isForceLocal)
 {
-    Vector3d pos = _offset;
-    Vector3d force = _force;
+    Eigen::Vector3d pos = _offset;
+    Eigen::Vector3d force = _force;
 
 //    if (!_isOffsetLocal)
 //        pos = math::xformHom(getWorldInvTransform(), _offset);
@@ -588,8 +585,8 @@ void BodyNode::addExternalForceLocal(
         bool _isOffsetLocal,
         bool _isLinearForceLocal)
 {
-    Vector3d offset = _offset;
-    Vector3d linearForce = _linearForce;
+    Eigen::Vector3d offset = _offset;
+    Eigen::Vector3d linearForce = _linearForce;
 
 //    if (!_isOffsetLocal)
 //        offset = math::xformHom(getWorldInvTransform(), _offset);

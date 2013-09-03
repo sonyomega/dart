@@ -46,7 +46,6 @@
 #include "simulation/World.h"
 #include "utils/SkelParser.h"
 
-//using namespace std;
 using namespace dart;
 using namespace math;
 using namespace dynamics;

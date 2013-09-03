@@ -42,7 +42,6 @@
 
 #include <cstdio>
 #include <iostream>
-using namespace std;
 #include "GlutWindow.h"
 #include "yui/GLFuncs.h"
 #include "renderer/OpenGLRenderInterface.h"
@@ -106,8 +105,8 @@ void GlutWindow::initWindow(int w, int h, const char* name)
 
 void GlutWindow::reshape(int w, int h)
 {
-    current()->mScreenshotTemp = vector<unsigned char>(w*h*4);
-    current()->mScreenshotTemp2 = vector<unsigned char>(w*h*4);
+    current()->mScreenshotTemp = std::vector<unsigned char>(w*h*4);
+    current()->mScreenshotTemp2 = std::vector<unsigned char>(w*h*4);
     current()->resize(w,h);
 }
 
@@ -181,7 +180,7 @@ bool GlutWindow::screenshot(){
         return false;
     }
     else {
-        cout << "wrote screenshot " << fileName << "\n";
+        std::cout << "wrote screenshot " << fileName << "\n";
         return true;
     }
 }

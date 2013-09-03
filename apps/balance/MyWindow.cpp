@@ -7,7 +7,6 @@
 #include "simulation/World.h"
 #include "yui/GLFuncs.h"
 
-using namespace std;
 using namespace Eigen;
 
 using namespace dart;
@@ -86,22 +85,22 @@ void MyWindow::keyboard(unsigned char key, int x, int y)
     case '1':
         mForce[0] = 20;
         mImpulseDuration = 100.0;
-        cout << "push forward" << endl;
+        std::cout << "push forward" << std::endl;
         break;
     case '2':
         mForce[0] = -10;
         mImpulseDuration = 100.0;
-        cout << "push backward" << endl;
+        std::cout << "push backward" << std::endl;
         break;
     case '3':
         mForce[2] = 50;
         mImpulseDuration = 100.0;
-        cout << "push right" << endl;
+        std::cout << "push right" << std::endl;
         break;
     case '4':
         mForce[2] = -50;
         mImpulseDuration = 100.0;
-        cout << "push left" << endl;
+        std::cout << "push left" << std::endl;
         break;
     default:
         Win3D::keyboard(key,x,y);

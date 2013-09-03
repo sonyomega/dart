@@ -38,7 +38,6 @@
 #include "Problem.h"
 
 #include <iostream>
-using namespace std;
 
 #include "Var.h"
 #include "Constraint.h"

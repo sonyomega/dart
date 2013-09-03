@@ -39,7 +39,6 @@
 #include <gtest/gtest.h>
 #include <Eigen/Dense>
 
-using namespace std;
 using namespace Eigen;
 
 /* ********************************************************************************************* */

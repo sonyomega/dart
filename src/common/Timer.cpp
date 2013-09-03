@@ -38,7 +38,6 @@
 #include <iostream>
 #include <string.h>
 #include <time.h>
-using namespace std;
 #include "Timer.h"  // for WIN32 placing this before glog/logging.h causes compilation errors
 
 //#if defined _WIN64 || defined _WIN32
@@ -128,7 +127,7 @@ bool Timer::isRunning() const {
 
 void Timer::printLog() {
     if(mCount>0) {
-        cout << "[VLOG(1)]" << "Timer [" << mName << "] : "
+        std::cout << "[VLOG(1)]" << "Timer [" << mName << "] : "
              << "Last = " << mLastElapsed << " "
              << "Total " << " "
              << mTotal << " " << mCount << "; "
@@ -136,22 +135,22 @@ void Timer::printLog() {
              << "FPS : " << mCount / mTotal << "hz ";
 
     } else {
-        cout << "[VLOG(1)]" << "Timer " << mName << " doesn't have any record." << endl;
+        std::cout << "[VLOG(1)]" << "Timer " << mName << " doesn't have any record." << std::endl;
     }
 }
 
 void Timer::printScreen() {
     if(mCount>0) {
-        cout << "Timer [" << mName << "] : "<<endl
+        std::cout << "Timer [" << mName << "] : "<<std::endl
              << "Last elapsed : " << mLastElapsed << "; "
              << "Total time : " << " "
              << mTotal << "; "
              << "Total count : " << mCount << "; "
              << "Average time : " << mTotal / mCount << " "
-             << "FPS : " << mCount / mTotal << "hz "<<endl;
+             << "FPS : " << mCount / mTotal << "hz "<<std::endl;
 
     } else {
-        cout << "Timer " << mName << " doesn't have any record." << endl;
+        std::cout << "Timer " << mName << " doesn't have any record." << std::endl;
     }
 }
 

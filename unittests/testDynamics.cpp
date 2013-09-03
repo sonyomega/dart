@@ -77,7 +77,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //dart::dynamics::Skeleton* prepareSkeleton( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
-//    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
@@ -104,7 +103,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //dart::dynamics::Skeleton* prepareSkeletonChain( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
-//	using namespace std;
 //	using namespace Eigen;
 //	using namespace dart;
 //	using namespace dynamics;
@@ -129,7 +127,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //void addExternalForces(dart::dynamics::Skeleton* skelDyn) {
-//    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
@@ -143,7 +140,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //void addExternalForcesChain(dart::dynamics::Skeleton* skelDyn) {
-//	using namespace std;
 //	using namespace Eigen;
 //	using namespace dart;
 //	using namespace dynamics;
@@ -154,7 +150,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //TEST(DYNAMICS, COMPARE_VELOCITIES) {
-//    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
@@ -212,7 +207,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //TEST(DYNAMICS, FINITEDIFF_ACCELERATIONS_INVERSEDYNAMICS) {
-//    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
@@ -267,7 +261,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //TEST(DYNAMICS, COMPARE_CORIOLIS) {
-//    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
@@ -291,7 +284,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //TEST(DYNAMICS, COMPARE_MASS) {
-//    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
@@ -321,7 +313,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //TEST(DYNAMICS, COMPARE_EXTERNAL_FORCES) {
-//    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
@@ -351,7 +342,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //TEST(DYNAMICS, COMPARE_DYN_EXTERNAL_FORCES) {
-//    using namespace std;
 //    using namespace Eigen;
 //    using namespace dart;
 //    using namespace dynamics;
@@ -384,7 +374,6 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 
 ///* ********************************************************************************************* */
 //TEST(DYNAMICS, COMPARE_JOINT_TOQUE_W_EXTERNAL_FORCES) {
-//	using namespace std;
 //	using namespace Eigen;
 //	using namespace dart;
 //	using namespace dynamics;

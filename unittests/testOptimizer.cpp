@@ -42,7 +42,6 @@
 #include "optimizer/ObjectiveBox.h"
 #include "optimizer/snopt/SnoptSolver.h"
 
-using namespace std;
 using namespace Eigen;
 
 /* ********************************************************************************************* *

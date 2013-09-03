@@ -42,7 +42,6 @@
 #include <Eigen/Eigen>
 #include <cstdio>
 
-using namespace std;
 using namespace Eigen;
 
 namespace dart {

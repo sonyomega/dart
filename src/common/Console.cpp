@@ -38,8 +38,6 @@
 
 #include "Console.h"
 
-using namespace std;
-
 namespace dart {
 namespace common {
 

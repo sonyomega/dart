@@ -81,7 +81,6 @@ private:
 };
 
 using namespace Eigen;
-using namespace std;
 
 template<typename T>
 EIGEN_DONT_INLINE
@@ -670,35 +669,35 @@ TEST(MATH, ARTICULATED_INERTIA_TRANSFORM)
     for(int i = 0; i < iterations; i++) {
         a2 = Transform_Affine3d(A1, a1);
     }
-    cout << "Transform_Affine3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Transform_Affine3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << a2 << endl;
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
         i2 = Transform_Isometry3d(I1, i1);
     }
-    cout << "Transform_Isometry3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Transform_Isometry3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << i2 << endl;
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
         i2 = Transform_Isometry3d_2(I1, i1);
     }
-    cout << "Transform_Isometry3d_2: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Transform_Isometry3d_2: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << i2 << endl;
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
         i2 = Transform_Isometry3d_3(I1, i1);
     }
-    cout << "Transform_Isometry3d_3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Transform_Isometry3d_3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << i2 << endl;
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
         m2 = Transform_Matrix4d(M1, m1);
     }
-    cout << "Transform_Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Transform_Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << m2 << endl;
 }
 
@@ -732,14 +731,14 @@ TEST(MATH, ADJOINT_MAPPING)
     for(int i = 0; i < iterations; i++) {
         a2 = Ad_Affine3d_1(A1, a1);
     }
-    cout << "Ad_Affine3d_1: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Ad_Affine3d_1: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << a2 << endl;
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
         a4 = Ad_Affine3d_2(A2, a3);
     }
-    cout << "Ad_Affine3d_2: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Ad_Affine3d_2: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << a4 << endl;
 
 //    start = clock();
@@ -753,14 +752,14 @@ TEST(MATH, ADJOINT_MAPPING)
     for(int i = 0; i < iterations; i++) {
         i2 = Ad_Isometry3d(I1, i1);
     }
-    cout << "Ad_Isometry3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Ad_Isometry3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << i2 << endl;
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
         m2 = Ad_Matrix4d(M1, m1);
     }
-    cout << "Ad_Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Ad_Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
     //cout << "result: " << im << endl;
 }
 
@@ -786,32 +785,32 @@ TEST(MATH, TRANSFORMATION)
     for(int i = 0; i < iterations; i++) {
        prod(ES2, ES1, ES3);
     }
-    cout << "EigenSE3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "EigenSE3: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
        prod( A2 , A1, A3);
     }
-    cout << "Affine3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Affine3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
        prod( I2 , I1, I3);
     }
-    cout << "Isometry3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Isometry3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
        prod ( M2 , M1, M3 );
     }
-    cout << "Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
     A2 = A1;
     start = clock();
     for(int i = 0; i < iterations; i++) {
        concatenate(A2, A1, A3);
     }
-    cout << "Hard-coded: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Hard-coded: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 }
 
 TEST(MATH, INVERSION)
@@ -832,25 +831,25 @@ TEST(MATH, INVERSION)
     for(int i = 0; i < iterations; i++) {
         inv(A1, A2);
     }
-    cout << "Affine3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Affine3d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
         inv(I1, I2);
     }
-    cout << "Isometry3d_1: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Isometry3d_1: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
         inv_se3(I1, I2);
     }
-    cout << "Isometry3d_2: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Isometry3d_2: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 
     start = clock();
     for(int i = 0; i < iterations; i++) {
        inv(M1, M2);
     }
-    cout << "Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
+    std::cout << "Matrix4d: " << (double)(clock() - start) / CLOCKS_PER_SEC << " s\n";
 }
 
 

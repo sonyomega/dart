@@ -36,7 +36,6 @@
  */
 
 #include "Constraint.h"
-using namespace std;
 using namespace Eigen;
 
 namespace dart {

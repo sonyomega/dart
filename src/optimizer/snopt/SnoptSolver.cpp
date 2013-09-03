@@ -10,7 +10,6 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-using namespace std;
 using namespace Eigen;
 
 #include "optimizer/Problem.h"
@@ -65,7 +64,7 @@ bool SnoptSolver::solve() {
     double* upper_bounds = new double[nVar];
 
 
-    vector<Var *>& vars(mProb->vars());
+    std::vector<Var *>& vars(mProb->vars());
     for(int i = 0; i < nVar; i++){
         upper_bounds[i] = vars[i]->mUpper;
         lower_bounds[i] = vars[i]->mLower;
@@ -111,8 +110,8 @@ bool SnoptSolver::solve() {
 
     SnoptInterface::Return ret = mSnopt->solve(coef_vals, lower_bounds, upper_bounds,mUnit);
 
-    cout << "[VLOG(1)]" << "SnoptSolver " << mOptCount << " : ";
-    cout << "[VLOG(1)]" << "obj = " << mSnopt->mReturnedObj << endl;
+    std::cout << "[VLOG(1)]" << "SnoptSolver " << mOptCount << " : ";
+    std::cout << "[VLOG(1)]" << "obj = " << mSnopt->mReturnedObj << std::endl;
 
     delete[] coef_vals;
     delete[] lower_bounds;
@@ -138,7 +137,7 @@ int SnoptSolver::iterUpdate(long mask, int compute_gradients, double *coefs, voi
 
     // UPDATE MODELS
 
-    vector<Var *>& vars(m->mProb->vars());
+    std::vector<Var *>& vars(m->mProb->vars());
     for(int i = 0; i < m->mTotalDofs; i++)
         vars[i]->mVal = coefs[i];
 

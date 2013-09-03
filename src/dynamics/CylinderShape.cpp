@@ -38,7 +38,6 @@
 #include "CylinderShape.h"
 #include "renderer/RenderInterface.h"
 
-using namespace std;
 using namespace Eigen;
 
 namespace dart {

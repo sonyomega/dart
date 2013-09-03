@@ -101,7 +101,6 @@ void print_edges(const EdgeListGraph& G, Name name)
 
 //TEST(SKELETON, GRAPH)
 //{
-//    using namespace std;
 //    using namespace boost;
 
 //    const char* name("ABCDE");
@@ -162,7 +161,6 @@ void print_edges(const EdgeListGraph& G, Name name)
 
 //TEST(SKELETON, GRAPH2)
 //{
-//    using namespace std;
 //    using namespace boost;
 
 //    /* define the graph type

@@ -5,7 +5,6 @@
 #include "simulation/World.h"
 #include "utils/SkelParser.h"
 
-using namespace std;
 using namespace Eigen;
 
 using namespace dart;
@@ -44,11 +43,11 @@ int main(int argc, char* argv[])
     window.setWorld(myWorld);
     window.setController(myController);
 
-    cout << "space bar: simulation on/off" << endl;
-    cout << "'p': playback/stop" << endl;
-    cout << "'[' and ']': play one frame backward and forward" << endl;
-    cout << "'v': visualization on/off" << endl;
-    cout << "'1'--'4': programmed interaction" << endl;
+    std::cout << "space bar: simulation on/off" << std::endl;
+    std::cout << "'p': playback/stop" << std::endl;
+    std::cout << "'[' and ']': play one frame backward and forward" << std::endl;
+    std::cout << "'v': visualization on/off" << std::endl;
+    std::cout << "'1'--'4': programmed interaction" << std::endl;
 
     glutInit(&argc, argv);
     window.initWindow(640, 480, "Balance");

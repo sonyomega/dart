@@ -46,7 +46,6 @@
 #include "renderer/LoadOpengl.h"
 #include "renderer/OpenGLRenderInterface.h"
 
-using namespace std;
 using namespace Eigen;
 
 // Code taken from glut/lib/glut_shapes.c
@@ -59,7 +58,7 @@ static void initQuadObj(void)
     quadObj = gluNewQuadric();
     if(!quadObj)
         // DART modified error output
-        cerr << "OpenGL: Fatal Error in DART: out of memory." << endl;
+        std::cerr << "OpenGL: Fatal Error in DART: out of memory." << std::endl;
 }
 //glut/lib/glut_shapes.c
 

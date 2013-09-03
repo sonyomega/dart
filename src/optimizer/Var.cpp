@@ -39,16 +39,14 @@
 #include <stdlib.h>
 #include "Var.h"
 
-using namespace std;
-
 namespace dart {
 namespace optimizer {
 
 Var::Var(double val, double lower, double upper)
     :mVal(val), mLower(lower), mUpper(upper), mWeight(1.0) {
     if(mLower >= mUpper) {
-        cout << mLower << " is greater than " << mUpper << endl;
-        cout << "Exiting." << endl;
+        std::cout << mLower << " is greater than " << mUpper << std::endl;
+        std::cout << "Exiting." << std::endl;
         exit(1);
     }
 }

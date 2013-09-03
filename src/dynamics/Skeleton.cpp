@@ -44,7 +44,6 @@
 #include "dynamics/Skeleton.h"
 #include "dynamics/Skeleton.h"
 
-using namespace std;
 using namespace Eigen;
 
 namespace dart {
@@ -65,12 +64,12 @@ Skeleton::~Skeleton()
 {
 }
 
-void Skeleton::setName(const string& _name)
+void Skeleton::setName(const std::string& _name)
 {
     mName = _name;
 }
 
-const string&Skeleton::getName() const
+const std::string& Skeleton::getName() const
 {
     return mName;
 }
@@ -202,7 +201,7 @@ BodyNode* Skeleton::getBodyNode(int _idx) const
     return mBodyNodes[_idx];
 }
 
-BodyNode* Skeleton::findBodyNode(const string& _name) const
+BodyNode* Skeleton::findBodyNode(const std::string& _name) const
 {
     assert(!_name.empty());
 

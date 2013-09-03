@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include "SnoptInterface.h"
-using namespace std;
 using namespace Eigen;
 
 namespace dart {
@@ -18,10 +17,7 @@ namespace snopt {
 #include <assert.h>
 //#include <FL/Fl.H>
 
-using namespace std;
-
 SnoptInterface* SnoptInterface::mRef = NULL;
-
 
 SnoptInterface::SnoptInterface(int constr_tot, int coef_tot, int nonlin_constr_tot,
                                int nonlin_obj, int nonlin_jac, int *c_eqns, int has_obj,
@@ -471,7 +467,7 @@ SnoptInterface::Return SnoptInterface::solve(double *x, double *lo_bounds,
     delete[] ka;
 
     if(inform != 0)
-        cout << "[VLOG(1)]" << "inform = " << inform << endl;
+        std::cout << "[VLOG(1)]" << "inform = " << inform << std::endl;
 
     // cout << "objective = " << mReturnedObj << endl;
 

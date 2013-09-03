@@ -39,7 +39,6 @@
 
 #include <cstring>
 #include <cstdio>
-using namespace std;
 using namespace Eigen;
 
 ///////////////////////////////////////////////////////////////////////

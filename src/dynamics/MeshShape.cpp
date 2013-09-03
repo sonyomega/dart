@@ -43,7 +43,6 @@
 #include <assimp/cimport.h>
 
 using namespace Eigen;
-using namespace std;
 
 namespace dart {
 namespace dynamics {
@@ -115,7 +114,7 @@ void MeshShape::computeVolume() {
     mVolume = mDim(0) * mDim(1) * mDim(2); // a * b * c
 }
 
-const aiScene* MeshShape::loadMesh(const string& fileName) {
+const aiScene* MeshShape::loadMesh(const std::string& fileName) {
     aiPropertyStore* propertyStore = aiCreatePropertyStore();
     aiSetImportPropertyInteger(propertyStore, AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE ); // remove points and lines
     const aiScene* scene = aiImportFileExWithProperties(fileName.c_str(), aiProcess_GenNormals             |

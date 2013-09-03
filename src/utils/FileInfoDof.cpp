@@ -43,8 +43,6 @@
 #include "dynamics/GenCoord.h"
 #include "utils/FileInfoDof.h"
 
-using namespace std;
-
 namespace dart {
 namespace utils {
 
@@ -59,7 +57,7 @@ FileInfoDof::~FileInfoDof(){
 
 bool FileInfoDof::loadFile(const char* _fName)
 {
-    ifstream inFile(_fName);
+    std::ifstream inFile(_fName);
     if (inFile.fail() == 1) return false;
 
     inFile.precision(20);
@@ -100,7 +98,7 @@ bool FileInfoDof::loadFile(const char* _fName)
 
     inFile.close();
 
-    string text = _fName;
+    std::string text = _fName;
     int lastSlash = text.find_last_of("/");
     text = text.substr(lastSlash+1);
     strcpy(mFileName, text.c_str());
@@ -110,31 +108,31 @@ bool FileInfoDof::loadFile(const char* _fName)
 bool FileInfoDof::saveFile( const char* _fName, int _start, int _end, double _sampleRate ){
     if (_end < _start) return false;
 
-    ofstream outFile(_fName, ios::out);
+    std::ofstream outFile(_fName, std::ios::out);
     if (outFile.fail()) return false;
 
     int first = _start<mNumFrames?_start:mNumFrames-1;
     int last = _end<mNumFrames?_end:mNumFrames-1;
 
     outFile.precision(20);
-    outFile << "frames = " << last-first+1 << " dofs = " << mSkel->getDOF() << endl;
+    outFile << "frames = " << last-first+1 << " dofs = " << mSkel->getDOF() << std::endl;
 
     for (int i = 0; i < mSkel->getDOF(); i++)
         outFile << mSkel->getDof(i)->getName() << ' ';
-    outFile << endl;
+    outFile << std::endl;
 
     for (int i = first; i <= last; i++){
         for (int j = 0; j < mSkel->getDOF(); j++){
             outFile << mDofs[i][j] << ' ';
         }
-        outFile << endl;
+        outFile << std::endl;
     }
 
-    outFile << "FPS " << mFPS << endl;
+    outFile << "FPS " << mFPS << std::endl;
 
     outFile.close();
 
-    string text = _fName;
+    std::string text = _fName;
     int lastSlash = text.find_last_of("/");
     text = text.substr(lastSlash+1);
     strcpy(mFileName, text.c_str());
