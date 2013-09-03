@@ -40,27 +40,32 @@
 #define DART_COLLISION_CONLLISION_NODE_H
 
 namespace dart {
-namespace dynamics { class BodyNode; }
+
+namespace dynamics {
+class BodyNode;
+}
+
 namespace collision {
 
 /// @brief
-class CollisionNode {
-public: // constructors and destructor
+class CollisionNode
+{
+public:
     /// @brief Default constructor
     CollisionNode(dynamics::BodyNode* _bodyNode);
 
     /// @brief Default destructor
     virtual ~CollisionNode();
 
-public: // setters and getters
+public:
     /// @brief
-    dynamics::BodyNode* getBodyNode() const { return mBodyNode; }
+    dynamics::BodyNode* getBodyNode() const;
 
     /// @brief
-    void setIndex(int _idx) { mIndex = _idx; }
+    void setIndex(int _idx);
 
     /// @brief
-    int getIndex() const { return mIndex; }
+    int getIndex() const;
 
 protected:
     /// @brief

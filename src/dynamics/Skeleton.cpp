@@ -80,6 +80,11 @@ void Skeleton::setSelfCollidable(bool _selfCollidable)
     mSelfCollidable = _selfCollidable;
 }
 
+bool Skeleton::getSelfCollidable() const
+{
+    return mSelfCollidable;
+}
+
 void Skeleton::setImmobileState(bool _immobile)
 {
     mImmobile = _immobile;
@@ -392,7 +397,8 @@ void Skeleton::updateDampingForces()
     int idx = 0;
     int numJoints = mJoints.size();
 
-    for (int i = 0; i < numJoints; ++i) {
+    for (int i = 0; i < numJoints; ++i)
+    {
         int numDofsJoint = mJoints[i]->getDOF();
         Eigen::VectorXd dampingForceJoint = mJoints[i]->getDampingForce();
 

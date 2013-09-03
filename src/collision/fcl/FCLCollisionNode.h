@@ -45,7 +45,11 @@
 #include "collision/CollisionNode.h"
 
 namespace dart {
-namespace dynamics { class BodyNode; }
+
+namespace dynamics {
+class BodyNode;
+}
+
 namespace collision {
 
 /// @brief
@@ -59,14 +63,10 @@ public:
     virtual ~FCLCollisionNode();
 
     /// @brief
-    int getNumCollisionGeometries() const {
-        return mCollisionGeometries.size();
-    }
+    int getNumCollisionGeometries() const;
 
     /// @brief
-    fcl::CollisionGeometry* getCollisionGeometry(int _idx) const {
-        return mCollisionGeometries[_idx];
-    }
+    fcl::CollisionGeometry* getCollisionGeometry(int _idx) const;
 
     /// @brief
     fcl::Transform3f getFCLTransform(int _idx) const;

@@ -45,24 +45,28 @@
 namespace dart {
 namespace collision {
 
-CollisionDetector::CollisionDetector() {
+CollisionDetector::CollisionDetector()
+{
     mNumMaxContacts = 100;
 }
 
-CollisionDetector::~CollisionDetector() {
+CollisionDetector::~CollisionDetector()
+{
     for(int i = 0; i < mCollisionNodes.size(); i++)
         delete mCollisionNodes[i];
 }
 
 void CollisionDetector::addCollisionSkeletonNode(dynamics::BodyNode* _bodyNode,
-                                                 bool _recursive) {
+                                                 bool _recursive)
+{
     CollisionNode* collNode = createCollisionNode(_bodyNode);
     collNode->setIndex(mCollisionNodes.size());
     mCollisionNodes.push_back(collNode);
     mBodyCollisionMap[_bodyNode] = collNode;
     mCollidablePairs.push_back(std::vector<bool>(mCollisionNodes.size() - 1, true));
 
-    if(_recursive) {
+    if(_recursive)
+    {
         for (int i = 0; i < _bodyNode->getNumChildJoints(); i++)
             addCollisionSkeletonNode(_bodyNode->getChildBodyNode(i), true);
     }
@@ -77,21 +81,52 @@ bool CollisionDetector::checkCollision(dynamics::BodyNode* _node1,
                           _calculateContactPoints);
 }
 
-void CollisionDetector::enablePair(dynamics::BodyNode* _node1, dynamics::BodyNode* _node2) {
+unsigned int CollisionDetector::getNumContacts()
+{
+    return mContacts.size();
+}
+
+Contact&CollisionDetector::getContact(int _idx)
+{
+    return mContacts[_idx];
+}
+
+void CollisionDetector::clearAllContacts()
+{
+    mContacts.clear();
+}
+
+int CollisionDetector::getNumMaxContacts() const
+{
+    return mNumMaxContacts;
+}
+
+void CollisionDetector::setNumMaxContacs(int _num)
+{
+    mNumMaxContacts = _num;
+}
+
+void CollisionDetector::enablePair(dynamics::BodyNode* _node1,
+                                   dynamics::BodyNode* _node2)
+{
     CollisionNode* collisionNode1 = getCollisionNode(_node1);
     CollisionNode* collisionNode2 = getCollisionNode(_node2);
     if(collisionNode1 && collisionNode2)
         getPairCollidable(collisionNode1, collisionNode2) = true;
 }
 
-void CollisionDetector::disablePair(dynamics::BodyNode* _node1, dynamics::BodyNode* _node2) {
+void CollisionDetector::disablePair(dynamics::BodyNode* _node1,
+                                    dynamics::BodyNode* _node2)
+{
     CollisionNode* collisionNode1 = getCollisionNode(_node1);
     CollisionNode* collisionNode2 = getCollisionNode(_node2);
     if(collisionNode1 && collisionNode2)
         getPairCollidable(collisionNode1, collisionNode2) = false;
 }
 
-bool CollisionDetector::isCollidable(const CollisionNode* _node1, const CollisionNode* _node2) {
+bool CollisionDetector::isCollidable(const CollisionNode* _node1,
+                                     const CollisionNode* _node2)
+{
     return getPairCollidable(_node1, _node2)
         && _node1->getBodyNode()->isCollidable()
         && _node2->getBodyNode()->isCollidable()
@@ -99,7 +134,9 @@ bool CollisionDetector::isCollidable(const CollisionNode* _node1, const Collisio
             || _node1->getBodyNode()->getSkeleton()->getSelfCollidable());
 }
 
-std::vector<bool>::reference CollisionDetector::getPairCollidable(const CollisionNode* _node1, const CollisionNode* _node2) {
+std::vector<bool>::reference CollisionDetector::getPairCollidable(
+        const CollisionNode* _node1, const CollisionNode* _node2)
+{
     assert(_node1 != _node2);
     int index1 = _node1->getIndex();
     int index2 = _node2->getIndex();
@@ -108,7 +145,9 @@ std::vector<bool>::reference CollisionDetector::getPairCollidable(const Collisio
     return mCollidablePairs[index1][index2];
 }
 
-CollisionNode* CollisionDetector::getCollisionNode(const dynamics::BodyNode *_bodyNode) {
+CollisionNode* CollisionDetector::getCollisionNode(
+        const dynamics::BodyNode *_bodyNode)
+{
     if(mBodyCollisionMap.find(_bodyNode) != mBodyCollisionMap.end())
         return mBodyCollisionMap[_bodyNode];
     else

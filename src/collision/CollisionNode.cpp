@@ -41,10 +41,27 @@ namespace dart {
 namespace collision {
 
 CollisionNode::CollisionNode(dynamics::BodyNode* _bodyNode)
-    : mBodyNode(_bodyNode) {
+    : mBodyNode(_bodyNode)
+{
 }
 
-CollisionNode::~CollisionNode() {
+CollisionNode::~CollisionNode()
+{
+}
+
+dynamics::BodyNode*CollisionNode::getBodyNode() const
+{
+    return mBodyNode;
+}
+
+void CollisionNode::setIndex(int _idx)
+{
+    mIndex = _idx;
+}
+
+int CollisionNode::getIndex() const
+{
+    return mIndex;
 }
 
 } // namespace collision

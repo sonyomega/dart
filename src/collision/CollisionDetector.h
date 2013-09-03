@@ -45,11 +45,16 @@
 #include "CollisionNode.h"
 
 namespace dart {
-namespace dynamics { class BodyNode; }
+
+namespace dynamics {
+class BodyNode;
+}
+
 namespace collision {
 
 /// @brief
-struct Contact {
+struct Contact
+{
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     /// @brief
@@ -80,8 +85,8 @@ struct Contact {
 };
 
 /// @brief
-class CollisionDetector {
-    // CONSTRUCTORS AND DESTRUCTOR ---------------------------------------------
+class CollisionDetector
+{
 public:
     /// @brief
     CollisionDetector();
@@ -89,7 +94,6 @@ public:
     /// @brief
     virtual ~CollisionDetector();
 
-public:
     /// @brief
     virtual void addCollisionSkeletonNode(dynamics::BodyNode *_bd,
                                           bool _bRecursive = false);
@@ -98,8 +102,13 @@ public:
     virtual CollisionNode* createCollisionNode(
             dynamics::BodyNode* _bodyNode) = 0;
 
-    void enablePair(dynamics::BodyNode* _node1, dynamics::BodyNode* _node2);
-    void disablePair(dynamics::BodyNode* _node1, dynamics::BodyNode* _node2);
+    /// @brief
+    void enablePair(dynamics::BodyNode* _node1,
+                    dynamics::BodyNode* _node2);
+
+    /// @brief
+    void disablePair(dynamics::BodyNode* _node1,
+                     dynamics::BodyNode* _node2);
 
     /// @brief
     virtual bool checkCollision(bool _checkAllCollisions,
@@ -110,26 +119,29 @@ public:
                         bool _calculateContactPoints);
 
     /// @brief
-    unsigned int getNumContacts() { return mContacts.size(); }
+    unsigned int getNumContacts();
 
     /// @brief
-    Contact& getContact(int _idx) { return mContacts[_idx]; }
+    Contact& getContact(int _idx);
 
     /// @brief
-    void clearAllContacts() { mContacts.clear(); }
+    void clearAllContacts();
 
     /// @brief
-    int getNumMaxContacts() const { return mNumMaxContacts; }
+    int getNumMaxContacts() const;
 
     /// @brief
-    void setNumMaxContacs(int _num) { mNumMaxContacts = _num; }
+    void setNumMaxContacs(int _num);
 
 protected:
+    /// @brief
     virtual bool checkCollision(CollisionNode* _node1,
                                 CollisionNode* _node2,
                                 bool _calculateContactPoints) = 0;
 
-    bool isCollidable(const CollisionNode* _node1, const CollisionNode* _node2);
+    /// @brief
+    bool isCollidable(const CollisionNode* _node1,
+                      const CollisionNode* _node2);
 
     /// @brief
     std::vector<Contact> mContacts;
@@ -141,8 +153,11 @@ protected:
     int mNumMaxContacts;
 
 private:
-    std::vector<bool>::reference getPairCollidable(const CollisionNode* _node1, const CollisionNode* _node2);
+    /// @brief
+    std::vector<bool>::reference getPairCollidable(
+            const CollisionNode* _node1, const CollisionNode* _node2);
 
+    /// @brief
     CollisionNode* getCollisionNode(const dynamics::BodyNode* _bodyNode);
 
     /// @brief

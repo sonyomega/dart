@@ -84,7 +84,7 @@ public:
     void setSelfCollidable(bool _selfCollidable);
 
     /// @brief
-    bool getSelfCollidable() const { return mSelfCollidable; }
+    bool getSelfCollidable() const;
 
     /// @brief
     void setImmobileState(bool _immobile);
@@ -161,7 +161,7 @@ public:
     Eigen::VectorXd getPoseVelocity() const;
 
     /// @brief
-    // TODO: Not implemented.
+    /// @todo Not implemented.
     math::Jacobian getJacobian(BodyNode* _beginBody,
                                BodyNode* _endBody) const;
 

@@ -52,11 +52,12 @@ namespace collision {
 FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
     : CollisionNode(_bodyNode)
 {
-    for(int i = 0; i < _bodyNode->getNumCollisionShapes(); i++) {
-
+    for(int i = 0; i < _bodyNode->getNumCollisionShapes(); i++)
+    {
         dynamics::Shape* shape = _bodyNode->getCollisionShape(i);
         mShapes.push_back(shape);
-        switch (shape->getShapeType()) {
+        switch (shape->getShapeType())
+        {
             case dynamics::Shape::P_BOX:
                 mCollisionGeometries.push_back(new fcl::Box(shape->getDim()[0],
                                                             shape->getDim()[1],
@@ -106,11 +107,25 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
     }
 }
 
-FCLCollisionNode::~FCLCollisionNode() {
+FCLCollisionNode::~FCLCollisionNode()
+{
 }
 
-fcl::Transform3f FCLCollisionNode::getFCLTransform(int _idx) const {
-    Eigen::Isometry3d worldTrans = mBodyNode->getWorldTransform() * mShapes[_idx]->getTransform();
+int FCLCollisionNode::getNumCollisionGeometries() const
+{
+    return mCollisionGeometries.size();
+}
+
+fcl::CollisionGeometry*FCLCollisionNode::getCollisionGeometry(int _idx) const
+{
+    return mCollisionGeometries[_idx];
+}
+
+fcl::Transform3f FCLCollisionNode::getFCLTransform(int _idx) const
+{
+    Eigen::Isometry3d worldTrans =
+            mBodyNode->getWorldTransform() *
+            mShapes[_idx]->getTransform();
 
     return fcl::Transform3f(fcl::Matrix3f(worldTrans(0,0), worldTrans(0,1), worldTrans(0,2),
                                           worldTrans(1,0), worldTrans(1,1), worldTrans(1,2),
@@ -120,14 +135,18 @@ fcl::Transform3f FCLCollisionNode::getFCLTransform(int _idx) const {
 
 template<class BV>
 fcl::BVHModel<BV>* createMesh(float _sizeX, float _sizeY, float _sizeZ,
-                              const aiScene *_mesh) {
+                              const aiScene *_mesh)
+{
     assert(_mesh);
     fcl::BVHModel<BV>* model = new fcl::BVHModel<BV>;
     model->beginModel();
-    for(unsigned int i = 0; i < _mesh->mNumMeshes; i++) {
-        for(unsigned int j = 0; j < _mesh->mMeshes[i]->mNumFaces; j++) {
+    for(unsigned int i = 0; i < _mesh->mNumMeshes; i++)
+    {
+        for(unsigned int j = 0; j < _mesh->mMeshes[i]->mNumFaces; j++)
+        {
             fcl::Vec3f vertices[3];
-            for(unsigned int k = 0; k < 3; k++) {
+            for(unsigned int k = 0; k < 3; k++)
+            {
                 const aiVector3D& vertex
                         = _mesh->mMeshes[i]->mVertices[
                               _mesh->mMeshes[i]->mFaces[j].mIndices[k]];
@@ -325,7 +344,8 @@ fcl::BVHModel<BV>* createEllipsoid(float _sizeX, float _sizeY, float _sizeZ) {
     fcl::Vec3f p1, p2, p3;
     model->beginModel();
 
-    for (int i = 0; i < 112; i++) {
+    for (int i = 0; i < 112; i++)
+    {
         p1 = fcl::Vec3f(v[f[i][0]][0] * _sizeX,
                         v[f[i][0]][1] * _sizeY,
                         v[f[i][0]][2] * _sizeZ);
