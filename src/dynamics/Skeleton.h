@@ -65,10 +65,10 @@ public:
     //--------------------------------------------------------------------------
     // Constructor and Destructor
     //--------------------------------------------------------------------------
-    /// @brief
+    /// @brief Constructor
     Skeleton(const std::string& _name = "");
 
-    /// @brief
+    /// @brief Destructor
     virtual ~Skeleton();
 
     //--------------------------------------------------------------------------
@@ -94,11 +94,11 @@ public:
 
     /// @brief
     /// @todo Let's set this state for each joints
-    DEPRECATED bool getJointLimitState() const { return mJointLimit; }
+    bool getJointLimitState() const;
 
     /// @brief
     /// @todo Let's set this state for each joints
-    DEPRECATED void setJointLimitState(bool _s) { mJointLimit = _s; }
+    void setJointLimitState(bool _s);
 
     /// @brief
     double getTotalMass() const;
@@ -107,7 +107,8 @@ public:
     // Structueral Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setWorldTransformation(const Eigen::Isometry3d& _W, bool _updateChilds = true);
+    void setWorldTransformation(const Eigen::Isometry3d& _W,
+                                bool _updateChilds = true);
 
     /// @brief
     const Eigen::Isometry3d& getWorldTransformation() const;
@@ -119,7 +120,7 @@ public:
     void addJoint(Joint* _joint);
 
     /// @brief
-    //void setRootBody(BodyNode* _body) { mRootBody = _body; }
+    void setRootBodyNode(BodyNode* _body) { mRootBody = _body; }
 
     /// @brief
     int getNumBodyNodes() const;
@@ -136,16 +137,13 @@ public:
     /// @brief
     BodyNode* findBodyNode(const std::string& _name) const;
 
-    ///// @brief
-    //// TODO: Not implemented.
-    //Eigen::VectorXd getDependentConfiguration(BodyNode* _beginBody,
-    //                                          BodyNode* _endBody) const;
-
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)
     //--------------------------------------------------------------------------
+    /// @brief
     Eigen::VectorXd getConfig(std::vector<int> _id);
 
+    /// @brief
     void setConfig(std::vector<int> _id, Eigen::VectorXd _vals,
                    bool _calcTrans = true, bool _calcDeriv = true);
 
@@ -168,19 +166,43 @@ public:
                                BodyNode* _endBody) const;
 
     // Dynamics equation
+    /// @brief
     Eigen::MatrixXd getMassMatrix() const;
+
+    /// @brief
     Eigen::MatrixXd getInvMassMatrix() const;
+
+    /// @brief
     Eigen::MatrixXd getCoriolisMatrix() const;
+
+    /// @brief
     Eigen::VectorXd getCoriolisVector() const;
+
+    /// @brief
     Eigen::VectorXd getGravityVector() const;
+
+    /// @brief
     Eigen::VectorXd getCombinedVector() const;
+
+    /// @brief
     Eigen::VectorXd getExternalForces() const;
+
+    /// @brief
     Eigen::VectorXd getInternalForces() const;
+
+    /// @brief
     Eigen::VectorXd getDampingForces() const;
+
+    /// @brief
     Eigen::VectorXd getConstraintForces() const;
 
+    /// @brief
     void setInternalForces(const Eigen::VectorXd& _forces);
+
+    /// @brief
     void clearInternalForces();
+
+    /// @brief
     void setConstraintForces(const Eigen::VectorXd& _Fc);
 
     /// @brief
@@ -232,7 +254,6 @@ public:
 
     //--------------------------------------------------------------------------
     // Recursive dynamics Algorithms
-    //--------------------------------------------------------------------------
 
     /// @brief
     void initDynamics();
@@ -341,12 +362,27 @@ protected:
     /// @brief Inverse of mass matrix for the skeleton.
     Eigen::MatrixXd mMInv;
 
-    Eigen::MatrixXd mC;    ///< Coriolis matrix for the skeleton; not being used currently
-    Eigen::VectorXd mCvec;    ///< Coriolis vector for the skeleton == mC*qdot
-    Eigen::VectorXd mG;    ///< Gravity vector for the skeleton; computed in nonrecursive dynamics only
-    Eigen::VectorXd mCg;   ///< combined coriolis and gravity term == mC*qdot + g
-    Eigen::VectorXd mFext; ///< external forces vector for the skeleton
-    //Eigen::VectorXd mFint; ///< internal forces vector for the skeleton; computed by an external controller
+    /// @brief Coriolis matrix for the skeleton; not being used currently
+    Eigen::MatrixXd mC;
+
+    /// @brief Coriolis vector for the skeleton == mC*qdot.
+    Eigen::VectorXd mCvec;
+
+    /// @brief Gravity vector for the skeleton; computed in nonrecursive
+    /// dynamics only.
+    Eigen::VectorXd mG;
+
+    /// @brief Combined coriolis and gravity term == mC*qdot + g.
+    Eigen::VectorXd mCg;
+
+    /// @brief External forces vector for the skeleton.
+    Eigen::VectorXd mFext;
+
+    /// @brief Internal forces vector for the skeleton; computed by an external
+    /// controller.
+    //Eigen::VectorXd mFint;
+
+    /// @brief
     Eigen::VectorXd mFc;
 
 private:

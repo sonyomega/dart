@@ -90,6 +90,16 @@ bool Skeleton::getImmobileState() const
     return mImmobile;
 }
 
+bool Skeleton::getJointLimitState() const
+{
+    return mJointLimit;
+}
+
+void Skeleton::setJointLimitState(bool _s)
+{
+    mJointLimit = _s;
+}
+
 double Skeleton::getTotalMass() const
 {
     return mTotalMass;
@@ -154,10 +164,16 @@ void Skeleton::addJoint(Joint* _joint)
     const std::vector<GenCoord*>& dofs = _joint->getGenCoords();
     for (std::vector<GenCoord*>::const_iterator itrDof = dofs.begin();
          itrDof != dofs.end();
-         ++itrDof) {
+         ++itrDof)
+    {
         mGenCoords.push_back((*itrDof));
         (*itrDof)->setSkelIndex(mGenCoords.size() - 1);
     }
+}
+
+void Skeleton::setRootBodyNode(BodyNode* _body)
+{
+    mRootBody = _body;
 }
 
 int Skeleton::getNumBodyNodes() const
