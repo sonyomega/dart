@@ -187,11 +187,11 @@ void World::step()
 {
     mIntegrator->integrate(this, mTimeStep);
 
-    for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
-         itrSkeleton != mSkeletons.end();
-         ++itrSkeleton)
+    for (std::vector<dynamics::Skeleton*>::iterator itr = mSkeletons.begin();
+         itr != mSkeletons.end(); ++itr)
     {
-        (*itrSkeleton)->clearInternalForces();
+        (*itr)->clearInternalForces();
+        (*itr)->clearExternalForces();
     }
 
     mTime += mTimeStep;

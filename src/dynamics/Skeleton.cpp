@@ -446,8 +446,6 @@ void Skeleton::computeForwardDynamicsID(
                                + this->getConstraintForces() );
 
     this->set_ddq(qddot);
-
-    clearExternalForces();
 }
 
 void Skeleton::computeForwardDynamicsID2(
@@ -489,7 +487,7 @@ void Skeleton::computeForwardDynamicsID2(
     set_tau(tau_old);
 
     // Evaluate external forces in generalized coordinate.
-    evalExternalForces();
+    updateExternalForces();
 
     Eigen::VectorXd qddot = this->getInvMassMatrix()
                             * (-this->getCombinedVector()
