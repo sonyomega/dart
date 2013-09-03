@@ -120,7 +120,7 @@ public:
     void addJoint(Joint* _joint);
 
     /// @brief
-    void setRootBodyNode(BodyNode* _body) { mRootBody = _body; }
+    void setRootBodyNode(BodyNode* _body);
 
     /// @brief
     int getNumBodyNodes() const;
