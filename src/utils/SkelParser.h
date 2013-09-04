@@ -45,6 +45,7 @@
 #include <tinyxml2.h>
 
 #include "math/Geometry.h"
+#include "utils/Parser.h"
 
 namespace dart {
 
@@ -73,52 +74,8 @@ class World;
 
 namespace utils {
 
-class ElementEnumerator;
-
-#define SDF_OK 0
-#define SDF_ERROR 1
-
 #define DART_OK 0
 #define DART_ERROR 1
-
-#define VSK_OK 0
-#define VSK_ERROR 1
-
-std::string toString(bool _v);
-std::string toString(int _v);
-std::string toString(unsigned int _v);
-std::string toString(float _v);
-std::string toString(double _v);
-std::string toString(char _v);
-std::string toString(const Eigen::Vector2d& _v);
-std::string toString(const Eigen::Vector3d& _v);
-std::string toString(const Eigen::Isometry3d& _v);
-
-bool              toBool      (const std::string& _str);
-int               toInt       (const std::string& _str);
-unsigned int      toUInt      (const std::string& _str);
-float             toFloat     (const std::string& _str);
-double            toDouble    (const std::string& _str);
-char              toChar      (const std::string& _str);
-Eigen::Vector2d   toVector2d  (const std::string& _str);
-Eigen::Vector3d   toVector3d  (const std::string& _str);
-Eigen::Vector6d   toVector6d  (const std::string& _str);
-Eigen::Isometry3d toIsometry3d(const std::string& _str);
-
-std::string       getValueString    (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-bool              getValueBool      (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-int               getValueInt       (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-unsigned int      getValueUInt      (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-float             getValueFloat     (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-double            getValueDouble    (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-char              getValueChar      (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-Eigen::Vector2d   getValueVector2d  (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-Eigen::Vector3d   getValueVector3d  (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-Eigen::Vector6d   getValueVector6d  (tinyxml2::XMLElement* _parentElement, const std::string& _name);
-Eigen::Isometry3d getValueIsometry3d(tinyxml2::XMLElement* _parentElement, const std::string& _name);
-
-bool hasElement(tinyxml2::XMLElement* _parentElement, const std::string& _name);
-tinyxml2::XMLElement* getElement(tinyxml2::XMLElement* _parentElement, const std::string& _name);
 
 //------------------------------------------------------------------------------
 // Parsing Helper Functions
@@ -177,51 +134,6 @@ dynamics::FreeJoint* readFreeJoint(
 dart::dynamics::WeldJoint* readWeldJoint(
         tinyxml2::XMLElement* _weldJointElement,
         dynamics::Skeleton* _skeleton);
-
-//------------------------------------------------------------------------------
-//
-//------------------------------------------------------------------------------
-/// @brief
-class ElementEnumerator
-{
-public:
-    /// @brief
-    ElementEnumerator(tinyxml2::XMLElement* _parent, const char* const _name);
-
-    /// @brief
-    ~ElementEnumerator();
-
-    /// @brief
-    bool valid() const;
-
-    /// @brief
-    bool next();
-
-    /// @brief
-    tinyxml2::XMLElement* get() const { return m_current; }
-
-    /// @brief
-    tinyxml2::XMLElement* operator->() const { return m_current; }
-
-    /// @brief
-    tinyxml2::XMLElement& operator*() const { return *m_current; }
-
-    /// @brief
-    bool operator==(const ElementEnumerator& _rhs) const;
-
-    /// @brief
-    ElementEnumerator & operator=(const ElementEnumerator& _rhs);
-
-private:
-    /// @brief
-    std::string m_name;
-
-    /// @brief
-    tinyxml2::XMLElement* m_parent;
-
-    /// @brief
-    tinyxml2::XMLElement* m_current;
-};
 
 } // namespace utils
 } // namespace dart
