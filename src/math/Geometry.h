@@ -339,8 +339,6 @@ bool VerifySE3(const Eigen::Isometry3d& _T);
 /// @brief
 bool Verifyse3(const Eigen::Vector6d& _V);
 
-#include "math/GeometryInl.h"
-
 } // namespace math
 } // namespace dart
 
