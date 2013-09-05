@@ -380,7 +380,7 @@ void Skeleton::updateExternalForces()
     // Clear external force.
     mFext.setZero();
 
-    // Recursive from child to parent.
+    // Recursive
     for (std::vector<BodyNode*>::iterator itr = mBodyNodes.begin();
          itr != mBodyNodes.end(); ++itr)
         (*itr)->aggregateExternalForces(mFext);
@@ -388,17 +388,18 @@ void Skeleton::updateExternalForces()
 
 void Skeleton::updateDampingForces()
 {
-    int idx = 0;
-    int numJoints = mJoints.size();
+    // Clear external force.
+    mDampingForce.setZero();
 
-    for (int i = 0; i < numJoints; ++i)
+    for (std::vector<Joint*>::iterator itr = mJoints.begin();
+         itr != mJoints.end(); ++itr)
     {
-        int numDofsJoint = mJoints[i]->getDOF();
-        Eigen::VectorXd dampingForceJoint = mJoints[i]->getDampingForce();
-
-        mDampingForce.segment(idx, numDofsJoint) = dampingForceJoint;
-
-        idx += numDofsJoint;
+        Eigen::VectorXd jointDampingForce = (*itr)->getDampingForce();
+        for (int i = 0; i < jointDampingForce.size(); i++)
+        {
+            mDampingForce((*itr)->getDof(i)->getSkelIndex()) =
+                    jointDampingForce(i);
+        }
     }
 }
 
