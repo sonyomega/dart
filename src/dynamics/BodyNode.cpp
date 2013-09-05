@@ -715,7 +715,7 @@ void BodyNode::updateBeta()
     // Add constraint force
     if (mParentJoint->getDOF() > 0)
     {
-        mAlpha          += mParentJoint->getDampingForce();
+        mAlpha          += mParentJoint->getDampingForces();
         Eigen::VectorXd Fc = Eigen::VectorXd::Zero(mParentJoint->getDOF());
         for (int i = 0; i < mParentJoint->getDOF(); i++)
             Fc(i) = mSkeleton->getConstraintForces()[(mParentJoint->getGenCoords()[i])->getSkelIndex()];

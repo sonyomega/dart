@@ -209,7 +209,7 @@ double Joint::getDampingCoefficient(int _idx) const
     return mDampingCoefficient[_idx];
 }
 
-Eigen::VectorXd Joint::getDampingForce() const
+Eigen::VectorXd Joint::getDampingForces() const
 {
     int numDofs = getDOF();
     Eigen::VectorXd dampingForce(numDofs);

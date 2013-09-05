@@ -165,8 +165,16 @@ public:
     void updateKinematics(bool _firstDerivative = true,
                           bool _secondDerivative = true);
 
-
     //void updateGlobalKinematics();
+
+    /// @brief
+    void setDampingCoefficient(int _idx, double _d);
+
+    /// @brief
+    double getDampingCoefficient(int _idx) const;
+
+    /// @brief
+    Eigen::VectorXd getDampingForces() const;
 
     //--------------------------------------------------------------------------
     //
@@ -191,9 +199,8 @@ protected:
     /// dV(q, dq, ddq) = dS(q) * dq + S(q) * ddq
     virtual void _updateAcceleration() = 0;
 
-    // TODO:
-    /// @brief
-    //virtual void _updateDampingForce() = 0;
+//    /// @brief
+//    virtual void updateDampingForce() = 0;
 
     //--------------------------------------------------------------------------
     //
@@ -243,18 +250,8 @@ protected:
     //--------------------------------------------------------------------------
     // Dynamics variables
     //--------------------------------------------------------------------------
-public:
     /// @brief
     std::vector<double> mDampingCoefficient;
-
-    /// @brief
-    void setDampingCoefficient(int _idx, double _d);
-
-    /// @brief
-    double getDampingCoefficient(int _idx) const;
-
-    /// @brief
-    Eigen::VectorXd getDampingForce() const;
 
     /// @brief
     std::vector<double> mSpringStiffness;

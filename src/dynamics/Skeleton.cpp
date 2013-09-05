@@ -394,7 +394,7 @@ void Skeleton::updateDampingForces()
     for (std::vector<Joint*>::iterator itr = mJoints.begin();
          itr != mJoints.end(); ++itr)
     {
-        Eigen::VectorXd jointDampingForce = (*itr)->getDampingForce();
+        Eigen::VectorXd jointDampingForce = (*itr)->getDampingForces();
         for (int i = 0; i < jointDampingForce.size(); i++)
         {
             mDampingForce((*itr)->getDof(i)->getSkelIndex()) =
