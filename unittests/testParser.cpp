@@ -41,7 +41,7 @@
 
 #include "dynamics/RevoluteJoint.h"
 #include "dynamics/Skeleton.h"
-#include "common/Paths.h"
+#include "utils/Paths.h"
 #include "simulation/World.h"
 #include "utils/SkelParser.h"
 
