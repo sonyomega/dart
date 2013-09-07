@@ -1,4 +1,4 @@
-#include "common/Paths.h"
+#include "utils/Paths.h"
 #include "utils/SkelParser.h"
 #include "MyWindow.h"
 
