@@ -49,9 +49,12 @@ RevoluteJoint::RevoluteJoint(BodyNode* _parent, BodyNode* _child,
       mAxis(axis)
 {
     mJointType = REVOLUTE;
+
     mGenCoords.push_back(&mCoordinate);
+
     mS = Eigen::Matrix<double,6,1>::Zero();
     mdS = Eigen::Matrix<double,6,1>::Zero();
+
     mDampingCoefficient.resize(1, 0);
 }
 

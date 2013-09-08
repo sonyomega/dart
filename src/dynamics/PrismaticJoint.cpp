@@ -49,12 +49,15 @@ PrismaticJoint::PrismaticJoint(BodyNode* _parent, BodyNode* _child,
                                const Eigen::Vector3d& axis,
                                const std::string& _name)
     : Joint(_parent, _child, _name),
-      mDirectionVector(axis)
+      mAxis(axis)
 {
     mJointType = PRISMATIC;
+
     mGenCoords.push_back(&mCoordinate);
+
     mS = Eigen::Matrix<double,6,1>::Zero();
     mdS = Eigen::Matrix<double,6,1>::Zero();
+
     mDampingCoefficient.resize(1, 0);
 }
 
@@ -65,12 +68,12 @@ PrismaticJoint::~PrismaticJoint()
 void PrismaticJoint::setAxis(const Eigen::Vector3d& _axis)
 {
     assert(_axis.norm() == 1.0);
-    mDirectionVector = _axis;
+    mAxis = _axis;
 }
 
 const Eigen::Vector3d&PrismaticJoint::getAxis() const
 {
-    return mDirectionVector;
+    return mAxis;
 }
 
 Eigen::Vector3d PrismaticJoint::getAxisGlobal() const
@@ -80,21 +83,21 @@ Eigen::Vector3d PrismaticJoint::getAxisGlobal() const
     if (this->mParentBody != NULL)
         parentTransf = mParentBody->getWorldTransform();
 
-    return math::Rotate(parentTransf * mT_ParentBodyToJoint, mDirectionVector);
+    return math::Rotate(parentTransf * mT_ParentBodyToJoint, mAxis);
 }
 
 void PrismaticJoint::_updateTransformation()
 {
     // T
     mT = mT_ParentBodyToJoint
-         * math::ExpLinear(mDirectionVector * mCoordinate.get_q())
+         * math::ExpLinear(mAxis * mCoordinate.get_q())
          * Inv(mT_ChildBodyToJoint);
 }
 
 void PrismaticJoint::_updateVelocity()
 {
     // S
-    mS = math::AdTLinear(mT_ChildBodyToJoint, mDirectionVector);
+    mS = math::AdTLinear(mT_ChildBodyToJoint, mAxis);
 
     // V = S * dq
     mV.noalias() = mS * get_dq();

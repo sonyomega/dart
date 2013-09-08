@@ -49,6 +49,7 @@ WeldJoint::WeldJoint(BodyNode* _parent, BodyNode* _child,
     : Joint(_parent, _child, _name)
 {
     mJointType = WELD;
+
     mS = math::Jacobian::Zero(6,0);
     mdS = math::Jacobian::Zero(6,0);
 }

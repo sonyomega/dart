@@ -51,6 +51,7 @@ ScrewJoint::ScrewJoint(BodyNode* _parent, BodyNode* _child,
       mPitch(_pitch)
 {
     mJointType = SCREW;
+
     mGenCoords.push_back(&mCoordinate);
 
     mS = Eigen::Matrix<double,6,1>::Zero();

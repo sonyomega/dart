@@ -109,7 +109,7 @@ protected:
     GenCoord mCoordinate;
 
     /// @brief Rotational axis.
-    Eigen::Vector3d mDirectionVector;
+    Eigen::Vector3d mAxis;
 
 //    /// @brief Daping coefficient of revolute joint.
 //    double mDampingCoefficient;
