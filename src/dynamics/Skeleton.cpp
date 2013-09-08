@@ -692,19 +692,12 @@ void Skeleton::setConfig(std::vector<int> _id, Eigen::VectorXd _vals,
     for( unsigned int i = 0; i < _id.size(); i++ )
         mGenCoords[_id[i]]->set_q(_vals(i));
 
-    // TODO: Only do the necessary updates
     if (_calcTrans)
-        for (int i = 0; i < getNumBodyNodes(); i++)
-            mBodyNodes.at(i)->updateTransformation();
-
-    if (_calcDeriv)
     {
-        for (std::vector<Joint*>::iterator itrJoint = mJoints.begin();
-             itrJoint != mJoints.end(); ++itrJoint)
-            (*itrJoint)->updateKinematics(true, false);
-
-        for (int i = 0; i < getNumBodyNodes(); i++)
-            mBodyNodes.at(i)->updateVelocity();
+        if (_calcDeriv)
+            updateForwardKinematics(true, false);
+        else
+            updateForwardKinematics(false, false);
     }
 }
 
