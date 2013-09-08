@@ -107,65 +107,65 @@ TEST(PARSER, PARSER_DATA_STRUCTUER)
             EXPECT_EQ(valSE3(i,j), v11(i,j));
 }
 
-//TEST(PARSER, PARSER_DART_EMPTY)
-//{
-//    World* world = readSkelFile(DART_DATA_PATH"dart/test/empty.dart");
+TEST(PARSER, PARSER_DART_EMPTY)
+{
+    World* world = readSkelFile(DART_DATA_PATH"skel/test/empty.skel");
 
-//    EXPECT_TRUE(world != NULL);
-//    EXPECT_EQ(world->getTimeStep(), 0.001);
-//    EXPECT_EQ(world->getGravity()(0), 0);
-//    EXPECT_EQ(world->getGravity()(1), 0);
-//    EXPECT_EQ(world->getGravity()(2), -9.81);
-//    EXPECT_EQ(world->getNumSkeletons(), 0);
+    EXPECT_TRUE(world != NULL);
+    EXPECT_EQ(world->getTimeStep(), 0.001);
+    EXPECT_EQ(world->getGravity()(0), 0);
+    EXPECT_EQ(world->getGravity()(1), 0);
+    EXPECT_EQ(world->getGravity()(2), -9.81);
+    EXPECT_EQ(world->getNumSkeletons(), 0);
 
-//    EXPECT_EQ(world->getTime(), 0);
-//    world->step();
-//    EXPECT_EQ(world->getTime(), world->getTimeStep());
+    EXPECT_EQ(world->getTime(), 0);
+    world->step();
+    EXPECT_EQ(world->getTime(), world->getTimeStep());
 
-//    delete world;
-//}
+    delete world;
+}
 
-//TEST(PARSER, PARSER_DART_SINGLE_PENDULUM)
-//{
-//    World* world = readSkelFile(DART_DATA_PATH"dart/test/single_pendulum.dart");
+TEST(PARSER, PARSER_DART_SINGLE_PENDULUM)
+{
+    World* world = readSkelFile(DART_DATA_PATH"skel/test/single_pendulum.skel");
 
-//    EXPECT_TRUE(world != NULL);
-//    EXPECT_EQ(world->getTimeStep(), 0.001);
-//    EXPECT_EQ(world->getGravity()(0), 0);
-//    EXPECT_EQ(world->getGravity()(1), -9.81);
-//    EXPECT_EQ(world->getGravity()(2), 0);
-//    EXPECT_EQ(world->getNumSkeletons(), 1);
+    EXPECT_TRUE(world != NULL);
+    EXPECT_EQ(world->getTimeStep(), 0.001);
+    EXPECT_EQ(world->getGravity()(0), 0);
+    EXPECT_EQ(world->getGravity()(1), -9.81);
+    EXPECT_EQ(world->getGravity()(2), 0);
+    EXPECT_EQ(world->getNumSkeletons(), 1);
 
-//    Skeleton* skel1 = world->getSkeleton("skeleton 1");
+    Skeleton* skel1 = world->getSkeleton("skeleton 1");
 
-//    EXPECT_EQ(skel1->getNumBodyNodes(), 1);
-//    EXPECT_EQ(skel1->getNumJoints(), 1);
+    EXPECT_EQ(skel1->getNumBodyNodes(), 1);
+    EXPECT_EQ(skel1->getNumJoints(), 1);
 
-//    world->step();
+    world->step();
 
-//    delete world;
-//}
+    delete world;
+}
 
-//TEST(PARSER, PARSER_DART_SERIAL_CAHIN)
-//{
-//    World* world = readSkelFile(DART_DATA_PATH"dart/test/serial_chain.dart");
+TEST(PARSER, PARSER_DART_SERIAL_CAHIN)
+{
+    World* world = readSkelFile(DART_DATA_PATH"skel/test/serial_chain_ball_joint.skel");
 
-//    EXPECT_TRUE(world != NULL);
-//    EXPECT_EQ(world->getTimeStep(), 0.001);
-//    EXPECT_EQ(world->getGravity()(0), 0);
-//    EXPECT_EQ(world->getGravity()(1), -9.81);
-//    EXPECT_EQ(world->getGravity()(2), 0);
-//    EXPECT_EQ(world->getNumSkeletons(), 1);
+    EXPECT_TRUE(world != NULL);
+    EXPECT_EQ(world->getTimeStep(), 0.001);
+    EXPECT_EQ(world->getGravity()(0), 0);
+    EXPECT_EQ(world->getGravity()(1), -9.81);
+    EXPECT_EQ(world->getGravity()(2), 0);
+    EXPECT_EQ(world->getNumSkeletons(), 1);
 
-//    Skeleton* skel1 = world->getSkeleton("skeleton 1");
+    Skeleton* skel1 = world->getSkeleton("skeleton 1");
 
-//    EXPECT_EQ(skel1->getNumBodyNodes(), 10);
-//    EXPECT_EQ(skel1->getNumJoints(), 10);
+    EXPECT_EQ(skel1->getNumBodyNodes(), 10);
+    EXPECT_EQ(skel1->getNumJoints(), 10);
 
-//    world->step();
+    world->step();
 
-//    delete world;
-//}
+    delete world;
+}
 
 /******************************************************************************/
 int main(int argc, char* argv[])
