@@ -43,8 +43,9 @@
 namespace dart {
 namespace dynamics {
 
-BallJoint::BallJoint(const std::string& _name)
-    : Joint(_name)
+BallJoint::BallJoint(BodyNode* _parent, BodyNode* _child,
+                     const std::string& _name)
+    : Joint(_parent, _child, _name)
 {
     mJointType = BALL;
     mGenCoords.push_back(&mCoordinate[0]);
@@ -52,8 +53,6 @@ BallJoint::BallJoint(const std::string& _name)
     mGenCoords.push_back(&mCoordinate[2]);
     mS = Eigen::Matrix<double,6,3>::Zero();
     mdS = Eigen::Matrix<double,6,3>::Zero();
-
-    // TODO: Temporary code
     mDampingCoefficient.resize(3, 0);
 }
 

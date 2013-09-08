@@ -43,10 +43,11 @@
 namespace dart {
 namespace dynamics {
 
-UniversalJoint::UniversalJoint(const Eigen::Vector3d& _axis0,
+UniversalJoint::UniversalJoint(BodyNode* _parent, BodyNode* _child,
+                               const Eigen::Vector3d& _axis0,
                                const Eigen::Vector3d& _axis1,
                                const std::string& _name)
-    : Joint(_name)
+    : Joint(_parent, _child, _name)
 {
     mJointType = UNIVERSAL;
 

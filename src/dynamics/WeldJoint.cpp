@@ -44,8 +44,9 @@ namespace dynamics {
 
 #define FJOINT_EPS 1e-6
 
-WeldJoint::WeldJoint(const std::string& _name)
-    : Joint(_name)
+WeldJoint::WeldJoint(BodyNode* _parent, BodyNode* _child,
+                     const std::string& _name)
+    : Joint(_parent, _child, _name)
 {
     mJointType = WELD;
     mS = math::Jacobian::Zero(6,0);
@@ -64,26 +65,12 @@ void WeldJoint::_updateTransformation()
 
 void WeldJoint::_updateVelocity()
 {
-    // TODO: NEED TO CHECK !!
-    //       NOT FINISHED.
-
-    // S
-    mS;
-
-    // V = 0
-    mV;
+    // Do nothing
 }
 
 void WeldJoint::_updateAcceleration()
 {
-    // TODO: NEED TO CHECK !!
-    //       NOT FINISHED.
-
-    // dS
-    mdS;
-
-    // dV = 0
-    mdV;
+    // Do nothing
 }
 
 } // namespace dynamics

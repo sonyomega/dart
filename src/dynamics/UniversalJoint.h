@@ -53,7 +53,8 @@ public:
     //
     //--------------------------------------------------------------------------
     /// @brief
-    UniversalJoint(const Eigen::Vector3d& _axis0 = Eigen::Vector3d(1.0, 0.0, 0.0),
+    UniversalJoint(BodyNode* _parent = NULL, BodyNode* _child = NULL,
+                   const Eigen::Vector3d& _axis0 = Eigen::Vector3d(1.0, 0.0, 0.0),
                    const Eigen::Vector3d& _axis1 = Eigen::Vector3d(0.0, 1.0, 0.0),
                    const std::string& _name = "Universal joint");
 

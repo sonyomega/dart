@@ -42,8 +42,9 @@
 namespace dart {
 namespace dynamics {
 
-TranslationalJoint::TranslationalJoint(const std::string& _name)
-    : Joint(_name)
+TranslationalJoint::TranslationalJoint(BodyNode* _parent, BodyNode* _child,
+                                       const std::string& _name)
+    : Joint(_parent, _child, _name)
 {
     mJointType = TRANSLATIONAL;
     mGenCoords.push_back(&mCoordinate[0]);
@@ -51,8 +52,6 @@ TranslationalJoint::TranslationalJoint(const std::string& _name)
     mGenCoords.push_back(&mCoordinate[2]);
     mS = Eigen::Matrix<double,6,3>::Zero();
     mdS = Eigen::Matrix<double,6,3>::Zero();
-
-    // TODO: Temporary code
     mDampingCoefficient.resize(3, 0);
 }
 

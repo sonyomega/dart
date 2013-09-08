@@ -42,13 +42,13 @@
 namespace dart {
 namespace dynamics {
 
-ScrewJoint::ScrewJoint(const Eigen::Vector3d& axis,
+ScrewJoint::ScrewJoint(BodyNode* _parent, BodyNode* _child,
+                       const Eigen::Vector3d& axis,
                        double _pitch,
                        const std::string& _name)
-    : Joint(_name),
+    : Joint(_parent, _child, _name),
       mAxis(axis),
       mPitch(_pitch)
-      //mDampingCoefficient(0.0)
 {
     mJointType = SCREW;
     mGenCoords.push_back(&mCoordinate);
@@ -56,7 +56,6 @@ ScrewJoint::ScrewJoint(const Eigen::Vector3d& axis,
     mS = Eigen::Matrix<double,6,1>::Zero();
     mdS = Eigen::Matrix<double,6,1>::Zero();
 
-    // TODO: Temporary code
     mDampingCoefficient.resize(1, 0);
 }
 

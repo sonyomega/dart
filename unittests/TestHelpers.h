@@ -16,7 +16,7 @@
 #include "dynamics/BodyNode.h"
 #include "dynamics/GenCoord.h"
 #include "dynamics/Joint.h"
-#include "dynamics/FreeJoint.h"
+#include "dynamics/WeldJoint.h"
 #include "dynamics/BoxShape.h"
 
 using namespace dart;
@@ -34,39 +34,41 @@ template <class MATRIX>
 bool equals (const Eigen::DenseBase<MATRIX>& A, const Eigen::DenseBase<MATRIX>& B, double tol = 1e-5) {
 
     // Get the matrix sizes and sanity check the call
-  const size_t n1 = A.cols(), m1 = A.rows();
-  const size_t n2 = B.cols(), m2 = B.rows();
-  if(m1!=m2 || n1!=n2) return false;
+    const size_t n1 = A.cols(), m1 = A.rows();
+    const size_t n2 = B.cols(), m2 = B.rows();
+    if(m1!=m2 || n1!=n2) return false;
 
     // Check each index
-  for(size_t i=0; i<m1; i++) {
-    for(size_t j=0; j<n1; j++) {
-      if(boost::math::isnan(A(i,j)) ^ boost::math::isnan(B(i,j)))
-        return false;
-      else if(fabs(A(i,j) - B(i,j)) > tol)
-        return false;
-    }
+    for(size_t i=0; i<m1; i++) {
+        for(size_t j=0; j<n1; j++) {
+            if(boost::math::isnan(A(i,j)) ^ boost::math::isnan(B(i,j)))
+                return false;
+            else if(fabs(A(i,j) - B(i,j)) > tol)
+                return false;
+        }
     }
 
     // If no problems, the two matrices are equal
-  return true;
+    return true;
 }
 
-///* ********************************************************************************************* */
-///// Add an end-effector to the last link of the given robot
-//void addEndEffector (Skeleton* robot, BodyNode* parent_node, Vector3d dim) {
+/* ********************************************************************************************* */
+/// Add an end-effector to the last link of the given robot
+void addEndEffector (Skeleton* robot, BodyNode* parent_node, Vector3d dim) {
 
-//    // Create the end-effector node with a random dimension
-//    BodyNode* node = new BodyNode("ee");
-//    FreeJoint* joint = new FreeJoint("eeJoint");
-//    add_XyzRpy(joint, 0.0, 0.0, dim(2), 0.0, 0.0, 0.0);
-//    Shape* shape = new ShapeBox(Vector3d(0.2, 0.2, 0.2));
-//    node->setLocalCOM(Vector3d(0.0, 0.0, 0.0));
-//    node->setMass(1.0);
-//    node->addVisualizationShape(shape);
-//    node->addCollisionShape(shape);
-//    robot->addBodyNode(node);
-//}
+    // Create the end-effector node with a random dimension
+    BodyNode* node = new BodyNode("ee");
+    WeldJoint* joint = new WeldJoint(parent_node, node, "eeJoint");
+    Eigen::Isometry3d T = Eigen::Isometry3d::Identity();
+    T.translate(Eigen::Vector3d(0.0, 0.0, dim(2)));
+    joint->setTransformFromParentBody(T);
+    Shape* shape = new BoxShape(Vector3d(0.2, 0.2, 0.2));
+    node->setLocalCOM(Vector3d(0.0, 0.0, 0.0));
+    node->setMass(1.0);
+    node->addVisualizationShape(shape);
+    node->addCollisionShape(shape);
+    robot->addBodyNode(node);
+}
 
 ///* ********************************************************************************************* */
 ///// Creates a two link manipulator with the given dimensions where the first link rotates around
@@ -78,7 +80,7 @@ bool equals (const Eigen::DenseBase<MATRIX>& A, const Eigen::DenseBase<MATRIX>& 
 
 //    // Create the first link, the joint with the ground and its shape
 //    double mass = 1.0;
-//    BodyNode* node = (BodyNode*) robot->createBodyNode("link1");
+//    BodyNode* node = new BodyNode("link1");
 //    Joint* joint = new Joint(NULL, node, "joint1");
 //    add_XyzRpy(joint, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 //    add_DOF(robot, joint, 0.0, -M_PI, M_PI, type1);

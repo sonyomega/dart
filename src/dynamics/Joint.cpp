@@ -43,12 +43,12 @@
 namespace dart {
 namespace dynamics {
 
-Joint::Joint(const std::string& _name)
+Joint::Joint(BodyNode* _parent, BodyNode* _child, const std::string& _name)
     : mName(_name),
       mSkelIndex(-1),
       mJointType(UNKNOWN),
-      mParentBody(NULL),
-      mChildBody(NULL),
+      mParentBody(_parent),
+      mChildBody(_child),
       mT_ParentBodyToJoint(Eigen::Isometry3d::Identity()),
       mT_ChildBodyToJoint(Eigen::Isometry3d::Identity()),
       mT(Eigen::Isometry3d::Identity()),
@@ -57,6 +57,8 @@ Joint::Joint(const std::string& _name)
       mdV(Eigen::Vector6d::Zero()),
       mdS(math::Jacobian::Zero(6,0))
 {
+    setParentBody(mParentBody);
+    setChildBody(mParentBody);
 }
 
 Joint::~Joint()
@@ -117,7 +119,6 @@ void Joint::setParentBody(BodyNode* _body)
 {
     mParentBody = _body;
 
-    // TODO: Use builder
     if (mParentBody != NULL)
     {
         mParentBody->addChildJoint(this);
@@ -134,7 +135,6 @@ void Joint::setChildBody(BodyNode* _body)
 {
     mChildBody = _body;
 
-    // TODO: Use builder
     if (mChildBody != NULL)
     {
         mChildBody->setParentJoint(this);

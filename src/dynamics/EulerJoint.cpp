@@ -44,8 +44,9 @@
 namespace dart {
 namespace dynamics {
 
-EulerJoint::EulerJoint()
-    : Joint("EulerXYZ joint"),
+EulerJoint::EulerJoint(BodyNode* _parent, BodyNode* _child,
+                       const std::string& _name)
+    : Joint(_parent, _child, "EulerXYZ joint"),
       mAxisOrder(AO_XYZ)
 {
     mJointType = EULER;

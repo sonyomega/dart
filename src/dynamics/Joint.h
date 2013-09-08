@@ -84,7 +84,8 @@ public:
     // Constructor and Destructor
     //--------------------------------------------------------------------------
     /// @brief
-    Joint(const std::string& _name = "");
+    Joint(BodyNode* _parent = NULL, BodyNode* _child = NULL,
+          const std::string& _name = "");
 
     /// @brief
     virtual ~Joint();
