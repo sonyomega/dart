@@ -763,7 +763,7 @@ dynamics::UniversalJoint* readUniversalJoint(
 
         // xyz
         Eigen::Vector3d xyz = getValueVector3d(axisElement, "xyz");
-        newUniversalJoint->setAxis(0, xyz);
+        newUniversalJoint->setAxis1(xyz);
 
         // damping
         if (hasElement(axisElement, "damping"))
@@ -807,7 +807,7 @@ dynamics::UniversalJoint* readUniversalJoint(
 
         // xyz
         Eigen::Vector3d xyz = getValueVector3d(axis2Element, "xyz");
-        newUniversalJoint->setAxis(1, xyz);
+        newUniversalJoint->setAxis2(xyz);
 
         // damping
         if (hasElement(axis2Element, "damping"))

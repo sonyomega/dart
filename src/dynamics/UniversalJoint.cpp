@@ -67,19 +67,26 @@ UniversalJoint::~UniversalJoint()
 {
 }
 
-void UniversalJoint::setAxis(int _idx, const Eigen::Vector3d& _axis)
+void UniversalJoint::setAxis1(const Eigen::Vector3d& _axis)
 {
     assert(_axis.norm() == 1);
-    assert(0 <= _idx && _idx <=1);
-
-    mAxis[_idx] = _axis;
+    mAxis[0] = _axis;
 }
 
-const Eigen::Vector3d& UniversalJoint::getAxis(int _idx) const
+void UniversalJoint::setAxis2(const Eigen::Vector3d& _axis)
 {
-    assert(0 <= _idx && _idx <=1);
+    assert(_axis.norm() == 1);
+    mAxis[1] = _axis;
+}
 
-    return mAxis[_idx];
+const Eigen::Vector3d& UniversalJoint::getAxis1() const
+{
+    return mAxis[0];
+}
+
+const Eigen::Vector3d& UniversalJoint::getAxis2() const
+{
+    return mAxis[1];
 }
 
 inline void UniversalJoint::_updateTransformation()
