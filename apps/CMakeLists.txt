@@ -13,7 +13,7 @@ foreach(APPDIR
     #ik
     #hybrid
     #hanging
-    #hardcodedDesign
+    hardcodedDesign
     #closedLoop
     #drawRRT
     testBed
