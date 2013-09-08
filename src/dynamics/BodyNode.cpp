@@ -541,9 +541,6 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
                            const Eigen::Vector3d& _force,
                            bool _isOffsetLocal, bool _isForceLocal)
 {
-    //--------------------------------------------------------------------------
-    // TODO: Need verification
-    //--------------------------------------------------------------------------
     Eigen::Isometry3d T = Eigen::Isometry3d::Identity();
     Eigen::Vector6d F = Eigen::Vector6d::Zero();
 
