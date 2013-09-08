@@ -284,7 +284,6 @@ void Skeleton::initKinematics()
     mRootBodyNode = mBodyNodes[0];
     mToRootBody = math::Inv(mFrame) * mRootBodyNode->getWorldInvTransform();
 
-    // calculate mass
     // init the dependsOnDof stucture for each bodylink
     for(int i = 0; i < getNumBodyNodes(); i++)
     {
