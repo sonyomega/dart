@@ -58,7 +58,7 @@ Joint::Joint(BodyNode* _parent, BodyNode* _child, const std::string& _name)
       mdS(math::Jacobian::Zero(6,0))
 {
     setParentBody(mParentBody);
-    setChildBody(mParentBody);
+    setChildBody(mChildBody);
 }
 
 Joint::~Joint()
