@@ -265,6 +265,13 @@ public:
                                 bool _withExternalForces = false,
                                 bool _withDampingForces = false);
 
+    Eigen::VectorXd computeInverseDynamics(const Eigen::Vector3d& _gravity,
+                                const Eigen::VectorXd* _qdot,
+                                const Eigen::VectorXd* _qdotdot = NULL,
+                                bool _computeJacobians = true,
+                                bool _withExternalForces = false,
+                                bool _withDampingForces = false);
+
     /// @brief Evaluate external forces to generalized torques.
     /// Similarly to the inverse dynamics computation, when _useRecursive is
     /// true, a recursive algorithm is used; else the jacobian is used to do the

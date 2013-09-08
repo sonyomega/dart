@@ -291,6 +291,8 @@ void Skeleton::initKinematics()
         mBodyNodes.at(i)->setDependDofList();
         mBodyNodes.at(i)->init();
     }
+
+    updateForwardKinematics();
 }
 
 void Skeleton::updateForwardKinematics(bool _firstDerivative,
@@ -367,6 +369,48 @@ void Skeleton::computeInverseDynamics(const Eigen::Vector3d& _gravity,
                                      _withExternalForces);
         (*ritrBody)->updateGeneralizedForce(_withDampingForces);
     }
+}
+
+Eigen::VectorXd Skeleton::computeInverseDynamics(
+        const Eigen::Vector3d& _gravity,
+        const Eigen::VectorXd* _qdot,
+        const Eigen::VectorXd* _qdotdot,
+        bool _computeJacobians,
+        bool _withExternalForces,
+        bool _withDampingForces)
+{
+    int n = getDOF();
+
+    if (_qdot == NULL)
+        set_dq(Eigen::VectorXd::Zero(n));
+
+    if (_qdotdot == NULL)
+        set_ddq(Eigen::VectorXd::Zero(n));
+
+    _updateJointKinematics();
+
+    // Forward recursion
+    for (std::vector<dynamics::BodyNode*>::iterator itrBody = mBodyNodes.begin();
+         itrBody != mBodyNodes.end();
+         ++itrBody) {
+        (*itrBody)->updateTransformation();
+        (*itrBody)->updateVelocity(_computeJacobians);
+        (*itrBody)->updateEta();
+        (*itrBody)->updateAcceleration(_computeJacobians);
+    }
+
+    // Backward recursion
+    for (std::vector<dynamics::BodyNode*>::reverse_iterator ritrBody
+         = mBodyNodes.rbegin();
+         ritrBody != mBodyNodes.rend();
+         ++ritrBody)
+    {
+        (*ritrBody)->updateBodyForce(_gravity,
+                                     _withExternalForces);
+        (*ritrBody)->updateGeneralizedForce(_withDampingForces);
+    }
+
+    return get_tau();
 }
 
 void Skeleton::evalExternalForces()
