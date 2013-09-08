@@ -49,7 +49,7 @@ PrismaticJoint::PrismaticJoint(BodyNode* _parent, BodyNode* _child,
                                const Eigen::Vector3d& axis,
                                const std::string& _name)
     : Joint(_parent, _child, _name),
-      mAxis(axis)
+      mAxis(axis.normalized())
 {
     mJointType = PRISMATIC;
 

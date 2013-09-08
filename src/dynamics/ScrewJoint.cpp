@@ -47,7 +47,7 @@ ScrewJoint::ScrewJoint(BodyNode* _parent, BodyNode* _child,
                        double _pitch,
                        const std::string& _name)
     : Joint(_parent, _child, _name),
-      mAxis(axis),
+      mAxis(axis.normalized()),
       mPitch(_pitch)
 {
     mJointType = SCREW;

@@ -59,8 +59,8 @@ UniversalJoint::UniversalJoint(BodyNode* _parent, BodyNode* _child,
 
     mDampingCoefficient.resize(2, 0);
 
-    mAxis[0] = _axis0;
-    mAxis[1] = _axis1;
+    mAxis[0] = _axis0.normalized();
+    mAxis[1] = _axis1.normalized();
 }
 
 UniversalJoint::~UniversalJoint()
