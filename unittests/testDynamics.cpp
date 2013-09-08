@@ -39,6 +39,7 @@
 #include "math/Helpers.h"
 #include "dynamics/BodyNode.h"
 #include "dynamics/Skeleton.h"
+#include "utils/Paths.h"
 #include "utils/SkelParser.h"
 #include "simulation/World.h"
 
@@ -100,49 +101,48 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 //    skelDyn->initDynamics();
 //    return skelDyn; }
 
-///* ********************************************************************************************* */
-//dart::dynamics::Skeleton* prepareSkeletonChain( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
-//	using namespace dart;
-//	using namespace dynamics;
-//	using namespace dynamics;
+/* ********************************************************************************************* */
+dart::dynamics::Skeleton* prepareSkeletonChain( Eigen::VectorXd& _q, Eigen::VectorXd& _qdot) {
+    using namespace dart;
+    using namespace dynamics;
+    using namespace dynamics;
 
-//	// load skeleton
-//	const char* skelfilename = DART_DATA_PATH"skel/chainwhipa.skel";
-//	FileInfoSkel<Skeleton>* skelFile = new FileInfoSkel<Skeleton>;
-//	bool loadModelResult = skelFile->loadFile(skelfilename);
-//	assert(loadModelResult);
+    // load skeleton
+    dart::simulation::World *myWorld = dart::utils::readSkelFile(
+                DART_DATA_PATH"skel/test/chainwhipa.skel");
+    assert(myWorld != NULL);
 
-//	Skeleton *skelDyn = static_cast<Skeleton*>(skelFile->getSkel());
-//	assert(skelDyn != NULL);
+    Skeleton *skelDyn = myWorld->getSkeleton(0);
+    assert(skelDyn != NULL);
 
-//	// generate a random state
-//	_q = VectorXd::Zero(skelDyn->getNumDofs());
-//	_qdot = VectorXd::Zero(skelDyn->getNumDofs());
-//	_q[6] = 1.5707963265;
-//        skelDyn->initDynamics();
-//	return skelDyn;
-//}
+    // generate a random state
+    _q = Eigen::VectorXd::Zero(skelDyn->getDOF());
+    _qdot = Eigen::VectorXd::Zero(skelDyn->getDOF());
+    _q[6] = 1.5707963265;
+        skelDyn->initDynamics();
+    return skelDyn;
+}
 
-///* ********************************************************************************************* */
-//void addExternalForces(dart::dynamics::Skeleton* skelDyn) {
-//    using namespace dart;
-//    using namespace dynamics;
-//    using namespace dynamics;
+/* ********************************************************************************************* */
+void addExternalForces(dart::dynamics::Skeleton* skelDyn) {
+    using namespace dart;
+    using namespace dynamics;
+    using namespace dynamics;
 
-//    ((BodyNode*)skelDyn->getNode(7))->addExtForce(Vector3d(0.1,0.2,0.3), Vector3d(30,40,50), true, false );
-//    ((BodyNode*)skelDyn->getNode(7))->addExtForce(Vector3d(0.5,0.5,0.5), -Vector3d(20,4,5), true, false );
-//    ((BodyNode*)skelDyn->getNode(13))->addExtForce(Vector3d(0,0,0), Vector3d(30,20,10), true, false );
-//    ((BodyNode*)skelDyn->getNode(2))->addExtTorque(Vector3d(30,20,10), false );
-//}
+    skelDyn->getBodyNode(7)->addExtForce(Eigen::Vector3d(0.1,0.2,0.3), Eigen::Vector3d(30,40,50), true, false );
+    skelDyn->getBodyNode(7)->addExtForce(Eigen::Vector3d(0.5,0.5,0.5), -Eigen::Vector3d(20,4,5), true, false );
+    skelDyn->getBodyNode(13)->addExtForce(Eigen::Vector3d(0,0,0), Eigen::Vector3d(30,20,10), true, false );
+    skelDyn->getBodyNode(2)->addExtTorque(Eigen::Vector3d(30,20,10), false );
+}
 
-///* ********************************************************************************************* */
-//void addExternalForcesChain(dart::dynamics::Skeleton* skelDyn) {
-//	using namespace dart;
-//	using namespace dynamics;
-//	using namespace dynamics;
+/* ********************************************************************************************* */
+void addExternalForcesChain(dart::dynamics::Skeleton* skelDyn) {
+    using namespace dart;
+    using namespace dynamics;
+    using namespace dynamics;
 
-//	((BodyNode*)skelDyn->getNode(2))->addExtForce(skelDyn->getNode(2)->getLocalCOM(), Vector3d(0,19.6,0), true, false );
-//}
+    skelDyn->getBodyNode(2)->addExtForce(skelDyn->getBodyNode(2)->getLocalCOM(), Eigen::Vector3d(0,19.6,0), true, false );
+}
 
 ///* ********************************************************************************************* */
 //TEST(DYNAMICS, COMPARE_VELOCITIES) {
@@ -362,36 +362,36 @@ dart::dynamics::Skeleton* prepareSkeleton(const std::string& _fileName,
 //            EXPECT_NEAR(MRec(i,j), MNon(i,j), TOLERANCE_EXACT);
 //}
 
-///* ********************************************************************************************* */
-//TEST(DYNAMICS, COMPARE_JOINT_TOQUE_W_EXTERNAL_FORCES) {
-//	using namespace dart;
-//	using namespace dynamics;
-//    using namespace math;
-//	using namespace dynamics;
+/* ********************************************************************************************* */
+TEST(DYNAMICS, COMPARE_JOINT_TOQUE_W_EXTERNAL_FORCES) {
+    using namespace dart;
+    using namespace dynamics;
+    using namespace math;
+    using namespace dynamics;
 
-//	const double TOLERANCE_EXACT = 1.0e-10;
-//	Vector3d gravity(0.0, -9.8, 0.0);
+    const double TOLERANCE_EXACT = 1.0e-10;
+    Eigen::Vector3d gravity(0.0, -9.8, 0.0);
 
-//	VectorXd q, qdot;
-//	Skeleton* skelDyn = prepareSkeletonChain(q, qdot);
-//	skelDyn->setPose(q, true, true);
+    Eigen::VectorXd q, qdot;
+    Skeleton* skelDyn = prepareSkeletonChain(q, qdot);
+    skelDyn->setPose(q, true, true);
 
-//	addExternalForcesChain(skelDyn);
-//	skelDyn->evalExternalForces(false);
-//	VectorXd Cginvdyn = skelDyn->computeInverseDynamicsLinear(gravity, &qdot, NULL, true, true);
+    addExternalForcesChain(skelDyn);
+    skelDyn->updateExternalForces();
+    Eigen::VectorXd Cginvdyn = skelDyn->computeInverseDynamics(gravity, &qdot, NULL, true, true);
 
-//	for(int i=0; i<skelDyn->getNumDofs(); i++)
-//		EXPECT_NEAR(Cginvdyn(i), 0.0, TOLERANCE_EXACT);
-//}
+    for(int i=0; i<skelDyn->getDOF(); i++)
+        EXPECT_NEAR(Cginvdyn(i), 0.0, TOLERANCE_EXACT);
+}
 
-///* ********************************************************************************************* */
-//// TODO
-//TEST(DYNAMICS, CONVERSION_VELOCITY) {
-//}
+/* ********************************************************************************************* */
+// TODO
+TEST(DYNAMICS, CONVERSION_VELOCITY) {
+}
 
-///* ********************************************************************************************* */
-//TEST(DYNAMICS, CONVERSION_FORCES) {
-//}
+/* ********************************************************************************************* */
+TEST(DYNAMICS, CONVERSION_FORCES) {
+}
 
 /******************************************************************************/
 TEST(DYNAMICS, INERTIA)
