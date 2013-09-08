@@ -537,73 +537,35 @@ Eigen::Matrix6d BodyNode::getGeneralizedInertia() const
     return mI;
 }
 
-//void BodyNode::setExternalForceLocal(const math::dse3& _FextLocal)
-//{
-//    mFext = _FextLocal;
-//}
-//
-//void BodyNode::setExternalForceGlobal(const math::dse3& _FextWorld)
-//{
-//    mFext = _FextWorld;
-//}
-//
-//void BodyNode::setExternalForceLocal(
-//        const Eigen::Vector3d& _posLocal,
-//        const Eigen::Vector3d& _linearForceGlobal)
-//{
-//}
-
 void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
                            const Eigen::Vector3d& _force,
                            bool _isOffsetLocal, bool _isForceLocal)
 {
-    Eigen::Vector3d pos = _offset;
-    Eigen::Vector3d force = _force;
+    //--------------------------------------------------------------------------
+    // TODO: Need verification
+    //--------------------------------------------------------------------------
+    Eigen::Isometry3d T = Eigen::Isometry3d::Identity();
+    Eigen::Vector6d F = Eigen::Vector6d::Zero();
 
-//    if (!_isOffsetLocal)
-//        pos = math::xformHom(getWorldInvTransform(), _offset);
+    if (_isOffsetLocal)
+        T.translate(_offset);
+    else
+        T.translate(math::xformHom(getWorldInvTransform(), _offset));
 
-//    if (!_isForceLocal)
-//        force = mW.rotation().transpose()*_force;
+    if (_isForceLocal)
+        F.tail<3>() = _force;
+    else
+        F.tail<3>() = mW.rotation().transpose() * _force;
 
-//    mContacts.push_back(pair<Vector3d, Vector3d>(pos, force));
+    mFext += math::dAdInvT(T, F);
 }
 
-void BodyNode::addExternalForceLocal(const Eigen::Vector6d& _FextLocal)
+void BodyNode::addExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
 {
-    mFext += _FextLocal;
-}
-
-void BodyNode::addExternalForceGlobal(const Eigen::Vector6d& _FextWorld)
-{
-//    mFext += math::dAdT(mW, _FextWorld);
-}
-
-void BodyNode::addExternalForceLocal(
-        const Eigen::Vector3d& _offset,
-        const Eigen::Vector3d& _linearForce,
-        bool _isOffsetLocal,
-        bool _isLinearForceLocal)
-{
-    Eigen::Vector3d offset = _offset;
-    Eigen::Vector3d linearForce = _linearForce;
-
-//    if (!_isOffsetLocal)
-//        offset = math::xformHom(getWorldInvTransform(), _offset);
-
-//    if (!_isLinearForceLocal)
-//        linearForce = mW.rotation().transpose()*_linearForce;
-
-//    math::dse3 contactForce;
-//    contactForce.head<3>() = offset.cross(linearForce);
-//    contactForce.tail<3>() = linearForce;
-
-//    if (linearForce != Eigen::Vector3d::Zero())
-//    {
-//        int a = 10;
-//    }
-
-//    mFext += contactForce;
+    if (_isLocal)
+        mFext.head<3>() += _torque;
+    else
+        mFext.head<3>() += mW.rotation() * _torque;
 }
 
 const Eigen::Vector6d& BodyNode::getExternalForceLocal() const
@@ -818,17 +780,9 @@ void BodyNode::_updateGeralizedInertia()
     mI.triangularView<Eigen::StrictlyLower>() = mI.transpose();
 }
 
-void BodyNode::addExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
-{
-    dterr << "Not implemented.\n";
-}
-
 void BodyNode::clearExternalForces()
 {
-    mContacts.clear();
     mFext.setZero();
-    //mExtForceBody.setZero();
-    //mExtTorqueBody.setZero();
 }
 
 } // namespace dynamics

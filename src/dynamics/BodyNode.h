@@ -323,16 +323,6 @@ public:
     /// @brief
     bool getColliding() { return mColliding; }
 
-    /// @brief
-    void setExternalForceLocal(const Eigen::Vector6d& _FextLocal);
-
-    /// @brief
-    void setExternalForceGlobal(const Eigen::Vector6d& _FextWorld);
-
-    /// @brief
-    void setExternalForceLocal(const Eigen::Vector3d& _posLocal,
-                               const Eigen::Vector3d& _linearForceGlobal);
-
     /// @brief apply linear Cartesian forces to this node.
     ///
     /// A force is defined by a point of application and a force vector. The
@@ -342,7 +332,8 @@ public:
     /// When conversion is needed, make sure the transformations are avaialble.
     void addExtForce(const Eigen::Vector3d& _offset,
                      const Eigen::Vector3d& _force,
-                     bool _isOffsetLocal = true, bool _isForceLocal = false);
+                     bool _isOffsetLocal = true,
+                     bool _isForceLocal = false);
 
     /// @brief apply Cartesian torque to the node.
     ///
@@ -354,24 +345,6 @@ public:
     ///
     /// Called from @Skeleton::clearExternalForces.
     void clearExternalForces();
-
-    /// @brief
-    void addExternalForceLocal(const Eigen::Vector6d& _FextLocal);
-
-    /// @brief
-    void addExternalForceGlobal(const Eigen::Vector6d& _FextWorld);
-
-    /// @brief apply linear Cartesian forces to this node.
-    ///
-    /// A force is defined by a point of application and a force vector. The
-    /// last two parameters specify frames of the first two parameters.
-    /// Coordinate transformations are applied when needed. The point of
-    /// application and the force in local coordinates are stored in mContacts.
-    /// When conversion is needed, make sure the transformations are avaialble.
-    void addExternalForceLocal(const Eigen::Vector3d& _offset,
-                               const Eigen::Vector3d& _linearForce,
-                               bool _isOffsetLocal = true,
-                               bool _isLinearForceLocal = false);
 
     /// @brief
     const Eigen::Vector6d& getExternalForceLocal() const;
