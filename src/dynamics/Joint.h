@@ -120,6 +120,9 @@ public:
     /// @brief
     const Eigen::Vector6d& getLocalAcceleration() const;
 
+    /// @brief
+    bool isPresent(const GenCoord* _q) const;
+
     //--------------------------------------------------------------------------
     // Structueral Properties
     //--------------------------------------------------------------------------

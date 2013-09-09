@@ -265,6 +265,9 @@ public:
     DEPRECATED GenCoord* getDof(int _idx) const;
     GenCoord* getLocalGenCoord(int _idx) const;
 
+    /// @brief
+    bool isPresent(const GenCoord* _q) const;
+
     /// @brief The number of the dofs by which this node is affected.
     int getNumDependentDofs() const;
 
@@ -525,14 +528,10 @@ protected:
     Skeleton* mSkeleton;
 
     /// @brief
-    // TODO: rename
-    //Joint* mParentJoint;
     Joint* mParentJoint;
 
     /// @brief
-    // TODO: rename
-    //std::vector<Joint*> mChildJoints;
-    std::vector<Joint*> mJointsChild;
+    std::vector<Joint*> mChildJoints;
 
     /// @brief
     BodyNode* mParentBodyNode;

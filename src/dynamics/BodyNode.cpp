@@ -60,7 +60,7 @@ BodyNode::BodyNode(const std::string& _name)
       mColliding(false),
       mSkeleton(NULL),
       mParentJoint(NULL),
-      mJointsChild(std::vector<Joint*>(0)),
+      mChildJoints(std::vector<Joint*>(0)),
       mParentBodyNode(NULL),
       mChildBodyNodes(std::vector<BodyNode*>(0)),
       mGravityMode(true),
@@ -136,24 +136,24 @@ void BodyNode::addChildJoint(Joint* _joint)
 {
     assert(_joint != NULL);
 
-    mJointsChild.push_back(_joint);
+    mChildJoints.push_back(_joint);
 }
 
 Joint*BodyNode::getChildJoint(int _idx) const
 {
-    assert(0 <= _idx && _idx < mJointsChild.size());
+    assert(0 <= _idx && _idx < mChildJoints.size());
 
-    return mJointsChild[_idx];
+    return mChildJoints[_idx];
 }
 
 const std::vector<Joint*>&BodyNode::getChildJoints() const
 {
-    return mJointsChild;
+    return mChildJoints;
 }
 
 int BodyNode::getNumChildJoints() const
 {
-    return mJointsChild.size();
+    return mChildJoints.size();
 }
 
 void BodyNode::setParentBodyNode(BodyNode* _body)
@@ -236,6 +236,11 @@ GenCoord* BodyNode::getDof(int _idx) const
 GenCoord* BodyNode::getLocalGenCoord(int _idx) const
 {
     return mParentJoint->getGenCoord(_idx);
+}
+
+bool BodyNode::isPresent(const GenCoord* _q) const
+{
+    return mParentJoint->isPresent(_q);
 }
 
 int BodyNode::getNumDependentDofs() const
@@ -424,9 +429,9 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
     _ri->popName();
 
     // render the subtree
-    for (unsigned int i = 0; i < mJointsChild.size(); i++)
+    for (unsigned int i = 0; i < mChildJoints.size(); i++)
     {
-        mJointsChild[i]->getChildBodyNode()->draw(_ri, _color, _useDefaultColor);
+        mChildJoints[i]->getChildBodyNode()->draw(_ri, _color, _useDefaultColor);
     }
 
     _ri->popMatrix();
@@ -824,7 +829,7 @@ void BodyNode::updateArticulatedInertia()
     mAI = mI;
 
     std::vector<Joint*>::iterator iJoint;
-    for (iJoint = mJointsChild.begin(); iJoint != mJointsChild.end(); ++iJoint)
+    for (iJoint = mChildJoints.begin(); iJoint != mChildJoints.end(); ++iJoint)
     {
         mAI += math::Transform(
                     math::Inv((*iJoint)->getLocalTransformation()),
@@ -842,7 +847,7 @@ void BodyNode::updateBiasForce(const Eigen::Vector3d& _gravity)
     mB = -math::dad(mV, mI*mV) - mFext - mFgravity;
 
     std::vector<Joint*>::iterator iJoint;
-    for (iJoint = mJointsChild.begin(); iJoint != mJointsChild.end(); ++iJoint)
+    for (iJoint = mChildJoints.begin(); iJoint != mChildJoints.end(); ++iJoint)
         mB += math::dAdInvT((*iJoint)->getLocalTransformation(),
                             (*iJoint)->getChildBodyNode()->mBeta);
 

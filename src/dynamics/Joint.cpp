@@ -105,6 +105,15 @@ const Eigen::Vector6d&Joint::getLocalAcceleration() const
     return mdV;
 }
 
+bool Joint::isPresent(const GenCoord* _q) const
+{
+    for (unsigned int i = 0; i < getDOF(); i++)
+        if (_q == mGenCoords[i])
+            return true;
+
+    return false;
+}
+
 void Joint::setSkelIndex(int _idx)
 {
     mSkelIndex= _idx;
