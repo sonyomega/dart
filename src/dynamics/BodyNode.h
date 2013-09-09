@@ -265,7 +265,7 @@ public:
     DEPRECATED GenCoord* getDof(int _idx) const;
     GenCoord* getLocalGenCoord(int _idx) const;
 
-    /// @brief
+    /// @brief true if d is present in the dof list for the joint.
     bool isPresent(const GenCoord* _q) const;
 
     /// @brief The number of the dofs by which this node is affected.
