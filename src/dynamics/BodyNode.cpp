@@ -100,6 +100,26 @@ const std::string& BodyNode::getName() const
     return mName;
 }
 
+void BodyNode::setGravityMode(bool _onoff)
+{
+    mGravityMode = _onoff;
+}
+
+bool BodyNode::getGravityMode() const
+{
+    return mGravityMode;
+}
+
+bool BodyNode::isCollidable() const
+{
+    return mCollidable;
+}
+
+void BodyNode::setCollidability(bool _c)
+{
+    mCollidable = _c;
+}
+
 void BodyNode::setMass(double _mass)
 {
     assert(_mass >= 0.0 && "Negative mass is not allowable.");
@@ -126,6 +146,26 @@ Joint*BodyNode::getChildJoint(int _idx) const
     return mJointsChild[_idx];
 }
 
+const std::vector<Joint*>&BodyNode::getChildJoints() const
+{
+    return mJointsChild;
+}
+
+int BodyNode::getNumChildJoints() const
+{
+    return mJointsChild.size();
+}
+
+void BodyNode::setParentBody(BodyNode* _body)
+{
+    mParentBodyNode = _body;
+}
+
+BodyNode*BodyNode::getParentBody() const
+{
+    return mParentBodyNode;
+}
+
 void BodyNode::addChildBody(BodyNode* _body)
 {
     assert(_body != NULL);
@@ -138,6 +178,11 @@ BodyNode* BodyNode::getChildBodyNode(int _idx) const
     assert(0 <= _idx && _idx < mChildBodyNodes.size());
 
     return mChildBodyNodes[_idx];
+}
+
+const std::vector<BodyNode*>&BodyNode::getChildBodies() const
+{
+    return mChildBodyNodes;
 }
 
 void BodyNode::setDependDofList()
@@ -186,6 +231,21 @@ int BodyNode::getNumLocalDofs() const
 GenCoord* BodyNode::getLocalDof(int _idx) const
 {
     return mParentJoint->getDof(_idx);
+}
+
+int BodyNode::getNumDependentDofs() const
+{
+    return mDependentDofIndexes.size();
+}
+
+const std::vector<int>&BodyNode::getDependentDofIndexes() const
+{
+    return mDependentDofIndexes;
+}
+
+int BodyNode::getDependentDof(int _arrayIndex) const
+{
+    return mDependentDofIndexes[_arrayIndex];
 }
 
 void BodyNode::setWorldTransform(const Eigen::Isometry3d &_W)
@@ -303,6 +363,16 @@ Eigen::MatrixXd BodyNode::getJacobianWorldAtPoint_LinearPartOnly(
     JcLinear = getJacobianWorldAtPoint(r_world).bottomLeftCorner(3,getNumDependentDofs());
 
     return JcLinear;
+}
+
+void BodyNode::setColliding(bool _colliding)
+{
+    mColliding = _colliding;
+}
+
+bool BodyNode::getColliding()
+{
+    return mColliding;
 }
 
 void BodyNode::init()
@@ -545,6 +615,76 @@ Eigen::Matrix6d BodyNode::getGeneralizedInertia() const
     return mI;
 }
 
+void BodyNode::setSkelIndex(int _idx)
+{
+    mSkelIndex = _idx;
+}
+
+int BodyNode::getSkelIndex() const
+{
+    return mSkelIndex;
+}
+
+void BodyNode::addVisualizationShape(Shape* _p)
+{
+    mVizShapes.push_back(_p);
+}
+
+int BodyNode::getNumVisualizationShapes() const
+{
+    return mVizShapes.size();
+}
+
+Shape*BodyNode::getVisualizationShape(int _idx) const
+{
+    return mVizShapes[_idx];
+}
+
+void BodyNode::addCollisionShape(Shape* _p)
+{
+    mColShapes.push_back(_p);
+}
+
+int BodyNode::getNumCollisionShapes() const
+{
+    return mColShapes.size();
+}
+
+Shape*BodyNode::getCollisionShape(int _idx) const
+{
+    return mColShapes[_idx];
+}
+
+void BodyNode::setSkel(Skeleton* _skel)
+{
+    setSkeleton(_skel);
+}
+
+void BodyNode::setSkeleton(Skeleton* _skel)
+{
+    mSkeleton = _skel;
+}
+
+Skeleton*BodyNode::getSkel() const
+{
+    return getSkeleton();
+}
+
+Skeleton*BodyNode::getSkeleton() const
+{
+    return mSkeleton;
+}
+
+void BodyNode::setParentJoint(Joint* _joint)
+{
+    mParentJoint = _joint;
+}
+
+Joint*BodyNode::getParentJoint() const
+{
+    return mParentJoint;
+}
+
 void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
                            const Eigen::Vector3d& _force,
                            bool _isOffsetLocal, bool _isForceLocal)
@@ -582,6 +722,16 @@ Eigen::Vector6d BodyNode::getExternalForceGlobal() const
 {
     //return math::dAdInvT(mW, mFext);
     return Eigen::Vector6d();
+}
+
+const Eigen::Vector6d&BodyNode::getBodyForce() const
+{
+    return mF;
+}
+
+double BodyNode::getKineticEnergy() const
+{
+    return 0.5 * mV.dot(mI * mV);
 }
 
 void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,

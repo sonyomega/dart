@@ -131,16 +131,16 @@ public:
     const std::string& getName() const;
 
     /// @brief
-    void setGravityMode(bool _onoff) { mGravityMode = _onoff; }
+    void setGravityMode(bool _onoff);
 
     /// @brief
-    bool getGravityMode() const { return mGravityMode; }
+    bool getGravityMode() const;
 
     /// @brief
-    bool isCollidable() const { return mCollidable; }
+    bool isCollidable() const;
 
     /// @brief
-    void setCollidability(bool _c) { mCollidable = _c; }
+    void setCollidability(bool _c);
 
     /// @brief
     void setMass(double _mass);
@@ -168,42 +168,42 @@ public:
     // Structueral Properties
     //--------------------------------------------------------------------------
     /// @brief
-    void setSkelIndex(int _idx) { mSkelIndex = _idx; }
+    void setSkelIndex(int _idx);
 
     /// @brief
-    int getSkelIndex() const { return mSkelIndex; }
+    int getSkelIndex() const;
 
     /// @brief
-    void addVisualizationShape(Shape *_p) { mVizShapes.push_back(_p); }
+    void addVisualizationShape(Shape *_p);
 
     /// @brief
-    int getNumVisualizationShapes() const { return mVizShapes.size(); }
+    int getNumVisualizationShapes() const;
 
     /// @brief
-    Shape* getVisualizationShape(int _idx) const { return mVizShapes[_idx]; }
+    Shape* getVisualizationShape(int _idx) const;
 
     /// @brief
-    void addCollisionShape(Shape *_p) { mColShapes.push_back(_p); }
+    void addCollisionShape(Shape *_p);
 
     /// @brief
-    int getNumCollisionShapes() const { return mColShapes.size(); }
+    int getNumCollisionShapes() const;
 
     /// @brief
-    Shape* getCollisionShape(int _idx) const { return mColShapes[_idx]; }
+    Shape* getCollisionShape(int _idx) const;
 
     /// @brief
-    DEPRECATED void setSkel(Skeleton* _skel) { mSkeleton = _skel; }
-    void setSkeleton(Skeleton* _skel) { mSkeleton = _skel; }
+    DEPRECATED void setSkel(Skeleton* _skel);
+    void setSkeleton(Skeleton* _skel);
 
     /// @brief
-    DEPRECATED Skeleton* getSkel() const { return mSkeleton; }
-    Skeleton* getSkeleton() const { return mSkeleton; }
+    DEPRECATED Skeleton* getSkel() const;
+    Skeleton* getSkeleton() const;
 
     /// @brief
-    void setParentJoint(Joint* _joint) { mParentJoint = _joint; }
+    void setParentJoint(Joint* _joint);
 
     /// @brief
-    Joint* getParentJoint() const { return mParentJoint; }
+    Joint* getParentJoint() const;
 
     /// @brief
     void addChildJoint(Joint* _joint);
@@ -212,16 +212,16 @@ public:
     Joint* getChildJoint(int _idx) const;
 
     /// @brief
-    const std::vector<Joint*>& getChildJoints() const { return mJointsChild; }
+    const std::vector<Joint*>& getChildJoints() const;
 
     /// @brief
-    int getNumChildJoints() const { return mJointsChild.size(); }
+    int getNumChildJoints() const;
 
     /// @brief
-    void setParentBody(BodyNode* _body) { mParentBodyNode = _body; }
+    void setParentBody(BodyNode* _body);
 
     /// @brief
-    BodyNode* getParentBody() const { return mParentBodyNode; }
+    BodyNode* getParentBody() const;
 
     /// @brief
     void addChildBody(BodyNode* _body);
@@ -230,7 +230,7 @@ public:
     BodyNode* getChildBodyNode(int _idx) const;
 
     /// @brief
-    const std::vector<BodyNode*>& getChildBodies() const { return mChildBodyNodes; }
+    const std::vector<BodyNode*>& getChildBodies() const;
 
     /// @brief Set up the list of dependent dofs.
     void setDependDofList();
@@ -247,13 +247,13 @@ public:
     GenCoord* getLocalDof(int _idx) const;
 
     /// @brief The number of the dofs by which this node is affected.
-    int getNumDependentDofs() const { return mDependentDofIndexes.size(); }
+    int getNumDependentDofs() const;
 
     /// @brief
-    const std::vector<int>& getDependentDofIndexes() const { return mDependentDofIndexes; }
+    const std::vector<int>& getDependentDofIndexes() const;
 
     /// @brief Return an dof index from the array index (< getNumDependentDofs).
-    int getDependentDof(int _arrayIndex) const { return mDependentDofIndexes[_arrayIndex]; }
+    int getDependentDof(int _arrayIndex) const;
 
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)
@@ -323,10 +323,10 @@ public:
             const Eigen::Vector3d& r_world) const;
 
     /// @brief
-    void setColliding(bool _colliding) { mColliding = _colliding; }
+    void setColliding(bool _colliding);
 
     /// @brief
-    bool getColliding() { return mColliding; }
+    bool getColliding();
 
     /// @brief apply linear Cartesian forces to this node.
     ///
@@ -358,10 +358,10 @@ public:
     Eigen::Vector6d getExternalForceGlobal() const;
 
     /// @brief
-    const Eigen::Vector6d& getBodyForce() const { return mF; }
+    const Eigen::Vector6d& getBodyForce() const;
 
     /// @brief
-    double getKineticEnergy() const { return 0.5 * mV.dot(mI * mV); }
+    double getKineticEnergy() const;
 
     //// TODO: Not implemented.
     ///// @brief
