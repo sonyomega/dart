@@ -39,6 +39,7 @@
 #include "dynamics/BodyNode.h"
 
 #include <iostream>
+#include <algorithm>
 
 #include "common/Console.h"
 #include "math/Helpers.h"
@@ -168,6 +169,13 @@ void BodyNode::setDependDofList()
         }
     }
 #endif
+}
+
+bool BodyNode::dependsOn(int _dofIndex) const
+{
+    return binary_search(mDependentDofIndexes.begin(),
+                         mDependentDofIndexes.end(),
+                         _dofIndex);
 }
 
 int BodyNode::getNumLocalDofs() const

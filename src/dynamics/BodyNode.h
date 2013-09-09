@@ -232,8 +232,13 @@ public:
     /// @brief
     const std::vector<BodyNode*>& getChildBodies() const { return mChildBodyNodes; }
 
-    /// @brief
+    /// @brief Set up the list of dependent dofs.
     void setDependDofList();
+
+    /// @brief Test whether this dof is dependent or not.
+    /// @warning You may want to use getNumDependentDofs / getDependentDof for
+    /// efficiency.
+    bool dependsOn(int _dofIndex) const;
 
     /// @brief
     int getNumLocalDofs() const;
