@@ -40,7 +40,7 @@
 #define DART_DYNAMICS_JOINT_H
 
 #include "math/Geometry.h"
-#include "dynamics/System.h"
+#include "dynamics/GenCoordSystem.h"
 
 namespace dart {
 namespace renderer { class RenderInterface; }

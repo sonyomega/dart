@@ -35,8 +35,8 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_DYNAMICS_SYSTEM_H
-#define DART_DYNAMICS_SYSTEM_H
+#ifndef DART_DYNAMICS_GENCOORDSYSTEM_H
+#define DART_DYNAMICS_GENCOORDSYSTEM_H
 
 #include <vector>
 #include <Eigen/Dense>
@@ -121,4 +121,4 @@ private:
 } // namespace dynamics
 } // namespace dart
 
-#endif // DART_DYNAMICS_SYSTEM_H
+#endif // DART_DYNAMICS_GENCOORDSYSTEM_H

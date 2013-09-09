@@ -45,7 +45,7 @@
 
 #include "math/Geometry.h"
 #include "common/Deprecated.h"
-#include "dynamics/System.h"
+#include "dynamics/GenCoordSystem.h"
 
 namespace dart {
 

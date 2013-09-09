@@ -35,7 +35,7 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dynamics/System.h"
+#include "dynamics/GenCoordSystem.h"
 #include "integration/EulerIntegrator.h"
 
 namespace dart {
