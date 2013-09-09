@@ -235,7 +235,7 @@ GenCoord* BodyNode::getDof(int _idx) const
 
 GenCoord* BodyNode::getLocalGenCoord(int _idx) const
 {
-    return mParentJoint->getDof(_idx);
+    return mParentJoint->getGenCoord(_idx);
 }
 
 int BodyNode::getNumDependentDofs() const

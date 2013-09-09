@@ -215,7 +215,7 @@ Eigen::VectorXd Joint::getDampingForces() const
     Eigen::VectorXd dampingForce(numDofs);
 
     for (int i = 0; i < numDofs; ++i)
-        dampingForce(i) = -mDampingCoefficient[i] * getDof(i)->get_dq();
+        dampingForce(i) = -mDampingCoefficient[i] * getGenCoord(i)->get_dq();
 
     return dampingForce;
 }

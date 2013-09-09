@@ -63,10 +63,10 @@ public:
     const std::vector<GenCoord*>& getGenCoords() const { return mGenCoords; }
 
     /// @brief
-    GenCoord* getDof(int _idx) const;
+    GenCoord* getGenCoord(int _idx) const;
 
     /// @brief
-    GenCoord* getDof(const std::string& _name) const;
+    GenCoord* getGenCoord(const std::string& _name) const;
 
     /// @brief Backup current state as initial state.
     void backupInitState();

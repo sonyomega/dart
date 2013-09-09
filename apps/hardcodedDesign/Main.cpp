@@ -42,9 +42,9 @@ Joint* create1DOFJoint(BodyNode* parent, BodyNode* child, double val, double min
     else if(type == DOF_ROLL)
         newJoint = new RevoluteJoint(parent, child, Eigen::Vector3d(1.0, 0.0, 0.0));
     // Add the transformation to the joint, set the min/max values and set it to the skeleton
-    newJoint->getDof(0)->set_q(val);
-    newJoint->getDof(0)->set_qMin(min);
-    newJoint->getDof(0)->set_qMax(max);
+    newJoint->getGenCoord(0)->set_q(val);
+    newJoint->getGenCoord(0)->set_qMin(min);
+    newJoint->getGenCoord(0)->set_qMax(max);
 
     return newJoint;
 }

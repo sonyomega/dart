@@ -48,14 +48,14 @@ GenCoordSystem::~GenCoordSystem()
 {
 }
 
-GenCoord* GenCoordSystem::getDof(int _idx) const
+GenCoord* GenCoordSystem::getGenCoord(int _idx) const
 {
     assert(0 <= _idx && _idx < getDOF());
 
     return mGenCoords[_idx];
 }
 
-GenCoord* GenCoordSystem::getDof(const std::string& _name) const
+GenCoord* GenCoordSystem::getGenCoord(const std::string& _name) const
 {
     int size = getDOF();
 

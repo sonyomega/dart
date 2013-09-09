@@ -540,7 +540,7 @@ void Skeleton::updateDampingForces()
         Eigen::VectorXd jointDampingForce = (*itr)->getDampingForces();
         for (int i = 0; i < jointDampingForce.size(); i++)
         {
-            mDampingForce((*itr)->getDof(i)->getSkelIndex()) =
+            mDampingForce((*itr)->getGenCoord(i)->getSkelIndex()) =
                     jointDampingForce(i);
         }
     }
