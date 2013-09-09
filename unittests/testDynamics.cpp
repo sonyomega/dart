@@ -378,7 +378,7 @@ TEST(DYNAMICS, COMPARE_JOINT_TOQUE_W_EXTERNAL_FORCES) {
 
     addExternalForcesChain(skelDyn);
     skelDyn->updateExternalForces();
-    Eigen::VectorXd Cginvdyn = skelDyn->computeInverseDynamics(gravity, &qdot, NULL, true, true);
+    Eigen::VectorXd Cginvdyn = skelDyn->computeInverseDynamicsLinear(gravity, &qdot, NULL, true, true);
 
     for(int i=0; i<skelDyn->getDOF(); i++)
         EXPECT_NEAR(Cginvdyn(i), 0.0, TOLERANCE_EXACT);

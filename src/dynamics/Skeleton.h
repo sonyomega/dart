@@ -101,7 +101,7 @@ public:
     void setJointLimitState(bool _s);
 
     /// @brief
-    double getTotalMass() const;
+    double getMass() const;
 
     //--------------------------------------------------------------------------
     // Structueral Properties
@@ -114,6 +114,7 @@ public:
     const Eigen::Isometry3d& getWorldTransformation() const;
 
     /// @brief
+    DEPRECATED void addNode(BodyNode* _body, bool _addParentJoint = true);
     void addBodyNode(BodyNode* _body, bool _addParentJoint = true);
 
     /// @brief
@@ -123,6 +124,7 @@ public:
     void setRootBodyNode(BodyNode* _body);
 
     /// @brief
+    DEPRECATED int getNumNodes() const;
     int getNumBodyNodes() const;
 
     /// @brief
@@ -132,10 +134,25 @@ public:
     BodyNode* getRoot();
 
     /// @brief
+    DEPRECATED BodyNode* getNode(int _idx) const;
     BodyNode* getBodyNode(int _idx) const;
 
     /// @brief
+    DEPRECATED BodyNode* getNode(const char* const _name) const;
     BodyNode* findBodyNode(const std::string& _name) const;
+
+    /// @brief
+    int getBodyNodeIndex(const std::string& _name) const;
+
+    /// @brief
+    Joint* getJoint(int _idx) const;
+
+    /// @brief
+    DEPRECATED Joint* getJoint(const char* const _name) const;
+    Joint* findJoint(const std::string& _name) const;
+
+    /// @brief
+    int getJointIndex(const std::string& _name) const;
 
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)
@@ -149,23 +166,14 @@ public:
 
     /// @brief
     void setPose(const Eigen::VectorXd& _pose,
-                            bool bCalcTrans = true,
-                            bool bCalcDeriv = true);
+                 bool bCalcTrans = true, bool bCalcDeriv = true);
 
     /// @brief
-    /// @todo Use get_q() instead.
     Eigen::VectorXd getPose() const;
 
     /// @brief
-    /// @todo Use get_dq() instead.
     Eigen::VectorXd getPoseVelocity() const;
 
-    /// @brief
-    /// @todo Not implemented.
-    math::Jacobian getJacobian(BodyNode* _beginBody,
-                               BodyNode* _endBody) const;
-
-    // Dynamics equation
     /// @brief
     Eigen::MatrixXd getMassMatrix() const;
 
@@ -200,6 +208,18 @@ public:
     void setInternalForces(const Eigen::VectorXd& _forces);
 
     /// @brief
+    void setMinInternalForces(Eigen::VectorXd _minForces);
+
+    /// @brief
+    Eigen::VectorXd getMinInternalForces() const;
+
+    /// @brief
+    void setMaxInternalForces(Eigen::VectorXd _maxForces);
+
+    /// @brief
+    Eigen::VectorXd getMaxInternalForces() const;
+
+    /// @brief
     void clearInternalForces();
 
     /// @brief
@@ -212,7 +232,6 @@ public:
     /// @brief
     double getPotentialEnergy() const;
 
-    // TODO: Not implemented.
     /// @brief
     Eigen::Vector3d getWorldCOM();
 
@@ -259,18 +278,27 @@ public:
     void initDynamics();
 
     /// @brief (q, dq, ddq) --> (tau)
-    void computeInverseDynamics(const Eigen::Vector3d& _gravity,
+    void computeInverseDynamicsLinear(const Eigen::Vector3d& _gravity,
                                 bool _computeJacobian = true,
                                 bool _computeJacobianDeriv = true,
                                 bool _withExternalForces = false,
                                 bool _withDampingForces = false);
 
-    Eigen::VectorXd computeInverseDynamics(const Eigen::Vector3d& _gravity,
-                                const Eigen::VectorXd* _qdot,
-                                const Eigen::VectorXd* _qdotdot = NULL,
-                                bool _computeJacobians = true,
-                                bool _withExternalForces = false,
-                                bool _withDampingForces = false);
+    /// @brief Inverse dynamics computation.
+    /// Runs recursive inverse dynamics algorithm and returns the generalized
+    /// forces; if qdd is NULL, it is treated as zero; also computes Jacobian Jv
+    /// and Jw in iterative manner if the flag is true i.e. replaces
+    /// updateFirstDerivatives of non-recursive dynamics; when
+    ///_withExternalForces is true, external forces will be accounted for in the
+    /// returned generalized forces; when _withExternalForces is false, only the
+    /// sum of Corolis force and gravity is returned.
+    Eigen::VectorXd computeInverseDynamicsLinear(
+            const Eigen::Vector3d& _gravity,
+            const Eigen::VectorXd* _qdot,
+            const Eigen::VectorXd* _qdotdot = NULL,
+            bool _computeJacobians = true,
+            bool _withExternalForces = false,
+            bool _withDampingForces = false);
 
     /// @brief Evaluate external forces to generalized torques.
     /// Similarly to the inverse dynamics computation, when _useRecursive is
