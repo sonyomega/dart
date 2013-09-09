@@ -177,6 +177,8 @@ protected:
     //double init_ddq;
 };
 
+DEPRECATED typedef GenCoord Dof;
+
 } // namespace dynamics
 } // namespace dart
 
