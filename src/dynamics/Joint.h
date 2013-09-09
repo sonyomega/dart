@@ -120,8 +120,12 @@ public:
     /// @brief
     const Eigen::Vector6d& getLocalAcceleration() const;
 
-    /// @brief
+    /// @brief true if d is present in the dof list for the joint.
     bool isPresent(const GenCoord* _q) const;
+
+    /// @brief Get local index of the dof at this joint; if the dof is not
+    /// presented at this joint, return -1.
+    int getGenCoordLocalIndex(int _dofSkelIndex) const;
 
     //--------------------------------------------------------------------------
     // Structueral Properties
