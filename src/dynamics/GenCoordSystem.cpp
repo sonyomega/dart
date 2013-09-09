@@ -387,5 +387,15 @@ Eigen::VectorXd GenCoordSystem::get_tauMin() const
     return tau;
 }
 
+int dart::dynamics::GenCoordSystem::getDOF() const
+{
+    return mGenCoords.size();
+}
+
+const std::vector<GenCoord*>&GenCoordSystem::getGenCoords() const
+{
+    return mGenCoords;
+}
+
 } // namespace dynamics
 } // namespace dart

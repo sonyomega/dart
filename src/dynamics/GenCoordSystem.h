@@ -57,10 +57,11 @@ public:
     virtual ~GenCoordSystem();
 
     /// @brief
-    int getDOF() const { return mGenCoords.size(); }
+    DEPRECATED int getNumDofs() const { return getDOF(); }
+    int getDOF() const;
 
     /// @brief
-    const std::vector<GenCoord*>& getGenCoords() const { return mGenCoords; }
+    const std::vector<GenCoord*>& getGenCoords() const;
 
     /// @brief
     GenCoord* getGenCoord(int _idx) const;
