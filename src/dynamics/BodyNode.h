@@ -340,7 +340,7 @@ public:
             const Eigen::Vector3d& r_world) const;
 
     /// @brief
-    const math::Jacobian* getJacobianDeriv() const;
+    const math::Jacobian& getJacobianDeriv() const;
 
     /// @brief
     void setColliding(bool _colliding);

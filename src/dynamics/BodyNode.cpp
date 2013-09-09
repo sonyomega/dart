@@ -375,7 +375,7 @@ Eigen::MatrixXd BodyNode::getJacobianWorldAtPoint_LinearPartOnly(
     return JcLinear;
 }
 
-const math::Jacobian*BodyNode::getJacobianDeriv() const
+const math::Jacobian& BodyNode::getJacobianDeriv() const
 {
     return mBodyJacobianDeriv;
 }
