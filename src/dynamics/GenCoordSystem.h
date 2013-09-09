@@ -118,6 +118,8 @@ private:
 
 };
 
+DEPRECATED typedef GenCoordSystem System;
+
 } // namespace dynamics
 } // namespace dart
 
