@@ -47,6 +47,7 @@
 #include "dynamics/Joint.h"
 #include "dynamics/Shape.h"
 #include "dynamics/Skeleton.h"
+#include "dynamics/Marker.h"
 
 namespace dart {
 namespace dynamics {
@@ -183,6 +184,21 @@ BodyNode* BodyNode::getChildBodyNode(int _idx) const
 const std::vector<BodyNode*>&BodyNode::getChildBodies() const
 {
     return mChildBodyNodes;
+}
+
+void BodyNode::addMarker(Marker* _h)
+{
+    mMarkers.push_back(_h);
+}
+
+int BodyNode::getNumMarkers() const
+{
+    return mMarkers.size();
+}
+
+Marker* BodyNode::getMarker(int _idx) const
+{
+    return mMarkers[_idx];
 }
 
 void BodyNode::setDependDofList()
@@ -433,6 +449,28 @@ void BodyNode::draw(renderer::RenderInterface* _ri,
     {
         mChildJoints[i]->getChildBodyNode()->draw(_ri, _color, _useDefaultColor);
     }
+
+    _ri->popMatrix();
+}
+
+void BodyNode::drawMarkers(renderer::RenderInterface* _ri,
+                           const Eigen::Vector4d& _color,
+                           bool _useDefaultColor) const
+{
+    if (!_ri)
+        return;
+
+    _ri->pushMatrix();
+
+    mParentJoint->applyGLTransform(_ri);
+
+    // render the corresponding mMarkerss
+    for (unsigned int i = 0; i < mMarkers.size(); i++)
+        mMarkers[i]->draw(_ri, true, _color, _useDefaultColor);
+
+    for (unsigned int i = 0; i < mChildJoints.size(); i++)
+        mChildJoints[i]->getChildBodyNode()->drawMarkers(_ri,_color,
+                                                         _useDefaultColor);
 
     _ri->popMatrix();
 }

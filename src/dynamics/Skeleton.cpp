@@ -41,7 +41,7 @@
 #include "dynamics/BodyNode.h"
 #include "dynamics/GenCoord.h"
 #include "dynamics/Joint.h"
-#include "dynamics/Skeleton.h"
+#include "dynamics/Marker.h"
 #include "dynamics/Skeleton.h"
 
 namespace dart {
@@ -288,6 +288,24 @@ int Skeleton::getJointIndex(const std::string& _name) const
     return -1;
 }
 
+void Skeleton::addMarker(Marker* _h)
+{
+    mMarkers.push_back(_h);
+    _h->setSkelIndex(mMarkers.size()-1);
+    BodyNode *body = _h->getNode();
+    body->addMarker(_h);
+}
+
+int Skeleton::getNumMarkers() const
+{
+    return mMarkers.size();
+}
+
+Marker* Skeleton::getMarker(int _i)
+{
+    return mMarkers[_i];
+}
+
 Eigen::VectorXd Skeleton::getConfig(std::vector<int> _id)
 {
     Eigen::VectorXd dofs(_id.size());
@@ -407,6 +425,13 @@ void Skeleton::draw(renderer::RenderInterface* _ri,
                     bool _useDefaultColor) const
 {
     mRootBodyNode->draw(_ri, _color, _useDefaultColor);
+}
+
+void Skeleton::drawMarkers(renderer::RenderInterface* _ri,
+                           const Eigen::Vector4d& _color,
+                           bool _useDefaultColor) const
+{
+    mRootBodyNode->drawMarkers(_ri, _color, _useDefaultColor);
 }
 
 void Skeleton::_updateJointKinematics(bool _firstDerivative,

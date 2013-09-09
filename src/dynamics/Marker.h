@@ -78,32 +78,32 @@ public:
     Eigen::Vector3d getWorldCoords(); ///< get the world coordinates of mOffset
 
     /// @brief
-    inline Eigen::Vector3d getLocalCoords() const;
+    Eigen::Vector3d getLocalCoords() const;
 
     /// @brief
-    inline void setLocalCoords(Eigen::Vector3d& _offset);
+    void setLocalCoords(Eigen::Vector3d& _offset);
 
     /// @brief
-    inline int getSkelIndex() const;
+    int getSkelIndex() const;
 
     /// @brief
-    inline void setSkelIndex(int _idx);
+    void setSkelIndex(int _idx);
 
     /// @brief
-    inline int getID() const;
+    int getID() const;
 
     /// @brief
-    inline BodyNode* getNode() const;
+    BodyNode* getNode() const;
 
     /// @brief
-    inline const char* getName() const;
+    const char* getName() const;
 
     // useful for IK
     /// @brief
-    inline ConstraintType getConstraintType() const;
+    ConstraintType getConstraintType() const;
 
     /// @brief
-    inline void setConstraintType(ConstraintType _type);
+    void setConstraintType(ConstraintType _type);
     
     
 protected:

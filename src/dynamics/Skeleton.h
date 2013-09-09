@@ -57,6 +57,7 @@ namespace dynamics {
 
 class BodyNode;
 class Joint;
+class Marker;
 
 /// @brief
 class Skeleton : public GenCoordSystem
@@ -153,6 +154,15 @@ public:
 
     /// @brief
     int getJointIndex(const std::string& _name) const;
+
+    /// @brief
+    void addMarker(Marker *_h);
+
+    /// @brief
+    int getNumMarkers() const;
+
+    /// @brief
+    Marker* getMarker(int _i);
 
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)
@@ -346,6 +356,11 @@ public:
               const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
               bool _useDefaultColor = true) const;
 
+    /// @brief
+    void drawMarkers(renderer::RenderInterface* _ri = NULL,
+                     const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
+                     bool _useDefaultColor = true ) const;
+
 protected:
     //--------------------------------------------------------------------------
     // Sub-functions for Recursive Algorithms
@@ -376,6 +391,8 @@ protected:
     /// @brief
     std::vector<Joint*> mJoints;
 
+    /// @brief List of markers associated
+    std::vector<Marker*> mMarkers;
 
     //--------------------------------------------------------------------------
     //

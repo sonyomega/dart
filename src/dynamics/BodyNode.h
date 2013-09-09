@@ -93,6 +93,7 @@ class GenCoord;
 class Skeleton;
 class Joint;
 class Shape;
+class Marker;
 
 /// @brief BodyNode class represents a single node of the skeleton.
 ///
@@ -250,6 +251,15 @@ public:
     /// @brief
     const std::vector<BodyNode*>& getChildBodies() const;
 
+    /// @brief
+    void addMarker(Marker* _h);
+
+    /// @brief
+    int getNumMarkers() const;
+
+    /// @brief
+    Marker* getMarker(int _idx) const;
+
     /// @brief Set up the list of dependent dofs.
     void setDependDofList();
 
@@ -400,6 +410,11 @@ public:
               const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
               bool _useDefaultColor = true, int _depth = 0) const;
 
+    /// @brief Render the markers
+    void drawMarkers(renderer::RenderInterface* _ri = NULL,
+                     const Eigen::Vector4d& _color = Eigen::Vector4d::Ones(),
+                     bool _useDefaultColor = true) const;
+
     //--------------------------------------------------------------------------
     // Sub-functions for Recursive Kinematics Algorithms
     //--------------------------------------------------------------------------
@@ -485,7 +500,6 @@ protected:
 
     /// @brief If the gravity mode is false, this body node does not
     /// being affected by gravity.
-    /// TODO: Not implemented yet!
     bool mGravityMode;
 
     /// @brief Generalized inertia.
@@ -538,6 +552,9 @@ protected:
 
     /// @brief
     std::vector<BodyNode*> mChildBodyNodes;
+
+    /// @brief List of markers associated
+    std::vector<Marker*> mMarkers;
 
     /// @brief A list of dependent dof indices
     std::vector<int> mDependentDofIndexes;
