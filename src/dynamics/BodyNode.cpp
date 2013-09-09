@@ -156,12 +156,12 @@ int BodyNode::getNumChildJoints() const
     return mJointsChild.size();
 }
 
-void BodyNode::setParentBody(BodyNode* _body)
+void BodyNode::setParentBodyNode(BodyNode* _body)
 {
     mParentBodyNode = _body;
 }
 
-BodyNode*BodyNode::getParentBody() const
+BodyNode*BodyNode::getParentBodyNode() const
 {
     return mParentBodyNode;
 }
@@ -198,7 +198,7 @@ void BodyNode::setDependDofList()
 
     for (int i = 0; i < getNumLocalDofs(); i++)
     {
-        int dofID = getLocalDof(i)->getSkelIndex();
+        int dofID = getLocalGenCoord(i)->getSkelIndex();
         mDependentDofIndexes.push_back(dofID);
     }
 
@@ -228,7 +228,12 @@ int BodyNode::getNumLocalDofs() const
     return mParentJoint->getDOF();
 }
 
-GenCoord* BodyNode::getLocalDof(int _idx) const
+GenCoord* BodyNode::getDof(int _idx) const
+{
+    return getLocalGenCoord(_idx);
+}
+
+GenCoord* BodyNode::getLocalGenCoord(int _idx) const
 {
     return mParentJoint->getDof(_idx);
 }
@@ -314,6 +319,11 @@ Eigen::Vector6d BodyNode::getAccelerationWorldAtFrame(const Eigen::Isometry3d& _
     return math::AdT(math::Inv(_T) * mW, mdV);
 }
 
+const math::Jacobian&BodyNode::getJacobianBody() const
+{
+    return mBodyJacobian;
+}
+
 math::Jacobian BodyNode::getJacobianWorld() const
 {
     return math::AdR(mW, mBodyJacobian);
@@ -363,6 +373,11 @@ Eigen::MatrixXd BodyNode::getJacobianWorldAtPoint_LinearPartOnly(
     JcLinear = getJacobianWorldAtPoint(r_world).bottomLeftCorner(3,getNumDependentDofs());
 
     return JcLinear;
+}
+
+const math::Jacobian*BodyNode::getJacobianDeriv() const
+{
+    return mBodyJacobianDeriv;
 }
 
 void BodyNode::setColliding(bool _colliding)
@@ -625,9 +640,25 @@ int BodyNode::getSkelIndex() const
     return mSkelIndex;
 }
 
+void BodyNode::addShape(Shape* _p)
+{
+    addVisualizationShape(_p);
+    addCollisionShape(_p);
+}
+
+Shape*BodyNode::getShape(int _idx) const
+{
+    return mVizShapes[_idx];
+}
+
 void BodyNode::addVisualizationShape(Shape* _p)
 {
     mVizShapes.push_back(_p);
+}
+
+int BodyNode::getNumShapes() const
+{
+    return mVizShapes.size();
 }
 
 int BodyNode::getNumVisualizationShapes() const
@@ -732,6 +763,18 @@ const Eigen::Vector6d&BodyNode::getBodyForce() const
 double BodyNode::getKineticEnergy() const
 {
     return 0.5 * mV.dot(mI * mV);
+}
+
+Eigen::Vector3d BodyNode::evalLinMomentum() const
+{
+    return (mI * mV).tail<3>();
+}
+
+Eigen::Vector3d BodyNode::evalAngMomentum(Eigen::Vector3d _pivot)
+{
+    Eigen::Isometry3d T = Eigen::Isometry3d::Identity();
+    T.translation() = _pivot;
+    return math::dAdT(T, mI * mV).head<3>();
 }
 
 void BodyNode::updateBodyForce(const Eigen::Vector3d& _gravity,
@@ -880,6 +923,11 @@ void BodyNode::update_F_fs()
 void BodyNode::updateDampingForce()
 {
     dterr << "Not implemented.\n";
+}
+
+void BodyNode::evalMassMatrix()
+{
+    updateMassMatrix();
 }
 
 void BodyNode::updateMassMatrix()

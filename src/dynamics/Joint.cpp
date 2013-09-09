@@ -125,7 +125,7 @@ void Joint::setParentBody(BodyNode* _body)
 
         if (mChildBody != NULL)
         {
-            mChildBody->setParentBody(mParentBody);
+            mChildBody->setParentBodyNode(mParentBody);
             mParentBody->addChildBody(mChildBody);
         }
     }
@@ -142,7 +142,7 @@ void Joint::setChildBody(BodyNode* _body)
         if (mParentBody != NULL)
         {
             mParentBody->addChildBody(mChildBody);
-            mChildBody->setParentBody(mParentBody);
+            mChildBody->setParentBodyNode(mParentBody);
         }
     }
 }

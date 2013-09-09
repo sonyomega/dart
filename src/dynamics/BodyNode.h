@@ -130,10 +130,13 @@ public:
     /// @brief
     const std::string& getName() const;
 
-    /// @brief
+    /// @brief Set gravity mode.
+    /// @param[in] _gravityMode
     void setGravityMode(bool _onoff);
 
-    /// @brief
+    /// @brief If the gravity mode is false, this body node does not being
+    /// affected by gravity.
+    /// @return
     bool getGravityMode() const;
 
     /// @brief
@@ -149,6 +152,9 @@ public:
     double getMass() const;
 
     /// @brief
+    DEPRECATED void setLocalInertia(double _Ixx, double _Iyy, double _Izz,
+                                    double _Ixy, double _Ixz, double _Iyz)
+    { setMomentOfInertia(_Ixx, _Iyy, _Izz, _Ixy, _Ixz, _Iyz); }
     void setMomentOfInertia(double _Ixx, double _Iyy, double _Izz,
                             double _Ixy, double _Ixz, double _Iyz);
 
@@ -172,6 +178,15 @@ public:
 
     /// @brief
     int getSkelIndex() const;
+
+    /// @brief Use addVisualizationShape() and addCollisionShape()
+    DEPRECATED void addShape(Shape* _p);
+
+    /// @brief Use getVisualizationShape()
+    DEPRECATED Shape* getShape(int _idx) const;
+
+    /// @brief Use getNumVisualizationShapes()
+    DEPRECATED int getNumShapes() const;
 
     /// @brief
     void addVisualizationShape(Shape *_p);
@@ -218,15 +233,18 @@ public:
     int getNumChildJoints() const;
 
     /// @brief
-    void setParentBody(BodyNode* _body);
+    DEPRECATED void getParentNode(BodyNode* _body) { setParentBodyNode(_body); }
+    void setParentBodyNode(BodyNode* _body);
 
     /// @brief
-    BodyNode* getParentBody() const;
+    DEPRECATED BodyNode* getParentNode() const { return getParentBodyNode(); }
+    BodyNode* getParentBodyNode() const;
 
     /// @brief
     void addChildBody(BodyNode* _body);
 
     /// @brief
+    DEPRECATED BodyNode* getChildNode(int _idx) const { return getChildBodyNode(_idx); }
     BodyNode* getChildBodyNode(int _idx) const;
 
     /// @brief
@@ -244,7 +262,8 @@ public:
     int getNumLocalDofs() const;
 
     /// @brief
-    GenCoord* getLocalDof(int _idx) const;
+    DEPRECATED GenCoord* getDof(int _idx) const;
+    GenCoord* getLocalGenCoord(int _idx) const;
 
     /// @brief The number of the dofs by which this node is affected.
     int getNumDependentDofs() const;
@@ -308,7 +327,7 @@ public:
     Eigen::Vector6d getAccelerationWorldAtFrame(const Eigen::Isometry3d& _T) const;
 
     /// @brief
-    const math::Jacobian& getJacobianBody() const { return mBodyJacobian; }
+    const math::Jacobian& getJacobianBody() const;
 
     /// @brief
     math::Jacobian getJacobianWorld() const;
@@ -316,11 +335,12 @@ public:
     /// @brief Get body Jacobian at contact point.
     math::Jacobian getJacobianWorldAtPoint(const Eigen::Vector3d& r_world) const;
 
-    // TODO: Speed up here.
-    // TODO: Eigne?
     /// @brief
     Eigen::MatrixXd getJacobianWorldAtPoint_LinearPartOnly(
             const Eigen::Vector3d& r_world) const;
+
+    /// @brief
+    const math::Jacobian* getJacobianDeriv() const;
 
     /// @brief
     void setColliding(bool _colliding);
@@ -328,7 +348,7 @@ public:
     /// @brief
     bool getColliding();
 
-    /// @brief apply linear Cartesian forces to this node.
+    /// @brief Apply linear Cartesian forces to this node.
     ///
     /// A force is defined by a point of application and a force vector. The
     /// last two parameters specify frames of the first two parameters.
@@ -363,9 +383,11 @@ public:
     /// @brief
     double getKineticEnergy() const;
 
-    //// TODO: Not implemented.
-    ///// @brief
-    //double getPotentialEnergy() const {}
+    /// @brief
+    Eigen::Vector3d evalLinMomentum() const;
+
+    /// @brief
+    Eigen::Vector3d evalAngMomentum(Eigen::Vector3d _pivot);
 
     //--------------------------------------------------------------------------
     // Rendering
@@ -381,8 +403,8 @@ public:
     /// @brief Initialize the vector memebers with proper sizes.
     void init();
 
-    /// @brief
-    /// parentJoint.T, parentBody.W --> W
+    /// @brief Update local transformations and world transformations.
+    /// T(i-1,i), W(i)
     void updateTransformation();
 
     /// @brief
@@ -431,7 +453,8 @@ public:
     /// @brief
     void updateDampingForce();
 
-    /// @brief
+    /// @brief Updates the mass matrix mM
+    DEPRECATED void evalMassMatrix();
     void updateMassMatrix();
 
     /// @brief Aggregate the external forces mFext in the generalized
