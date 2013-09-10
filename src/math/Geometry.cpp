@@ -84,7 +84,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
 
     if(order == XYZ)
     {
-        if (m(2, 0) > (1.0-M_EPSILON))
+        if (m(2, 0) > (1.0-DART_EPSILON))
         {
             std::cout << "North Pole" << std::endl;
             x = atan2(m(0, 1), m(0, 2));
@@ -92,7 +92,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
             z = 0.0;
         }
 
-        if (m(2, 0) < -(1.0-M_EPSILON))
+        if (m(2, 0) < -(1.0-DART_EPSILON))
         {
             std::cout << "South Pole" << std::endl;
             x = atan2(m(0, 1), m(0, 2));
@@ -110,7 +110,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
 
     if (order == ZYX)
     {
-        if (m(0, 2) > (1.0-M_EPSILON))
+        if (m(0, 2) > (1.0-DART_EPSILON))
         {
             std::cout << "North Pole" << std::endl;
             z = atan2(m(1, 0), m(1, 1));
@@ -118,7 +118,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
             x = 0.0;
         }
 
-        if (m(0, 2) < -(1.0-M_EPSILON))
+        if (m(0, 2) < -(1.0-DART_EPSILON))
         {
             std::cout << "South Pole" << std::endl;
             z = atan2(m(1, 0), m(1, 1));
@@ -136,7 +136,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
 
     if (order == YZX)
     {
-        if (m(0, 1) > (1.0-M_EPSILON))
+        if (m(0, 1) > (1.0-DART_EPSILON))
         {
             std::cout << "North Pole" << std::endl;
             y = atan2(m(1, 2), m(1, 0));
@@ -144,7 +144,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
             x = 0.0;
         }
 
-        if (m(0, 1) < -(1.0-M_EPSILON))
+        if (m(0, 1) < -(1.0-DART_EPSILON))
         {
             std::cout << "South Pole" << std::endl;
             y = atan2(m(1, 2), m(1, 0));
@@ -162,7 +162,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
 
     if (order == XZY)
     {
-        if(m(1, 0) > (1.0-M_EPSILON))
+        if(m(1, 0) > (1.0-DART_EPSILON))
         {
             std::cout << "North Pole" << std::endl;
             x = -atan2(m(0, 2), m(0, 1));
@@ -170,7 +170,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
             y = 0.0;
         }
 
-        if(m(1, 0) < -(1.0-M_EPSILON))
+        if(m(1, 0) < -(1.0-DART_EPSILON))
         {
             std::cout << "South Pole" << std::endl;
             x = -atan2(m(0, 2), m(0, 1));
@@ -188,7 +188,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
 
     if (order == YXZ)
     {
-        if (m(2, 1) > (1.0-M_EPSILON))
+        if (m(2, 1) > (1.0-DART_EPSILON))
         {
             std::cout << "North Pole" << std::endl;
             y = atan2(m(0, 2), m(0, 0));
@@ -196,7 +196,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
             z = 0.0;
         }
 
-        if (m(2, 1) < -(1.0-M_EPSILON))
+        if (m(2, 1) < -(1.0-DART_EPSILON))
         {
             std::cout << "South Pole" << std::endl;
             y = atan2(m(0, 2), m(0, 0));
@@ -214,7 +214,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
 
     if (order==ZXY)
     {
-        if (m(1, 2) > (1.0-M_EPSILON))
+        if (m(1, 2) > (1.0-DART_EPSILON))
         {
             std::cout << "North Pole" << std::endl;
             z = -atan2(m(0, 1), m(0, 0));
@@ -222,7 +222,7 @@ Eigen::Vector3d matrixToEuler(Eigen::Matrix3d& m, RotationOrder order)
             y = 0.0;
         }
 
-        if(m(1, 2) < -(1.0-M_EPSILON))
+        if(m(1, 2) < -(1.0-DART_EPSILON))
         {
             std::cout << "South Pole" << std::endl;
             z = -atan2(m(0, 1), m(0, 0));
@@ -1095,7 +1095,7 @@ Eigen::Isometry3d Exp(const Eigen::Vector6d& s)
     double s3[] = { s[0]*s[1], s[1]*s[2], s[2]*s[0] };
     double theta = sqrt(s2[0] + s2[1] + s2[2]), cos_t = cos(theta), alpha, beta, gamma;
 
-    if ( theta > LIE_EPS )
+    if ( theta > DART_EPSILON )
     {
         double sin_t = sin(theta);
         alpha = sin_t / theta;
@@ -1127,7 +1127,7 @@ Eigen::Isometry3d ExpAngular(const Eigen::Vector3d& S)
     double alpha = 0.0;
     double beta = 0.0;
 
-    if (theta > LIE_EPS)
+    if (theta > DART_EPSILON)
     {
         alpha = sin(theta) / theta;
         beta = (1.0 - cos_t) / theta / theta;

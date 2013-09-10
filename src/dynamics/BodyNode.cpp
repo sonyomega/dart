@@ -217,15 +217,14 @@ void BodyNode::setDependDofList()
     }
 
 #ifndef NDEBUG
-    for (int i = 0; i < (int)mDependentDofIndexes.size() - 1; i++)
+    for (int i = 0; i < mDependentDofIndexes.size() - 1; i++)
     {
-        int now = mDependentDofIndexes[i];
-        int next = mDependentDofIndexes[i + 1];
-        if (now > next)
-        {
-            std::cerr << "Array not sorted!!!" << std::endl;
-            exit(0);
-        }
+        for (int j = i + 1; j < mDependentDofIndexes.size(); j++)
+            if (mDependentDofIndexes[i] == mDependentDofIndexes[j])
+            {
+                dterr << "Skeleton ID of Generalized coordinates is duplicated."
+                      << std::endl;
+            }
     }
 #endif
 }
@@ -746,12 +745,40 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
     mFext += math::dAdInvT(T, F);
 }
 
+void BodyNode::setExtForce(const Eigen::Vector3d& _offset,
+                           const Eigen::Vector3d& _force,
+                           bool _isOffsetLocal, bool _isForceLocal)
+{
+    Eigen::Isometry3d T = Eigen::Isometry3d::Identity();
+    Eigen::Vector6d F = Eigen::Vector6d::Zero();
+
+    if (_isOffsetLocal)
+        T.translate(_offset);
+    else
+        T.translate(math::xformHom(getWorldInvTransform(), _offset));
+
+    if (_isForceLocal)
+        F.tail<3>() = _force;
+    else
+        F.tail<3>() = mW.rotation().transpose() * _force;
+
+    mFext = math::dAdInvT(T, F);
+}
+
 void BodyNode::addExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
 {
     if (_isLocal)
         mFext.head<3>() += _torque;
     else
         mFext.head<3>() += mW.rotation() * _torque;
+}
+
+void BodyNode::setExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
+{
+    if (_isLocal)
+        mFext.head<3>() = _torque;
+    else
+        mFext.head<3>() = mW.rotation() * _torque;
 }
 
 const Eigen::Vector6d& BodyNode::getExternalForceLocal() const
