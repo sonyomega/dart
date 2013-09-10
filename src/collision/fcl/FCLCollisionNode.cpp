@@ -44,10 +44,19 @@
 #include "dynamics/CylinderShape.h"
 #include "dynamics/MeshShape.h"
 
+#include "collision/fcl/CollisionShapes.h"
 #include "collision/fcl/FCLCollisionNode.h"
 
 namespace dart {
 namespace collision {
+
+fcl::Transform3f convFclTransform(const Eigen::Isometry3d& _m)
+{
+    return fcl::Transform3f(fcl::Matrix3f(_m(0,0), _m(0,1), _m(0,2),
+                                          _m(1,0), _m(1,1), _m(1,2),
+                                          _m(2,0), _m(2,1), _m(2,2)),
+                            fcl::Vec3f(_m(0,3), _m(1,3), _m(2,3)));
+}
 
 FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
     : CollisionNode(_bodyNode)
@@ -56,13 +65,17 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
     {
         dynamics::Shape* shape = _bodyNode->getCollisionShape(i);
         mShapes.push_back(shape);
+        fcl::Transform3f shapeTransform = convFclTransform(shape->getTransform());
         switch (shape->getShapeType())
         {
             case dynamics::Shape::P_BOX:
-                mCollisionGeometries.push_back(new fcl::Box(shape->getDim()[0],
-                                                            shape->getDim()[1],
-                                                            shape->getDim()[2]));
+            {
+//                mCollisionGeometries.push_back(new fcl::Box(shape->getDim()[0],
+//                                                            shape->getDim()[1],
+//                                                            shape->getDim()[2]));
+                mCollisionGeometries.push_back(createCube<fcl::OBBRSS>(shape->getDim()[0], shape->getDim()[1], shape->getDim()[2], shapeTransform));
                 break;
+            }
             case dynamics::Shape::P_ELLIPSOID:
             {
                 dynamics::EllipsoidShape* ellipsoid
@@ -80,8 +93,13 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
             {
                 dynamics::CylinderShape* cylinder
                         = dynamic_cast<dynamics::CylinderShape*>(shape);
-                mCollisionGeometries.push_back(new fcl::Cylinder(cylinder->getRadius(),
-                                                                 cylinder->getHeight()));
+//                mCollisionGeometries.push_back(new fcl::Cylinder(cylinder->getRadius(),
+//                                                                 cylinder->getHeight()));
+                if(cylinder) {
+                    double radius = cylinder->getRadius();
+                    double height = cylinder->getHeight();
+                    mCollisionGeometries.push_back(createCylinder<fcl::OBBRSS>(radius, radius, height, 16, 16, shapeTransform));
+                }
                 break;
             }
             case dynamics::Shape::P_MESH:
