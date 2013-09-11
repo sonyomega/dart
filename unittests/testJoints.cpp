@@ -84,9 +84,9 @@ void JOINTS::kinematicsTest(Joint* _joint)
 
         for (int i = 0; i < dof; ++i)
         {
-            q(i) = random(-M_PI, M_PI);
-            dq(i) = random(-M_PI, M_PI);
-            ddq(i) = random(-M_PI, M_PI);
+            q(i) = random(-DART_PI, DART_PI);
+            dq(i) = random(-DART_PI, DART_PI);
+            ddq(i) = random(-DART_PI, DART_PI);
         }
 
         _joint->set_q(q);
@@ -141,7 +141,7 @@ void JOINTS::kinematicsTest(Joint* _joint)
             Eigen::Isometry3d T_b = _joint->getLocalTransformation();
 
             //
-            Eigen::Isometry3d Tinv_a = Inv(T_a);
+            Eigen::Isometry3d Tinv_a = T_a.inverse();
             Eigen::Matrix4d Tinv_a_eigen = Tinv_a.matrix();
 
             // dTdq
