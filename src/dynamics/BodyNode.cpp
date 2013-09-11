@@ -275,26 +275,25 @@ void BodyNode::setWorldTransform(const Eigen::Isometry3d &_W)
 
 Eigen::Vector3d BodyNode::evalWorldPos(const Eigen::Vector3d& _lp) const
 {
-    return math::xformHom(mW, _lp);
+    return mW * _lp;
 }
 
 Eigen::Vector6d BodyNode::getVelocityWorld() const
 {
-    //return math::Rotate(mW, mV);
     return math::AdR(mW, mV);
 }
 
 Eigen::Vector6d BodyNode::getVelocityWorldAtCOG() const
 {
     Eigen::Isometry3d worldFrameAtCOG = mW;
-    worldFrameAtCOG.translation() = math::Rotate(mW, -mCenterOfMass);
+    worldFrameAtCOG.translation() = mW.linear() * -mCenterOfMass;
     return math::AdT(worldFrameAtCOG, mV);
 }
 
 Eigen::Vector6d BodyNode::getVelocityWorldAtPoint(const Eigen::Vector3d& _pointBody) const
 {
     Eigen::Isometry3d worldFrameAtPoint = mW;
-    worldFrameAtPoint.translation() = math::Rotate(mW, -_pointBody);
+    worldFrameAtPoint.translation() = mW.linear() *  -_pointBody;
     return math::AdT(worldFrameAtPoint, mV);
 }
 
@@ -302,26 +301,25 @@ Eigen::Vector6d BodyNode::getVelocityWorldAtFrame(const Eigen::Isometry3d& _T) c
 {
     assert(math::VerifySE3(_T));
 
-    return math::AdT(math::Inv(_T) * mW, mV);
+    return math::AdT(_T.inverse() * mW, mV);
 }
 
 Eigen::Vector6d BodyNode::getAccelerationWorld() const
 {
-    //return math::Rotate(mW, mdV);
     return math::AdR(mW, mdV);
 }
 
 Eigen::Vector6d BodyNode::getAccelerationWorldAtCOG() const
 {
     Eigen::Isometry3d worldFrameAtCOG = mW;
-    worldFrameAtCOG.translation() = math::Rotate(mW, -mCenterOfMass);
+    worldFrameAtCOG.translation() = mW.linear() * -mCenterOfMass;
     return math::AdT(worldFrameAtCOG, mdV);
 }
 
 Eigen::Vector6d BodyNode::getAccelerationWorldAtPoint(const Eigen::Vector3d& _pointBody) const
 {
     Eigen::Isometry3d worldFrameAtPoint = mW;
-    worldFrameAtPoint.translation() = math::Rotate(mW, -_pointBody);
+    worldFrameAtPoint.translation() = mW.linear() * _pointBody;
     return math::AdT(worldFrameAtPoint, mdV);
 }
 
@@ -329,7 +327,7 @@ Eigen::Vector6d BodyNode::getAccelerationWorldAtFrame(const Eigen::Isometry3d& _
 {
     assert(math::VerifySE3(_T));
 
-    return math::AdT(math::Inv(_T) * mW, mdV);
+    return math::AdT(_T.inverse() * mW, mdV);
 }
 
 const math::Jacobian&BodyNode::getJacobianBody() const
@@ -733,14 +731,14 @@ void BodyNode::addExtForce(const Eigen::Vector3d& _offset,
     Eigen::Vector6d F = Eigen::Vector6d::Zero();
 
     if (_isOffsetLocal)
-        T.translate(_offset);
+        T.translation() = _offset;
     else
-        T.translate(math::xformHom(getWorldInvTransform(), _offset));
+        T.translation() = getWorldInvTransform() * _offset;
 
     if (_isForceLocal)
         F.tail<3>() = _force;
     else
-        F.tail<3>() = mW.rotation().transpose() * _force;
+        F.tail<3>() = mW.linear().transpose() * _force;
 
     mFext += math::dAdInvT(T, F);
 }
@@ -753,14 +751,14 @@ void BodyNode::setExtForce(const Eigen::Vector3d& _offset,
     Eigen::Vector6d F = Eigen::Vector6d::Zero();
 
     if (_isOffsetLocal)
-        T.translate(_offset);
+        T.translation() = _offset;
     else
-        T.translate(math::xformHom(getWorldInvTransform(), _offset));
+        T.translation() = getWorldInvTransform() * _offset;
 
     if (_isForceLocal)
         F.tail<3>() = _force;
     else
-        F.tail<3>() = mW.rotation().transpose() * _force;
+        F.tail<3>() = mW.linear().transpose() * _force;
 
     mFext = math::dAdInvT(T, F);
 }
@@ -770,7 +768,7 @@ void BodyNode::addExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
     if (_isLocal)
         mFext.head<3>() += _torque;
     else
-        mFext.head<3>() += mW.rotation() * _torque;
+        mFext.head<3>() += mW.linear() * _torque;
 }
 
 void BodyNode::setExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
@@ -778,7 +776,7 @@ void BodyNode::setExtTorque(const Eigen::Vector3d& _torque, bool _isLocal)
     if (_isLocal)
         mFext.head<3>() = _torque;
     else
-        mFext.head<3>() = mW.rotation() * _torque;
+        mFext.head<3>() = mW.linear() * _torque;
 }
 
 const Eigen::Vector6d& BodyNode::getExternalForceLocal() const
@@ -864,7 +862,7 @@ void BodyNode::updateArticulatedInertia()
     for (iJoint = mChildJoints.begin(); iJoint != mChildJoints.end(); ++iJoint)
     {
         mAI += math::Transform(
-                    math::Inv((*iJoint)->getLocalTransformation()),
+                    (*iJoint)->getLocalTransformation().inverse(),
                     (*iJoint)->getChildBodyNode()->mPi);
     }
 }

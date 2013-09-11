@@ -82,19 +82,19 @@ inline void EulerJoint::_updateTransformation()
     case AO_XYZ:
     {
         mT = mT_ParentBodyToJoint *
-                math::EulerXYZ(Eigen::Vector3d(mCoordinate[0].get_q(),
+                math::eulerXYZToMatrix(Eigen::Vector3d(mCoordinate[0].get_q(),
                                           mCoordinate[1].get_q(),
                                           mCoordinate[2].get_q())) *
-                math::Inv(mT_ChildBodyToJoint);
+                mT_ChildBodyToJoint.inverse();
         break;
     }
     case AO_ZYX:
     {
         mT = mT_ParentBodyToJoint *
-                math::EulerZYX(Eigen::Vector3d(mCoordinate[0].get_q(),
+                math::eulerZYXToMatrix(Eigen::Vector3d(mCoordinate[0].get_q(),
                                           mCoordinate[1].get_q(),
                                           mCoordinate[2].get_q())) *
-                math::Inv(mT_ChildBodyToJoint);
+                mT_ChildBodyToJoint.inverse();
         break;
     }
     default:
