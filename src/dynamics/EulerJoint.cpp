@@ -75,7 +75,7 @@ EulerJoint::AxisOrder EulerJoint::getAxisOrder() const
     return mAxisOrder;
 }
 
-inline void EulerJoint::_updateTransformation()
+inline void EulerJoint::_updateTransform()
 {
     switch (mAxisOrder)
     {
@@ -104,7 +104,7 @@ inline void EulerJoint::_updateTransformation()
     }
     }
 
-    assert(math::VerifySE3(mT));
+    assert(math::verifyTransform(mT));
 }
 
 inline void EulerJoint::_updateVelocity()
