@@ -18,6 +18,14 @@ void MyWindow::timeStepping()
     //mForce /= 2.0;
 }
 
+void MyWindow::drawSkels()
+{
+//    glEnable(GL_LIGHTING);
+//    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    dart::simulation::SimWindow::drawSkels();
+}
+
 void MyWindow::keyboard(unsigned char key, int x, int y)
 {
     switch(key){

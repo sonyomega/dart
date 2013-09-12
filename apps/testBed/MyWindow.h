@@ -18,6 +18,9 @@ public:
     virtual void timeStepping();
 
     /// @brief
+    virtual void drawSkels();
+
+    /// @brief
     virtual void keyboard(unsigned char key, int x, int y);
 
 private:
