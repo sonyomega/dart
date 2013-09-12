@@ -77,9 +77,6 @@ public:
     Eigen::Vector3d getOffset() const;
 
     /// @brief
-    int getID() const;
-
-    /// @brief
     SensorType getSensorType() const;
 
     /// @brief
@@ -99,9 +96,6 @@ protected:
 
     /// @brief Volume enclosed by the geometry.
     double mVolume;
-
-    /// @brief Unique id.
-    int mID;
 
     /// @brief The origin of this primitive in the bodynode frame.
     Eigen::Vector3d mOffset;

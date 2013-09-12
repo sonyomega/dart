@@ -49,10 +49,5 @@ Sensor::~Sensor()
 {
 }
 
-int Sensor::getID() const
-{
-    return mID;
-}
-
 } // namespace dynamics
 } // namespace dart
