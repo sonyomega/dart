@@ -65,7 +65,7 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
     {
         dynamics::Shape* shape = _bodyNode->getCollisionShape(i);
         mShapes.push_back(shape);
-        fcl::Transform3f shapeTransform = convFclTransform(shape->getTransform());
+        fcl::Transform3f shapeTransform = convFclTransform(shape->getLocalTransform());
         switch (shape->getShapeType())
         {
             case dynamics::Shape::P_BOX:
