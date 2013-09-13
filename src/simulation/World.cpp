@@ -109,6 +109,11 @@ void World::setControlInput()
 
 Eigen::VectorXd World::evalDeriv()
 {
+    static common::Timer t1("t1");
+    static common::Timer t2("t2");
+
+    t1.startTimer();
+
     // Calculate M(q), M^{-1}(q)
     for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
@@ -118,8 +123,13 @@ Eigen::VectorXd World::evalDeriv()
         //(*itrSkeleton)->computeEquationsOfMotionFS(mGravity);
     }
 
+    t1.stopTimer();
+    t2.startTimer();
+
     // compute constraint (contact/contact, joint limit) forces
     mCollisionHandle->computeConstraintForces();
+
+    t2.stopTimer();
 
     // set constraint force
     for (unsigned int i = 0; i < getNumSkeletons(); i++)
@@ -132,6 +142,8 @@ Eigen::VectorXd World::evalDeriv()
                     mCollisionHandle->getTotalConstraintForce(i));
     }
 
+    t1.startTimer();
+
     // compute forward dynamics
     for (std::vector<dynamics::Skeleton*>::iterator itrSkeleton = mSkeletons.begin();
          itrSkeleton != mSkeletons.end();
@@ -140,6 +152,8 @@ Eigen::VectorXd World::evalDeriv()
         //(*itrSkeleton)->computeForwardDynamicsID(mGravity);
         (*itrSkeleton)->computeForwardDynamicsFS(mGravity);
     }
+
+    t1.stopTimer();
 
     // compute derivatives for integration
     Eigen::VectorXd deriv = Eigen::VectorXd::Zero(mIndices.back() * 2);
@@ -158,6 +172,9 @@ Eigen::VectorXd World::evalDeriv()
         // set qddot (accelerations)
         deriv.segment(start + size, size) = getSkeleton(i)->get_ddq();
     }
+
+    t1.printScreen();
+    t2.printScreen();
 
     return deriv;
 }
