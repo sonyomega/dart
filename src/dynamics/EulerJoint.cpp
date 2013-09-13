@@ -79,31 +79,33 @@ inline void EulerJoint::_updateTransform()
 {
     switch (mAxisOrder)
     {
-    case AO_XYZ:
-    {
-        mT = mT_ParentBodyToJoint *
-                math::eulerXYZToMatrix(Eigen::Vector3d(mCoordinate[0].get_q(),
-                                          mCoordinate[1].get_q(),
-                                          mCoordinate[2].get_q())) *
-                mT_ChildBodyToJoint.inverse();
-        break;
-    }
-    case AO_ZYX:
-    {
-        mT = mT_ParentBodyToJoint *
-                math::eulerZYXToMatrix(Eigen::Vector3d(mCoordinate[0].get_q(),
-                                          mCoordinate[1].get_q(),
-                                          mCoordinate[2].get_q())) *
-                mT_ChildBodyToJoint.inverse();
-        break;
-    }
-    default:
-    {
-        dterr << "Undefined Euler axis order\n";
-        break;
-    }
+        case AO_XYZ:
+        {
+            mT = mT_ParentBodyToJoint *
+                 math::eulerXYZToMatrix(Eigen::Vector3d(mCoordinate[0].get_q(),
+                                                        mCoordinate[1].get_q(),
+                                                        mCoordinate[2].get_q())) *
+                    mT_ChildBodyToJoint.inverse();
+            break;
+        }
+        case AO_ZYX:
+        {
+            mT = mT_ParentBodyToJoint *
+                 math::eulerZYXToMatrix(Eigen::Vector3d(mCoordinate[0].get_q(),
+                                                        mCoordinate[1].get_q(),
+                                                        mCoordinate[2].get_q())) *
+                    mT_ChildBodyToJoint.inverse();
+            break;
+        }
+        default:
+        {
+            dterr << "Undefined Euler axis order\n";
+            break;
+        }
     }
 
+    assert(math::verifyTransform(mT_ParentBodyToJoint.inverse()));
+    assert(math::verifyTransform(mT_ChildBodyToJoint.inverse()));
     assert(math::verifyTransform(mT));
 }
 

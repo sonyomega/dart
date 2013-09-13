@@ -109,11 +109,13 @@ bool FCLCollisionDetector::checkCollision(bool _checkAllCollisions,
                 contactPair.point(1) = contact.pos[1];
                 contactPair.point(2) = contact.pos[2];
                 //--------------------------------------------------------------
-                // box(mesh)-box(mesh): -normal
-                // box(mesh)-sphere   : +normal
-                // sphere-sphere      : +normal
-                // sphere-box         : +normal
-                // box-box            : -normal
+                // box(mesh)-box(mesh)        : -normal
+                // box(fcl:mesh)-box(fcl:mesh): -normal
+                // box(mesh)-sphere           : +normal
+                // sphere-sphere              : +normal
+                // sphere-box                 : +normal
+                // box-box                    : -normal
+                //--------------------------------------------------------------
                 contactPair.normal(0) = contact.normal[0];
                 contactPair.normal(1) = contact.normal[1];
                 contactPair.normal(2) = contact.normal[2];

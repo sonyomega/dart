@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/11/2013
+ * Date: 09/13/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,71 +35,69 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_COLLISION_FCL_CONLLISION_NODE_H
-#define DART_COLLISION_FCL_CONLLISION_NODE_H
+#include <cmath>
+#include <iostream>
 
-#include <Eigen/Dense>
-#include <fcl/collision.h>
-#include <fcl/BVH/BVH_model.h>
+#include <assimp/scene.h>
 
-#include "collision/CollisionNode.h"
+#include "dynamics/BodyNode.h"
+#include "dynamics/EllipsoidShape.h"
+#include "dynamics/CylinderShape.h"
+#include "dynamics/MeshShape.h"
+#include "collision/dart/DARTCollisionNode.h"
 
 namespace dart {
-
-namespace dynamics {
-class BodyNode;
-}
-
 namespace collision {
 
-/// @brief
-class FCLCollisionNode : public CollisionNode
+DARTCollisionNode::DARTCollisionNode(dynamics::BodyNode* _bodyNode)
+    : CollisionNode(_bodyNode)
 {
-public:
-    /// @brief
-    FCLCollisionNode(dynamics::BodyNode* _bodyNode);
+    for(int i = 0; i < _bodyNode->getNumCollisionShapes(); i++)
+    {
+        dynamics::Shape* shape = _bodyNode->getCollisionShape(i);
+        mShapes.push_back(shape);
+        switch (shape->getShapeType())
+        {
+            case dynamics::Shape::P_BOX:
+            {
 
-    /// @brief
-    virtual ~FCLCollisionNode();
+                break;
+            }
+            case dynamics::Shape::P_ELLIPSOID:
+            {
+                dynamics::EllipsoidShape* ellipsoid
+                        = dynamic_cast<dynamics::EllipsoidShape*>(shape);
 
-    /// @brief
-    int getNumCollisionGeometries() const;
+                break;
+            }
+            case dynamics::Shape::P_CYLINDER:
+            {
+                dynamics::CylinderShape* cylinder
+                        = dynamic_cast<dynamics::CylinderShape*>(shape);
 
-    /// @brief
-    fcl::CollisionGeometry* getCollisionGeometry(int _idx) const;
+                break;
+            }
+            case dynamics::Shape::P_MESH:
+            {
+                dynamics::MeshShape *shapeMesh
+                        = dynamic_cast<dynamics::MeshShape *>(shape);
 
-    /// @brief
-    fcl::Transform3f getFCLTransform(int _idx) const;
+                break;
+            }
+            default:
+            {
+                std::cout << "ERROR: Collision checking does not support "
+                          << _bodyNode->getName()
+                          << "'s Shape type\n";
+                break;
+            }
+        }
+    }
+}
 
-protected:
-
-private:
-    /// @brief
-    std::vector<fcl::CollisionGeometry*> mCollisionGeometries;
-    std::vector<dynamics::Shape*> mShapes;
-};
-
-/// @brief
-template<class BV>
-fcl::BVHModel<BV>* createMesh(float _sizeX, float _sizeY, float _sizeZ,
-                              const aiScene *_mesh);
-
-/// @brief
-template<class BV>
-fcl::BVHModel<BV>* createCube2(float _sizeX, float _sizeY, float _sizeZ,
-                              const fcl::Transform3f& _transform = fcl::Transform3f()); //create a cube mesh for collision detection
-
-/// @brief
-template<class BV>
-fcl::BVHModel<BV>* createEllipsoid(float _sizeX, float _sizeY, float _sizeZ);
-
-/// @brief
-template<class BV>
-fcl::BVHModel<BV>* createCylinder(double _baseRadius, double _topRadius,
-                                  double _height, int _slices, int _stacks,
-                                  const fcl::Transform3f& _transform = fcl::Transform3f());
+DARTCollisionNode::~DARTCollisionNode()
+{
+}
 
 } // namespace collision
 } // namespace dart
-
-#endif // #ifndef DART_COLLISION_FCL_CONLLISION_NODE_H

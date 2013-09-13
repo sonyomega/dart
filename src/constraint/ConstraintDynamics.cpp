@@ -6,6 +6,7 @@
 #include "lcpsolver/LCPSolver.h"
 #include "collision/fcl_mesh/FCLMESHCollisionDetector.h"
 #include "collision/fcl/FCLCollisionDetector.h"
+#include "collision/dart/DARTCollisionDetector.h"
 #include "dynamics/BodyNode.h"
 #include "dynamics/GenCoord.h"
 #include "dynamics/Skeleton.h"
@@ -165,8 +166,9 @@ void ConstraintDynamics::addSkeleton(dynamics::Skeleton* _newSkel)
 
 void ConstraintDynamics::initialize() {
     // Allocate the Collision Detection class
-    mCollisionChecker = new FCLCollisionDetector();
-    //mCollisionChecker = new FCLMESHCollisionDetector();
+    //mCollisionChecker = new FCLCollisionDetector();
+    mCollisionChecker = new FCLMESHCollisionDetector();
+    //mCollisionChecker = new DARTCollisionDetector();
     mBodyIndexToSkelIndex.clear();
     // Add all body nodes into mCollisionChecker
     int rows = 0;

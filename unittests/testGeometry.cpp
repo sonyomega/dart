@@ -204,7 +204,7 @@ TEST(LIE_GROUP_OPERATORS, EULER_ANGLES)
     // TODO: Special angles such as (PI, 0, 0)
 
     //
-    int numTest = 1;
+    int numTest = 1000;
     for (int i = 0; i < numTest; ++i)
     {
         Eigen::Vector3d angle = Eigen::Vector3d::Random();

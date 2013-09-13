@@ -1419,7 +1419,7 @@ bool verifyTransform(const Eigen::Isometry3d& _T)
             if (_T(i,j) != _T(i,j))
                 return false;
 
-    if (fabs(fabs(_T.linear().determinant()) - 1.0) > DART_EPSILON)
+    if (fabs(fabs(_T.linear().determinant()) - 1.0) > DART_EPSILON * 1000)
         return false;
 
     return true;
