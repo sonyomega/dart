@@ -166,9 +166,9 @@ void ConstraintDynamics::addSkeleton(dynamics::Skeleton* _newSkel)
 
 void ConstraintDynamics::initialize() {
     // Allocate the Collision Detection class
-    //mCollisionChecker = new FCLCollisionDetector();
+    mCollisionChecker = new FCLCollisionDetector();
     //mCollisionChecker = new FCLMESHCollisionDetector();
-    mCollisionChecker = new DARTCollisionDetector();
+    //mCollisionChecker = new DARTCollisionDetector();
     mBodyIndexToSkelIndex.clear();
     // Add all body nodes into mCollisionChecker
     int rows = 0;
@@ -416,7 +416,7 @@ void ConstraintDynamics::updateTauStar() {
             continue;
 
         Eigen::VectorXd tau = mSkels[i]->getExternalForces() + mSkels[i]->getInternalForces() + mSkels[i]->getDampingForces();
-        Eigen::VectorXd tauStar = (mSkels[i]->getMassMatrix() * mSkels[i]->getPoseVelocity()) - (mDt * (mSkels[i]->getCombinedVector() - tau));
+        Eigen::VectorXd tauStar = (mSkels[i]->getMassMatrix() * mSkels[i]->get_dq()) - (mDt * (mSkels[i]->getCombinedVector() - tau));
         mTauStar.block(startRow, 0, tauStar.rows(), 1) = tauStar;
         startRow += tauStar.rows();
     }
@@ -555,7 +555,7 @@ void ConstraintDynamics::updateConstraintTerms(){
     for (int i = 0; i < mSkels.size(); i++) {
         if (mSkels[i]->getImmobileState())
             continue;
-        Eigen::VectorXd qDot = mSkels[i]->getPoseVelocity();
+        Eigen::VectorXd qDot = mSkels[i]->get_dq();
         mTauHat.noalias() += -(mJ[i] - mPreJ[i]) / mDt * qDot;
         mTauHat.noalias() -= mJMInv[i] * (mSkels[i]->getInternalForces() + mSkels[i]->getExternalForces() - mSkels[i]->getCombinedVector());
     }

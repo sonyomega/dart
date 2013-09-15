@@ -129,13 +129,13 @@ public:
     int getNumJoints() const;
 
     /// @brief
-    BodyNode* getRoot();
+    BodyNode* getRootBodyNode();
 
     /// @brief
     BodyNode* getBodyNode(int _idx) const;
 
     /// @brief
-    BodyNode* findBodyNode(const std::string& _name) const;
+    BodyNode* getBodyNode(const std::string& _name) const;
 
     /// @brief
     int getBodyNodeIndex(const std::string& _name) const;
@@ -144,7 +144,7 @@ public:
     Joint* getJoint(int _idx) const;
 
     /// @brief
-    Joint* findJoint(const std::string& _name) const;
+    Joint* getJoint(const std::string& _name) const;
 
     /// @brief
     int getJointIndex(const std::string& _name) const;
@@ -158,25 +158,25 @@ public:
     /// @brief
     Marker* getMarker(int _i);
 
+    /// @brief
+    Marker* getMarker(const std::string& _name) const;
+
     //--------------------------------------------------------------------------
     // Properties updated by dynamics (kinematics)
     //--------------------------------------------------------------------------
     /// @brief
-    Eigen::VectorXd getConfig(std::vector<int> _id);
-
-    /// @brief
-    void setConfig(std::vector<int> _id, Eigen::VectorXd _vals,
+    void setConfig(const std::vector<int>& _id, Eigen::VectorXd _vals,
                    bool _calcTrans = true, bool _calcDeriv = true);
 
     /// @brief
-    void setPose(const Eigen::VectorXd& _pose,
-                 bool bCalcTrans = true, bool bCalcDeriv = true);
+    void setConfig(const Eigen::VectorXd& _pose,
+                   bool bCalcTrans = true, bool bCalcDeriv = true);
 
-    /// @brief
-    Eigen::VectorXd getPose() const;
-
-    /// @brief
-    Eigen::VectorXd getPoseVelocity() const;
+    /// @brief Get the configuration of this skeleton described in generalized
+    /// coordinates. The returned order of configuration is determined by _id.
+    /// If you just want the configuration in original order then use
+    /// GenCoordSystem::get_q().
+    Eigen::VectorXd getConfig(const std::vector<int>& _id) const;
 
     /// @brief
     Eigen::MatrixXd getMassMatrix() const;

@@ -54,7 +54,8 @@ Skeleton::Skeleton(const std::string& _name)
       mTotalMass(0.0),
       mImmobile(false),
       mJointLimit(true),
-      mFrame(Eigen::Isometry3d::Identity())
+      mFrame(Eigen::Isometry3d::Identity()),
+      mRootBodyNode(NULL)
 {
 }
 
@@ -189,7 +190,7 @@ int Skeleton::getNumJoints() const
     return mJoints.size();
 }
 
-BodyNode* Skeleton::getRoot()
+BodyNode* Skeleton::getRootBodyNode()
 {
     return mRootBodyNode;
 }
@@ -199,7 +200,7 @@ BodyNode* Skeleton::getBodyNode(int _idx) const
     return mBodyNodes[_idx];
 }
 
-BodyNode* Skeleton::findBodyNode(const std::string& _name) const
+BodyNode* Skeleton::getBodyNode(const std::string& _name) const
 {
     assert(!_name.empty());
 
@@ -233,7 +234,7 @@ Joint* Skeleton::getJoint(int _idx) const
     return mJoints[_idx];
 }
 
-Joint* Skeleton::findJoint(const std::string& _name) const
+Joint* Skeleton::getJoint(const std::string& _name) const
 {
     assert(!_name.empty());
 
@@ -281,17 +282,32 @@ Marker* Skeleton::getMarker(int _i)
     return mMarkers[_i];
 }
 
-Eigen::VectorXd Skeleton::getConfig(std::vector<int> _id)
+Marker*Skeleton::getMarker(const std::string& _name) const
 {
-    Eigen::VectorXd dofs(_id.size());
+    assert(!_name.empty());
 
-    for(unsigned int i = 0; i < _id.size(); i++)
-        dofs[i] = mGenCoords[_id[i]]->get_q();
+    for (std::vector<Marker*>::const_iterator itrMarker = mMarkers.begin();
+         itrMarker != mMarkers.end();
+         ++itrMarker)
+    {
+        if ((*itrMarker)->getName() == _name)
+            return *itrMarker;
+    }
 
-    return dofs;
+    return NULL;
 }
 
-void Skeleton::setConfig(std::vector<int> _id, Eigen::VectorXd _vals,
+Eigen::VectorXd Skeleton::getConfig(const std::vector<int>& _id) const
+{
+    Eigen::VectorXd q(_id.size());
+
+    for(unsigned int i = 0; i < _id.size(); i++)
+        q[i] = mGenCoords[_id[i]]->get_q();
+
+    return q;
+}
+
+void Skeleton::setConfig(const std::vector<int>& _id, Eigen::VectorXd _vals,
                          bool _calcTrans, bool _calcDeriv)
 {
     for( unsigned int i = 0; i < _id.size(); i++ )
@@ -306,7 +322,7 @@ void Skeleton::setConfig(std::vector<int> _id, Eigen::VectorXd _vals,
     }
 }
 
-void Skeleton::setPose(const Eigen::VectorXd& _pose,
+void Skeleton::setConfig(const Eigen::VectorXd& _pose,
                        bool bCalcTrans,
                        bool bCalcDeriv)
 {
@@ -320,16 +336,6 @@ void Skeleton::setPose(const Eigen::VectorXd& _pose,
         else
             updateForwardKinematics(false, false);
     }
-}
-
-Eigen::VectorXd Skeleton::getPose() const
-{
-    return get_q();
-}
-
-Eigen::VectorXd Skeleton::getPoseVelocity() const
-{
-    return get_dq();
 }
 
 Eigen::MatrixXd Skeleton::getMassMatrix() const
@@ -374,7 +380,12 @@ Eigen::VectorXd Skeleton::getInternalForces() const
 
 void Skeleton::initKinematics()
 {
-    mRootBodyNode = mBodyNodes[0];
+    if (mRootBodyNode == NULL)
+    {
+        assert(mBodyNodes.size() > 0);
+        mRootBodyNode = mBodyNodes[0];
+    }
+
     mToRootBody = mFrame.inverse() * mRootBodyNode->getWorldInvTransform();
 
     // init the dependsOnDof stucture for each bodylink
