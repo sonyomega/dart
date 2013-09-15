@@ -74,6 +74,8 @@ bool FCLCollisionDetector::checkCollision(bool _checkAllCollisions,
     fcl::CollisionRequest request;
     request.enable_contact = _calculateContactPoints;
     request.num_max_contacts = mNumMaxContacts;
+    request.enable_cached_gjk_guess = false;
+    request.gjk_solver_type = fcl::GST_INDEP;
 //    request.enable_cost;
 //    request.num_max_cost_sources;
 //    request.use_approximate_cost;
@@ -116,9 +118,9 @@ bool FCLCollisionDetector::checkCollision(bool _checkAllCollisions,
                 // sphere-box                 : +normal
                 // box-box                    : -normal
                 //--------------------------------------------------------------
-                contactPair.normal(0) = contact.normal[0];
-                contactPair.normal(1) = contact.normal[1];
-                contactPair.normal(2) = contact.normal[2];
+                contactPair.normal(0) = -contact.normal[0];
+                contactPair.normal(1) = -contact.normal[1];
+                contactPair.normal(2) = -contact.normal[2];
                 contactPair.collisionNode1 = findCollisionNode(contact.o1);
                 contactPair.collisionNode2 = findCollisionNode(contact.o2);
                 assert(contactPair.collisionNode1 != NULL);

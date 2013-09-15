@@ -6,14 +6,14 @@
             <gravity>0 -9.81 0</gravity>
         </physics>
         
-        <skeleton name="grount skeleton">
+        <skeleton name="box_grount">
             <body name="ground">
                 <transformation>0 -0.4 0 0 0 0</transformation>
                 <visualization_shape>
                     <transformation>0 0 0 0 0 0</transformation>
                     <geometry>
                         <box>
-                            <size>1.0 0.1 1.0</size>
+                            <size>2.0 0.1 2.0</size>
                         </box>
                     </geometry>
                     <color>0.8 0.8 0.8</color>
@@ -22,7 +22,7 @@
                     <transformation>0 0 0 0 0 0</transformation>
                     <geometry>
                         <box>
-                            <size>1.0 0.1 1.0</size>
+                            <size>2.0 0.1 2.0</size>
                         </box>
                     </geometry>
                 </collision_shape>                                
@@ -36,7 +36,7 @@
         <skeleton name="box skeleton">
             <body name="link1">
                 <gravity>1</gravity>
-                <transformation>0 0.5 0 0.1 0.2 0.3</transformation>
+                <transformation>0 0.5 0 0.0 0.0 0.0</transformation>
                 <inertia>
                     <mass>1</mass>
                     <offset>0 0 0</offset>
@@ -45,7 +45,7 @@
                     <transformation>0 0 0 0 0 0</transformation>
                     <geometry>
                         <box>
-                            <size>0.2 0.3 0.4</size>
+                            <size>0.1 0.15 0.2</size>
                         </box>
                     </geometry>
                     <color>0.8 0.2 0.2</color>
@@ -54,8 +54,76 @@
                     <transformation>0 0 0 0 0 0</transformation>
                     <geometry>
                         <box>
-                            <size>0.2 0.3 0.4</size>
+                            <size>0.1 0.15 0.2</size>
                         </box>
+                    </geometry>
+                </collision_shape>                                
+            </body>
+            
+            <joint type="free" name="joint 1">
+                <parent>world</parent>
+                <child>link1</child>
+            </joint>
+        </skeleton>
+
+        <skeleton name="sphere skeleton">
+            <body name="link1">
+                <gravity>1</gravity>
+                <transformation>0.3 0.5 0 0.3 0.2 0.1</transformation>
+                <inertia>
+                    <mass>1</mass>
+                    <offset>0 0 0</offset>
+                </inertia>
+                <visualization_shape>
+                    <transformation>0 0 0 0 0 0</transformation>
+                    <geometry>
+                        <ellipsoid>
+                            <size>0.15 0.15 0.15</size>
+                        </ellipsoid>
+                    </geometry>
+                    <color>0.2 0.2 0.8</color>
+                </visualization_shape>
+                <collision_shape>
+                    <transformation>0 0 0 0 0 0</transformation>
+                    <geometry>
+                        <ellipsoid>
+                            <size>0.15 0.15 0.15</size>
+                        </ellipsoid>
+                    </geometry>
+                </collision_shape>                                
+            </body>
+            
+            <joint type="free" name="joint 1">
+                <parent>world</parent>
+                <child>link1</child>
+            </joint>
+        </skeleton>
+
+        <skeleton name="sphere skeleton">
+            <body name="link1">
+                <gravity>1</gravity>
+                <transformation>-0.3 0.5 0 0.3 0.2 0.1</transformation>
+                <inertia>
+                    <mass>1</mass>
+                    <offset>0 0 0</offset>
+                </inertia>
+                <visualization_shape>
+                    <transformation>0 0 0 0 0 0</transformation>
+                    <geometry>
+                        <cylinder>
+                            <radius>0.05</radius>
+                            <height>0.15</height>
+                        </cylinder>
+                    </geometry>
+                    <color>0.2 0.2 0.8</color>
+                </visualization_shape>
+                <collision_shape>
+                    <transformation>0 0 0 0 0 0</transformation>
+                    <geometry>
+                        <cylinder>
+                            <radius>0.05</radius>
+                            <height>0.15</height>
+                        </cylinder>
                     </geometry>
                 </collision_shape>                                
             </body>

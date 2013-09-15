@@ -86,7 +86,7 @@ fcl::BVHModel<BV>* createMesh(float _sizeX, float _sizeY, float _sizeZ,
 
 /// @brief
 template<class BV>
-fcl::BVHModel<BV>* createCube2(float _sizeX, float _sizeY, float _sizeZ,
+fcl::BVHModel<BV>* createCube(float _sizeX, float _sizeY, float _sizeZ,
                               const fcl::Transform3f& _transform = fcl::Transform3f()); //create a cube mesh for collision detection
 
 /// @brief

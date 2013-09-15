@@ -39,13 +39,16 @@
 #include <gtest/gtest.h>
 
 #include <fcl/collision.h>
+#include <fcl/BVH/BVH_model.h>
 #include <fcl/shape/geometric_shapes.h>
+#include <fcl/shape/geometric_shape_to_BVH_model.h>
 #include <fcl/narrowphase/narrowphase.h>
 
 #include "common/Console.h"
 #include "math/Helpers.h"
 #include "math/Geometry.h"
 #include "collision/CollisionDetector.h"
+#include "collision/fcl_mesh/CollisionShapes.h"
 #include "collision/dart/DARTCollide.h"
 
 using namespace dart;
@@ -400,18 +403,157 @@ void COLLISION::printResult(const fcl::CollisionResult& _result)
 //                     0.0);
 //}
 
-TEST_F(COLLISION, FCL_BOX_BOX)
+TEST_F(COLLISION, FCL_MESHBOX_MESHBOX)
 {
     double delta = 1e-5;
-    double EulerZ = 0.1;
-    double EulerY = 0.2;
-    double EulerX = 0.3;
+
+//    double EulerZ = 0.1;
+//    double EulerY = 0.2;
+//    double EulerX = 0.3;
+
+    double EulerZ = 0.0;
+    double EulerY = 0.0;
+    double EulerX = 0.0;
 
     // Collision test setting
     fcl::CollisionResult result;
     fcl::CollisionRequest request;
     request.enable_contact = true;
     request.num_max_contacts = 100;
+    request.enable_cached_gjk_guess = true;
+    request.gjk_solver_type = fcl::GST_INDEP;
+
+    // Ground like box setting
+    fcl::Box groundObject(100, 100, 0.1);
+    fcl::BVHModel<fcl::OBBRSS> meshGroundObject;
+    fcl::generateBVHModel(meshGroundObject, groundObject, fcl::Transform3f());
+    fcl::Transform3f groundTransf;
+    groundTransf.setIdentity();
+    fcl::Vec3f ground_position(0.0, 0.0, -0.05);
+    groundTransf.setTranslation(ground_position);
+
+    // Dropping box object setting
+    fcl::Box box(0.5, 0.5, 0.5);
+    fcl::BVHModel<fcl::OBBRSS> meshBox;
+    fcl::generateBVHModel(meshBox, box, fcl::Transform3f());
+    fcl::Transform3f objectTransf;
+    fcl::Matrix3f rot;
+    rot.setEulerZYX(EulerZ, EulerY, EulerX);
+    objectTransf.setRotation(rot);
+    fcl::Vec3f dropping_position(0.0, 0.0, 5.0);
+    objectTransf.setTranslation(dropping_position);
+
+    // Let's drop the object until it collide with ground
+    do {
+        objectTransf.setTranslation(dropping_position);
+
+        fcl::collide(&meshBox, objectTransf, &meshGroundObject, groundTransf, request, result);
+
+        dropping_position[2] -= delta;
+    }
+    while (result.numContacts() == 0);
+
+    std::cout << "Current position of the object: "
+              << objectTransf.getTranslation()
+              << std::endl
+              << "Number of contacts: "
+              << result.numContacts()
+              << std::endl;
+
+    for (int i = 0; i < result.numContacts(); ++i)
+    {
+        std::cout << "----- CONTACT " << i << " --------" << std::endl;
+        std::cout << "contact_points: " << result.getContact(i).pos << std::endl;
+        std::cout << "penetration_depth: " << result.getContact(i).penetration_depth << std::endl;
+        std::cout << "normal: " << result.getContact(i).normal << std::endl;
+    }
+}
+
+TEST_F(COLLISION, FCL_MESHBOX2_MESHBOX2)
+{
+    double delta = 1e-5;
+
+//    double EulerZ = 0.1;
+//    double EulerY = 0.2;
+//    double EulerX = 0.3;
+
+    double EulerZ = 0.0;
+    double EulerY = 0.0;
+    double EulerX = 0.0;
+
+    // Collision test setting
+    fcl::CollisionResult result;
+    fcl::CollisionRequest request;
+    request.enable_contact = true;
+    request.num_max_contacts = 100;
+    request.enable_cached_gjk_guess = true;
+    request.gjk_solver_type = fcl::GST_INDEP;
+
+    // Ground like box setting
+    fcl::Box groundObject(100, 100, 0.1);
+    fcl::BVHModel<fcl::OBBRSS>* meshGroundObject =
+            collision::createCube<fcl::OBBRSS>(100.0, 100.0, 0.1, fcl::Transform3f());
+    fcl::Transform3f groundTransf;
+    groundTransf.setIdentity();
+    fcl::Vec3f ground_position(0.0, 0.0, -0.05);
+    groundTransf.setTranslation(ground_position);
+
+    // Dropping box object setting
+    fcl::Box box(0.5, 0.5, 0.5);
+    fcl::BVHModel<fcl::OBBRSS>* meshBox =
+            collision::createCube<fcl::OBBRSS>(0.5, 0.5, 0.5, fcl::Transform3f());
+    fcl::Transform3f objectTransf;
+    fcl::Matrix3f rot;
+    rot.setEulerZYX(EulerZ, EulerY, EulerX);
+    objectTransf.setRotation(rot);
+    fcl::Vec3f dropping_position(0.0, 0.0, 5.0);
+    objectTransf.setTranslation(dropping_position);
+
+    // Let's drop the object until it collide with ground
+    do {
+        objectTransf.setTranslation(dropping_position);
+
+        fcl::collide(meshBox, objectTransf, meshGroundObject, groundTransf, request, result);
+
+        dropping_position[2] -= delta;
+    }
+    while (result.numContacts() == 0);
+
+    std::cout << "Current position of the object: "
+              << objectTransf.getTranslation()
+              << std::endl
+              << "Number of contacts: "
+              << result.numContacts()
+              << std::endl;
+
+    for (int i = 0; i < result.numContacts(); ++i)
+    {
+        std::cout << "----- CONTACT " << i << " --------" << std::endl;
+        std::cout << "contact_points: " << result.getContact(i).pos << std::endl;
+        std::cout << "penetration_depth: " << result.getContact(i).penetration_depth << std::endl;
+        std::cout << "normal: " << result.getContact(i).normal << std::endl;
+    }
+}
+
+TEST_F(COLLISION, FCL_BOX_BOX)
+{
+    double delta = 1e-5;
+
+//    double EulerZ = 0.1;
+//    double EulerY = 0.2;
+//    double EulerX = 0.3;
+
+    double EulerZ = 0.0;
+    double EulerY = 0.0;
+    double EulerX = 0.0;
+
+    // Collision test setting
+    fcl::CollisionResult result;
+    fcl::CollisionRequest request;
+    request.enable_contact = true;
+    request.num_max_contacts = 100;
+    request.enable_cached_gjk_guess = true;
+    request.gjk_solver_type = fcl::GST_INDEP;
 
     // Ground like box setting
     fcl::Box groundObject(100, 100, 0.1);
@@ -455,12 +597,79 @@ TEST_F(COLLISION, FCL_BOX_BOX)
     }
 }
 
+TEST_F(COLLISION, FCL_BOX_CYLINDER)
+{
+    double delta = 1e-5;
+
+//    double EulerZ = 0.1;
+//    double EulerY = 0.2;
+//    double EulerX = 0.3;
+
+    double EulerZ = 0.0;
+    double EulerY = 0.0;
+    double EulerX = 0.0;
+
+    // Collision test setting
+    fcl::CollisionResult result;
+    fcl::CollisionRequest request;
+    request.enable_contact = true;
+    request.num_max_contacts = 100;
+    request.enable_cached_gjk_guess = true;
+    request.gjk_solver_type = fcl::GST_INDEP;
+
+    // Ground like box setting
+    fcl::Box groundObject(100, 100, 0.1);
+    fcl::Transform3f groundTransf;
+    groundTransf.setIdentity();
+    fcl::Vec3f ground_position(0.0, 0.0, -0.05);
+    groundTransf.setTranslation(ground_position);
+
+    // Dropping box object setting
+    fcl::Cylinder cylinder(0.5, 0.5);
+    fcl::Transform3f objectTransf;
+    fcl::Matrix3f rot;
+    rot.setEulerZYX(EulerZ, EulerY, EulerX);
+    objectTransf.setRotation(rot);
+    fcl::Vec3f dropping_position(0.0, 0.0, 5.0);
+    objectTransf.setTranslation(dropping_position);
+
+    // Let's drop the object until it collide with ground
+    do {
+        objectTransf.setTranslation(dropping_position);
+
+        fcl::collide(&cylinder, objectTransf, &groundObject, groundTransf, request, result);
+
+        dropping_position[2] -= delta;
+    }
+    while (result.numContacts() == 0);
+
+    std::cout << "Current position of the object: "
+              << objectTransf.getTranslation()
+              << std::endl
+              << "Number of contacts: "
+              << result.numContacts()
+              << std::endl;
+
+    for (int i = 0; i < result.numContacts(); ++i)
+    {
+        std::cout << "----- CONTACT " << i << " --------" << std::endl;
+        std::cout << "contact_points: " << result.getContact(i).pos << std::endl;
+        std::cout << "penetration_depth: " << result.getContact(i).penetration_depth << std::endl;
+        std::cout << "normal: " << result.getContact(i).normal << std::endl;
+    }
+}
+
 TEST_F(COLLISION, DART_COLLISION_BOX_BOX)
 {
     double delta = 1e-5;
-    double EulerZ = 0.1;
-    double EulerY = 0.2;
-    double EulerX = 0.3;
+
+//    double EulerZ = 0.1;
+//    double EulerY = 0.2;
+//    double EulerX = 0.3;
+
+    double EulerZ = 0.0;
+    double EulerY = 0.0;
+    double EulerX = 0.0;
 
     // Collision test setting
     std::vector<collision::Contact> result;

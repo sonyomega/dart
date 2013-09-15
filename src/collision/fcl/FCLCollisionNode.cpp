@@ -72,18 +72,18 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
         {
             case dynamics::Shape::P_BOX:
             {
-                mCollisionGeometries.push_back(new fcl::Box(shape->getDim()[0],
-                                                            shape->getDim()[1],
-                                                            shape->getDim()[2]));
+//                mCollisionGeometries.push_back(new fcl::Box(shape->getDim()[0],
+//                                                            shape->getDim()[1],
+//                                                            shape->getDim()[2]));
 
 //                fcl::BVHModel<fcl::OBBRSS>* model = new fcl::BVHModel<fcl::OBBRSS>();
 //                fcl::generateBVHModel(*model, fcl::Box(shape->getDim()[0], shape->getDim()[1], shape->getDim()[2]), fcl::Transform3f());
 //                mCollisionGeometries.push_back(model);
 
-//                mCollisionGeometries.push_back(
-//                            createCube2<fcl::OBBRSS>(shape->getDim()[0],
-//                                                    shape->getDim()[1],
-//                                                    shape->getDim()[2]));
+                mCollisionGeometries.push_back(
+                            createCube<fcl::OBBRSS>(shape->getDim()[0],
+                                                    shape->getDim()[1],
+                                                    shape->getDim()[2]));
                 break;
             }
             case dynamics::Shape::P_ELLIPSOID:
@@ -91,31 +91,40 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
                 dynamics::EllipsoidShape* ellipsoid
                         = dynamic_cast<dynamics::EllipsoidShape*>(shape);
 
-                if (ellipsoid->isSphere())
-                    mCollisionGeometries.push_back(new fcl::Sphere(ellipsoid->getDim()[0] * 0.5));
-                else
+                //if (ellipsoid->isSphere())
+                {
+//                    fcl::BVHModel<fcl::OBBRSS>* model = new fcl::BVHModel<fcl::OBBRSS>();
+//                    fcl::generateBVHModel(*model, fcl::Sphere(ellipsoid->getDim()[0] * 0.5), fcl::Transform3f(), 4, 4);
+//                    mCollisionGeometries.push_back(model);
+
+//                    mCollisionGeometries.push_back(new fcl::Sphere(ellipsoid->getDim()[0] * 0.5));
+                }
+                //else
+                {
                     mCollisionGeometries.push_back(
                                 createEllipsoid<fcl::OBBRSS>(
                                     ellipsoid->getDim()[0],
                                     ellipsoid->getDim()[1],
                                     ellipsoid->getDim()[2]));
+                }
                 break;
             }
             case dynamics::Shape::P_CYLINDER:
             {
                 dynamics::CylinderShape* cylinder
                         = dynamic_cast<dynamics::CylinderShape*>(shape);
-//                mCollisionGeometries.push_back(new fcl::Cylinder(cylinder->getRadius(),
-//                                                                 cylinder->getHeight()));
-                if(cylinder) {
-                    double radius = cylinder->getRadius();
-                    double height = cylinder->getHeight();
-                    mCollisionGeometries.push_back(
-                                createCylinder<fcl::OBBRSS>(radius,
-                                                            radius,
-                                                            height,
-                                                            16, 16));
-                }
+
+                double radius = cylinder->getRadius();
+                double height = cylinder->getHeight();
+                mCollisionGeometries.push_back(
+                            createCylinder<fcl::OBBRSS>(radius, radius, height, 16, 16));
+
+//                fcl::BVHModel<fcl::OBBRSS>* model = new fcl::BVHModel<fcl::OBBRSS>();
+//                fcl::generateBVHModel(*model, fcl::Cylinder(radius * 0.2, height), fcl::Transform3f(), 16, 1);
+//                mCollisionGeometries.push_back(model);
+
+                //mCollisionGeometries.push_back(new fcl::Cylinder(radius, height));
+
                 break;
             }
             case dynamics::Shape::P_MESH:
@@ -399,7 +408,7 @@ fcl::BVHModel<BV>* createEllipsoid(float _sizeX, float _sizeY, float _sizeZ) {
 }
 
 template<class BV>
-fcl::BVHModel<BV>* createCube2(float _sizeX, float _sizeY, float _sizeZ,
+fcl::BVHModel<BV>* createCube(float _sizeX, float _sizeY, float _sizeZ,
                               const fcl::Transform3f& _transform = fcl::Transform3f()) //create a cube mesh for collision detection
 {
     float n[6][3] =
@@ -454,7 +463,7 @@ fcl::BVHModel<BV>* createCube2(float _sizeX, float _sizeY, float _sizeZ,
 }//end createCube
 
 template<class BV>
-fcl::BVHModel<BV>* createCylinder2(double _baseRadius, double _topRadius,
+fcl::BVHModel<BV>* createCylinder(double _baseRadius, double _topRadius,
                                   double _height, int _slices, int _stacks,
                                   const fcl::Transform3f& _transform = fcl::Transform3f())
 {

@@ -20,8 +20,8 @@ void MyWindow::timeStepping()
 
 void MyWindow::drawSkels()
 {
-//    glEnable(GL_LIGHTING);
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_LIGHTING);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     dart::simulation::SimWindow::drawSkels();
 }

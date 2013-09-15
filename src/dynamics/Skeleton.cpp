@@ -755,6 +755,12 @@ void Skeleton::clearInternalForces()
 
 void Skeleton::setConstraintForces(const Eigen::VectorXd& _Fc)
 {
+#ifndef NDEBUG
+    //assert(!math::isNan(_Fc));
+    if (math::isNan(_Fc))
+        return;
+#else
+#endif
     mFc = _Fc;
 }
 
