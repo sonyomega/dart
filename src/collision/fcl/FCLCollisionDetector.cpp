@@ -74,9 +74,7 @@ bool FCLCollisionDetector::checkCollision(bool _checkAllCollisions,
     fcl::CollisionRequest request;
     request.enable_contact = _calculateContactPoints;
     request.num_max_contacts = mNumMaxContacts;
-//    request.enable_cost;
-//    request.num_max_cost_sources;
-//    request.use_approximate_cost;
+    request.enable_cached_gjk_guess = true;
 
     for(int i = 0; i < mCollisionNodes.size(); i++)
     for(int j = i + 1; j < mCollisionNodes.size(); j++)
