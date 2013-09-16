@@ -66,14 +66,14 @@ public:
     int getNumCollisionGeometries() const;
 
     /// @brief
-    fcl::CollisionGeometry* getCollisionGeometry(int _idx) const;
+    fcl::CollisionObject* getCollisionObject(int _idx) const;
 
     /// @brief
     fcl::Transform3f getFCLTransform(int _idx) const;
 
 private:
     /// @brief
-    std::vector<fcl::CollisionGeometry*> mCollisionGeometries;
+    std::vector<fcl::CollisionObject*> mCollisionObject;
 
     /// @brief
     std::vector<dynamics::Shape*> mShapes;
@@ -83,6 +83,15 @@ private:
 template<class BV>
 fcl::BVHModel<BV>* createMesh(float _sizeX, float _sizeY, float _sizeZ,
                               const aiScene *_mesh);
+
+template<class BV>
+fcl::BVHModel<BV>* createCube(float _sizeX, float _sizeY, float _sizeZ,
+                              const fcl::Transform3f& _transform); //create a cube mesh for collision detection
+
+template<class BV>
+fcl::BVHModel<BV>* createCylinder(double _baseRadius, double _topRadius,
+                                  double _height, int _slices, int _stacks,
+                                  const fcl::Transform3f& _transform);
 
 /// @brief
 template<class BV>

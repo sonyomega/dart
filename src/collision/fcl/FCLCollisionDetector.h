@@ -42,36 +42,54 @@
 #include <map>
 #include <Eigen/Dense>
 #include <fcl/collision.h>
+#include <fcl/broadphase/broadphase.h>
 #include "collision/CollisionDetector.h"
 
 namespace dart {
 namespace collision {
 
+fcl::Transform3f convTransform(const Eigen::Isometry3d& _T);
+
 class FCLCollisionNode;
 
 /// @brief
-class FCLCollisionDetector : public CollisionDetector {
+class FCLCollisionDetector : public CollisionDetector
+{
 public:
-    /// @brief
+    /// @brief Default constructor
     FCLCollisionDetector();
 
-    /// @brief
+    /// @brief Default destructor
     virtual ~FCLCollisionDetector();
 
     // Documentation inherited
     virtual CollisionNode* createCollisionNode(dynamics::BodyNode* _bodyNode);
 
     // Documentation inherited
+    virtual void addCollisionSkeletonNode(dynamics::BodyNode* _bodyNode,
+                                                     bool _recursive);
+
+    // Documentation inherited
     virtual bool checkCollision(bool _checkAllCollisions,
                                 bool _calculateContactPoints);
 
-    CollisionNode* findCollisionNode(
+    /// @brief
+    CollisionNode* _findCollisionNode(
             const fcl::CollisionGeometry* _fclCollGeom) const;
 
 protected:
+    // Documentation inherited
     virtual bool checkCollision(CollisionNode* _node1,
                                 CollisionNode* _node2,
                                 bool _calculateContactPoints);
+
+    /// @brief Broad phase collision manager
+    fcl::BroadPhaseCollisionManager* mBroadPhaseCollMgr;
+
+private:
+
+    /// @brief
+    void _updateCollisionObjects();
 };
 
 } // namespace collision

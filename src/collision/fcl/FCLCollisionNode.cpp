@@ -60,13 +60,14 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
         {
             case dynamics::Shape::P_BOX:
             {
-//                mCollisionGeometries.push_back(new fcl::Box(shape->getDim()[0],
-//                                                            shape->getDim()[1],
-//                                                            shape->getDim()[2]));
+//                fcl::BVHModel<fcl::OBBRSS>* model = new fcl::BVHModel<fcl::OBBRSS>();
+//                fcl::generateBVHModel(*model, fcl::Box(shape->getDim()[0], shape->getDim()[1], shape->getDim()[2]), fcl::Transform3f());
 
-                fcl::BVHModel<fcl::OBBRSS>* model = new fcl::BVHModel<fcl::OBBRSS>();
-                fcl::generateBVHModel(*model, fcl::Box(shape->getDim()[0], shape->getDim()[1], shape->getDim()[2]), fcl::Transform3f());
-                mCollisionGeometries.push_back(model);
+                fcl::BVHModel<fcl::OBBRSS>* model = createCube<fcl::OBBRSS>(shape->getDim()[0], shape->getDim()[1], shape->getDim()[2], fcl::Transform3f());
+
+                fcl::CollisionObject* fclCollObj = new fcl::CollisionObject(boost::shared_ptr<fcl::CollisionGeometry>(model));
+                fclCollObj->setUserData(shape);
+                mCollisionObject.push_back(fclCollObj);
                 break;
             }
             case dynamics::Shape::P_ELLIPSOID:
@@ -78,17 +79,21 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
                 {
                     fcl::BVHModel<fcl::OBBRSS>* model = new fcl::BVHModel<fcl::OBBRSS>();
                     fcl::generateBVHModel(*model, fcl::Sphere(ellipsoid->getDim()[0] * 0.5), fcl::Transform3f(), 16, 16);
-                    mCollisionGeometries.push_back(model);
+                    fcl::CollisionObject* fclCollObj = new fcl::CollisionObject(boost::shared_ptr<fcl::CollisionGeometry>(model));
+                    fclCollObj->setUserData(shape);
+                    mCollisionObject.push_back(fclCollObj);
 
 //                    mCollisionGeometries.push_back(new fcl::Sphere(ellipsoid->getDim()[0] * 0.5));
                 }
                 else
                 {
-                    mCollisionGeometries.push_back(
+                    mCollisionObject.push_back(new fcl::CollisionObject(boost::shared_ptr<fcl::CollisionGeometry>(
                                 createEllipsoid<fcl::OBBRSS>(
                                     ellipsoid->getDim()[0],
                                     ellipsoid->getDim()[1],
-                                    ellipsoid->getDim()[2]));
+                                    ellipsoid->getDim()[2]))));
+
+                    std::cout << "DON'T" << std::endl;
                 }
                 break;
             }
@@ -100,9 +105,14 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
                 double radius = cylinder->getRadius();
                 double height = cylinder->getHeight();
 
-                fcl::BVHModel<fcl::OBBRSS>* model = new fcl::BVHModel<fcl::OBBRSS>();
-                fcl::generateBVHModel(*model, fcl::Cylinder(radius * 0.2, height), fcl::Transform3f(), 16, 1);
-                mCollisionGeometries.push_back(model);
+//                fcl::BVHModel<fcl::OBBRSS>* model = new fcl::BVHModel<fcl::OBBRSS>();
+//                fcl::generateBVHModel(*model, fcl::Cylinder(radius * 0.2, height), fcl::Transform3f(), 16, 1);
+
+                fcl::BVHModel<fcl::OBBRSS>* model = createCylinder<fcl::OBBRSS>(radius, radius, height, 16, 16, fcl::Transform3f());
+
+                fcl::CollisionObject* fclCollObj = new fcl::CollisionObject(boost::shared_ptr<fcl::CollisionGeometry>(model));
+                fclCollObj->setUserData(shape);
+                mCollisionObject.push_back(fclCollObj);
 
 //                mCollisionGeometries.push_back(new fcl::Cylinder(radius, height));
 
@@ -114,10 +124,14 @@ FCLCollisionNode::FCLCollisionNode(dynamics::BodyNode* _bodyNode)
                         = dynamic_cast<dynamics::MeshShape *>(shape);
 
                 if(shapeMesh)
-                    mCollisionGeometries.push_back(createMesh<fcl::OBBRSS>(shape->getDim()[0],
-                                                                           shape->getDim()[1],
-                                                                           shape->getDim()[2],
-                                                                           shapeMesh->getMesh()));
+                    mCollisionObject.push_back(
+                                new fcl::CollisionObject(
+                                    boost::shared_ptr<fcl::CollisionGeometry>(
+                                        createMesh<fcl::OBBRSS>(
+                                            shape->getDim()[0],
+                                            shape->getDim()[1],
+                                            shape->getDim()[2],
+                                            shapeMesh->getMesh()))));
                 break;
             }
             default:
@@ -137,12 +151,12 @@ FCLCollisionNode::~FCLCollisionNode()
 
 int FCLCollisionNode::getNumCollisionGeometries() const
 {
-    return mCollisionGeometries.size();
+    return mCollisionObject.size();
 }
 
-fcl::CollisionGeometry*FCLCollisionNode::getCollisionGeometry(int _idx) const
+fcl::CollisionObject* FCLCollisionNode::getCollisionObject(int _idx) const
 {
-    return mCollisionGeometries[_idx];
+    return mCollisionObject[_idx];
 }
 
 fcl::Transform3f FCLCollisionNode::getFCLTransform(int _idx) const
@@ -385,6 +399,164 @@ fcl::BVHModel<BV>* createEllipsoid(float _sizeX, float _sizeY, float _sizeZ) {
 
     model->endModel();
 
+    return model;
+}
+
+template<class BV>
+fcl::BVHModel<BV>* createCube(float _sizeX, float _sizeY, float _sizeZ,
+                              const fcl::Transform3f& _transform) //create a cube mesh for collision detection
+{
+    float n[6][3] =
+    {
+        {-1.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0},
+        {1.0, 0.0, 0.0},
+        {0.0, -1.0, 0.0},
+        {0.0, 0.0, 1.0},
+        {0.0, 0.0, -1.0}
+    };
+    int faces[6][4] =
+    {
+        {0, 1, 2, 3},
+        {3, 2, 6, 7},
+        {7, 6, 5, 4},
+        {4, 5, 1, 0},
+        {5, 6, 2, 1},
+        {7, 4, 0, 3}
+    };
+    float v[8][3];
+
+    v[0][0] = v[1][0] = v[2][0] = v[3][0] = -_sizeX / 2;
+    v[4][0] = v[5][0] = v[6][0] = v[7][0] = _sizeX / 2;
+    v[0][1] = v[1][1] = v[4][1] = v[5][1] = -_sizeY / 2;
+    v[2][1] = v[3][1] = v[6][1] = v[7][1] = _sizeY / 2;
+    v[0][2] = v[3][2] = v[4][2] = v[7][2] = -_sizeZ / 2;
+    v[1][2] = v[2][2] = v[5][2] = v[6][2] = _sizeZ / 2;
+
+    fcl::BVHModel<BV>* model = new fcl::BVHModel<BV>;
+    fcl::Vec3f p1, p2, p3;
+    model->beginModel();
+
+    for (int i = 0; i < 6; i++) {
+        p1 = fcl::Vec3f(v[faces[i][0]][0], v[faces[i][0]][1], v[faces[i][0]][2]);
+        p2 = fcl::Vec3f(v[faces[i][1]][0], v[faces[i][1]][1], v[faces[i][1]][2]);
+        p3 = fcl::Vec3f(v[faces[i][2]][0], v[faces[i][2]][1], v[faces[i][2]][2]);
+        p1 = _transform.transform(p1);
+        p2 = _transform.transform(p2);
+        p3 = _transform.transform(p3);
+        model->addTriangle(p1, p2, p3);
+        p1 = fcl::Vec3f(v[faces[i][0]][0], v[faces[i][0]][1], v[faces[i][0]][2]);
+        p2 = fcl::Vec3f(v[faces[i][2]][0], v[faces[i][2]][1], v[faces[i][2]][2]);
+        p3 = fcl::Vec3f(v[faces[i][3]][0], v[faces[i][3]][1], v[faces[i][3]][2]);
+        p1 = _transform.transform(p1);
+        p2 = _transform.transform(p2);
+        p3 = _transform.transform(p3);
+        model->addTriangle(p1, p2, p3);
+    }
+    model->endModel();
+    return model;
+}//end createCube
+
+template<class BV>
+fcl::BVHModel<BV>* createCylinder(double _baseRadius, double _topRadius,
+                                  double _height, int _slices, int _stacks,
+                                  const fcl::Transform3f& _transform)
+{
+    const int CACHE_SIZE = 240;
+
+    int i,j;
+    float sinCache[CACHE_SIZE];
+    float cosCache[CACHE_SIZE];
+    float angle;
+    float zBase;
+    float zLow, zHigh;
+    float sintemp, costemp;
+    float deltaRadius;
+    float radiusLow, radiusHigh;
+
+    if (_slices >= CACHE_SIZE) _slices = CACHE_SIZE-1;
+
+    if (_slices < 2 || _stacks < 1 || _baseRadius < 0.0 || _topRadius < 0.0 ||
+            _height < 0.0) {
+        return NULL;
+    }
+
+    /* Center at CoM */
+    zBase = -_height/2;
+
+    /* Compute delta */
+    deltaRadius = _baseRadius - _topRadius;
+
+    /* Cache is the vertex locations cache */
+    for (i = 0; i < _slices; i++) {
+        angle = 2 * M_PI * i / _slices;
+        sinCache[i] = sin(angle);
+        cosCache[i] = cos(angle);
+    }
+
+    sinCache[_slices] = sinCache[0];
+    cosCache[_slices] = cosCache[0];
+
+    fcl::BVHModel<BV>* model = new fcl::BVHModel<BV>;
+    fcl::Vec3f p1, p2, p3, p4;
+
+    model->beginModel();
+
+    /* Base of cylinder */
+    sintemp = sinCache[0];
+    costemp = cosCache[0];
+    radiusLow = _baseRadius;
+    zLow = zBase;
+    p1 = fcl::Vec3f(radiusLow * sintemp, radiusLow * costemp, zLow);
+    p1 = _transform.transform(p1);
+    for(i = 1; i < _slices; i++) {
+        p2 = fcl::Vec3f(radiusLow * sinCache[i], radiusLow * cosCache[i], zLow);
+        p3 = fcl::Vec3f(radiusLow * sinCache[i+1], radiusLow * cosCache[i+1], zLow);
+        p2 = _transform.transform(p2);
+        p3 = _transform.transform(p3);
+        model->addTriangle(p1, p2, p3);
+
+        Eigen::Vector3d v(radiusLow * sinCache[i], radiusLow * cosCache[i], zLow);
+    }
+
+    /* Body of cylinder */
+    for (i = 0; i < _slices; i++) {
+        for (j = 0; j < _stacks; j++) {
+            zLow = j * _height / _stacks + zBase;
+            zHigh = (j + 1) * _height / _stacks + zBase;
+            radiusLow = _baseRadius - deltaRadius * ((float) j / _stacks);
+            radiusHigh = _baseRadius - deltaRadius * ((float) (j + 1) / _stacks);
+
+            p1 = fcl::Vec3f(radiusLow * sinCache[i], radiusLow * cosCache[i], zLow);
+            p2 = fcl::Vec3f(radiusLow * sinCache[i+1], radiusLow * cosCache[i+1], zLow);
+            p3 = fcl::Vec3f(radiusHigh * sinCache[i], radiusHigh * cosCache[i], zHigh);
+            p4 = fcl::Vec3f(radiusHigh * sinCache[i+1], radiusHigh * cosCache[i+1], zHigh);
+            p1 = _transform.transform(p1);
+            p2 = _transform.transform(p2);
+            p3 = _transform.transform(p3);
+            p4 = _transform.transform(p4);
+
+            model->addTriangle(p1, p2, p3);
+            model->addTriangle(p2, p3, p4);
+        }
+    }
+
+    /* Top of cylinder */
+    sintemp = sinCache[0];
+    costemp = cosCache[0];
+    radiusLow = _topRadius;
+    zLow = zBase + _height;
+    p1 = fcl::Vec3f(radiusLow * sintemp, radiusLow * costemp, zLow);
+    p1 = _transform.transform(p1);
+    for(i = 1; i < _slices; i++) {
+        p2 = fcl::Vec3f(radiusLow * sinCache[i], radiusLow * cosCache[i], zLow);
+        p3 = fcl::Vec3f(radiusLow * sinCache[i+1], radiusLow * cosCache[i+1], zLow);
+        p2 = _transform.transform(p2);
+        p3 = _transform.transform(p3);
+        model->addTriangle(p1, p2, p3);
+    }
+
+    model->endModel();
     return model;
 }
 
