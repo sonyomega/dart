@@ -71,11 +71,11 @@ public:
     /// @brief
     fcl::Transform3f getFCLTransform(int _idx) const;
 
-protected:
-
 private:
     /// @brief
     std::vector<fcl::CollisionGeometry*> mCollisionGeometries;
+
+    /// @brief
     std::vector<dynamics::Shape*> mShapes;
 };
 
