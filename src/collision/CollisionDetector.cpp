@@ -76,8 +76,8 @@ bool CollisionDetector::checkCollision(dynamics::BodyNode* _node1,
                                        dynamics::BodyNode* _node2,
                                        bool _calculateContactPoints)
 {
-    return checkCollision(getCollisionNode(_node1),
-                          getCollisionNode(_node2),
+    return checkCollision(_getCollisionNode(_node1),
+                          _getCollisionNode(_node2),
                           _calculateContactPoints);
 }
 
@@ -109,32 +109,32 @@ void CollisionDetector::setNumMaxContacs(int _num)
 void CollisionDetector::enablePair(dynamics::BodyNode* _node1,
                                    dynamics::BodyNode* _node2)
 {
-    CollisionNode* collisionNode1 = getCollisionNode(_node1);
-    CollisionNode* collisionNode2 = getCollisionNode(_node2);
+    CollisionNode* collisionNode1 = _getCollisionNode(_node1);
+    CollisionNode* collisionNode2 = _getCollisionNode(_node2);
     if(collisionNode1 && collisionNode2)
-        getPairCollidable(collisionNode1, collisionNode2) = true;
+        _getPairCollidable(collisionNode1, collisionNode2) = true;
 }
 
 void CollisionDetector::disablePair(dynamics::BodyNode* _node1,
                                     dynamics::BodyNode* _node2)
 {
-    CollisionNode* collisionNode1 = getCollisionNode(_node1);
-    CollisionNode* collisionNode2 = getCollisionNode(_node2);
+    CollisionNode* collisionNode1 = _getCollisionNode(_node1);
+    CollisionNode* collisionNode2 = _getCollisionNode(_node2);
     if(collisionNode1 && collisionNode2)
-        getPairCollidable(collisionNode1, collisionNode2) = false;
+        _getPairCollidable(collisionNode1, collisionNode2) = false;
 }
 
 bool CollisionDetector::isCollidable(const CollisionNode* _node1,
                                      const CollisionNode* _node2)
 {
-    return getPairCollidable(_node1, _node2)
+    return _getPairCollidable(_node1, _node2)
         && _node1->getBodyNode()->isCollidable()
         && _node2->getBodyNode()->isCollidable()
         && (_node1->getBodyNode()->getSkeleton() != _node2->getBodyNode()->getSkeleton()
             || _node1->getBodyNode()->getSkeleton()->getSelfCollidable());
 }
 
-std::vector<bool>::reference CollisionDetector::getPairCollidable(
+std::vector<bool>::reference CollisionDetector::_getPairCollidable(
         const CollisionNode* _node1, const CollisionNode* _node2)
 {
     assert(_node1 != _node2);
@@ -145,7 +145,7 @@ std::vector<bool>::reference CollisionDetector::getPairCollidable(
     return mCollidablePairs[index1][index2];
 }
 
-CollisionNode* CollisionDetector::getCollisionNode(
+CollisionNode* CollisionDetector::_getCollisionNode(
         const dynamics::BodyNode *_bodyNode)
 {
     if(mBodyCollisionMap.find(_bodyNode) != mBodyCollisionMap.end())

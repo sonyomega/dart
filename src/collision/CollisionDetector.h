@@ -109,6 +109,7 @@ public:
     virtual bool checkCollision(bool _checkAllCollisions,
                                 bool _calculateContactPoints) = 0;
 
+    /// @brief
     bool checkCollision(dynamics::BodyNode* _node1,
                         dynamics::BodyNode* _node2,
                         bool _calculateContactPoints);
@@ -147,19 +148,20 @@ protected:
     /// @brief
     int mNumMaxContacts;
 
-private:
-    /// @brief
-    std::vector<bool>::reference getPairCollidable(
-            const CollisionNode* _node1, const CollisionNode* _node2);
-
-    /// @brief
-    CollisionNode* getCollisionNode(const dynamics::BodyNode* _bodyNode);
-
     /// @brief
     std::map<const dynamics::BodyNode*, CollisionNode*> mBodyCollisionMap;
 
     /// @brief
     std::vector<std::vector<bool> > mCollidablePairs;
+
+private:
+    /// @brief
+    std::vector<bool>::reference _getPairCollidable(
+            const CollisionNode* _node1, const CollisionNode* _node2);
+
+    /// @brief
+    CollisionNode* _getCollisionNode(const dynamics::BodyNode* _bodyNode);
+
 };
 
 } // namespace collision
