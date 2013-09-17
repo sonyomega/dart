@@ -133,11 +133,12 @@ protected:
     virtual bool checkCollision(CollisionNode* _node1,
                                 CollisionNode* _node2,
                                 bool _calculateContactPoints) = 0;
-
+public:
     /// @brief
     bool isCollidable(const CollisionNode* _node1,
                       const CollisionNode* _node2);
 
+protected:
     /// @brief
     std::vector<Contact> mContacts;
 
@@ -155,6 +156,7 @@ private:
     /// @brief
     CollisionNode* getCollisionNode(const dynamics::BodyNode* _bodyNode);
 
+protected:
     /// @brief
     std::map<const dynamics::BodyNode*, CollisionNode*> mBodyCollisionMap;
 

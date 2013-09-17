@@ -42,6 +42,7 @@
 #include <map>
 #include <Eigen/Dense>
 #include <fcl/collision.h>
+#include <fcl/broadphase/broadphase.h>
 #include "collision/CollisionDetector.h"
 
 namespace dart {
@@ -62,6 +63,9 @@ public:
     virtual CollisionNode* createCollisionNode(dynamics::BodyNode* _bodyNode);
 
     // Documentation inherited
+    virtual void addCollisionSkeletonNode(dynamics::BodyNode* _bodyNode,
+                                          bool _recursive);
+    // Documentation inherited
     virtual bool checkCollision(bool _checkAllCollisions,
                                 bool _calculateContactPoints);
 
@@ -72,7 +76,41 @@ protected:
     virtual bool checkCollision(CollisionNode* _node1,
                                 CollisionNode* _node2,
                                 bool _calculateContactPoints);
+
+    /// @brief Broad phase collision manager
+    fcl::BroadPhaseCollisionManager* mBroadPhaseCollMgr;
+
+private:
+    /// @brief
+    void _updateCollisionObjects();
 };
+
+/// @brief Collision data stores the collision request and the result given by
+/// collision algorithm.
+struct CollisionData
+{
+  CollisionData()
+  {
+    done = false;
+  }
+
+  /// @brief Collision request
+  fcl::CollisionRequest request;
+
+  /// @brief Collision result
+  fcl::CollisionResult result;
+
+  /// @brief Whether the collision iteration can stop
+  bool done;
+
+  FCLCollisionDetector* mCollDetecter;
+};
+
+bool defaultCollisionFunction(fcl::CollisionObject* o1,
+                              fcl::CollisionObject* o2,
+                              void* cdata_);
+
+fcl::Transform3f convTransform(const Eigen::Isometry3d& _T);
 
 } // namespace collision
 } // namespace dart

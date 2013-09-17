@@ -3,7 +3,7 @@
  * All rights reserved.
  *
  * Author(s): Jeongseok Lee <jslee02@gmail.com>
- * Date: 05/11/2013
+ * Date: 09/13/2013
  *
  * Geoorgia Tech Graphics Lab and Humanoid Robotics Lab
  *
@@ -35,73 +35,47 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DART_COLLISION_FCL_CONLLISION_NODE_H
-#define DART_COLLISION_FCL_CONLLISION_NODE_H
+#ifndef DART_COLLISION_DART_COLLIDE_H
+#define DART_COLLISION_DART_COLLIDE_H
 
+#include <vector>
 #include <Eigen/Dense>
-#include <fcl/collision.h>
-#include <fcl/BVH/BVH_model.h>
 
-#include "collision/CollisionNode.h"
+#include "math/Geometry.h"
+#include "collision/CollisionDetector.h"
 
 namespace dart {
 
 namespace dynamics {
-class BodyNode;
+class Shape;
 }
 
 namespace collision {
 
-/// @brief
-class FCLCollisionNode : public CollisionNode
-{
-public:
-    /// @brief
-    FCLCollisionNode(dynamics::BodyNode* _bodyNode);
+typedef Eigen::Vector3d Vec3;
+typedef Eigen::Isometry3d SE3;
 
-    /// @brief
-    virtual ~FCLCollisionNode();
+int collide(const dynamics::Shape* _shape0, const Eigen::Isometry3d& _T0,
+            const dynamics::Shape* _shape1, const Eigen::Isometry3d& _T1,
+            std::vector<Contact>& _result);
 
-    /// @brief
-    int getNumCollisionObjects() const;
+int collideBoxBox(const Vec3& size0, const SE3& T0,
+                  const Vec3& size1, const SE3& T1,
+                  std::vector<Contact>& result);
 
-    /// @brief
-    fcl::CollisionObject* getCollisionObject(int _idx) const;
+int	collideBoxSphere(const Vec3& size0, const SE3& T0,
+                     const double& r1, const SE3& T1,
+                     std::vector<Contact>& result);
 
-    /// @brief
-    fcl::Transform3f getFCLTransform(int _idx) const;
+int collideSphereBox(const double& r0, const SE3& T0,
+                     const Vec3& size1, const SE3& T1,
+                     std::vector<Contact>& result);
 
-protected:
-
-private:
-    /// @brief
-    std::vector<fcl::CollisionObject*> mCollisionObject;
-
-    /// @brief
-    std::vector<dynamics::Shape*> mShapes;
-};
-
-/// @brief
-template<class BV>
-fcl::BVHModel<BV>* createMesh(float _sizeX, float _sizeY, float _sizeZ,
-                              const aiScene *_mesh);
-
-/// @brief
-template<class BV>
-fcl::BVHModel<BV>* createCube(float _sizeX, float _sizeY, float _sizeZ,
-                              const fcl::Transform3f& _transform = fcl::Transform3f()); //create a cube mesh for collision detection
-
-/// @brief
-template<class BV>
-fcl::BVHModel<BV>* createEllipsoid(float _sizeX, float _sizeY, float _sizeZ);
-
-/// @brief
-template<class BV>
-fcl::BVHModel<BV>* createCylinder(double _baseRadius, double _topRadius,
-                                  double _height, int _slices, int _stacks,
-                                  const fcl::Transform3f& _transform = fcl::Transform3f());
+int collideSphereSphere(const double& _r0, const SE3& c0,
+                        const double& _r1, const SE3& c1,
+                        std::vector<Contact>& result);
 
 } // namespace collision
 } // namespace dart
 
-#endif // #ifndef DART_COLLISION_FCL_CONLLISION_NODE_H
+#endif // #ifndef DART_COLLISION_DART_COLLIDE_H
